@@ -1,0 +1,251 @@
+openapi: 3.1.0
+info:
+  title: SchoolMaster API
+  version: 1.0.0
+  summary: Initial SchoolMaster SaaS contract skeleton for v1 planning
+servers:
+  - url: https://api.schoolmaster.test
+tags:
+  - name: Auth
+  - name: Schools
+  - name: Users
+  - name: Roles
+  - name: Academic Years
+  - name: Academic Periods
+  - name: Guardians
+  - name: Teacher Content
+  - name: Questionnaires
+  - name: Learning Sets
+  - name: Grades
+  - name: Attendance
+  - name: Reports
+paths:
+  /api/v1/auth/login:
+    post:
+      tags: [Auth]
+      summary: Authenticate a user in platform or school context
+      operationId: login
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+      responses:
+        '200':
+          description: Authentication succeeded
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessEnvelope'
+        '422':
+          description: Validation failed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
+  /api/v1/schools:
+    get:
+      tags: [Schools]
+      summary: List schools visible to the requester
+      operationId: listSchools
+      responses:
+        '200':
+          description: School collection
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedEnvelope'
+    post:
+      tags: [Schools]
+      summary: Create a school tenant
+      operationId: createSchool
+      responses:
+        '201':
+          description: School created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessEnvelope'
+  /api/v1/users:
+    get:
+      tags: [Users]
+      summary: List users in permitted scope
+      operationId: listUsers
+      responses:
+        '200':
+          description: User collection
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedEnvelope'
+  /api/v1/roles:
+    get:
+      tags: [Roles]
+      summary: List roles in permitted scope
+      operationId: listRoles
+      responses:
+        '200':
+          description: Role collection
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedEnvelope'
+  /api/v1/academic-years:
+    get:
+      tags: [Academic Years]
+      summary: List academic years for a school
+      operationId: listAcademicYears
+      responses:
+        '200':
+          description: Academic year collection
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedEnvelope'
+  /api/v1/academic-periods:
+    get:
+      tags: [Academic Periods]
+      summary: List academic periods for a school
+      operationId: listAcademicPeriods
+      responses:
+        '200':
+          description: Academic period collection
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedEnvelope'
+  /api/v1/guardians:
+    get:
+      tags: [Guardians]
+      summary: List guardians for a school
+      operationId: listGuardians
+      responses:
+        '200':
+          description: Guardian collection
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedEnvelope'
+  /api/v1/teacher-content:
+    get:
+      tags: [Teacher Content]
+      summary: List teacher content items
+      operationId: listTeacherContent
+      responses:
+        '200':
+          description: Teacher content collection
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedEnvelope'
+  /api/v1/questionnaires:
+    get:
+      tags: [Questionnaires]
+      summary: List questionnaires
+      operationId: listQuestionnaires
+      responses:
+        '200':
+          description: Questionnaire collection
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedEnvelope'
+  /api/v1/learning-sets:
+    get:
+      tags: [Learning Sets]
+      summary: List learning sets
+      operationId: listLearningSets
+      responses:
+        '200':
+          description: Learning set collection
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedEnvelope'
+  /api/v1/grades:
+    get:
+      tags: [Grades]
+      summary: List grade records in permitted scope
+      operationId: listGrades
+      responses:
+        '200':
+          description: Grade record collection
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedEnvelope'
+  /api/v1/attendance:
+    get:
+      tags: [Attendance]
+      summary: List attendance records in permitted scope
+      operationId: listAttendance
+      responses:
+        '200':
+          description: Attendance record collection
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedEnvelope'
+  /api/v1/reports:
+    post:
+      tags: [Reports]
+      summary: Request a report in permitted scope
+      operationId: requestReport
+      responses:
+        '202':
+          description: Report request accepted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessEnvelope'
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: token
+  schemas:
+    LoginRequest:
+      type: object
+      required: [email, password]
+      properties:
+        email:
+          type: string
+          format: email
+        password:
+          type: string
+        school_id:
+          type: string
+          format: uuid
+          nullable: true
+    SuccessEnvelope:
+      type: object
+      required: [data, meta]
+      properties:
+        data:
+          oneOf:
+            - type: object
+            - type: array
+              items: {}
+        meta:
+          type: object
+          additionalProperties: true
+    ErrorEnvelope:
+      type: object
+      required: [error]
+      properties:
+        error:
+          type: object
+          required: [code, message]
+          properties:
+            code:
+              type: string
+            message:
+              type: string
+            details:
+              type: object
+              additionalProperties: true
+    PaginatedEnvelope:
+      allOf:
+        - $ref: '#/components/schemas/SuccessEnvelope'
