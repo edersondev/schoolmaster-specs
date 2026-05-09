@@ -24,6 +24,19 @@ before implementation begins in the backend and frontend repositories.
 4. Add verification for contract, backend behavior, and frontend behavior
    before merging each slice.
 
+## Cross-Repository Traceability
+
+- Use `001-schoolmaster-platform` in related branches, issues, pull requests,
+  and implementation notes across `schoolmaster-specs`,
+  `schoolmaster-backend`, and `schoolmaster-frontend`.
+- Contract changes land in `schoolmaster-specs` before dependent backend or
+  frontend implementation work.
+- Backend work links to the OpenAPI operation IDs it implements and includes
+  PHPUnit coverage for tenant, authorization, validation, and response-shape
+  behavior.
+- Frontend work links to the OpenAPI operation IDs it consumes and includes
+  Vitest coverage for affected services, stores, composables, and route guards.
+
 ## Validation Walkthrough
 
 ### 1. Tenant and actor validation
@@ -58,10 +71,38 @@ before implementation begins in the backend and frontend repositories.
 - Confirm school administrators can request reports for their school only.
 - Confirm report filters cannot expand outside tenant scope.
 
+### 6. Contract validation
+
+- Confirm all protected endpoints declare authentication expectations.
+- Confirm school-scoped endpoints document tenant-context behavior.
+- Confirm success, validation, forbidden, inactive-record, tenant-mismatch, and
+  not-found responses use the shared response envelope.
+- Confirm P1 operations expose concrete request and response schemas for
+  schools, users, roles, permissions, academic years, academic periods, and
+  guardians before backend or frontend implementation starts.
+
+## Verification Commands
+
+Run the concrete commands in the target repositories once those repositories
+contain the implementation:
+
+```bash
+# schoolmaster-backend
+php artisan test
+
+# schoolmaster-frontend
+npm test
+
+# schoolmaster-specs
+# Use the repository-approved OpenAPI validator for contracts/openapi.yaml.
+```
+
 ## Exit Criteria for Planning
 
 - Product modules, actors, and non-goals are stable enough for task breakdown.
-- Initial OpenAPI paths cover the launch-scope module families.
+- Initial OpenAPI paths cover the launch-scope module families and define P1
+  request, response, security, tenant, pagination, filtering, sorting, and
+  standard error semantics.
 - Data model boundaries are sufficient to start backend and frontend task
   generation.
 - No constitution check violations remain unresolved.

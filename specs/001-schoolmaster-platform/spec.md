@@ -170,8 +170,8 @@ administrator to generate reports for a selected academic period.
 - **OpenAPI update required**: Yes. Initial contracts must be defined in the
   specification repository before backend or frontend implementation begins.
 - **Versioned endpoints affected**: `/api/v1/auth`, `/api/v1/schools`,
-  `/api/v1/users`, `/api/v1/roles`, `/api/v1/academic-years`,
-  `/api/v1/academic-periods`, `/api/v1/guardians`,
+  `/api/v1/users`, `/api/v1/roles`, `/api/v1/permissions`,
+  `/api/v1/academic-years`, `/api/v1/academic-periods`, `/api/v1/guardians`,
   `/api/v1/teacher-content`, `/api/v1/questionnaires`,
   `/api/v1/learning-sets`, `/api/v1/grades`, `/api/v1/attendance`,
   `/api/v1/reports`
@@ -335,6 +335,77 @@ administrator to generate reports for a selected academic period.
 - For v1, permissions are managed through roles rather than direct per-user
   permission assignment.
 
+## Business Rules and Boundaries
+
+### Tenant and Status Rules
+
+- Every school-scoped action must resolve one active school tenant before data
+  access occurs. Requests with missing, mismatched, or inactive tenant context
+  are denied before module-specific business logic runs.
+- System administrators may create, activate, deactivate, and review school
+  tenants through platform-scope policies only. They do not receive an implicit
+  bypass for school-scoped module actions unless a specific platform override is
+  documented for that action.
+- Inactive schools cannot accept new operational records. Inactive users cannot
+  authenticate or continue protected workflows, even if role assignments remain
+  stored for audit or reactivation.
+- Recoverable tenant-owned records keep status history and use soft deletion
+  where removal is needed without losing audit or reporting context.
+
+### Role and Permission Rules
+
+- Permissions are assigned to roles, and users inherit permissions only through
+  their active role assignments.
+- Direct per-user permission assignment is outside v1 scope.
+- Platform-scoped roles may grant platform capabilities only. School-scoped
+  roles may grant school capabilities only and are effective only within the
+  user's resolved school tenant.
+- School administrators may assign only active school-scoped roles that are
+  available inside their own tenant. System administrators may manage
+  platform-scope roles and the baseline role templates needed to provision a
+  school.
+- API responses that expose roles must include enough permission information
+  for the frontend to render allowed navigation and actions without duplicating
+  authorization rules client-side.
+
+### Academic Rules
+
+- A school may have many academic years, but only one academic year may be
+  active for normal operations at a time unless a later module specification
+  approves an overlap rule.
+- Academic periods must fit inside their parent academic year and must not
+  overlap with another period in the same academic year.
+- Grades, attendance, learning sets, and period-scoped reports must reference
+  an academic period that belongs to the same school as the affected students
+  and teacher.
+- Teachers may record grades and attendance only for active academic periods.
+  Closed periods are read-only except through an explicitly authorized
+  correction workflow documented before implementation.
+
+### Content and Upload Rules
+
+- Uploaded instructional files must be validated for declared type, detected
+  content type, size, tenant ownership, and authorization before persistence.
+- Uploaded instructional files are stored in private tenant-scoped storage and
+  are served only through authorized API access.
+- Allowed file types, maximum file size, malware scanning expectations, and
+  rejected-file behavior must be specified in OpenAPI and module business rules
+  before teacher content implementation begins.
+- If a content item or questionnaire referenced by a published learning set
+  becomes inactive, the learning set keeps its sequence for audit, hides or
+  marks the unavailable item for students, and requires teacher or
+  administrator review before the item can be used again.
+
+### Reporting Rules
+
+- Launch-scope reports cover attendance, grades, academic structure, and school
+  activity summaries.
+- Report filters must be tenant-bound and may not expand visibility beyond the
+  requester's school. Platform-wide reporting is outside v1 scope unless a
+  specific platform override is documented later.
+- Report requests must record requester, tenant, report type, selected filters,
+  status, and generated timestamp when applicable.
+
 ## Success Criteria *(mandatory)*
 
 ### Measurable Outcomes
@@ -366,12 +437,10 @@ administrator to generate reports for a selected academic period.
   first version, except system administrators who operate at platform scope.
 - Student and guardian data are managed by school staff rather than through a
   self-service guardian portal in the first version.
-- Business rule details for grading methods, attendance states, and report
-  layouts will be documented as module-level follow-up specifications before
-  implementation of those modules begins.
-- Upload security rules, including allowed file types, maximum upload size,
-  storage visibility, and validation or sanitization outcomes, will be defined
-  before teacher content implementation begins.
+- Detailed grading scales, attendance state catalogs, report layouts, and
+  upload allow-lists may be refined in module-level follow-up specifications,
+  but the tenant, authorization, lifecycle, and contract boundaries in this
+  specification are binding for v1 implementation.
 - The product will be delivered incrementally across the specification,
   backend, and frontend repositories, with contracts and business rules defined
   before implementation work starts in the dependent repositories.

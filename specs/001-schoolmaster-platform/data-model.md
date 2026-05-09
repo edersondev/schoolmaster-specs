@@ -7,6 +7,8 @@
 - Business status uses explicit active or inactive state where applicable.
 - Historical academic data favors reversible deactivation over destructive
   deletion when records participate in reporting or audit flows.
+- Recoverable tenant-owned records include backend soft-delete support even
+  when the public API primarily exposes business status.
 
 ## Entities
 
@@ -73,6 +75,7 @@
 - **Purpose**: Named authorization grouping.
 - **Core fields**:
   - `id` (UUID)
+  - `school_id` (nullable; required for school-scoped roles)
   - `scope` (`platform`, `school`)
   - `name`
   - `status` (`active`, `inactive`)
@@ -82,6 +85,7 @@
 - **Validation rules**:
   - name is required
   - scope is required
+  - school-scoped roles require `school_id`
   - school-scoped roles cannot grant platform-only permissions
 
 ### Permission
@@ -92,11 +96,13 @@
   - `code`
   - `name`
   - `scope` (`platform`, `school`)
+  - `status` (`active`, `inactive`)
 - **Relationships**:
   - belongs to many `Role`
 - **Validation rules**:
   - code is unique and required
   - scope is required
+  - inactive permissions cannot be added to new role definitions
 
 ### AcademicYear
 
@@ -355,3 +361,12 @@
 - Inactive schools or users cannot participate in normal operational workflows.
 - Grades, attendance, learning sets, and reports must align with the selected
   academic period and tenant context.
+- School-scoped role assignments are effective only when the role, user, and
+  resolved tenant are active and belong to the same school.
+- `School`, `User`, `Role`, `AcademicYear`, `AcademicPeriod`,
+  `StudentProfile`, `Guardian`, `TeacherContentFolder`, `TeacherContentItem`,
+  `Questionnaire`, `LearningSet`, `GradeRecord`, `AttendanceRecord`, and
+  `ReportRun` are recoverable records and use soft-delete support unless a
+  later module plan documents an approved permanent deletion path.
+- `Permission` records are controlled capability definitions. They use status
+  for lifecycle control and are not normally tenant-owned business records.

@@ -62,10 +62,11 @@ and launch-scope reporting across the listed v1 modules
 - Any constitution deviation is recorded in Complexity Tracking with approval
   rationale.
 
-**Gate Status**: CONDITIONAL PASS. Constitution intent is covered, but
-implementation should not begin until the OpenAPI contract is expanded to
-implementation-grade detail for P1, tenancy strategy is explicit, and data
-lifecycle decisions are reflected in tasks and validation.
+**Gate Status**: PASS FOR PLANNING. Constitution intent is covered for this
+foundation plan. Implementation of any slice remains gated by an
+implementation-ready OpenAPI contract for that slice, explicit tenant and
+authorization rules, and tests that verify tenant isolation, response shape,
+and critical business flows.
 
 ## Tenancy Strategy
 
@@ -85,12 +86,27 @@ lifecycle decisions are reflected in tasks and validation.
   payloads, status codes, auth expectations, pagination, filtering, sorting,
   tenancy semantics, and error envelopes.
 - P1 endpoints for authentication, schools, users, roles, permissions,
-  academic years, academic periods, and guardians must be implementation-ready
-  in OpenAPI before backend or frontend coding starts for that slice.
+  academic years, academic periods, and guardians have baseline request,
+  response, tenant-context, and error semantics in OpenAPI. Backend or
+  frontend coding for the slice must not start until any remaining endpoint-
+  specific examples and validation details are made implementation-ready.
 - US2 and US3 extend the published contract additively and must preserve the
   established response envelope and error conventions.
 - Cross-repository work uses the shared feature id `001-schoolmaster-platform`
   for traceability across specs, backend, and frontend delivery.
+
+## Cross-Repository Traceability
+
+- All related backend, frontend, and specification branches, pull requests, and
+  issues use the feature identifier `001-schoolmaster-platform`.
+- The specification repository leads contract and business-rule changes. The
+  backend repository implements only approved contract behavior, and the
+  frontend repository consumes only published `/api/v1` endpoints.
+- A backend pull request that changes response shape, authorization behavior,
+  or validation semantics must link to the matching specification contract
+  change before review.
+- A frontend pull request that depends on new API behavior must link to the
+  published OpenAPI operation IDs it consumes.
 
 ## Data Lifecycle Strategy
 
@@ -114,7 +130,7 @@ specs/001-schoolmaster-platform/
 ├── data-model.md        # Phase 1 output (/speckit-plan command)
 ├── quickstart.md        # Phase 1 output (/speckit-plan command)
 ├── contracts/
-│   └── openapi.yaml     # Initial platform API contract skeleton
+│   └── openapi.yaml     # Initial platform API contract baseline
 └── tasks.md             # Phase 2 output (/speckit-tasks command - NOT created by /speckit-plan)
 ```
 
