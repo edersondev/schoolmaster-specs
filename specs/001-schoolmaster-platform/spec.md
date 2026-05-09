@@ -191,9 +191,15 @@ administrator to generate reports for a selected academic period.
 - **Tenant scoping impact**: Each school operates as an isolated tenant for its
   users, academic structures, guardians, content, questionnaires, learning
   sets, grades, attendance, and reports.
+- **Tenant resolution impact**: Every authenticated school-scoped request must
+  resolve an explicit tenant context and reject access when the tenant is
+  missing, mismatched, or inactive.
 - **Cross-tenant or platform access impact**: Only system administrators may
   perform platform-wide operations such as provisioning schools or reviewing
   platform-level status; all other roles remain limited to their own school.
+- **Platform override impact**: Any cross-tenant operation available to a
+  platform-scope user must be explicitly documented in policy and contract
+  definitions and covered by authorization and regression tests.
 - **Soft delete impact**: School-owned operational records and administrative
   reference records are expected to support reversible deactivation or removal
   where recovery is relevant to school operations and audits.
@@ -239,20 +245,37 @@ administrator to generate reports for a selected academic period.
   grades, and attendance records for their own school context.
 - **FR-019**: System MUST preserve tenant isolation so that school-scoped users
   cannot view or modify another school's data.
+- **FR-019a**: System MUST resolve tenant context explicitly for every
+  authenticated school-scoped request and deny access when tenant context is
+  missing, mismatched, or inactive.
 - **FR-020**: System MUST use UUID-based identifiers for entities that are
   exchanged across product boundaries or external references.
 - **FR-021**: System MUST maintain active or inactive status for schools,
   users, academic structures, and other applicable operational records.
+- **FR-021a**: System MUST use soft deletes for recoverable tenant-owned
+  operational records unless a permanent deletion path is explicitly approved
+  and documented.
 - **FR-022**: System MUST define REST communication contracts in OpenAPI before
   implementation begins.
 - **FR-023**: System MUST expose product routes through versioned `/api/v1`
   endpoints.
 - **FR-024**: System MUST preserve a consistent response structure for
   successful outcomes and failure outcomes across product modules.
+- **FR-024a**: System MUST document authentication, authorization, pagination,
+  filtering, sorting, tenancy semantics, and standard error responses in
+  OpenAPI for every affected endpoint.
 - **FR-025**: System MUST document business rules for each module before
   implementation starts in the backend or frontend repositories.
 - **FR-026**: System MUST identify affected repositories and delivery sequence
   whenever a feature spans specifications, backend, and frontend work.
+- **FR-027**: System MUST define how permissions are assigned, inherited, and
+  exposed through roles for platform and school scopes.
+- **FR-028**: System MUST treat system administrator, school administrator,
+  teacher, and student as actor profiles expressed through scoped roles and,
+  where needed, related domain profiles such as `StudentProfile`.
+- **FR-029**: System MUST validate, sanitize, and store uploaded instructional
+  files in tenant-scoped private storage with enforced type and size
+  restrictions.
 
 ### Key Entities *(include if feature involves data)*
 
@@ -300,6 +323,18 @@ administrator to generate reports for a selected academic period.
 - The first version does not include direct third-party integrations unless
   they are needed to support the defined core modules.
 
+## Actor Profile Model
+
+- `System administrator` is a platform-scope actor profile with explicit
+  authority to provision and review school tenants and no implicit bypass of
+  module-specific authorization rules.
+- `School administrator`, `teacher`, and `student` are school-scoped actor
+  profiles expressed through tenant-bound roles and permissions.
+- `StudentProfile` is a domain profile linked to the `User` actor identity for
+  student-specific enrollment and academic operations.
+- For v1, permissions are managed through roles rather than direct per-user
+  permission assignment.
+
 ## Success Criteria *(mandatory)*
 
 ### Measurable Outcomes
@@ -334,6 +369,9 @@ administrator to generate reports for a selected academic period.
 - Business rule details for grading methods, attendance states, and report
   layouts will be documented as module-level follow-up specifications before
   implementation of those modules begins.
+- Upload security rules, including allowed file types, maximum upload size,
+  storage visibility, and validation or sanitization outcomes, will be defined
+  before teacher content implementation begins.
 - The product will be delivered incrementally across the specification,
   backend, and frontend repositories, with contracts and business rules defined
   before implementation work starts in the dependent repositories.

@@ -29,7 +29,10 @@ description: "Task list for SchoolMaster Platform Foundation"
 **Purpose**: Establish contract, module boundaries, and repository scaffolding for the platform foundation.
 
 - [ ] T001 Update `schoolmaster-specs/specs/001-schoolmaster-platform/contracts/openapi.yaml` with the v1 module operations, shared schemas, security requirements, and `/api/v1` response envelopes needed by the planned stories
+- [ ] T001a Expand `schoolmaster-specs/specs/001-schoolmaster-platform/contracts/openapi.yaml` with security schemes, auth responses, pagination and filtering parameters, sorting semantics, and tenant-scope rules for P1 endpoints
+- [ ] T001b Define concrete request and response schemas in `schoolmaster-specs/specs/001-schoolmaster-platform/contracts/openapi.yaml` for schools, users, roles, permissions, academic years, academic periods, and guardians
 - [ ] T002 Create cross-repository delivery notes in `schoolmaster-specs/specs/001-schoolmaster-platform/plan.md` and `schoolmaster-specs/specs/001-schoolmaster-platform/quickstart.md` that map each module to `schoolmaster-backend` and `schoolmaster-frontend` implementation targets
+- [ ] T002a Add cross-repository traceability conventions for feature id `001-schoolmaster-platform` in `schoolmaster-specs/specs/001-schoolmaster-platform/plan.md` and `schoolmaster-specs/specs/001-schoolmaster-platform/quickstart.md`
 - [ ] T003 [P] Create baseline feature directories and placeholder README files in `schoolmaster-backend/app/Services/`, `schoolmaster-backend/app/DTOs/`, `schoolmaster-frontend/src/modules/`, and `schoolmaster-frontend/tests/` for the v1 feature slices
 
 ---
@@ -41,11 +44,18 @@ description: "Task list for SchoolMaster Platform Foundation"
 **⚠️ CRITICAL**: No user story work should begin before this phase is complete.
 
 - [ ] T004 Create shared tenant-aware domain models with UUIDs and status support in `schoolmaster-backend/app/Models/School.php`, `schoolmaster-backend/app/Models/User.php`, `schoolmaster-backend/app/Models/Role.php`, and `schoolmaster-backend/app/Models/Permission.php`
+- [ ] T004a Create foundational Laravel migrations for `schools`, `users`, `roles`, `permissions`, and supporting pivot tables in `schoolmaster-backend/database/migrations/` with UUID keys, tenant-aware indexes, status fields, and soft deletes where applicable
+- [ ] T004b Implement shared tenant query scope or equivalent tenant-resolution infrastructure in `schoolmaster-backend/app/Models/` and `schoolmaster-backend/app/Repositories/`
 - [ ] T005 [P] Implement shared backend DTO and repository scaffolding for tenant-scoped access in `schoolmaster-backend/app/DTOs/` and `schoolmaster-backend/app/Repositories/`
+- [ ] T005a [P] Implement authorization mapping for platform-scope versus school-scope permissions in `schoolmaster-backend/app/Services/Auth/` and `schoolmaster-backend/app/Policies/`
 - [ ] T006 [P] Implement shared JSON envelope, exception, and API resource foundations in `schoolmaster-backend/app/Http/Resources/` and `schoolmaster-backend/app/Exceptions/`
+- [ ] T006a [P] Define machine-readable error codes and validation error formats aligned with `schoolmaster-specs/specs/001-schoolmaster-platform/contracts/openapi.yaml` in `schoolmaster-backend/app/Exceptions/` and `schoolmaster-backend/app/Http/Resources/`
 - [ ] T007 Implement authentication, tenant resolution, and role-based authorization foundations in `schoolmaster-backend/app/Services/Auth/`, `schoolmaster-backend/app/Policies/`, and `schoolmaster-backend/routes/api.php`
+- [ ] T007a Implement and document inactive-school, inactive-user, and tenant-mismatch rejection rules in `schoolmaster-backend/app/Services/Auth/`, `schoolmaster-backend/app/Policies/`, and `schoolmaster-backend/tests/Feature/`
 - [ ] T008 [P] Create shared frontend auth, tenant context, and API client foundations in `schoolmaster-frontend/src/services/http/`, `schoolmaster-frontend/src/stores/auth/`, and `schoolmaster-frontend/src/router/index.ts`
+- [ ] T008a [P] Implement frontend session bootstrap and tenant-context restoration based only on API responses in `schoolmaster-frontend/src/services/http/`, `schoolmaster-frontend/src/stores/auth/`, and `schoolmaster-frontend/src/router/index.ts`
 - [ ] T009 [P] Add contract verification and repository traceability workflow notes in `schoolmaster-specs/specs/001-schoolmaster-platform/quickstart.md` and `schoolmaster-specs/specs/001-schoolmaster-platform/contracts/openapi.yaml`
+- [ ] T009a [P] Add executable OpenAPI validation and response-shape verification workflow guidance in `schoolmaster-specs/specs/001-schoolmaster-platform/quickstart.md`
 
 **Checkpoint**: Shared contract and tenant foundations are ready. User stories can now proceed.
 
@@ -66,12 +76,16 @@ description: "Task list for SchoolMaster Platform Foundation"
 ### Implementation for User Story 1
 
 - [ ] T013 [P] [US1] Create school administration persistence models and relationships in `schoolmaster-backend/app/Models/AcademicYear.php`, `schoolmaster-backend/app/Models/AcademicPeriod.php`, `schoolmaster-backend/app/Models/StudentProfile.php`, and `schoolmaster-backend/app/Models/Guardian.php`
+- [ ] T013a [P] [US1] Create Laravel migrations for `academic_years`, `academic_periods`, `student_profiles`, `guardians`, and the student-guardian pivot tables in `schoolmaster-backend/database/migrations/` with tenant-safe constraints and soft deletes where applicable
 - [ ] T014 [P] [US1] Implement onboarding and administration services in `schoolmaster-backend/app/Services/Schools/SchoolProvisioningService.php`, `schoolmaster-backend/app/Services/Users/UserAdministrationService.php`, and `schoolmaster-backend/app/Services/Academics/AcademicStructureService.php`
+- [ ] T014a [P] [US1] Implement scoped role management and permission assignment rules in `schoolmaster-backend/app/Services/Users/` and `schoolmaster-backend/app/Policies/`
 - [ ] T015 [US1] Implement form requests, policies, API resources, and controllers for `/api/v1/schools`, `/api/v1/users`, `/api/v1/roles`, `/api/v1/academic-years`, `/api/v1/academic-periods`, and `/api/v1/guardians` in `schoolmaster-backend/app/Http/Controllers/Api/V1/`, `schoolmaster-backend/app/Http/Requests/`, and `schoolmaster-backend/app/Http/Resources/`
+- [ ] T015a [US1] Implement contract-backed permission exposure through `/api/v1/roles` responses or dedicated permission endpoints in `schoolmaster-backend/app/Http/Controllers/Api/V1/`, `schoolmaster-backend/app/Http/Resources/`, and `schoolmaster-specs/specs/001-schoolmaster-platform/contracts/openapi.yaml`
 - [ ] T016 [P] [US1] Implement admin-facing API service modules in `schoolmaster-frontend/src/services/schools.ts`, `schoolmaster-frontend/src/services/users.ts`, `schoolmaster-frontend/src/services/roles.ts`, `schoolmaster-frontend/src/services/academic-years.ts`, `schoolmaster-frontend/src/services/academic-periods.ts`, and `schoolmaster-frontend/src/services/guardians.ts`
 - [ ] T017 [P] [US1] Implement Pinia stores for school setup and user administration in `schoolmaster-frontend/src/stores/schools.ts`, `schoolmaster-frontend/src/stores/users.ts`, and `schoolmaster-frontend/src/stores/academics.ts`
 - [ ] T018 [US1] Build the onboarding and school administration views in `schoolmaster-frontend/src/modules/admin/` and register routes in `schoolmaster-frontend/src/router/index.ts`
 - [ ] T019 [US1] Document tenant-boundary, inactive-status, and onboarding validation rules in `schoolmaster-specs/specs/001-schoolmaster-platform/spec.md` and `schoolmaster-specs/specs/001-schoolmaster-platform/quickstart.md`
+- [ ] T019a [US1] Document role inheritance, permission assignment, and platform-versus-school administration boundaries in `schoolmaster-specs/specs/001-schoolmaster-platform/spec.md` and `schoolmaster-specs/specs/001-schoolmaster-platform/quickstart.md`
 
 **Checkpoint**: User Story 1 delivers a testable tenant onboarding and school setup MVP.
 
@@ -92,12 +106,16 @@ description: "Task list for SchoolMaster Platform Foundation"
 ### Implementation for User Story 2
 
 - [ ] T023 [P] [US2] Create teacher workflow persistence models in `schoolmaster-backend/app/Models/TeacherContentFolder.php`, `schoolmaster-backend/app/Models/TeacherContentItem.php`, `schoolmaster-backend/app/Models/Questionnaire.php`, `schoolmaster-backend/app/Models/LearningSet.php`, `schoolmaster-backend/app/Models/LearningSetEntry.php`, `schoolmaster-backend/app/Models/GradeRecord.php`, and `schoolmaster-backend/app/Models/AttendanceRecord.php`
+- [ ] T023a [P] [US2] Create Laravel migrations for teacher content, questionnaires, learning sets, learning set entries, grade records, and attendance records in `schoolmaster-backend/database/migrations/` with tenant indexes and soft deletes where applicable
 - [ ] T024 [P] [US2] Implement teacher content, questionnaire, learning set, grade, and attendance services in `schoolmaster-backend/app/Services/TeacherContent/`, `schoolmaster-backend/app/Services/Questionnaires/`, `schoolmaster-backend/app/Services/LearningSets/`, `schoolmaster-backend/app/Services/Grades/`, and `schoolmaster-backend/app/Services/Attendance/`
+- [ ] T024a [P] [US2] Implement tenant-scoped file storage, upload sanitization, and private asset access workflow in `schoolmaster-backend/app/Services/TeacherContent/` and `schoolmaster-backend/app/Http/Requests/`
 - [ ] T025 [US2] Implement requests, policies, resources, and controllers for `/api/v1/teacher-content`, `/api/v1/questionnaires`, `/api/v1/learning-sets`, `/api/v1/grades`, and `/api/v1/attendance` in `schoolmaster-backend/app/Http/Controllers/Api/V1/`, `schoolmaster-backend/app/Http/Requests/`, and `schoolmaster-backend/app/Http/Resources/`
+- [ ] T025a [US2] Define contract-backed upload, download authorization, MIME and size validation, and inactive-asset handling in `schoolmaster-specs/specs/001-schoolmaster-platform/contracts/openapi.yaml`, `schoolmaster-backend/app/Http/Requests/`, and `schoolmaster-backend/app/Http/Controllers/Api/V1/`
 - [ ] T026 [P] [US2] Implement teacher workflow API clients in `schoolmaster-frontend/src/services/teacher-content.ts`, `schoolmaster-frontend/src/services/questionnaires.ts`, `schoolmaster-frontend/src/services/learning-sets.ts`, `schoolmaster-frontend/src/services/grades.ts`, and `schoolmaster-frontend/src/services/attendance.ts`
 - [ ] T027 [P] [US2] Implement Pinia stores for teacher operations in `schoolmaster-frontend/src/stores/teacher-content.ts`, `schoolmaster-frontend/src/stores/questionnaires.ts`, `schoolmaster-frontend/src/stores/learning-sets.ts`, and `schoolmaster-frontend/src/stores/class-records.ts`
 - [ ] T028 [US2] Build the teacher workflow views for content management, learning sets, attendance, and grades in `schoolmaster-frontend/src/modules/teacher/` and update routes in `schoolmaster-frontend/src/router/index.ts`
 - [ ] T029 [US2] Document upload constraints, inactive-content behavior, and academic-period validation rules in `schoolmaster-specs/specs/001-schoolmaster-platform/spec.md` and `schoolmaster-specs/specs/001-schoolmaster-platform/quickstart.md`
+- [ ] T029a [US2] Document allowed file types, size limits, storage visibility, and validation or sanitization outcomes in `schoolmaster-specs/specs/001-schoolmaster-platform/spec.md` and `schoolmaster-specs/specs/001-schoolmaster-platform/quickstart.md`
 
 **Checkpoint**: User Story 2 delivers an independently testable teacher operations slice.
 
@@ -118,12 +136,16 @@ description: "Task list for SchoolMaster Platform Foundation"
 ### Implementation for User Story 3
 
 - [ ] T033 [P] [US3] Create reporting persistence and projection support in `schoolmaster-backend/app/Models/ReportRun.php` and `schoolmaster-backend/app/Repositories/Reports/`
+- [ ] T033a [P] [US3] Create Laravel migrations and projection support for report requests and persisted outputs in `schoolmaster-backend/database/migrations/`, `schoolmaster-backend/app/Models/ReportRun.php`, and `schoolmaster-backend/app/Repositories/Reports/`
 - [ ] T034 [P] [US3] Implement student progress and report generation services in `schoolmaster-backend/app/Services/Students/StudentProgressService.php` and `schoolmaster-backend/app/Services/Reports/ReportGenerationService.php`
+- [ ] T034a [P] [US3] Define launch-scope report types, filters, and tenant-bound report generation rules in `schoolmaster-backend/app/Services/Reports/` and `schoolmaster-specs/specs/001-schoolmaster-platform/spec.md`
 - [ ] T035 [US3] Implement controllers, requests, policies, and resources for student views and `/api/v1/reports` in `schoolmaster-backend/app/Http/Controllers/Api/V1/`, `schoolmaster-backend/app/Http/Requests/`, and `schoolmaster-backend/app/Http/Resources/`
+- [ ] T035a [US3] Add explicit student self-view contract coverage for learning timeline, grades, and attendance endpoints in `schoolmaster-specs/specs/001-schoolmaster-platform/contracts/openapi.yaml` and `schoolmaster-backend/app/Http/Controllers/Api/V1/`
 - [ ] T036 [P] [US3] Implement student and report API clients in `schoolmaster-frontend/src/services/student-progress.ts` and `schoolmaster-frontend/src/services/reports.ts`
 - [ ] T037 [P] [US3] Implement Pinia stores for student timeline and school reporting in `schoolmaster-frontend/src/stores/student-progress.ts` and `schoolmaster-frontend/src/stores/reports.ts`
 - [ ] T038 [US3] Build the student progress and reporting screens in `schoolmaster-frontend/src/modules/student/`, `schoolmaster-frontend/src/modules/reports/`, and `schoolmaster-frontend/src/router/index.ts`
 - [ ] T039 [US3] Document report filters, student visibility rules, and cross-tenant rejection scenarios in `schoolmaster-specs/specs/001-schoolmaster-platform/spec.md` and `schoolmaster-specs/specs/001-schoolmaster-platform/quickstart.md`
+- [ ] T039a [US3] Document the report-type matrix, filter constraints, and platform-versus-school reporting boundaries in `schoolmaster-specs/specs/001-schoolmaster-platform/spec.md` and `schoolmaster-specs/specs/001-schoolmaster-platform/quickstart.md`
 
 **Checkpoint**: User Story 3 delivers independently testable student visibility and reporting outcomes.
 
@@ -134,9 +156,12 @@ description: "Task list for SchoolMaster Platform Foundation"
 **Purpose**: Final hardening, consistency, and validation across all stories.
 
 - [ ] T040 [P] Reconcile final contract examples, shared schemas, and error cases in `schoolmaster-specs/specs/001-schoolmaster-platform/contracts/openapi.yaml`
+- [ ] T040a [P] Reconcile success, validation failure, forbidden, not found, inactive-record, and tenant-isolation examples in `schoolmaster-specs/specs/001-schoolmaster-platform/contracts/openapi.yaml`
 - [ ] T041 Run the end-to-end validation walkthrough and update expected outcomes in `schoolmaster-specs/specs/001-schoolmaster-platform/quickstart.md`
 - [ ] T042 [P] Add cross-story backend regression coverage for tenant isolation and inactive-status handling in `schoolmaster-backend/tests/Feature/Security/TenantIsolationRegressionTest.php`
+- [ ] T042a [P] Add backend regression coverage for platform-admin override rules and upload access control in `schoolmaster-backend/tests/Feature/Security/`
 - [ ] T043 [P] Add cross-story frontend regression coverage for route guards and role-based navigation in `schoolmaster-frontend/tests/router/role-navigation.spec.ts`
+- [ ] T043a [P] Add frontend regression coverage for tenant-loss and session-mismatch behavior in `schoolmaster-frontend/tests/router/` and `schoolmaster-frontend/tests/modules/`
 
 ---
 

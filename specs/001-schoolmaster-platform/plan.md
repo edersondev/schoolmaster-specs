@@ -17,12 +17,6 @@ reports.
 
 ## Technical Context
 
-<!--
-  ACTION REQUIRED: Replace the content in this section with the technical details
-  for the project. The structure here is presented in advisory capacity to guide
-  the iteration process.
--->
-
 **Language/Version**: PHP 8.x for backend, TypeScript with Vue 3 SPA for
 frontend, Markdown/OpenAPI for specification artifacts  
 **Primary Dependencies**: Laravel API stack, Vue 3 SPA stack, Pinia, Vue
@@ -35,9 +29,10 @@ OpenAPI contract verification for published endpoints
 with backend REST services hosted on web infrastructure  
 **Project Type**: Multi-repository web application platform with API backend,
 SPA frontend, and shared specification/contracts repository  
-**Performance Goals**: Core administration and teaching workflows feel
-responsive for normal school usage; launch scope should support concurrent use
-across multiple schools without tenant leakage or degraded core task completion  
+**Performance Goals**: Core school administration and teaching workflows use
+tenant-safe indexed queries on `school_id`, private object storage for teacher
+content, and report generation that may run asynchronously when immediate
+response time would degrade interactive workflows  
 **Constraints**: Strict tenant isolation, `/api/v1` versioning, OpenAPI-first
 delivery, UUID identifiers for cross-boundary entities, active/inactive status
 tracking, documented business rules before implementation  
@@ -67,8 +62,46 @@ and launch-scope reporting across the listed v1 modules
 - Any constitution deviation is recorded in Complexity Tracking with approval
   rationale.
 
-**Gate Status**: PASS before research. All constitution constraints are
-addressed in this plan, and no deviations require exception handling.
+**Gate Status**: CONDITIONAL PASS. Constitution intent is covered, but
+implementation should not begin until the OpenAPI contract is expanded to
+implementation-grade detail for P1, tenancy strategy is explicit, and data
+lifecycle decisions are reflected in tasks and validation.
+
+## Tenancy Strategy
+
+- `School` is the tenant root for all school-scoped operations.
+- Every tenant-owned table carries `school_id` unless ownership is inherited
+  through a strictly school-owned parent record with validated traversal.
+- Tenant scope is enforced at service, query or repository, policy, contract,
+  and test layers; the default access stance is deny by default.
+- Platform administrators use explicit policy paths for cross-tenant
+  operations; no implicit override is allowed.
+- Teacher content stored outside MySQL uses private object storage paths
+  prefixed by tenant identity and guarded by API authorization.
+
+## Contract Strategy
+
+- `schoolmaster-specs` owns the OpenAPI contract as the source of truth for
+  payloads, status codes, auth expectations, pagination, filtering, sorting,
+  tenancy semantics, and error envelopes.
+- P1 endpoints for authentication, schools, users, roles, permissions,
+  academic years, academic periods, and guardians must be implementation-ready
+  in OpenAPI before backend or frontend coding starts for that slice.
+- US2 and US3 extend the published contract additively and must preserve the
+  established response envelope and error conventions.
+- Cross-repository work uses the shared feature id `001-schoolmaster-platform`
+  for traceability across specs, backend, and frontend delivery.
+
+## Data Lifecycle Strategy
+
+- Schools, users, roles, academic structures, guardians, teacher content,
+  questionnaires, learning sets, grades, attendance, and report requests use
+  explicit business status fields.
+- Recoverable tenant-owned operational records use status plus soft deletes
+  unless a permanent deletion path is later approved and documented.
+- Historical academic records that affect reporting are retained for audit and
+  may become operationally immutable after closure of the relevant academic
+  period or year according to module business rules.
 
 ## Project Structure
 
@@ -86,17 +119,12 @@ specs/001-schoolmaster-platform/
 ```
 
 ### Source Code (target repositories)
-<!--
-  ACTION REQUIRED: Replace the placeholder tree below with the concrete layout
-  for this feature. Delete unused options and expand the chosen structure with
-  real paths (e.g., apps/admin, packages/something). The delivered plan must
-  not include Option labels.
--->
 
 ```text
 # Backend repository (Laravel API)
 schoolmaster-backend/
 ├── app/
+│   ├── Exceptions/
 │   ├── DTOs/
 │   ├── Http/
 │   │   ├── Controllers/Api/V1/
@@ -106,6 +134,8 @@ schoolmaster-backend/
 │   ├── Policies/
 │   ├── Repositories/
 │   └── Services/
+├── database/
+│   └── migrations/
 ├── routes/
 │   └── api.php
 └── tests/
@@ -120,6 +150,8 @@ schoolmaster-frontend/
 │   ├── services/
 │   └── stores/
 └── tests/
+    ├── modules/
+    └── router/
 
 # Contracts and shared delivery artifacts
 schoolmaster-specs/
@@ -132,7 +164,9 @@ tenant-aware Laravel API implementation, and `schoolmaster-frontend` for the
 Vue 3 SPA that consumes only the published REST endpoints. Backend code is
 organized by feature with Service Layer, Requests, Policies, Resources, DTOs,
 and selective Repositories. Frontend code is organized by feature modules with
-service-based API access and centralized state coordination.
+service-based API access and centralized state coordination. Cross-repository
+delivery uses the shared feature identifier `001-schoolmaster-platform` in
+branching, issue references, and implementation notes.
 
 ## Complexity Tracking
 
