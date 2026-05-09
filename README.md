@@ -1,5 +1,9 @@
 # schoolmaster-specs
 
+[![GitHub Repo](https://img.shields.io/badge/repo-schoolmaster--specs-1f2937?logo=github)](https://github.com/edersondev/schoolmaster-specs)
+[![Branch](https://img.shields.io/badge/branch-main-0f766e)](https://github.com/edersondev/schoolmaster-specs/tree/main)
+[![Last Commit](https://img.shields.io/github/last-commit/edersondev/schoolmaster-specs/main)](https://github.com/edersondev/schoolmaster-specs/commits/main)
+
 Product specifications, business rules, architecture decisions, and OpenAPI
 contracts for SchoolMaster, a multi-tenant school management SaaS.
 
