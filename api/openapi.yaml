@@ -2,15 +2,16 @@ openapi: 3.1.0
 info:
   title: SchoolMaster API
   version: 0.1.0
-  summary: Contract placeholder for the SchoolMaster platform API.
+  summary: Repository-level aggregate placeholder for the SchoolMaster platform API.
   description: >
     This OpenAPI document is the contract between the SchoolMaster frontend and
-    backend repositories. The target implementations are a Laravel API and a
-    Vue 3 SPA. Detailed endpoint definitions remain pending approval from the
-    specification artifacts under specs/.
+    backend repositories once feature contracts are promoted. The target
+    implementations are a Laravel API and a Vue 3 SPA. Approved feature-level
+    contracts live under specs/*/contracts/ before promotion into this
+    repository-level aggregate.
 servers:
-  - url: /api/v1
-    description: Versioned API base path
+  - url: /
+    description: API origin; promoted paths include the /api/v1 version prefix
 tags:
   - name: Pending
     description: Placeholder tag until module contracts are promoted here
@@ -20,9 +21,10 @@ components:
     bearerAuth:
       type: http
       scheme: bearer
-      bearerFormat: JWT
+      bearerFormat: token
 x-notes:
   source_of_truth: schoolmaster-specs
   backend_repository: schoolmaster-backend
   frontend_repository: schoolmaster-frontend
-  status: Placeholder contract. Promote approved operations from specs/*/contracts/openapi.yaml.
+  status: Placeholder aggregate. Promote approved operations from specs/*/contracts/openapi.yaml.
+  active_feature_contract: specs/001-schoolmaster-platform/contracts/openapi.yaml

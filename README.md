@@ -58,7 +58,10 @@ Current foundation feature:
 ## Working Rules
 
 1. Update approved requirements in `specs/` first.
-2. Update `api/openapi.yaml` when API behavior changes.
-3. Keep backend and frontend aligned with the published contract.
-4. Record durable technical decisions in `decisions/`.
-5. Add pending details as explicit placeholders instead of inventing rules.
+2. Update the relevant feature OpenAPI contract in `specs/*/contracts/` when
+   API behavior changes.
+3. Promote approved contract behavior into `api/openapi.yaml` when maintaining
+   a repository-level aggregate contract.
+4. Keep backend and frontend aligned with the published contract.
+5. Record durable technical decisions in `decisions/`.
+6. Add pending details as explicit placeholders instead of inventing rules.
