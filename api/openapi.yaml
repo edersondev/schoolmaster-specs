@@ -41,6 +41,8 @@ tags:
   description: Student grade records in permitted scope.
 - name: Attendance
   description: Student attendance records in permitted scope.
+- name: Reports
+  description: Tenant-scoped report requests and outputs.
 paths:
   /api/v1/auth/login:
     post:
@@ -813,8 +815,229 @@ paths:
           $ref: '#/components/responses/TenantMismatch'
         '422':
           $ref: '#/components/responses/ValidationError'
+  /api/v1/student/learning-sets:
+    get:
+      tags:
+      - Learning Sets
+      summary: List learning sets assigned to the authenticated student
+      operationId: listStudentLearningSets
+      parameters:
+      - $ref: '#/components/parameters/TenantContext'
+      - $ref: '#/components/parameters/AcademicPeriodFilterRequired'
+      - $ref: '#/components/parameters/Page'
+      - $ref: '#/components/parameters/PerPage'
+      responses:
+        '200':
+          description: Student learning set timeline
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/PaginatedEnvelope'
+                - type: object
+                  properties:
+                    data:
+                      type: array
+                      items:
+                        $ref: '#/components/schemas/StudentLearningSetTimelineItem'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/TenantMismatch'
+  /api/v1/student/teacher-content/{contentItemId}/download:
+    get:
+      tags:
+      - Teacher Content
+      summary: Download assigned teacher content for the authenticated student
+      operationId: downloadStudentTeacherContent
+      parameters:
+      - $ref: '#/components/parameters/TenantContext'
+      - $ref: '#/components/parameters/ContentItemId'
+      responses:
+        '200':
+          description: Authorized content file download
+          content:
+            application/octet-stream:
+              schema:
+                type: string
+                format: binary
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/TenantMismatch'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /api/v1/student/grades:
+    get:
+      tags:
+      - Grades
+      summary: List grade records for the authenticated student
+      operationId: listStudentGrades
+      parameters:
+      - $ref: '#/components/parameters/TenantContext'
+      - $ref: '#/components/parameters/AcademicPeriodFilter'
+      - $ref: '#/components/parameters/Page'
+      - $ref: '#/components/parameters/PerPage'
+      responses:
+        '200':
+          description: Student grade collection
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/PaginatedEnvelope'
+                - type: object
+                  properties:
+                    data:
+                      type: array
+                      items:
+                        $ref: '#/components/schemas/GradeRecord'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/TenantMismatch'
+  /api/v1/student/attendance:
+    get:
+      tags:
+      - Attendance
+      summary: List attendance records for the authenticated student
+      operationId: listStudentAttendance
+      parameters:
+      - $ref: '#/components/parameters/TenantContext'
+      - $ref: '#/components/parameters/AcademicPeriodFilter'
+      - $ref: '#/components/parameters/Page'
+      - $ref: '#/components/parameters/PerPage'
+      responses:
+        '200':
+          description: Student attendance collection
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/PaginatedEnvelope'
+                - type: object
+                  properties:
+                    data:
+                      type: array
+                      items:
+                        $ref: '#/components/schemas/AttendanceRecord'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/TenantMismatch'
+  /api/v1/reports:
+    get:
+      tags:
+      - Reports
+      summary: List report requests for the resolved school
+      operationId: listReports
+      parameters:
+      - $ref: '#/components/parameters/TenantContext'
+      - $ref: '#/components/parameters/Page'
+      - $ref: '#/components/parameters/PerPage'
+      - name: report_type
+        in: query
+        schema:
+          $ref: '#/components/schemas/ReportType'
+      responses:
+        '200':
+          description: Report request collection
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/PaginatedEnvelope'
+                - type: object
+                  properties:
+                    data:
+                      type: array
+                      items:
+                        $ref: '#/components/schemas/ReportRun'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/TenantMismatch'
+    post:
+      tags:
+      - Reports
+      summary: Request a tenant-scoped report
+      operationId: requestReport
+      parameters:
+      - $ref: '#/components/parameters/TenantContext'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ReportRequest'
+      responses:
+        '202':
+          description: Report request accepted
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/SuccessEnvelope'
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/ReportRun'
+        '403':
+          $ref: '#/components/responses/TenantMismatch'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+  /api/v1/reports/{reportRunId}/download:
+    get:
+      tags:
+      - Reports
+      summary: Download a generated report output
+      operationId: downloadReport
+      parameters:
+      - $ref: '#/components/parameters/TenantContext'
+      - $ref: '#/components/parameters/ReportRunId'
+      - name: format
+        in: query
+        required: true
+        schema:
+          $ref: '#/components/schemas/ReportFormat'
+      responses:
+        '200':
+          description: Generated report file download
+          content:
+            application/octet-stream:
+              schema:
+                type: string
+                format: binary
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/TenantMismatch'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '410':
+          $ref: '#/components/responses/OutputExpired'
 components:
   parameters:
+    AcademicPeriodFilter:
+      name: academic_period_id
+      in: query
+      schema:
+        type: string
+        format: uuid
+    AcademicPeriodFilterRequired:
+      name: academic_period_id
+      in: query
+      required: true
+      schema:
+        type: string
+        format: uuid
+    ContentItemId:
+      name: contentItemId
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
     Page:
       name: page
       in: query
@@ -830,6 +1053,13 @@ components:
         minimum: 1
         maximum: 100
         default: 25
+    ReportRunId:
+      name: reportRunId
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
     SchoolId:
       name: schoolId
       in: path
@@ -869,6 +1099,13 @@ components:
             $ref: '#/components/schemas/ErrorEnvelope'
     NotFound:
       description: Resource was not found in the permitted scope
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorEnvelope'
+    OutputExpired:
+      description: Generated report output file has expired; request a new ReportRun
+        with the same filters
       content:
         application/json:
           schema:
@@ -1350,6 +1587,77 @@ components:
           minItems: 1
           items:
             $ref: '#/components/schemas/QuestionnaireQuestionInput'
+    ReportFormat:
+      type: string
+      enum:
+      - pdf
+      - csv
+    ReportRequest:
+      type: object
+      required:
+      - report_type
+      - filters
+      properties:
+        report_type:
+          $ref: '#/components/schemas/ReportType'
+        filters:
+          $ref: '#/components/schemas/ReportFilters'
+    ReportRun:
+      type: object
+      required:
+      - id
+      - school_id
+      - requested_by_user_id
+      - report_type
+      - filter_summary
+      - output_formats
+      - status
+      - outputs_available
+      properties:
+        id:
+          type: string
+          format: uuid
+        school_id:
+          type: string
+          format: uuid
+        requested_by_user_id:
+          type: string
+          format: uuid
+        report_type:
+          $ref: '#/components/schemas/ReportType'
+        filter_summary:
+          $ref: '#/components/schemas/ReportFilters'
+        output_formats:
+          type: array
+          minItems: 2
+          items:
+            $ref: '#/components/schemas/ReportFormat'
+        status:
+          type: string
+          enum:
+          - requested
+          - generated
+          - failed
+          - inactive
+        generated_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+        output_expires_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+        outputs_available:
+          type: boolean
+    ReportType:
+      type: string
+      enum:
+      - attendance
+      - grades
+      - academic_structure
+      - school_activity
     Role:
       type: object
       required:
@@ -1457,6 +1765,35 @@ components:
           type: string
         address_summary:
           type: string
+    StudentLearningSetTimelineItem:
+      type: object
+      required:
+      - id
+      - academic_period_id
+      - title
+      - status
+      - published_at
+      - entries
+      properties:
+        id:
+          type: string
+          format: uuid
+        academic_period_id:
+          type: string
+          format: uuid
+        title:
+          type: string
+        status:
+          type: string
+          enum:
+          - published
+        published_at:
+          type: string
+          format: date-time
+        entries:
+          type: array
+          items:
+            $ref: '#/components/schemas/StudentLearningSetEntry'
     SuccessEnvelope:
       type: object
       required:
@@ -1708,6 +2045,29 @@ components:
           type: string
         sequence:
           type: integer
+    ReportFilters:
+      type: object
+      required:
+      - academic_period_id
+      properties:
+        academic_period_id:
+          type: string
+          format: uuid
+        student_profile_id:
+          type: string
+          format: uuid
+        user_id:
+          type: string
+          format: uuid
+        status:
+          type: string
+        start_date:
+          type: string
+          format: date
+        end_date:
+          type: string
+          format: date
+      additionalProperties: false
     Scope:
       type: string
       enum:
@@ -1718,6 +2078,28 @@ components:
       enum:
       - active
       - inactive
+    StudentLearningSetEntry:
+      type: object
+      required:
+      - entry_type
+      - entry_reference_id
+      - sequence
+      - title
+      properties:
+        entry_type:
+          type: string
+          enum:
+          - content_item
+          - questionnaire
+        entry_reference_id:
+          type: string
+          format: uuid
+        sequence:
+          type: integer
+        title:
+          type: string
+        content_item:
+          $ref: '#/components/schemas/TeacherContentStudentMetadata'
     TeacherContentScanStatus:
       type: string
       enum:
@@ -1737,6 +2119,30 @@ components:
       - multiple_choice
       - true_false
       - short_text
+    TeacherContentStudentMetadata:
+      type: object
+      required:
+      - id
+      - title
+      - content_type
+      - file_size_bytes
+      - scan_status
+      - download_available
+      properties:
+        id:
+          type: string
+          format: uuid
+        title:
+          type: string
+        content_type:
+          type: string
+        file_size_bytes:
+          type: integer
+          maximum: 26214400
+        scan_status:
+          $ref: '#/components/schemas/TeacherContentScanStatus'
+        download_available:
+          type: boolean
   securitySchemes:
     bearerAuth:
       type: http
@@ -1746,14 +2152,13 @@ x-notes:
   source_of_truth: schoolmaster-specs
   backend_repository: schoolmaster-backend
   frontend_repository: schoolmaster-frontend
-  status: P1 and P2 foundation plus teacher workflow operations promoted from the
-    active feature contract.
+  status: P1 through P3 launch-scope operations promoted from the active feature contract.
   active_feature_contract: specs/001-schoolmaster-platform/contracts/openapi.yaml
 security:
 - bearerAuth: []
 x-promoted-scope:
   feature_id: 001-schoolmaster-platform
-  scope: P1 and P2 foundation plus teacher workflow operations
+  scope: P1 through P3 launch-scope operations
   source_contract: specs/001-schoolmaster-platform/contracts/openapi.yaml
   promoted_paths:
   - /api/v1/auth/login
@@ -1771,3 +2176,9 @@ x-promoted-scope:
   - /api/v1/learning-sets
   - /api/v1/grades
   - /api/v1/attendance
+  - /api/v1/student/learning-sets
+  - /api/v1/student/teacher-content/{contentItemId}/download
+  - /api/v1/student/grades
+  - /api/v1/student/attendance
+  - /api/v1/reports
+  - /api/v1/reports/{reportRunId}/download
