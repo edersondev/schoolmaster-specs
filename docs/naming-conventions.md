@@ -11,6 +11,8 @@
 - Use concise English titles
 - Keep file names lowercase with hyphens
 - Number architecture decisions with a three-digit prefix
+- Add index files when a directory is intended to be consumed directly by
+  backend or frontend repositories
 
 ## Contracts
 

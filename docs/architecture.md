@@ -5,16 +5,25 @@
 SchoolMaster uses this repository as the source of truth for specifications,
 contracts, architecture decisions, and implementation guidance.
 
+See [repository-consumption.md](repository-consumption.md) for how backend and
+frontend repositories consume this repository through git submodules.
+
 ## Repository Model
 
 - `schoolmaster-specs` stores approved requirements, contracts, and decisions
 - `schoolmaster-backend` implements the Laravel API
 - `schoolmaster-frontend` implements the Vue 3 SPA
 
+Durable repository and storage decisions are recorded in
+[`decisions/`](../decisions/README.md).
+
 ## Integration Boundary
 
 The OpenAPI contract is the formal boundary between frontend and backend.
 Implementation work should align to published contract definitions.
+
+Feature-level contracts live under `specs/*/contracts/` before approved
+behavior is promoted into `api/openapi.yaml`.
 
 ## Architectural Direction
 

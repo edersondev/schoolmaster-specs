@@ -47,6 +47,23 @@ General SaaS requirements:
 
 The goal of this specification is to define the product vision, main modules, actors, business boundaries, high-level requirements, non-goals and acceptance criteria for the first version of SchoolMaster."
 
+## Clarifications
+
+### Session 2026-05-11
+
+- Q: Which launch upload policy should P2 teacher content use? → A: Restricted teaching files: PDF, images, text, office docs; max 25 MB; reject executables/archives; malware scan before availability.
+- Q: How should v1 learning sets be assigned to students? → A: Assign learning sets directly to selected `StudentProfile` records.
+- Q: Which questionnaire question types should v1 support? → A: Multiple choice, true/false, and short text.
+- Q: How should v1 grade values be represented? → A: Numeric decimal value from 0 to 100, with optional display label.
+- Q: Which attendance status catalog should v1 use? → A: `present`, `absent`, `late`, `excused`, `remote`, `suspended`.
+- Q: How should students access assigned teacher content files in v1? → A: Students can view metadata and download authorized files after malware scan passes.
+- Q: How should the student learning timeline be filtered and ordered in v1? → A: Filter by academic period; order assigned learning sets by publish date, then entry sequence.
+- Q: What report output formats should v1 support? → A: PDF and CSV outputs for all launch-scope report types.
+- Q: How should v1 report generation execute? → A: Asynchronous generation for all report types; request returns a report run and status.
+- Q: Which report filters should v1 require/support? → A: Required `academic_period_id`; optional `student_profile_id`, `user_id`, `status`, and date range where relevant.
+- Q: How long should generated report output files be retained in v1? → A: 90 days, then expire files while retaining `ReportRun` metadata.
+- Q: How should users regenerate expired report outputs in v1? → A: Request a new `ReportRun` with the same filters.
+
 ## User Scenarios & Testing *(mandatory)*
 
 ### User Story 1 - Onboard a school and its staff (Priority: P1)
@@ -121,8 +138,9 @@ administrator to generate reports for a selected academic period.
 **Acceptance Scenarios**:
 
 1. **Given** a student has access to assigned learning sets, **When** they open
-   their learning timeline, **Then** they can see content and questionnaires in
-   the sequence defined by their teacher.
+   their learning timeline for an academic period, **Then** they can see
+   assigned learning sets ordered by publish date and each set's content and
+   questionnaires in teacher-defined entry sequence.
 2. **Given** a student has attendance and grade records, **When** they review
    their academic status, **Then** they can see only their own records within
    the relevant academic period.
@@ -232,17 +250,34 @@ administrator to generate reports for a selected academic period.
 - **FR-012**: System MUST allow teachers to create folders and manage uploaded
   instructional content for their school.
 - **FR-013**: System MUST allow teachers to create and maintain questionnaires
-  for instructional use.
+  for instructional use with multiple-choice, true-or-false, and short-text
+  question types in v1.
 - **FR-014**: System MUST allow teachers to create learning sets that organize
-  content and questionnaires in chronological order.
+  content and questionnaires in chronological order and assign them directly to
+  selected `StudentProfile` records in the same school.
 - **FR-015**: System MUST allow authorized users to record and review student
-  grades within the relevant academic period.
+  grades within the relevant academic period as numeric decimal values from 0
+  to 100 with an optional display label.
 - **FR-016**: System MUST allow authorized users to record and review student
-  attendance within the relevant academic period.
+  attendance within the relevant academic period using the v1 status catalog:
+  `present`, `absent`, `late`, `excused`, `remote`, and `suspended`.
 - **FR-017**: System MUST provide reports for school administrators covering at
-  least attendance, grades, academic structure, and school activity summaries.
+  least attendance, grades, academic structure, and school activity summaries,
+  with PDF and CSV outputs for all launch-scope report types.
+- **FR-017a**: Report requests MUST require `academic_period_id` and MAY
+  support `student_profile_id`, `user_id`, `status`, `start_date`, and
+  `end_date` filters where relevant to the selected report type.
+- **FR-017b**: Generated report output files MUST be retained for 90 days after
+  generation, after which the output files expire while `ReportRun` metadata is
+  retained for audit and history.
+- **FR-017c**: When generated report output files expire, users MUST request a
+  new `ReportRun` with the same filters to generate fresh output files.
 - **FR-018**: Students MUST be able to view their assigned learning sets,
-  grades, and attendance records for their own school context.
+  download authorized assigned content files after malware scan passes, and
+  view grades and attendance records for their own school context.
+- **FR-018a**: Student learning timelines MUST support filtering by academic
+  period and order assigned learning sets by publish date, then learning set
+  entries by teacher-defined sequence.
 - **FR-019**: System MUST preserve tenant isolation so that school-scoped users
   cannot view or modify another school's data.
 - **FR-019a**: System MUST resolve tenant context explicitly for every
@@ -275,7 +310,8 @@ administrator to generate reports for a selected academic period.
   where needed, related domain profiles such as `StudentProfile`.
 - **FR-029**: System MUST validate, sanitize, and store uploaded instructional
   files in tenant-scoped private storage with enforced type and size
-  restrictions.
+  restrictions; v1 uploads are limited to PDF, images, text, and office
+  documents up to 25 MB, with executables and archives rejected.
 
 ### Key Entities *(include if feature involves data)*
 
@@ -299,15 +335,20 @@ administrator to generate reports for a selected academic period.
   managed by a teacher.
 - **Content Folder**: Represents an organizational container for teacher
   content.
-- **Questionnaire**: Represents an assessment or activity created by a teacher.
+- **Questionnaire**: Represents an assessment or activity created by a teacher,
+  using multiple-choice, true-or-false, and short-text question types in v1.
 - **Learning Set**: Represents a chronological sequence of content items and
-  questionnaires for student consumption.
+  questionnaires for student consumption, assigned directly to selected
+  `StudentProfile` records for v1.
 - **Grade Record**: Represents an academic evaluation result associated with a
-  student, teacher, and academic period.
+  student, teacher, and academic period, using a numeric decimal value from 0
+  to 100 with an optional display label in v1.
 - **Attendance Record**: Represents a student's presence status for a specific
-  instructional event or date.
+  instructional event or date, using the v1 status catalog `present`,
+  `absent`, `late`, `excused`, `remote`, and `suspended`.
 - **Report Definition or Output**: Represents a generated summary or formal
-  view of school information for oversight.
+  view of school information for oversight, with PDF and CSV outputs for all
+  launch-scope report types in v1.
 
 ## Non-Goals
 
@@ -378,9 +419,18 @@ administrator to generate reports for a selected academic period.
 - Grades, attendance, learning sets, and period-scoped reports must reference
   an academic period that belongs to the same school as the affected students
   and teacher.
+- If a student becomes inactive or transfers out of a school, the student's
+  historical grade, attendance, and assigned learning-set records remain
+  retained for school-authorized administrative review, but the student user no
+  longer receives active self-service access to that school's student views.
 - Teachers may record grades and attendance only for active academic periods.
   Closed periods are read-only except through an explicitly authorized
   correction workflow documented before implementation.
+- V1 grade records use numeric decimal values from 0 to 100 for validation,
+  aggregation, and reporting, with an optional display label for school-facing
+  presentation.
+- V1 attendance records use the status catalog `present`, `absent`, `late`,
+  `excused`, `remote`, and `suspended`.
 
 ### Content and Upload Rules
 
@@ -388,21 +438,49 @@ administrator to generate reports for a selected academic period.
   content type, size, tenant ownership, and authorization before persistence.
 - Uploaded instructional files are stored in private tenant-scoped storage and
   are served only through authorized API access.
-- Allowed file types, maximum file size, malware scanning expectations, and
-  rejected-file behavior must be specified in OpenAPI and module business rules
-  before teacher content implementation begins.
+- For v1, uploaded instructional files are limited to PDF, images, text, and
+  office documents up to 25 MB. Executables and archives are rejected.
+- Uploaded files must pass malware scanning before they become available
+  through student or teacher content access.
+- Students may view metadata and download assigned teacher content files only
+  when the file belongs to their school, is included in an assigned learning
+  set, has passed malware scanning, and is authorized by the API.
+- V1 questionnaires support multiple-choice, true-or-false, and short-text
+  questions. Long-text responses, file-response questions, and other question
+  types are outside v1 until specified.
 - If a content item or questionnaire referenced by a published learning set
   becomes inactive, the learning set keeps its sequence for audit, hides or
   marks the unavailable item for students, and requires teacher or
   administrator review before the item can be used again.
+- Published learning sets are assigned directly to selected active
+  `StudentProfile` records in the same school and academic period. Class or
+  group-based learning set assignment is outside v1 until a class or group
+  model is specified.
+- Student learning timelines are filtered by academic period and show assigned
+  learning sets ordered by publish date, with each set's entries ordered by
+  teacher-defined sequence.
 
 ### Reporting Rules
 
 - Launch-scope reports cover attendance, grades, academic structure, and school
   activity summaries.
+- V1 report outputs are generated in PDF and CSV formats for every
+  launch-scope report type.
+- V1 report generation is asynchronous for every launch-scope report type.
+  Report requests return a `ReportRun` with status, and generated outputs are
+  accessed after the status becomes `generated`.
+- Generated report output files are retained for 90 days after generation.
+  After retention expires, the output files are no longer available, but the
+  `ReportRun` metadata remains available for audit and history.
+- Expired report output files are not regenerated automatically during
+  download. Users must request a new `ReportRun` with the same filters to
+  generate fresh output files.
 - Report filters must be tenant-bound and may not expand visibility beyond the
   requester's school. Platform-wide reporting is outside v1 scope unless a
   specific platform override is documented later.
+- V1 report requests require `academic_period_id` and may include
+  `student_profile_id`, `user_id`, `status`, `start_date`, and `end_date`
+  filters where relevant to the selected report type.
 - Report requests must record requester, tenant, report type, selected filters,
   status, and generated timestamp when applicable.
 
@@ -437,9 +515,9 @@ administrator to generate reports for a selected academic period.
   first version, except system administrators who operate at platform scope.
 - Student and guardian data are managed by school staff rather than through a
   self-service guardian portal in the first version.
-- Detailed grading scales, attendance state catalogs, report layouts, and
-  upload allow-lists may be refined in module-level follow-up specifications,
-  but the tenant, authorization, lifecycle, and contract boundaries in this
+- Report layouts may be refined in module-level follow-up specifications, but
+  the tenant, authorization, lifecycle, teacher upload, questionnaire, learning
+  set assignment, grade, attendance, and contract boundaries in this
   specification are binding for v1 implementation.
 - The product will be delivered incrementally across the specification,
   backend, and frontend repositories, with contracts and business rules defined

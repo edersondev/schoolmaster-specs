@@ -47,7 +47,8 @@ Architecture Decision Records (ADR).
 ## Architecture
 
 - Multi-tenant SaaS
-- tenant_id strategy
+- tenant-by-column strategy with `School` as the v1 tenant root and `school_id`
+  as the concrete tenant column for school-owned records
 - Laravel API backend
 - Vue 3 SPA frontend
 - API-first architecture
@@ -60,3 +61,7 @@ When implementing or modifying features:
 - then update plans/tasks if needed
 - then update API contracts
 - only then implementation repositories should change
+
+<!-- SPECKIT START -->
+Active implementation plan: `specs/001-schoolmaster-platform/plan.md`
+<!-- SPECKIT END -->

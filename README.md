@@ -39,13 +39,27 @@ Changes to behavior or payloads should start here before implementation.
 
 ## Core Documentation
 
-- [API contract](api/openapi.yaml)
+- [Repository consumption guide](docs/repository-consumption.md)
+- [Next actions](docs/next-actions.md)
 - [Architecture overview](docs/architecture.md)
 - [Backend guidelines](docs/backend-guidelines.md)
 - [Frontend guidelines](docs/frontend-guidelines.md)
 - [Multi-tenancy](docs/multi-tenant.md)
 - [Security](docs/security.md)
 - [Naming conventions](docs/naming-conventions.md)
+- [Documentation index](docs/README.md)
+- [ADR index](decisions/README.md)
+
+## OpenAPI Contracts
+
+- Active feature contract:
+  [specs/001-schoolmaster-platform/contracts/openapi.yaml](specs/001-schoolmaster-platform/contracts/openapi.yaml)
+- Repository aggregate contract:
+  [api/openapi.yaml](api/openapi.yaml)
+
+Feature contracts are authored under `specs/*/contracts/`. The repository-level
+aggregate in `api/openapi.yaml` is the stable publication target for promoted
+contract behavior.
 
 ## Spec Kit Artifacts
 
@@ -54,6 +68,13 @@ Existing Spec Kit feature artifacts remain under `specs/`.
 Current foundation feature:
 
 - [001-schoolmaster-platform](specs/001-schoolmaster-platform/spec.md)
+
+## Consuming This Repository
+
+Backend and frontend repositories may include `schoolmaster-specs` as a git
+submodule. Consuming repositories must read requirements from `specs/`, API
+behavior from the active OpenAPI contract, implementation guidance from
+`docs/`, and durable architecture decisions from `decisions/`.
 
 ## Working Rules
 

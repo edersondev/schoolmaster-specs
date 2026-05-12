@@ -7,6 +7,8 @@ is the tenant root and school-owned records use `school_id` as the tenant
 column unless ownership is inherited through a strictly school-owned parent
 record with documented traversal rules.
 
+This follows [ADR 004](../decisions/004-use-tenant-by-column.md).
+
 ## Scope
 
 - Tenant-owned data is isolated by school identity.
