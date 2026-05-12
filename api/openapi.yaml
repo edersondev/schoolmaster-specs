@@ -31,6 +31,16 @@ tags:
   description: Periods inside academic years for academic operations.
 - name: Guardians
   description: Guardian records linked to student profiles.
+- name: Teacher Content
+  description: Teacher-managed folders and instructional content.
+- name: Questionnaires
+  description: Teacher-authored instructional questionnaires.
+- name: Learning Sets
+  description: Ordered instructional sequences for student use.
+- name: Grades
+  description: Student grade records in permitted scope.
+- name: Attendance
+  description: Student attendance records in permitted scope.
 paths:
   /api/v1/auth/login:
     post:
@@ -508,6 +518,301 @@ paths:
                       $ref: '#/components/schemas/Guardian'
         '422':
           $ref: '#/components/responses/ValidationError'
+  /api/v1/teacher-content:
+    get:
+      tags:
+      - Teacher Content
+      summary: List tenant-scoped teacher content items
+      operationId: listTeacherContent
+      parameters:
+      - $ref: '#/components/parameters/TenantContext'
+      - $ref: '#/components/parameters/Page'
+      - $ref: '#/components/parameters/PerPage'
+      responses:
+        '200':
+          description: Teacher content collection
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/PaginatedEnvelope'
+                - type: object
+                  properties:
+                    data:
+                      type: array
+                      items:
+                        $ref: '#/components/schemas/TeacherContentItem'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/TenantMismatch'
+    post:
+      tags:
+      - Teacher Content
+      summary: Create a tenant-scoped teacher content item
+      operationId: createTeacherContent
+      parameters:
+      - $ref: '#/components/parameters/TenantContext'
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/TeacherContentCreateRequest'
+      responses:
+        '201':
+          description: Teacher content item created
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/SuccessEnvelope'
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/TeacherContentItem'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/TenantMismatch'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+  /api/v1/questionnaires:
+    get:
+      tags:
+      - Questionnaires
+      summary: List tenant-scoped questionnaires
+      operationId: listQuestionnaires
+      parameters:
+      - $ref: '#/components/parameters/TenantContext'
+      - $ref: '#/components/parameters/Page'
+      - $ref: '#/components/parameters/PerPage'
+      responses:
+        '200':
+          description: Questionnaire collection
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/PaginatedEnvelope'
+                - type: object
+                  properties:
+                    data:
+                      type: array
+                      items:
+                        $ref: '#/components/schemas/Questionnaire'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/TenantMismatch'
+    post:
+      tags:
+      - Questionnaires
+      summary: Create a questionnaire with v1 supported question types
+      operationId: createQuestionnaire
+      parameters:
+      - $ref: '#/components/parameters/TenantContext'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/QuestionnaireCreateRequest'
+      responses:
+        '201':
+          description: Questionnaire created
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/SuccessEnvelope'
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/Questionnaire'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/TenantMismatch'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+  /api/v1/learning-sets:
+    get:
+      tags:
+      - Learning Sets
+      summary: List tenant-scoped learning sets
+      operationId: listLearningSets
+      parameters:
+      - $ref: '#/components/parameters/TenantContext'
+      - $ref: '#/components/parameters/Page'
+      - $ref: '#/components/parameters/PerPage'
+      responses:
+        '200':
+          description: Learning set collection
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/PaginatedEnvelope'
+                - type: object
+                  properties:
+                    data:
+                      type: array
+                      items:
+                        $ref: '#/components/schemas/LearningSet'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/TenantMismatch'
+    post:
+      tags:
+      - Learning Sets
+      summary: Create a learning set with ordered entries and direct student assignments
+      operationId: createLearningSet
+      parameters:
+      - $ref: '#/components/parameters/TenantContext'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LearningSetCreateRequest'
+      responses:
+        '201':
+          description: Learning set created
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/SuccessEnvelope'
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/LearningSet'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/TenantMismatch'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+  /api/v1/grades:
+    get:
+      tags:
+      - Grades
+      summary: List grade records in permitted scope
+      operationId: listGrades
+      parameters:
+      - $ref: '#/components/parameters/TenantContext'
+      - $ref: '#/components/parameters/Page'
+      - $ref: '#/components/parameters/PerPage'
+      responses:
+        '200':
+          description: Grade record collection
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/PaginatedEnvelope'
+                - type: object
+                  properties:
+                    data:
+                      type: array
+                      items:
+                        $ref: '#/components/schemas/GradeRecord'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/TenantMismatch'
+    post:
+      tags:
+      - Grades
+      summary: Record a grade for a student in an academic period
+      operationId: createGrade
+      parameters:
+      - $ref: '#/components/parameters/TenantContext'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GradeCreateRequest'
+      responses:
+        '201':
+          description: Grade record created
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/SuccessEnvelope'
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/GradeRecord'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/TenantMismatch'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+  /api/v1/attendance:
+    get:
+      tags:
+      - Attendance
+      summary: List attendance records in permitted scope
+      operationId: listAttendance
+      parameters:
+      - $ref: '#/components/parameters/TenantContext'
+      - $ref: '#/components/parameters/Page'
+      - $ref: '#/components/parameters/PerPage'
+      responses:
+        '200':
+          description: Attendance record collection
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/PaginatedEnvelope'
+                - type: object
+                  properties:
+                    data:
+                      type: array
+                      items:
+                        $ref: '#/components/schemas/AttendanceRecord'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/TenantMismatch'
+    post:
+      tags:
+      - Attendance
+      summary: Record attendance for a student in an academic period
+      operationId: createAttendance
+      parameters:
+      - $ref: '#/components/parameters/TenantContext'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AttendanceCreateRequest'
+      responses:
+        '201':
+          description: Attendance record created
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/SuccessEnvelope'
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/AttendanceRecord'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/TenantMismatch'
+        '422':
+          $ref: '#/components/responses/ValidationError'
 components:
   parameters:
     Page:
@@ -683,6 +988,59 @@ components:
         end_date:
           type: string
           format: date
+    AttendanceCreateRequest:
+      type: object
+      required:
+      - student_profile_id
+      - academic_period_id
+      - attendance_date
+      - attendance_status
+      properties:
+        student_profile_id:
+          type: string
+          format: uuid
+        academic_period_id:
+          type: string
+          format: uuid
+        attendance_date:
+          type: string
+          format: date
+        attendance_status:
+          $ref: '#/components/schemas/AttendanceStatus'
+    AttendanceRecord:
+      type: object
+      required:
+      - id
+      - school_id
+      - student_profile_id
+      - academic_period_id
+      - recorded_by_user_id
+      - attendance_date
+      - attendance_status
+      - status
+      properties:
+        id:
+          type: string
+          format: uuid
+        school_id:
+          type: string
+          format: uuid
+        student_profile_id:
+          type: string
+          format: uuid
+        academic_period_id:
+          type: string
+          format: uuid
+        recorded_by_user_id:
+          type: string
+          format: uuid
+        attendance_date:
+          type: string
+          format: date
+        attendance_status:
+          $ref: '#/components/schemas/AttendanceStatus'
+        status:
+          $ref: '#/components/schemas/Status'
     AuthSession:
       type: object
       required:
@@ -707,6 +1065,65 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Permission'
+    GradeCreateRequest:
+      type: object
+      required:
+      - student_profile_id
+      - academic_period_id
+      - grade_value
+      properties:
+        student_profile_id:
+          type: string
+          format: uuid
+        academic_period_id:
+          type: string
+          format: uuid
+        grade_value:
+          type: number
+          minimum: 0
+          maximum: 100
+        grade_label:
+          type: string
+    GradeRecord:
+      type: object
+      required:
+      - id
+      - school_id
+      - student_profile_id
+      - academic_period_id
+      - recorded_by_user_id
+      - grade_value
+      - status
+      - recorded_at
+      properties:
+        id:
+          type: string
+          format: uuid
+        school_id:
+          type: string
+          format: uuid
+        student_profile_id:
+          type: string
+          format: uuid
+        academic_period_id:
+          type: string
+          format: uuid
+        recorded_by_user_id:
+          type: string
+          format: uuid
+        grade_value:
+          type: number
+          minimum: 0
+          maximum: 100
+        grade_label:
+          type:
+          - string
+          - 'null'
+        status:
+          $ref: '#/components/schemas/Status'
+        recorded_at:
+          type: string
+          format: date-time
     Guardian:
       type: object
       required:
@@ -754,6 +1171,76 @@ components:
           type: string
         student_profile_ids:
           type: array
+          items:
+            type: string
+            format: uuid
+    LearningSet:
+      type: object
+      required:
+      - id
+      - school_id
+      - owner_user_id
+      - academic_period_id
+      - title
+      - status
+      - entries
+      - assignments
+      properties:
+        id:
+          type: string
+          format: uuid
+        school_id:
+          type: string
+          format: uuid
+        owner_user_id:
+          type: string
+          format: uuid
+        academic_period_id:
+          type: string
+          format: uuid
+        title:
+          type: string
+        published_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+        status:
+          type: string
+          enum:
+          - draft
+          - published
+          - inactive
+          - archived
+        entries:
+          type: array
+          items:
+            $ref: '#/components/schemas/LearningSetEntry'
+        assignments:
+          type: array
+          items:
+            $ref: '#/components/schemas/LearningSetAssignment'
+    LearningSetCreateRequest:
+      type: object
+      required:
+      - academic_period_id
+      - title
+      - entries
+      - student_profile_ids
+      properties:
+        academic_period_id:
+          type: string
+          format: uuid
+        title:
+          type: string
+        entries:
+          type: array
+          minItems: 1
+          items:
+            $ref: '#/components/schemas/LearningSetEntry'
+        student_profile_ids:
+          type: array
+          minItems: 1
           items:
             type: string
             format: uuid
@@ -818,6 +1305,51 @@ components:
           $ref: '#/components/schemas/Scope'
         status:
           $ref: '#/components/schemas/Status'
+    Questionnaire:
+      type: object
+      required:
+      - id
+      - school_id
+      - owner_user_id
+      - title
+      - status
+      - questions
+      properties:
+        id:
+          type: string
+          format: uuid
+        school_id:
+          type: string
+          format: uuid
+        owner_user_id:
+          type: string
+          format: uuid
+        title:
+          type: string
+        status:
+          type: string
+          enum:
+          - draft
+          - active
+          - inactive
+          - archived
+        questions:
+          type: array
+          items:
+            $ref: '#/components/schemas/QuestionnaireQuestion'
+    QuestionnaireCreateRequest:
+      type: object
+      required:
+      - title
+      - questions
+      properties:
+        title:
+          type: string
+        questions:
+          type: array
+          minItems: 1
+          items:
+            $ref: '#/components/schemas/QuestionnaireQuestionInput'
     Role:
       type: object
       required:
@@ -935,6 +1467,70 @@ components:
         meta:
           type: object
           additionalProperties: true
+    TeacherContentCreateRequest:
+      type: object
+      required:
+      - title
+      - content_type
+      - file
+      properties:
+        folder_id:
+          type: string
+          format: uuid
+        title:
+          type: string
+        content_type:
+          $ref: '#/components/schemas/TeacherContentType'
+        file:
+          type: string
+          format: binary
+          description: PDF, image, text, or office document up to 25 MB.
+    TeacherContentItem:
+      type: object
+      required:
+      - id
+      - school_id
+      - owner_user_id
+      - title
+      - content_type
+      - file_size_bytes
+      - scan_status
+      - status
+      properties:
+        id:
+          type: string
+          format: uuid
+        school_id:
+          type: string
+          format: uuid
+        owner_user_id:
+          type: string
+          format: uuid
+        folder_id:
+          type:
+          - string
+          - 'null'
+          format: uuid
+        title:
+          type: string
+        content_type:
+          $ref: '#/components/schemas/TeacherContentType'
+        declared_content_type:
+          type: string
+        detected_content_type:
+          type: string
+        file_size_bytes:
+          type: integer
+          maximum: 26214400
+        scan_status:
+          $ref: '#/components/schemas/TeacherContentScanStatus'
+        status:
+          type: string
+          enum:
+          - draft
+          - active
+          - inactive
+          - archived
     User:
       type: object
       required:
@@ -990,6 +1586,15 @@ components:
       - active
       - closed
       - inactive
+    AttendanceStatus:
+      type: string
+      enum:
+      - present
+      - absent
+      - late
+      - excused
+      - remote
+      - suspended
     ErrorEnvelope:
       type: object
       required:
@@ -1012,6 +1617,97 @@ components:
             details:
               type: object
               additionalProperties: true
+    LearningSetAssignment:
+      type: object
+      required:
+      - id
+      - school_id
+      - learning_set_id
+      - student_profile_id
+      - status
+      - assigned_at
+      properties:
+        id:
+          type: string
+          format: uuid
+        school_id:
+          type: string
+          format: uuid
+        learning_set_id:
+          type: string
+          format: uuid
+        student_profile_id:
+          type: string
+          format: uuid
+        status:
+          $ref: '#/components/schemas/Status'
+        assigned_at:
+          type: string
+          format: date-time
+    LearningSetEntry:
+      type: object
+      required:
+      - entry_type
+      - entry_reference_id
+      - sequence
+      properties:
+        entry_type:
+          type: string
+          enum:
+          - content_item
+          - questionnaire
+        entry_reference_id:
+          type: string
+          format: uuid
+        sequence:
+          type: integer
+    QuestionnaireQuestion:
+      type: object
+      required:
+      - id
+      - question_type
+      - prompt
+      - sequence
+      properties:
+        id:
+          type: string
+          format: uuid
+        question_type:
+          $ref: '#/components/schemas/QuestionType'
+        prompt:
+          type: string
+        options:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+        correct_answer:
+          type:
+          - string
+          - 'null'
+        sequence:
+          type: integer
+    QuestionnaireQuestionInput:
+      type: object
+      required:
+      - question_type
+      - prompt
+      - sequence
+      properties:
+        question_type:
+          $ref: '#/components/schemas/QuestionType'
+        prompt:
+          type: string
+        options:
+          type: array
+          items:
+            type: string
+          minItems: 2
+        correct_answer:
+          type: string
+        sequence:
+          type: integer
     Scope:
       type: string
       enum:
@@ -1022,6 +1718,25 @@ components:
       enum:
       - active
       - inactive
+    TeacherContentScanStatus:
+      type: string
+      enum:
+      - pending
+      - clean
+      - failed
+    TeacherContentType:
+      type: string
+      enum:
+      - pdf
+      - image
+      - text
+      - office_document
+    QuestionType:
+      type: string
+      enum:
+      - multiple_choice
+      - true_false
+      - short_text
   securitySchemes:
     bearerAuth:
       type: http
@@ -1031,13 +1746,14 @@ x-notes:
   source_of_truth: schoolmaster-specs
   backend_repository: schoolmaster-backend
   frontend_repository: schoolmaster-frontend
-  status: P1 foundation operations promoted from the active feature contract.
+  status: P1 and P2 foundation plus teacher workflow operations promoted from the
+    active feature contract.
   active_feature_contract: specs/001-schoolmaster-platform/contracts/openapi.yaml
 security:
 - bearerAuth: []
 x-promoted-scope:
   feature_id: 001-schoolmaster-platform
-  scope: P1 foundation operations
+  scope: P1 and P2 foundation plus teacher workflow operations
   source_contract: specs/001-schoolmaster-platform/contracts/openapi.yaml
   promoted_paths:
   - /api/v1/auth/login
@@ -1050,3 +1766,8 @@ x-promoted-scope:
   - /api/v1/academic-years
   - /api/v1/academic-periods
   - /api/v1/guardians
+  - /api/v1/teacher-content
+  - /api/v1/questionnaires
+  - /api/v1/learning-sets
+  - /api/v1/grades
+  - /api/v1/attendance
