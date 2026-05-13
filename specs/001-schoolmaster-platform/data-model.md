@@ -355,6 +355,8 @@
   - belongs to `User` as recorder
 - **Validation rules**:
   - student and period must belong to the same school
+  - grade entry targets selected active `StudentProfile` records directly; v1
+    does not persist class, course, section, or enrollment-group references
   - recorder must have permission to manage grades
   - grade value must be a numeric decimal from 0 to 100
   - grade label is optional and presentation-only
@@ -379,6 +381,8 @@
 - **Validation rules**:
   - attendance date must fall within the relevant academic period or approved
     operational rules
+  - attendance entry targets selected active `StudentProfile` records directly;
+    v1 does not persist class, course, section, or enrollment-group references
   - recorder must have permission to manage attendance
   - attendance status must be one of `present`, `absent`, `late`, `excused`,
     `remote`, or `suspended`
@@ -434,6 +438,9 @@
 - Inactive schools or users cannot participate in normal operational workflows.
 - Grades, attendance, learning sets, and reports must align with the selected
   academic period and tenant context.
+- V1 grade and attendance workflows operate directly on selected active
+  `StudentProfile` records. Class, course, section, roster, or group entities
+  are outside v1 until specified by a later feature.
 - Teacher content items must remain private until upload validation and malware
   scanning complete successfully.
 - Students may download teacher content only when it is in their school, part

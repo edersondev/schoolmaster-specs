@@ -98,14 +98,14 @@ for key roles, and confirming each user sees only the permitted school data.
 
 A teacher organizes instructional content in folders, uploads files, creates
 questionnaires, assembles learning sets in chronological order, records
-attendance, and submits grades for their students during an academic period.
+attendance, and submits grades for selected students during an academic period.
 
 **Why this priority**: Once a school is onboarded, the next core value is
 enabling teachers to manage classroom delivery and student evaluation.
 
 **Independent Test**: This story can be tested independently by having a
-teacher add content, publish a learning set, record attendance for a class
-session, and enter grades for students assigned to that teacher.
+teacher add content, publish a learning set, record attendance for selected
+students, and enter grades for students assigned to that teacher.
 
 **Acceptance Scenarios**:
 
@@ -115,9 +115,9 @@ session, and enter grades for students assigned to that teacher.
 2. **Given** a teacher needs to structure instruction, **When** they create a
    learning set with content items and questionnaires in chronological order,
    **Then** the learning set preserves the intended sequence for student use.
-3. **Given** a teacher is responsible for a class during an active academic
-   period, **When** they record attendance and submit grades, **Then** the
-   records are stored against the correct students, period, and school.
+3. **Given** a teacher is responsible for selected students during an active
+   academic period, **When** they record attendance and submit grades, **Then**
+   the records are stored against the correct students, period, and school.
 
 ---
 
@@ -346,9 +346,9 @@ administrator to generate reports for a selected academic period.
 - **Attendance Record**: Represents a student's presence status for a specific
   instructional event or date, using the v1 status catalog `present`,
   `absent`, `late`, `excused`, `remote`, and `suspended`.
-- **Report Definition or Output**: Represents a generated summary or formal
-  view of school information for oversight, with PDF and CSV outputs for all
-  launch-scope report types in v1.
+- **ReportRun**: Represents an asynchronous tenant-scoped report request,
+  generation status, selected filters, retained metadata, and generated PDF/CSV
+  output availability for launch-scope report types in v1.
 
 ## Non-Goals
 
@@ -419,6 +419,11 @@ administrator to generate reports for a selected academic period.
 - Grades, attendance, learning sets, and period-scoped reports must reference
   an academic period that belongs to the same school as the affected students
   and teacher.
+- V1 does not define class, course, section, or enrollment-group entities.
+  Teacher grade and attendance entry is recorded directly against selected
+  active `StudentProfile` records for the selected academic period. Any
+  classroom, course, or group-based recording workflow is outside v1 until a
+  class/course model is specified.
 - If a student becomes inactive or transfers out of a school, the student's
   historical grade, attendance, and assigned learning-set records remain
   retained for school-authorized administrative review, but the student user no
@@ -496,8 +501,8 @@ administrator to generate reports for a selected academic period.
   acceptance testing.
 - **SC-003**: Teachers can complete the end-to-end workflow of uploading
   content, assembling a learning set, recording attendance, and entering grades
-  for a class during acceptance testing without switching to out-of-system
-  tools.
+  for selected students during acceptance testing without switching to
+  out-of-system tools.
 - **SC-004**: Students can access their assigned learning materials and own
   academic records with a first-attempt task completion rate of at least 90%
   during usability validation.

@@ -270,3 +270,51 @@
     trigger asynchronous write behavior and can surprise clients.
   - No regeneration path: rejected because administrators still need a way to
     recreate outputs from the approved filters after expiry.
+
+## Decision 21: V1 grade and attendance recording boundary
+
+- **Decision**: Record teacher-entered grades and attendance directly against
+  selected active `StudentProfile` records for the selected academic period.
+  Do not introduce class, course, section, roster, or group entities in v1.
+- **Rationale**: The approved v1 data model defines `StudentProfile` and
+  academic periods but does not define a class/course boundary. Direct selected
+  student recording keeps grade and attendance workflows implementable without
+  inventing undocumented grouping behavior.
+- **Alternatives considered**:
+  - Class-session recording: rejected because v1 has no class, course, section,
+    roster, or enrollment-group model.
+  - Assignment to every student in a period: rejected because teachers need
+    selected-student workflows and period membership alone is too broad.
+
+## Decision 22: Teacher content malware scanning boundary
+
+- **Decision**: Treat malware scanning as a backend-owned asynchronous workflow
+  behind a scanner adapter. Uploaded files start with `scan_status = pending`,
+  remain unavailable until an authorized backend process marks them `clean`, and
+  stay unavailable when scanning fails.
+- **Rationale**: The API contract needs stable scan-state semantics regardless
+  of whether deployment uses a local, hosted, or third-party scanner. Keeping
+  scan transitions server-side prevents clients from bypassing the availability
+  gate.
+- **Alternatives considered**:
+  - Client-declared scan status: rejected because clients cannot be trusted to
+    assert file safety.
+  - Synchronous request-time scanning only: rejected because large files or
+    scanner latency can make upload requests brittle.
+  - Making files available while scanning is pending: rejected because the v1
+    requirement requires malware scan approval before availability.
+
+## Decision 23: Executable OpenAPI verification gate
+
+- **Decision**: Require executable Redocly validation for both
+  `specs/001-schoolmaster-platform/contracts/openapi.yaml` and the repository
+  aggregate `api/openapi.yaml`, plus response-shape verification guidance for
+  critical success and failure envelopes.
+- **Rationale**: Contract-first delivery is only enforceable when reviewers can
+  run the checks that prove the feature contract and publication target remain
+  valid.
+- **Alternatives considered**:
+  - Documentation-only validation guidance: rejected because it does not satisfy
+    the constitution's verification gate.
+  - Feature contract validation only: rejected because backend/frontend delivery
+    eventually consumes the aggregate publication target.
