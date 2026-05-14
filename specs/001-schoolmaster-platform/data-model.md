@@ -33,6 +33,7 @@
   - has many `TeacherContentItem`
   - has many `Questionnaire`
   - has many `LearningSet`
+  - has many `LearningSetAssignment`
   - has many `GradeRecord`
   - has many `AttendanceRecord`
   - has many `ReportRun`
@@ -212,6 +213,10 @@
   - `folder_id`
   - `title`
   - `content_type`
+  - `declared_content_type`
+  - `detected_content_type`
+  - `file_size_bytes`
+  - `scan_status` (`pending`, `clean`, `failed`)
   - `storage_reference`
   - `status` (`draft`, `active`, `inactive`, `archived`)
 - **Relationships**:
@@ -222,7 +227,10 @@
 - **Validation rules**:
   - title is required
   - folder must belong to the same school
-  - uploaded file metadata must meet allowed upload constraints
+  - uploaded files must be PDF, image, text, or office document types
+  - uploaded files must not exceed 25 MB
+  - executables and archives are rejected
+  - uploaded files must not become available until `scan_status` is `clean`
 
 ### Questionnaire
 
@@ -237,9 +245,29 @@
   - belongs to `School`
   - belongs to `User` as owner
   - belongs to many `LearningSet` through ordered entries
+  - has many `QuestionnaireQuestion`
 - **Validation rules**:
   - title is required
   - only authorized teachers or administrators may manage questionnaires
+
+### QuestionnaireQuestion
+
+- **Purpose**: Individual question inside a teacher-authored questionnaire.
+- **Core fields**:
+  - `id` (UUID)
+  - `questionnaire_id`
+  - `question_type` (`multiple_choice`, `true_false`, `short_text`)
+  - `prompt`
+  - `options` (required for `multiple_choice`, nullable otherwise)
+  - `correct_answer` (nullable)
+  - `sequence`
+- **Relationships**:
+  - belongs to `Questionnaire`
+- **Validation rules**:
+  - prompt is required
+  - sequence is required and unique within the questionnaire
+  - multiple-choice questions require at least two options
+  - question type must be one of the v1 supported types
 
 ### LearningSet
 
@@ -250,16 +278,20 @@
   - `owner_user_id`
   - `academic_period_id`
   - `title`
+  - `published_at`
   - `status` (`draft`, `published`, `inactive`, `archived`)
 - **Relationships**:
   - belongs to `School`
   - belongs to `User` as owner
   - belongs to `AcademicPeriod`
   - has many ordered `LearningSetEntry`
+  - has many `LearningSetAssignment`
 - **Validation rules**:
   - title is required
   - ordered entries must preserve a unique sequence within the learning set
   - referenced items must belong to the same school
+  - published learning sets require at least one active student assignment
+  - student timelines order learning sets by `published_at`
 - **State transitions**:
   - `draft -> published` when ready for student visibility
   - `published -> inactive` when withdrawn without permanent deletion
@@ -278,6 +310,30 @@
 - **Validation rules**:
   - sequence is required and unique within learning set
   - referenced item type must match the referenced entity
+
+### LearningSetAssignment
+
+- **Purpose**: Direct assignment of a learning set to a student profile.
+- **Core fields**:
+  - `id` (UUID)
+  - `school_id`
+  - `learning_set_id`
+  - `student_profile_id`
+  - `assigned_by_user_id`
+  - `status` (`active`, `inactive`)
+  - `assigned_at`
+- **Relationships**:
+  - belongs to `School`
+  - belongs to `LearningSet`
+  - belongs to `StudentProfile`
+  - belongs to `User` as assigner
+- **Validation rules**:
+  - learning set and student profile must belong to the same school
+  - student profile must be active when assigned
+  - learning set academic period must belong to the student's current school
+    context
+  - active assignments authorize student metadata visibility for published
+    learning sets in the assigned academic period
 
 ### GradeRecord
 
@@ -299,7 +355,11 @@
   - belongs to `User` as recorder
 - **Validation rules**:
   - student and period must belong to the same school
+  - grade entry targets selected active `StudentProfile` records directly; v1
+    does not persist class, course, section, or enrollment-group references
   - recorder must have permission to manage grades
+  - grade value must be a numeric decimal from 0 to 100
+  - grade label is optional and presentation-only
 
 ### AttendanceRecord
 
@@ -321,7 +381,11 @@
 - **Validation rules**:
   - attendance date must fall within the relevant academic period or approved
     operational rules
+  - attendance entry targets selected active `StudentProfile` records directly;
+    v1 does not persist class, course, section, or enrollment-group references
   - recorder must have permission to manage attendance
+  - attendance status must be one of `present`, `absent`, `late`, `excused`,
+    `remote`, or `suspended`
 
 ### ReportRun
 
@@ -332,14 +396,25 @@
   - `requested_by_user_id`
   - `report_type`
   - `filter_summary`
+  - `output_formats` (`pdf`, `csv`)
   - `status` (`requested`, `generated`, `failed`, `inactive`)
   - `generated_at`
+  - `output_expires_at`
+  - `outputs_available`
 - **Relationships**:
   - belongs to `School`
   - belongs to `User` as requester
 - **Validation rules**:
   - requester must have permission to access the selected report type
   - report filters must remain inside the requester's tenant scope
+  - `academic_period_id` is required for every report request
+  - `student_profile_id`, `user_id`, `status`, `start_date`, and `end_date`
+    are optional filters where relevant to the selected report type
+  - generated outputs are available in PDF and CSV after status is `generated`
+  - generated output files expire 90 days after generation while `ReportRun`
+    metadata remains available
+  - expired output files require a new `ReportRun` with the same filters to
+    generate fresh files
 
 ## Relationship Summary
 
@@ -350,6 +425,8 @@
 - `Guardian` and `StudentProfile` form a many-to-many relationship.
 - `LearningSet` is composed of ordered `LearningSetEntry` items that reference
   either `TeacherContentItem` or `Questionnaire`.
+- `LearningSetAssignment` links a `LearningSet` directly to selected
+  `StudentProfile` records for v1 student access.
 - `GradeRecord`, `AttendanceRecord`, and `ReportRun` are school-scoped
   operational records tied to authorization and academic structure.
 
@@ -361,12 +438,30 @@
 - Inactive schools or users cannot participate in normal operational workflows.
 - Grades, attendance, learning sets, and reports must align with the selected
   academic period and tenant context.
+- V1 grade and attendance workflows operate directly on selected active
+  `StudentProfile` records. Class, course, section, roster, or group entities
+  are outside v1 until specified by a later feature.
+- Teacher content items must remain private until upload validation and malware
+  scanning complete successfully.
+- Students may download teacher content only when it is in their school, part
+  of an assigned learning set, and the content scan status is `clean`.
+- Student learning timelines require an academic period filter, order assigned
+  learning sets by publish date, and order entries by teacher-defined sequence.
+- Report generation is asynchronous for all launch-scope report types; report
+  outputs are tenant-bound and available only after the run is `generated`.
+- Generated report output files are retained for 90 days after generation, then
+  expire while `ReportRun` metadata remains available for audit and history.
+- Expired report output files are not regenerated during download; users must
+  request a new `ReportRun` with the same filters to generate fresh files.
+- P2 questionnaire, grade, attendance, and learning set assignment values must
+  use the fixed v1 catalogs and ranges defined in the feature specification.
 - School-scoped role assignments are effective only when the role, user, and
   resolved tenant are active and belong to the same school.
 - `School`, `User`, `Role`, `AcademicYear`, `AcademicPeriod`,
   `StudentProfile`, `Guardian`, `TeacherContentFolder`, `TeacherContentItem`,
-  `Questionnaire`, `LearningSet`, `GradeRecord`, `AttendanceRecord`, and
-  `ReportRun` are recoverable records and use soft-delete support unless a
-  later module plan documents an approved permanent deletion path.
+  `Questionnaire`, `QuestionnaireQuestion`, `LearningSet`,
+  `LearningSetAssignment`, `GradeRecord`, `AttendanceRecord`, and `ReportRun`
+  are recoverable records and use soft-delete support unless a later module
+  plan documents an approved permanent deletion path.
 - `Permission` records are controlled capability definitions. They use status
   for lifecycle control and are not normally tenant-owned business records.

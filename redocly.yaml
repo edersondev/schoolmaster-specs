@@ -1,0 +1,11 @@
+extends:
+  - recommended
+
+rules:
+  info-license: off
+
+apis:
+  aggregate@v1:
+    root: ./api/openapi.yaml
+  schoolmaster-platform@v1:
+    root: ./specs/001-schoolmaster-platform/contracts/openapi.yaml

@@ -111,3 +111,210 @@
     explicit project risks.
   - Manual acceptance only: rejected because it does not satisfy the
     constitution's release gates.
+
+## Decision 9: P2 upload policy for teacher content
+
+- **Decision**: Limit v1 instructional uploads to PDF, images, text, and office
+  documents up to 25 MB. Reject executables and archives before persistence,
+  store accepted files privately by tenant, and expose files only after malware
+  scan completion and authorization checks.
+- **Rationale**: This policy supports common classroom material workflows while
+  reducing storage, security, and validation risk for launch.
+- **Alternatives considered**:
+  - Broad media support including audio and video: rejected for v1 because it
+    increases storage, streaming, scanning, and UX complexity.
+  - Metadata-only content records: rejected because teacher upload is part of
+    the approved P2 workflow.
+
+## Decision 10: P2 questionnaire scope
+
+- **Decision**: Support multiple-choice, true-or-false, and short-text
+  question types in v1 questionnaires.
+- **Rationale**: These types cover common launch assessments while keeping
+  authoring, validation, response capture, and frontend rendering tractable.
+- **Alternatives considered**:
+  - Multiple-choice only: rejected because it is too narrow for initial teacher
+    assessment workflows.
+  - Long-text and file-response questions: rejected for v1 because they require
+    additional review, storage, grading, and moderation behavior not yet
+    specified.
+
+## Decision 11: P2 learning set assignment model
+
+- **Decision**: Assign learning sets directly to selected active
+  `StudentProfile` records in the same school and academic period.
+- **Rationale**: The current model has `StudentProfile` but no class, course,
+  or group entity. Direct assignment keeps the contract implementable without
+  inventing an unapproved grouping model.
+- **Alternatives considered**:
+  - Assignment to all students in an academic period: rejected because it does
+    not support selective teacher distribution.
+  - Class or group assignment: rejected for v1 until a class or group model is
+    specified.
+
+## Decision 12: P2 grade value model
+
+- **Decision**: Represent v1 grade values as numeric decimal values from 0 to
+  100, with an optional display label.
+- **Rationale**: Numeric values support validation, aggregation, sorting, and
+  launch reports while allowing schools to show a friendly label when needed.
+- **Alternatives considered**:
+  - Letter grades only: rejected because it requires school-defined catalogs
+    before reporting can be reliable.
+  - Flexible string grades: rejected because they prevent consistent
+    aggregation and validation in v1.
+
+## Decision 13: P2 attendance status catalog
+
+- **Decision**: Use the fixed v1 attendance status catalog `present`, `absent`,
+  `late`, `excused`, `remote`, and `suspended`.
+- **Rationale**: The catalog covers common in-person, remote, and exceptional
+  attendance states while keeping validation contract-backed.
+- **Alternatives considered**:
+  - `present` and `absent` only: rejected because it omits common school
+    attendance states.
+  - School-defined attendance statuses: rejected for v1 because it introduces
+    catalog management and reporting variability not yet specified.
+
+## Decision 14: P3 student content access
+
+- **Decision**: Allow students to view assigned teacher content metadata and
+  download the file only when the content belongs to their school, is included
+  in a learning set assigned to their active student profile, has a clean
+  malware scan status, and passes authorization.
+- **Rationale**: This preserves the teacher workflow while making student
+  access explicit, tenant-bound, and dependent on the upload security gate.
+- **Alternatives considered**:
+  - Metadata-only access: rejected because approved P3 clarification allows
+    file download.
+  - Direct file URL exposure: rejected because it would bypass tenant and
+    assignment authorization.
+
+## Decision 15: P3 student learning timeline order
+
+- **Decision**: Require `academic_period_id` when listing a student's learning
+  timeline. Order assigned learning sets by publish date and entries inside a
+  learning set by teacher-defined sequence.
+- **Rationale**: Academic period filtering keeps the student view aligned with
+  the school timeline, while publish-date and entry sequence provide stable,
+  product-approved ordering without inventing classes or groups.
+- **Alternatives considered**:
+  - Unfiltered student timeline: rejected because it can mix academic periods.
+  - Sorting only by assignment date: rejected because the approved clarification
+    uses learning set publish date.
+
+## Decision 16: P3 report output formats
+
+- **Decision**: Generate PDF and CSV outputs for all launch-scope report types:
+  attendance, grades, academic structure, and school activity.
+- **Rationale**: PDF supports review and sharing, while CSV supports operational
+  analysis without report-type-specific format negotiation.
+- **Alternatives considered**:
+  - PDF only: rejected because it limits downstream analysis.
+  - Per-report format configuration: rejected for v1 because the clarification
+    standardizes both formats for all launch reports.
+
+## Decision 17: P3 report generation lifecycle
+
+- **Decision**: Treat every report request as asynchronous. The API returns a
+  `ReportRun` with status, and generated outputs are downloadable only after
+  the run reaches `generated`.
+- **Rationale**: A consistent asynchronous model avoids separate synchronous
+  and background code paths and keeps larger tenant reports from blocking
+  request handling.
+- **Alternatives considered**:
+  - Synchronous generation for smaller reports: rejected because the approved
+    clarification requires asynchronous generation for all report types.
+  - Client-side report generation: rejected because authorization, tenant
+    scoping, and canonical output generation belong on the backend.
+
+## Decision 18: P3 report filters
+
+- **Decision**: Require `academic_period_id` for every report request and allow
+  `student_profile_id`, `user_id`, `status`, `start_date`, and `end_date` as
+  optional filters where relevant to the selected report type.
+- **Rationale**: Academic period is the shared reporting boundary, and the
+  optional filters cover the approved launch filter set without adding
+  report-specific business rules not yet specified.
+- **Alternatives considered**:
+  - No required report filter: rejected because it weakens academic-period
+    alignment and can produce overly broad tenant reports.
+  - Report-type-specific required filters: rejected until the product spec
+    defines those constraints.
+
+## Decision 19: P3 report output retention
+
+- **Decision**: Retain generated report output files for 90 days after
+  generation, then expire the files while retaining `ReportRun` metadata.
+- **Rationale**: This gives school administrators a practical download window
+  while limiting long-lived private report files. Keeping metadata preserves
+  audit and history without promising permanent output-file availability.
+- **Alternatives considered**:
+  - 30-day retention: rejected because it is less forgiving for school
+    operational review cycles.
+  - Retention until academic period close: rejected because period duration can
+    vary and makes storage behavior less predictable.
+  - No retained files with regeneration on every download: rejected because it
+    increases repeat processing and changes download behavior.
+
+## Decision 20: P3 expired report regeneration
+
+- **Decision**: Expired report output files are not regenerated automatically
+  during download. Users request a new `ReportRun` with the same filters to
+  generate fresh output files.
+- **Rationale**: Explicit regeneration keeps authorization, validation, and
+  tenant-bound report filters on the normal report request path instead of
+  hiding background work behind a download action.
+- **Alternatives considered**:
+  - Automatic regeneration on download: rejected because it makes a read action
+    trigger asynchronous write behavior and can surprise clients.
+  - No regeneration path: rejected because administrators still need a way to
+    recreate outputs from the approved filters after expiry.
+
+## Decision 21: V1 grade and attendance recording boundary
+
+- **Decision**: Record teacher-entered grades and attendance directly against
+  selected active `StudentProfile` records for the selected academic period.
+  Do not introduce class, course, section, roster, or group entities in v1.
+- **Rationale**: The approved v1 data model defines `StudentProfile` and
+  academic periods but does not define a class/course boundary. Direct selected
+  student recording keeps grade and attendance workflows implementable without
+  inventing undocumented grouping behavior.
+- **Alternatives considered**:
+  - Class-session recording: rejected because v1 has no class, course, section,
+    roster, or enrollment-group model.
+  - Assignment to every student in a period: rejected because teachers need
+    selected-student workflows and period membership alone is too broad.
+
+## Decision 22: Teacher content malware scanning boundary
+
+- **Decision**: Treat malware scanning as a backend-owned asynchronous workflow
+  behind a scanner adapter. Uploaded files start with `scan_status = pending`,
+  remain unavailable until an authorized backend process marks them `clean`, and
+  stay unavailable when scanning fails.
+- **Rationale**: The API contract needs stable scan-state semantics regardless
+  of whether deployment uses a local, hosted, or third-party scanner. Keeping
+  scan transitions server-side prevents clients from bypassing the availability
+  gate.
+- **Alternatives considered**:
+  - Client-declared scan status: rejected because clients cannot be trusted to
+    assert file safety.
+  - Synchronous request-time scanning only: rejected because large files or
+    scanner latency can make upload requests brittle.
+  - Making files available while scanning is pending: rejected because the v1
+    requirement requires malware scan approval before availability.
+
+## Decision 23: Executable OpenAPI verification gate
+
+- **Decision**: Require executable Redocly validation for both
+  `specs/001-schoolmaster-platform/contracts/openapi.yaml` and the repository
+  aggregate `api/openapi.yaml`, plus response-shape verification guidance for
+  critical success and failure envelopes.
+- **Rationale**: Contract-first delivery is only enforceable when reviewers can
+  run the checks that prove the feature contract and publication target remain
+  valid.
+- **Alternatives considered**:
+  - Documentation-only validation guidance: rejected because it does not satisfy
+    the constitution's verification gate.
+  - Feature contract validation only: rejected because backend/frontend delivery
+    eventually consumes the aggregate publication target.

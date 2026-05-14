@@ -9,23 +9,50 @@ info:
     envelopes, and enforce tenant scope before module-specific behavior.
 servers:
   - url: https://api.schoolmaster.test
+x-contract-readiness:
+  feature_id: 001-schoolmaster-platform
+  aggregate_target: api/openapi.yaml
+  p1_scope: Baseline schemas and operations are defined for authentication,
+    schools, users, roles, permissions, academic years, academic periods, and
+    guardians.
+  p2_scope: Teacher content, questionnaires, learning sets, grades, and
+    attendance have module-ready baseline request, response, error, tenant, and
+    validation details.
+  p3_scope: Student learning timelines, student academic records, authorized
+    content downloads, asynchronous report requests, and report output downloads
+    have module-ready baseline request, response, error, tenant, validation,
+    retention, and expiry details.
 security:
   - bearerAuth: []
 tags:
   - name: Auth
+    description: Authentication and current-session operations.
   - name: Schools
+    description: Platform-level school tenant provisioning and review.
   - name: Users
+    description: Tenant-aware user account administration.
   - name: Roles
+    description: Platform and school role management.
   - name: Permissions
+    description: Permission definitions exposed through scoped roles.
   - name: Academic Years
+    description: School-owned academic year management.
   - name: Academic Periods
+    description: Periods inside academic years for academic operations.
   - name: Guardians
+    description: Guardian records linked to student profiles.
   - name: Teacher Content
+    description: Teacher-managed folders and instructional content.
   - name: Questionnaires
+    description: Teacher-authored instructional questionnaires.
   - name: Learning Sets
+    description: Ordered instructional sequences for student use.
   - name: Grades
+    description: Student grade records in permitted scope.
   - name: Attendance
+    description: Student attendance records in permitted scope.
   - name: Reports
+    description: Tenant-scoped report requests and outputs.
 paths:
   /api/v1/auth/login:
     post:
@@ -262,6 +289,10 @@ paths:
                         type: array
                         items:
                           $ref: '#/components/schemas/Role'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/TenantMismatch'
     post:
       tags: [Roles]
       summary: Create a scoped role
@@ -311,6 +342,10 @@ paths:
                         type: array
                         items:
                           $ref: '#/components/schemas/Permission'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
   /api/v1/academic-years:
     get:
       tags: [Academic Years]
@@ -335,6 +370,10 @@ paths:
                         type: array
                         items:
                           $ref: '#/components/schemas/AcademicYear'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/TenantMismatch'
     post:
       tags: [Academic Years]
       summary: Create an academic year for the resolved school
@@ -390,6 +429,10 @@ paths:
                         type: array
                         items:
                           $ref: '#/components/schemas/AcademicPeriod'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/TenantMismatch'
     post:
       tags: [Academic Periods]
       summary: Create an academic period inside an academic year
@@ -440,6 +483,10 @@ paths:
                         type: array
                         items:
                           $ref: '#/components/schemas/Guardian'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/TenantMismatch'
     post:
       tags: [Guardians]
       summary: Create or maintain a guardian record
@@ -481,7 +528,48 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/PaginatedEnvelope'
+                allOf:
+                  - $ref: '#/components/schemas/PaginatedEnvelope'
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/TeacherContentItem'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/TenantMismatch'
+    post:
+      tags: [Teacher Content]
+      summary: Create a tenant-scoped teacher content item
+      operationId: createTeacherContent
+      parameters:
+        - $ref: '#/components/parameters/TenantContext'
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/TeacherContentCreateRequest'
+      responses:
+        '201':
+          description: Teacher content item created
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessEnvelope'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/TeacherContentItem'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/TenantMismatch'
+        '422':
+          $ref: '#/components/responses/ValidationError'
   /api/v1/questionnaires:
     get:
       tags: [Questionnaires]
@@ -497,7 +585,48 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/PaginatedEnvelope'
+                allOf:
+                  - $ref: '#/components/schemas/PaginatedEnvelope'
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/Questionnaire'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/TenantMismatch'
+    post:
+      tags: [Questionnaires]
+      summary: Create a questionnaire with v1 supported question types
+      operationId: createQuestionnaire
+      parameters:
+        - $ref: '#/components/parameters/TenantContext'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/QuestionnaireCreateRequest'
+      responses:
+        '201':
+          description: Questionnaire created
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessEnvelope'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/Questionnaire'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/TenantMismatch'
+        '422':
+          $ref: '#/components/responses/ValidationError'
   /api/v1/learning-sets:
     get:
       tags: [Learning Sets]
@@ -513,7 +642,48 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/PaginatedEnvelope'
+                allOf:
+                  - $ref: '#/components/schemas/PaginatedEnvelope'
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/LearningSet'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/TenantMismatch'
+    post:
+      tags: [Learning Sets]
+      summary: Create a learning set with ordered entries and direct student assignments
+      operationId: createLearningSet
+      parameters:
+        - $ref: '#/components/parameters/TenantContext'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LearningSetCreateRequest'
+      responses:
+        '201':
+          description: Learning set created
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessEnvelope'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/LearningSet'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/TenantMismatch'
+        '422':
+          $ref: '#/components/responses/ValidationError'
   /api/v1/grades:
     get:
       tags: [Grades]
@@ -529,7 +699,48 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/PaginatedEnvelope'
+                allOf:
+                  - $ref: '#/components/schemas/PaginatedEnvelope'
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/GradeRecord'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/TenantMismatch'
+    post:
+      tags: [Grades]
+      summary: Record a grade for a student in an academic period
+      operationId: createGrade
+      parameters:
+        - $ref: '#/components/parameters/TenantContext'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GradeCreateRequest'
+      responses:
+        '201':
+          description: Grade record created
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessEnvelope'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/GradeRecord'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/TenantMismatch'
+        '422':
+          $ref: '#/components/responses/ValidationError'
   /api/v1/attendance:
     get:
       tags: [Attendance]
@@ -545,7 +756,48 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/PaginatedEnvelope'
+                allOf:
+                  - $ref: '#/components/schemas/PaginatedEnvelope'
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/AttendanceRecord'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/TenantMismatch'
+    post:
+      tags: [Attendance]
+      summary: Record attendance for a student in an academic period
+      operationId: createAttendance
+      parameters:
+        - $ref: '#/components/parameters/TenantContext'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AttendanceCreateRequest'
+      responses:
+        '201':
+          description: Attendance record created
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessEnvelope'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/AttendanceRecord'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/TenantMismatch'
+        '422':
+          $ref: '#/components/responses/ValidationError'
   /api/v1/student/learning-sets:
     get:
       tags: [Learning Sets]
@@ -553,6 +805,7 @@ paths:
       operationId: listStudentLearningSets
       parameters:
         - $ref: '#/components/parameters/TenantContext'
+        - $ref: '#/components/parameters/AcademicPeriodFilterRequired'
         - $ref: '#/components/parameters/Page'
         - $ref: '#/components/parameters/PerPage'
       responses:
@@ -561,7 +814,40 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/PaginatedEnvelope'
+                allOf:
+                  - $ref: '#/components/schemas/PaginatedEnvelope'
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/StudentLearningSetTimelineItem'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/TenantMismatch'
+  /api/v1/student/teacher-content/{contentItemId}/download:
+    get:
+      tags: [Teacher Content]
+      summary: Download assigned teacher content for the authenticated student
+      operationId: downloadStudentTeacherContent
+      parameters:
+        - $ref: '#/components/parameters/TenantContext'
+        - $ref: '#/components/parameters/ContentItemId'
+      responses:
+        '200':
+          description: Authorized content file download
+          content:
+            application/octet-stream:
+              schema:
+                type: string
+                format: binary
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/TenantMismatch'
+        '404':
+          $ref: '#/components/responses/NotFound'
   /api/v1/student/grades:
     get:
       tags: [Grades]
@@ -569,6 +855,7 @@ paths:
       operationId: listStudentGrades
       parameters:
         - $ref: '#/components/parameters/TenantContext'
+        - $ref: '#/components/parameters/AcademicPeriodFilter'
         - $ref: '#/components/parameters/Page'
         - $ref: '#/components/parameters/PerPage'
       responses:
@@ -577,7 +864,18 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/PaginatedEnvelope'
+                allOf:
+                  - $ref: '#/components/schemas/PaginatedEnvelope'
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/GradeRecord'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/TenantMismatch'
   /api/v1/student/attendance:
     get:
       tags: [Attendance]
@@ -585,6 +883,7 @@ paths:
       operationId: listStudentAttendance
       parameters:
         - $ref: '#/components/parameters/TenantContext'
+        - $ref: '#/components/parameters/AcademicPeriodFilter'
         - $ref: '#/components/parameters/Page'
         - $ref: '#/components/parameters/PerPage'
       responses:
@@ -593,7 +892,18 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/PaginatedEnvelope'
+                allOf:
+                  - $ref: '#/components/schemas/PaginatedEnvelope'
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/AttendanceRecord'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/TenantMismatch'
   /api/v1/reports:
     get:
       tags: [Reports]
@@ -613,7 +923,18 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/PaginatedEnvelope'
+                allOf:
+                  - $ref: '#/components/schemas/PaginatedEnvelope'
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/ReportRun'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/TenantMismatch'
     post:
       tags: [Reports]
       summary: Request a tenant-scoped report
@@ -642,6 +963,35 @@ paths:
           $ref: '#/components/responses/TenantMismatch'
         '422':
           $ref: '#/components/responses/ValidationError'
+  /api/v1/reports/{reportRunId}/download:
+    get:
+      tags: [Reports]
+      summary: Download a generated report output
+      operationId: downloadReport
+      parameters:
+        - $ref: '#/components/parameters/TenantContext'
+        - $ref: '#/components/parameters/ReportRunId'
+        - name: format
+          in: query
+          required: true
+          schema:
+            $ref: '#/components/schemas/ReportFormat'
+      responses:
+        '200':
+          description: Generated report file download
+          content:
+            application/octet-stream:
+              schema:
+                type: string
+                format: binary
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/TenantMismatch'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '410':
+          $ref: '#/components/responses/OutputExpired'
 components:
   securitySchemes:
     bearerAuth:
@@ -663,6 +1013,33 @@ components:
     SchoolId:
       name: schoolId
       in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+    ContentItemId:
+      name: contentItemId
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+    ReportRunId:
+      name: reportRunId
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+    AcademicPeriodFilter:
+      name: academic_period_id
+      in: query
+      schema:
+        type: string
+        format: uuid
+    AcademicPeriodFilterRequired:
+      name: academic_period_id
+      in: query
       required: true
       schema:
         type: string
@@ -714,6 +1091,12 @@ components:
             $ref: '#/components/schemas/ErrorEnvelope'
     NotFound:
       description: Resource was not found in the permitted scope
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorEnvelope'
+    OutputExpired:
+      description: Generated report output file has expired; request a new ReportRun with the same filters
       content:
         application/json:
           schema:
@@ -1077,9 +1460,344 @@ components:
           items:
             type: string
             format: uuid
+    TeacherContentType:
+      type: string
+      enum: [pdf, image, text, office_document]
+    TeacherContentScanStatus:
+      type: string
+      enum: [pending, clean, failed]
+    TeacherContentItem:
+      type: object
+      required: [id, school_id, owner_user_id, title, content_type, file_size_bytes, scan_status, status]
+      properties:
+        id:
+          type: string
+          format: uuid
+        school_id:
+          type: string
+          format: uuid
+        owner_user_id:
+          type: string
+          format: uuid
+        folder_id:
+          type:
+            - string
+            - 'null'
+          format: uuid
+        title:
+          type: string
+        content_type:
+          $ref: '#/components/schemas/TeacherContentType'
+        declared_content_type:
+          type: string
+        detected_content_type:
+          type: string
+        file_size_bytes:
+          type: integer
+          maximum: 26214400
+        scan_status:
+          $ref: '#/components/schemas/TeacherContentScanStatus'
+        status:
+          type: string
+          enum: [draft, active, inactive, archived]
+    TeacherContentCreateRequest:
+      type: object
+      required: [title, content_type, file]
+      properties:
+        folder_id:
+          type: string
+          format: uuid
+        title:
+          type: string
+        content_type:
+          $ref: '#/components/schemas/TeacherContentType'
+        file:
+          type: string
+          format: binary
+          description: PDF, image, text, or office document up to 25 MB.
+    QuestionType:
+      type: string
+      enum: [multiple_choice, true_false, short_text]
+    QuestionnaireQuestion:
+      type: object
+      required: [id, question_type, prompt, sequence]
+      properties:
+        id:
+          type: string
+          format: uuid
+        question_type:
+          $ref: '#/components/schemas/QuestionType'
+        prompt:
+          type: string
+        options:
+          type:
+            - array
+            - 'null'
+          items:
+            type: string
+        correct_answer:
+          type:
+            - string
+            - 'null'
+        sequence:
+          type: integer
+    Questionnaire:
+      type: object
+      required: [id, school_id, owner_user_id, title, status, questions]
+      properties:
+        id:
+          type: string
+          format: uuid
+        school_id:
+          type: string
+          format: uuid
+        owner_user_id:
+          type: string
+          format: uuid
+        title:
+          type: string
+        status:
+          type: string
+          enum: [draft, active, inactive, archived]
+        questions:
+          type: array
+          items:
+            $ref: '#/components/schemas/QuestionnaireQuestion'
+    QuestionnaireQuestionInput:
+      type: object
+      required: [question_type, prompt, sequence]
+      properties:
+        question_type:
+          $ref: '#/components/schemas/QuestionType'
+        prompt:
+          type: string
+        options:
+          type: array
+          items:
+            type: string
+          minItems: 2
+        correct_answer:
+          type: string
+        sequence:
+          type: integer
+    QuestionnaireCreateRequest:
+      type: object
+      required: [title, questions]
+      properties:
+        title:
+          type: string
+        questions:
+          type: array
+          minItems: 1
+          items:
+            $ref: '#/components/schemas/QuestionnaireQuestionInput'
+    LearningSetEntry:
+      type: object
+      required: [entry_type, entry_reference_id, sequence]
+      properties:
+        entry_type:
+          type: string
+          enum: [content_item, questionnaire]
+        entry_reference_id:
+          type: string
+          format: uuid
+        sequence:
+          type: integer
+    LearningSetAssignment:
+      type: object
+      required: [id, school_id, learning_set_id, student_profile_id, status, assigned_at]
+      properties:
+        id:
+          type: string
+          format: uuid
+        school_id:
+          type: string
+          format: uuid
+        learning_set_id:
+          type: string
+          format: uuid
+        student_profile_id:
+          type: string
+          format: uuid
+        status:
+          $ref: '#/components/schemas/Status'
+        assigned_at:
+          type: string
+          format: date-time
+    LearningSet:
+      type: object
+      required: [id, school_id, owner_user_id, academic_period_id, title, status, entries, assignments]
+      properties:
+        id:
+          type: string
+          format: uuid
+        school_id:
+          type: string
+          format: uuid
+        owner_user_id:
+          type: string
+          format: uuid
+        academic_period_id:
+          type: string
+          format: uuid
+        title:
+          type: string
+        published_at:
+          type:
+            - string
+            - 'null'
+          format: date-time
+        status:
+          type: string
+          enum: [draft, published, inactive, archived]
+        entries:
+          type: array
+          items:
+            $ref: '#/components/schemas/LearningSetEntry'
+        assignments:
+          type: array
+          items:
+            $ref: '#/components/schemas/LearningSetAssignment'
+    LearningSetCreateRequest:
+      type: object
+      required: [academic_period_id, title, entries, student_profile_ids]
+      properties:
+        academic_period_id:
+          type: string
+          format: uuid
+        title:
+          type: string
+        entries:
+          type: array
+          minItems: 1
+          items:
+            $ref: '#/components/schemas/LearningSetEntry'
+        student_profile_ids:
+          type: array
+          minItems: 1
+          items:
+            type: string
+            format: uuid
+    GradeRecord:
+      type: object
+      required: [id, school_id, student_profile_id, academic_period_id, recorded_by_user_id, grade_value, status, recorded_at]
+      properties:
+        id:
+          type: string
+          format: uuid
+        school_id:
+          type: string
+          format: uuid
+        student_profile_id:
+          type: string
+          format: uuid
+        academic_period_id:
+          type: string
+          format: uuid
+        recorded_by_user_id:
+          type: string
+          format: uuid
+        grade_value:
+          type: number
+          minimum: 0
+          maximum: 100
+        grade_label:
+          type:
+            - string
+            - 'null'
+        status:
+          $ref: '#/components/schemas/Status'
+        recorded_at:
+          type: string
+          format: date-time
+    GradeCreateRequest:
+      type: object
+      required: [student_profile_id, academic_period_id, grade_value]
+      properties:
+        student_profile_id:
+          type: string
+          format: uuid
+        academic_period_id:
+          type: string
+          format: uuid
+        grade_value:
+          type: number
+          minimum: 0
+          maximum: 100
+        grade_label:
+          type: string
+    AttendanceStatus:
+      type: string
+      enum: [present, absent, late, excused, remote, suspended]
+    AttendanceRecord:
+      type: object
+      required: [id, school_id, student_profile_id, academic_period_id, recorded_by_user_id, attendance_date, attendance_status, status]
+      properties:
+        id:
+          type: string
+          format: uuid
+        school_id:
+          type: string
+          format: uuid
+        student_profile_id:
+          type: string
+          format: uuid
+        academic_period_id:
+          type: string
+          format: uuid
+        recorded_by_user_id:
+          type: string
+          format: uuid
+        attendance_date:
+          type: string
+          format: date
+        attendance_status:
+          $ref: '#/components/schemas/AttendanceStatus'
+        status:
+          $ref: '#/components/schemas/Status'
+    AttendanceCreateRequest:
+      type: object
+      required: [student_profile_id, academic_period_id, attendance_date, attendance_status]
+      properties:
+        student_profile_id:
+          type: string
+          format: uuid
+        academic_period_id:
+          type: string
+          format: uuid
+        attendance_date:
+          type: string
+          format: date
+        attendance_status:
+          $ref: '#/components/schemas/AttendanceStatus'
     ReportType:
       type: string
       enum: [attendance, grades, academic_structure, school_activity]
+    ReportFormat:
+      type: string
+      enum: [pdf, csv]
+    ReportFilters:
+      type: object
+      required: [academic_period_id]
+      properties:
+        academic_period_id:
+          type: string
+          format: uuid
+        student_profile_id:
+          type: string
+          format: uuid
+        user_id:
+          type: string
+          format: uuid
+        status:
+          type: string
+        start_date:
+          type: string
+          format: date
+        end_date:
+          type: string
+          format: date
+      additionalProperties: false
     ReportRequest:
       type: object
       required: [report_type, filters]
@@ -1087,11 +1805,10 @@ components:
         report_type:
           $ref: '#/components/schemas/ReportType'
         filters:
-          type: object
-          additionalProperties: true
+          $ref: '#/components/schemas/ReportFilters'
     ReportRun:
       type: object
-      required: [id, school_id, requested_by_user_id, report_type, status]
+      required: [id, school_id, requested_by_user_id, report_type, filter_summary, output_formats, status, outputs_available]
       properties:
         id:
           type: string
@@ -1105,8 +1822,12 @@ components:
         report_type:
           $ref: '#/components/schemas/ReportType'
         filter_summary:
-          type: object
-          additionalProperties: true
+          $ref: '#/components/schemas/ReportFilters'
+        output_formats:
+          type: array
+          minItems: 2
+          items:
+            $ref: '#/components/schemas/ReportFormat'
         status:
           type: string
           enum: [requested, generated, failed, inactive]
@@ -1115,3 +1836,66 @@ components:
             - string
             - 'null'
           format: date-time
+        output_expires_at:
+          type:
+            - string
+            - 'null'
+          format: date-time
+        outputs_available:
+          type: boolean
+    TeacherContentStudentMetadata:
+      type: object
+      required: [id, title, content_type, file_size_bytes, scan_status, download_available]
+      properties:
+        id:
+          type: string
+          format: uuid
+        title:
+          type: string
+        content_type:
+          type: string
+        file_size_bytes:
+          type: integer
+          maximum: 26214400
+        scan_status:
+          $ref: '#/components/schemas/TeacherContentScanStatus'
+        download_available:
+          type: boolean
+    StudentLearningSetEntry:
+      type: object
+      required: [entry_type, entry_reference_id, sequence, title]
+      properties:
+        entry_type:
+          type: string
+          enum: [content_item, questionnaire]
+        entry_reference_id:
+          type: string
+          format: uuid
+        sequence:
+          type: integer
+        title:
+          type: string
+        content_item:
+          $ref: '#/components/schemas/TeacherContentStudentMetadata'
+    StudentLearningSetTimelineItem:
+      type: object
+      required: [id, academic_period_id, title, status, published_at, entries]
+      properties:
+        id:
+          type: string
+          format: uuid
+        academic_period_id:
+          type: string
+          format: uuid
+        title:
+          type: string
+        status:
+          type: string
+          enum: [published]
+        published_at:
+          type: string
+          format: date-time
+        entries:
+          type: array
+          items:
+            $ref: '#/components/schemas/StudentLearningSetEntry'

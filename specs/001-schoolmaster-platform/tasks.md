@@ -12,6 +12,10 @@ description: "Task list for SchoolMaster Platform Foundation"
 
 **Organization**: Tasks are grouped by user story to enable independent implementation and testing.
 
+**Current plan delta**: The latest planning pass adds report output retention
+and regeneration behavior. US3 report tasks must explicitly cover 90-day output
+retention, expired-output download behavior, and new `ReportRun` regeneration.
+
 ## Format: `[ID] [P?] [Story] Description`
 
 - **[P]**: Can run in parallel (different files, no dependencies)
@@ -56,6 +60,7 @@ description: "Task list for SchoolMaster Platform Foundation"
 - [ ] T008a [P] Implement frontend session bootstrap and tenant-context restoration based only on API responses in `schoolmaster-frontend/src/services/http/`, `schoolmaster-frontend/src/stores/auth/`, and `schoolmaster-frontend/src/router/index.ts`
 - [ ] T009 [P] Add contract verification and repository traceability workflow notes in `schoolmaster-specs/specs/001-schoolmaster-platform/quickstart.md` and `schoolmaster-specs/specs/001-schoolmaster-platform/contracts/openapi.yaml`
 - [ ] T009a [P] Add executable OpenAPI validation and response-shape verification workflow guidance in `schoolmaster-specs/specs/001-schoolmaster-platform/quickstart.md`
+- [ ] T009b [P] Add executable contract validation commands for `schoolmaster-specs/specs/001-schoolmaster-platform/contracts/openapi.yaml` and `schoolmaster-specs/api/openapi.yaml` using Redocly CLI in `schoolmaster-specs/specs/001-schoolmaster-platform/quickstart.md`
 
 **Checkpoint**: Shared contract and tenant foundations are ready. User stories can now proceed.
 
@@ -100,19 +105,24 @@ description: "Task list for SchoolMaster Platform Foundation"
 ### Tests for User Story 2
 
 - [ ] T020 [P] [US2] Add contract coverage for teacher content, questionnaires, learning sets, grades, and attendance in `schoolmaster-specs/specs/001-schoolmaster-platform/contracts/openapi.yaml`
-- [ ] T021 [P] [US2] Add backend feature tests for teacher workflow, period validation, and tenant-safe record creation in `schoolmaster-backend/tests/Feature/Teacher/TeachingWorkflowTest.php`
+- [ ] T021 [P] [US2] Add backend feature tests for teacher workflow, active-period validation, selected-student grade and attendance entry, and tenant-safe record creation in `schoolmaster-backend/tests/Feature/Teacher/TeachingWorkflowTest.php`
 - [ ] T022 [P] [US2] Add frontend Vitest coverage for teacher workflow services and stores in `schoolmaster-frontend/tests/modules/teacher/teaching-workflow.spec.ts`
 
 ### Implementation for User Story 2
 
 - [ ] T023 [P] [US2] Create teacher workflow persistence models in `schoolmaster-backend/app/Models/TeacherContentFolder.php`, `schoolmaster-backend/app/Models/TeacherContentItem.php`, `schoolmaster-backend/app/Models/Questionnaire.php`, `schoolmaster-backend/app/Models/LearningSet.php`, `schoolmaster-backend/app/Models/LearningSetEntry.php`, `schoolmaster-backend/app/Models/GradeRecord.php`, and `schoolmaster-backend/app/Models/AttendanceRecord.php`
 - [ ] T023a [P] [US2] Create Laravel migrations for teacher content, questionnaires, learning sets, learning set entries, grade records, and attendance records in `schoolmaster-backend/database/migrations/` with tenant indexes and soft deletes where applicable
+- [ ] T023b [P] [US2] Create `LearningSetAssignment` persistence support in `schoolmaster-backend/app/Models/LearningSetAssignment.php` and `schoolmaster-backend/database/migrations/` with tenant-safe constraints for direct assignment to selected active `StudentProfile` records
 - [ ] T024 [P] [US2] Implement teacher content, questionnaire, learning set, grade, and attendance services in `schoolmaster-backend/app/Services/TeacherContent/`, `schoolmaster-backend/app/Services/Questionnaires/`, `schoolmaster-backend/app/Services/LearningSets/`, `schoolmaster-backend/app/Services/Grades/`, and `schoolmaster-backend/app/Services/Attendance/`
 - [ ] T024a [P] [US2] Implement tenant-scoped file storage, upload sanitization, and private asset access workflow in `schoolmaster-backend/app/Services/TeacherContent/` and `schoolmaster-backend/app/Http/Requests/`
+- [ ] T024b [US2] Implement learning set direct-assignment validation in `schoolmaster-backend/app/Services/LearningSets/`, ensuring assigned students are active, in the same school, and aligned to the learning set academic period
+- [ ] T024c [US2] Implement malware scan status handling for teacher content in `schoolmaster-backend/app/Services/TeacherContent/`, ensuring uploaded files remain unavailable until `scan_status` is `clean`
+- [ ] T024d [US2] Implement malware scanning adapter and asynchronous scan-status transition workflow in `schoolmaster-backend/app/Services/TeacherContent/`, `schoolmaster-backend/app/Jobs/`, and `schoolmaster-backend/tests/Feature/Teacher/TeacherContentUploadTest.php`
 - [ ] T025 [US2] Implement requests, policies, resources, and controllers for `/api/v1/teacher-content`, `/api/v1/questionnaires`, `/api/v1/learning-sets`, `/api/v1/grades`, and `/api/v1/attendance` in `schoolmaster-backend/app/Http/Controllers/Api/V1/`, `schoolmaster-backend/app/Http/Requests/`, and `schoolmaster-backend/app/Http/Resources/`
 - [ ] T025a [US2] Define contract-backed upload, download authorization, MIME and size validation, and inactive-asset handling in `schoolmaster-specs/specs/001-schoolmaster-platform/contracts/openapi.yaml`, `schoolmaster-backend/app/Http/Requests/`, and `schoolmaster-backend/app/Http/Controllers/Api/V1/`
+- [ ] T025b [US2] Add backend and contract coverage for malware scan statuses, scan-gated content availability, and rejection of unavailable content in `schoolmaster-specs/specs/001-schoolmaster-platform/contracts/openapi.yaml` and `schoolmaster-backend/tests/Feature/Teacher/TeacherContentUploadTest.php`
 - [ ] T026 [P] [US2] Implement teacher workflow API clients in `schoolmaster-frontend/src/services/teacher-content.ts`, `schoolmaster-frontend/src/services/questionnaires.ts`, `schoolmaster-frontend/src/services/learning-sets.ts`, `schoolmaster-frontend/src/services/grades.ts`, and `schoolmaster-frontend/src/services/attendance.ts`
-- [ ] T027 [P] [US2] Implement Pinia stores for teacher operations in `schoolmaster-frontend/src/stores/teacher-content.ts`, `schoolmaster-frontend/src/stores/questionnaires.ts`, `schoolmaster-frontend/src/stores/learning-sets.ts`, and `schoolmaster-frontend/src/stores/class-records.ts`
+- [ ] T027 [P] [US2] Implement Pinia stores for teacher operations in `schoolmaster-frontend/src/stores/teacher-content.ts`, `schoolmaster-frontend/src/stores/questionnaires.ts`, `schoolmaster-frontend/src/stores/learning-sets.ts`, and `schoolmaster-frontend/src/stores/academic-records.ts`
 - [ ] T028 [US2] Build the teacher workflow views for content management, learning sets, attendance, and grades in `schoolmaster-frontend/src/modules/teacher/` and update routes in `schoolmaster-frontend/src/router/index.ts`
 - [ ] T029 [US2] Document upload constraints, inactive-content behavior, and academic-period validation rules in `schoolmaster-specs/specs/001-schoolmaster-platform/spec.md` and `schoolmaster-specs/specs/001-schoolmaster-platform/quickstart.md`
 - [ ] T029a [US2] Document allowed file types, size limits, storage visibility, and validation or sanitization outcomes in `schoolmaster-specs/specs/001-schoolmaster-platform/spec.md` and `schoolmaster-specs/specs/001-schoolmaster-platform/quickstart.md`
@@ -130,8 +140,11 @@ description: "Task list for SchoolMaster Platform Foundation"
 ### Tests for User Story 3
 
 - [ ] T030 [P] [US3] Add contract coverage for student learning views and report requests in `schoolmaster-specs/specs/001-schoolmaster-platform/contracts/openapi.yaml`
+- [ ] T030a [P] [US3] Add contract coverage for report output retention and expiry in `schoolmaster-specs/specs/001-schoolmaster-platform/contracts/openapi.yaml`, including `ReportRun.output_expires_at`, `ReportRun.outputs_available`, and `410 OutputExpired` for `downloadReport`
 - [ ] T031 [P] [US3] Add backend feature tests for student self-view and school reporting scope in `schoolmaster-backend/tests/Feature/Student/StudentProgressAndReportsTest.php`
+- [ ] T031a [P] [US3] Add backend feature tests for report output expiry, retained `ReportRun` metadata, expired-output download rejection, and requesting a new `ReportRun` with the same filters in `schoolmaster-backend/tests/Feature/Reports/ReportOutputRetentionTest.php`
 - [ ] T032 [P] [US3] Add frontend Vitest coverage for student progress and reporting flows in `schoolmaster-frontend/tests/modules/student/student-progress-and-reports.spec.ts`
+- [ ] T032a [P] [US3] Add frontend Vitest coverage for expired report output handling and new report-run request flow in `schoolmaster-frontend/tests/modules/reports/report-output-retention.spec.ts`
 
 ### Implementation for User Story 3
 
@@ -139,8 +152,10 @@ description: "Task list for SchoolMaster Platform Foundation"
 - [ ] T033a [P] [US3] Create Laravel migrations and projection support for report requests and persisted outputs in `schoolmaster-backend/database/migrations/`, `schoolmaster-backend/app/Models/ReportRun.php`, and `schoolmaster-backend/app/Repositories/Reports/`
 - [ ] T034 [P] [US3] Implement student progress and report generation services in `schoolmaster-backend/app/Services/Students/StudentProgressService.php` and `schoolmaster-backend/app/Services/Reports/ReportGenerationService.php`
 - [ ] T034a [P] [US3] Define launch-scope report types, filters, and tenant-bound report generation rules in `schoolmaster-backend/app/Services/Reports/` and `schoolmaster-specs/specs/001-schoolmaster-platform/spec.md`
+- [ ] T034b [US3] Implement report output retention and expiry rules in `schoolmaster-backend/app/Services/Reports/`, preserving `ReportRun` metadata after files expire and preventing automatic regeneration during download
 - [ ] T035 [US3] Implement controllers, requests, policies, and resources for student views and `/api/v1/reports` in `schoolmaster-backend/app/Http/Controllers/Api/V1/`, `schoolmaster-backend/app/Http/Requests/`, and `schoolmaster-backend/app/Http/Resources/`
 - [ ] T035a [US3] Add explicit student self-view contract coverage for learning timeline, grades, and attendance endpoints in `schoolmaster-specs/specs/001-schoolmaster-platform/contracts/openapi.yaml` and `schoolmaster-backend/app/Http/Controllers/Api/V1/`
+- [ ] T035b [US3] Implement inactive or transferred student visibility rules for student self-view and administrative history access in `schoolmaster-backend/app/Policies/`, `schoolmaster-backend/app/Services/Students/StudentProgressService.php`, and `schoolmaster-backend/tests/Feature/Student/StudentProgressAndReportsTest.php`
 - [ ] T036 [P] [US3] Implement student and report API clients in `schoolmaster-frontend/src/services/student-progress.ts` and `schoolmaster-frontend/src/services/reports.ts`
 - [ ] T037 [P] [US3] Implement Pinia stores for student timeline and school reporting in `schoolmaster-frontend/src/stores/student-progress.ts` and `schoolmaster-frontend/src/stores/reports.ts`
 - [ ] T038 [US3] Build the student progress and reporting screens in `schoolmaster-frontend/src/modules/student/`, `schoolmaster-frontend/src/modules/reports/`, and `schoolmaster-frontend/src/router/index.ts`
@@ -157,6 +172,7 @@ description: "Task list for SchoolMaster Platform Foundation"
 
 - [ ] T040 [P] Reconcile final contract examples, shared schemas, and error cases in `schoolmaster-specs/specs/001-schoolmaster-platform/contracts/openapi.yaml`
 - [ ] T040a [P] Reconcile success, validation failure, forbidden, not found, inactive-record, and tenant-isolation examples in `schoolmaster-specs/specs/001-schoolmaster-platform/contracts/openapi.yaml`
+- [ ] T040b Run Redocly validation and response-shape verification for the feature OpenAPI contract and repository aggregate `api/openapi.yaml`, then document pass/fail results in `schoolmaster-specs/specs/001-schoolmaster-platform/quickstart.md`
 - [ ] T041 Run the end-to-end validation walkthrough and update expected outcomes in `schoolmaster-specs/specs/001-schoolmaster-platform/quickstart.md`
 - [ ] T042 [P] Add cross-story backend regression coverage for tenant isolation and inactive-status handling in `schoolmaster-backend/tests/Feature/Security/TenantIsolationRegressionTest.php`
 - [ ] T042a [P] Add backend regression coverage for platform-admin override rules and upload access control in `schoolmaster-backend/tests/Feature/Security/`
