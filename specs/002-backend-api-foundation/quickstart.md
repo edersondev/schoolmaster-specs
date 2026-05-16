@@ -39,6 +39,10 @@ Expected result: both contracts validate. Existing metadata warnings, such as a 
 
 Latest result, 2026-05-16: both `api/openapi.yaml` and `specs/001-schoolmaster-platform/contracts/openapi.yaml` validated successfully with Redocly after adding logout revocation, 8-hour token expiry, token rejection, login lockout, and audit-relevant auth semantics.
 
+Latest backend implementation result, 2026-05-16: both aggregate and active
+feature OpenAPI contracts validated successfully with Redocly. Each contract
+still reports the existing `info.license` warning only.
+
 ## Required Contract Sync Before Auth Coding
 
 Before implementing `login` or `getCurrentUser`, update `/specs` and OpenAPI to document:
@@ -71,6 +75,25 @@ Readiness expectations:
 - Backend setup documentation identifies MySQL, `/specs`, test commands, and contract validation commands.
 - `routes/api.php` is the product API route entry point.
 - The first product slice is limited to authentication and school management operations documented in OpenAPI.
+
+Latest route result, 2026-05-16: `php artisan route:list` shows the approved
+first-slice product routes under `/api/v1`:
+
+- `POST /api/v1/auth/login`
+- `GET /api/v1/auth/me`
+- `POST /api/v1/auth/logout`
+- `GET /api/v1/schools`
+- `POST /api/v1/schools`
+- `GET /api/v1/schools/{schoolId}`
+- `PATCH /api/v1/schools/{schoolId}`
+
+Latest test result, 2026-05-16: route/readiness and non-database unit tests
+passed with `php artisan test --filter
+'ApiResponseTest|ApiRoutePrefixTest|AuditEventServiceTest|BackendReadinessTest|SpecsSubmoduleReadinessTest'`.
+The full `php artisan test` command was executed but cannot complete in the
+current PHP runtime because `PDO::getAvailableDrivers()` returns no available
+database drivers; database-backed feature tests require enabling a PDO driver
+for the configured test database.
 
 ## First Slice Contract Boundary
 
