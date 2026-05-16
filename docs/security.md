@@ -22,11 +22,18 @@ before backend and frontend implementation diverge.
 
 - Authentication establishes the user identity and, for school-scoped users,
   the resolved school context.
+- First-slice bearer tokens expire 8 hours after issuance.
+- Logout revokes continued access for the current bearer token.
 - Inactive users cannot authenticate or continue protected workflows.
 - Inactive schools reject school-scoped operational workflows before
   module-specific logic runs.
-- Token lifetime, rotation, and revocation details must be documented in the
-  module contract before implementation.
+- Expired, revoked, inactive-user, and inactive-school tokens must return the
+  documented token rejection response envelope.
+- Failed login attempts are counted by both submitted email and source IP.
+  Login locks after 5 failed attempts for either key within 15 minutes and
+  returns the documented lockout envelope with retry metadata.
+- Token rotation and refresh behavior remain out of scope until specified in
+  OpenAPI.
 
 ## Authorization Rules
 
@@ -51,5 +58,10 @@ before backend and frontend implementation diverge.
 
 - Tenant-sensitive workflows should record enough context to investigate
   access, authorization, upload, report generation, and administrative changes.
+- The first backend slice records audit events for login success, login
+  failure, logout, token rejection, school create, school update, school
+  activation, and school deactivation.
+- Authentication and school lifecycle audit events must not store plaintext
+  credentials or bearer token values.
 - Audit event schemas and retention rules remain module-level decisions and
   must be specified before implementation where they affect product behavior.

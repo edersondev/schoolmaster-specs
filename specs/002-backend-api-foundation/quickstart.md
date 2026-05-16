@@ -6,7 +6,7 @@ Use this guide to validate backend readiness before implementation begins for au
 
 ## Prerequisites
 
-- Current branch: `001-backend-api-foundation`
+- Current branch: `002-backend-api-foundation`
 - Active spec: `specs/specs/002-backend-api-foundation/spec.md`
 - Active plan: `specs/specs/002-backend-api-foundation/plan.md`
 - Source-of-truth specs mounted at `specs/`
@@ -36,6 +36,8 @@ npx @redocly/cli lint specs/specs/001-schoolmaster-platform/contracts/openapi.ya
 ```
 
 Expected result: both contracts validate. Existing metadata warnings, such as a missing `info.license`, should be recorded but do not by themselves define backend behavior.
+
+Latest result, 2026-05-16: both `api/openapi.yaml` and `specs/001-schoolmaster-platform/contracts/openapi.yaml` validated successfully with Redocly after adding logout revocation, 8-hour token expiry, token rejection, login lockout, and audit-relevant auth semantics.
 
 ## Required Contract Sync Before Auth Coding
 
@@ -113,4 +115,4 @@ Backend design and tests must verify:
 - `AGENTS.md` points to this active plan between the Speckit markers.
 - OpenAPI validation can be run and results recorded.
 - OpenAPI is updated for token expiry, revocation, lockout, token rejection, and audit behavior before authentication coding.
-- No backend implementation tasks have been generated unless `/speckit-tasks` is explicitly requested.
+- Generated implementation tasks remain bounded to this plan and must preserve the contract-first guardrails before backend product coding.

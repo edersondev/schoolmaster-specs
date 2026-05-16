@@ -34,16 +34,16 @@
 
 **CRITICAL**: No authentication or school management implementation should begin until this phase is complete.
 
-- [ ] T009 Update aggregate OpenAPI auth operations and responses for 8-hour token expiry, logout revocation, inactive user/school token rejection, and lockout response in `specs/api/openapi.yaml`
-- [ ] T010 Update active feature OpenAPI auth operations and responses for 8-hour token expiry, logout revocation, inactive user/school token rejection, and lockout response in `specs/specs/001-schoolmaster-platform/contracts/openapi.yaml`
-- [ ] T011 Update security guidance with token expiry, lockout, token rejection, and audit requirements in `specs/docs/security.md`
+- [x] T009 Update aggregate OpenAPI auth operations and responses for 8-hour token expiry, logout revocation, inactive user/school token rejection, and lockout response in `specs/api/openapi.yaml`
+- [x] T010 Update active feature OpenAPI auth operations and responses for 8-hour token expiry, logout revocation, inactive user/school token rejection, and lockout response in `specs/specs/001-schoolmaster-platform/contracts/openapi.yaml`
+- [x] T011 Update security guidance with token expiry, lockout, token rejection, and audit requirements in `specs/docs/security.md`
 - [ ] T012 [P] Create API response envelope helper in `app/Http/Resources/ApiResponse.php`
 - [ ] T013 [P] Create API exception response mapping for validation, unauthorized, forbidden, tenant mismatch, lockout, token rejection, and not found outcomes in `bootstrap/app.php`
 - [ ] T014 [P] Create tenant context value object in `app/DTOs/TenantContext.php`
 - [ ] T015 [P] Create tenant context resolver service in `app/Services/TenantContextResolver.php`
 - [ ] T016 [P] Create audit event service interface and base service in `app/Services/AuditEventService.php`
 - [ ] T017 [P] Create base authorization policy scaffolding for platform and school scopes in `app/Policies/ScopePolicy.php`
-- [ ] T018 Run aggregate and active feature OpenAPI validation and record results in `specs/specs/002-backend-api-foundation/quickstart.md`
+- [x] T018 Run aggregate and active feature OpenAPI validation and record results in `specs/specs/002-backend-api-foundation/quickstart.md`
 
 **Checkpoint**: Contract-visible security behavior is documented; shared API, tenant, authorization, and audit primitives are ready.
 
