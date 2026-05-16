@@ -87,13 +87,11 @@ first-slice product routes under `/api/v1`:
 - `GET /api/v1/schools/{schoolId}`
 - `PATCH /api/v1/schools/{schoolId}`
 
-Latest test result, 2026-05-16: route/readiness and non-database unit tests
-passed with `php artisan test --filter
-'ApiResponseTest|ApiRoutePrefixTest|AuditEventServiceTest|BackendReadinessTest|SpecsSubmoduleReadinessTest'`.
-The full `php artisan test` command was executed but cannot complete in the
-current PHP runtime because `PDO::getAvailableDrivers()` returns no available
-database drivers; database-backed feature tests require enabling a PDO driver
-for the configured test database.
+Latest Docker/MySQL test result, 2026-05-16: `docker compose run --rm app php
+artisan test` passed with 17 tests and 88 assertions against the
+`schoolmaster_testing` MySQL database. The host PHP runtime still has no PDO
+drivers, so full database-backed validation should use Docker Compose unless
+the host PHP installation is extended with `pdo_mysql`.
 
 ## First Slice Contract Boundary
 

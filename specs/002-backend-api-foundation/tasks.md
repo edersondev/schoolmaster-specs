@@ -132,7 +132,7 @@
 - [X] T056 [US3] Register approved `/api/v1/auth/login`, `/api/v1/auth/me`, `/api/v1/auth/logout`, `/api/v1/schools`, and `/api/v1/schools/{schoolId}` routes only after OpenAPI documents them in `routes/api.php`
 - [X] T057 [US3] Create school and platform authorization policies in `app/Policies/SchoolPolicy.php`
 - [X] T058 [US3] Seed baseline platform/school permissions and roles needed for first-slice tests in `database/seeders/DatabaseSeeder.php`
-- [ ] T059 [US3] Run OpenAPI validation and backend tests, then record first-slice verification results in `specs/specs/002-backend-api-foundation/quickstart.md`
+- [X] T059 [US3] Run OpenAPI validation and backend tests, then record first-slice verification results in `specs/specs/002-backend-api-foundation/quickstart.md`
 
 **Checkpoint**: User Story 3 delivers the bounded first product slice and remains limited to approved authentication and school management operations.
 
@@ -146,8 +146,8 @@
 - [X] T061 [P] Review OpenAPI operation IDs implemented by backend and document traceability in `README.md`
 - [X] T062 [P] Review tenant terminology and replace implementation-facing `tenant_id` references with `school_id` where v1 school-owned records are meant in `app/` and `database/`
 - [X] T063 [P] Run `php artisan route:list` and verify no undocumented product route exists outside `routes/api.php`
-- [ ] T064 Run full validation from `specs/specs/002-backend-api-foundation/quickstart.md`
-- [ ] T065 Update `specs/specs/002-backend-api-foundation/tasks.md` with completion notes only after validation commands pass
+- [X] T064 Run full validation from `specs/specs/002-backend-api-foundation/quickstart.md`
+- [X] T065 Update `specs/specs/002-backend-api-foundation/tasks.md` with completion notes only after validation commands pass
 
 ---
 
