@@ -18,10 +18,10 @@
 
 **Purpose**: Align backend implementation with the approved specification and contract before code changes.
 
-- [ ] T001 Record feature scope and consumed operation IDs in `schoolmaster-backend/README.md`
-- [ ] T002 [P] Verify the backend specs submodule or mounted specs path references `schoolmaster-specs/specs/003-backend-school-admin/quickstart.md` in `schoolmaster-backend/AGENTS.md`
-- [ ] T003 [P] Run contract validation and record the result in `schoolmaster-backend/docs/implementation-notes/003-backend-school-admin.md`
-- [ ] T004 [P] Confirm no undocumented P1 school-admin routes exist and document the route inventory in `schoolmaster-backend/docs/implementation-notes/003-backend-school-admin.md`
+- [ ] T001 Record feature scope and consumed operation IDs in `README.md`
+- [ ] T002 [P] Verify the backend specs submodule or mounted specs path references `schoolmaster-specs/specs/003-backend-school-admin/quickstart.md` in `AGENTS.md`
+- [ ] T003 [P] Run contract validation and record the result in `docs/implementation-notes/003-backend-school-admin.md`
+- [ ] T004 [P] Confirm no undocumented P1 school-admin routes exist and document the route inventory in `docs/implementation-notes/003-backend-school-admin.md`
 
 ---
 
@@ -31,15 +31,15 @@
 
 **Critical**: No user story work should begin until this phase is complete.
 
-- [ ] T005 Inspect existing backend migrations for `User`, `Role`, `Permission`, `AcademicYear`, `AcademicPeriod`, `Guardian`, and `StudentProfile` UUID/status/tenant/soft-delete columns in `schoolmaster-backend/database/migrations/`
-- [ ] T006 Add only missing school-admin persistence changes and document any non-soft-deletable entity rationale in `schoolmaster-backend/database/migrations/` and `schoolmaster-backend/docs/implementation-notes/003-backend-school-admin.md`
-- [ ] T007 [P] Define shared school-scope query helpers or scopes in `schoolmaster-backend/app/Models/Concerns/BelongsToSchool.php`
-- [ ] T008 [P] Define tenant context access helpers for school-scoped services in `schoolmaster-backend/app/Services/TenantContextService.php`
-- [ ] T009 Define shared tenant-context middleware behavior for `X-School-Id` failures in `schoolmaster-backend/app/Http/Middleware/ResolveSchoolContext.php`
-- [ ] T010 [P] Define shared API error code mappings for tenant mismatch, inactive record, forbidden, and validation failures in `schoolmaster-backend/app/Exceptions/Handler.php`
-- [ ] T011 [P] Define base pagination/resource envelope helpers for list responses in `schoolmaster-backend/app/Http/Resources/Concerns/WrapsApiResponses.php`
-- [ ] T012 Seed baseline platform and school permission definitions used by this slice in `schoolmaster-backend/database/seeders/PermissionSeeder.php`
-- [ ] T013 Define the school-admin route group with auth and tenant middleware only, without operation-specific route registration, in `schoolmaster-backend/routes/api.php`
+- [ ] T005 Inspect existing backend migrations for `User`, `Role`, `Permission`, `AcademicYear`, `AcademicPeriod`, `Guardian`, and `StudentProfile` UUID/status/tenant/soft-delete columns in `database/migrations/`
+- [ ] T006 Add only missing school-admin persistence changes and document any non-soft-deletable entity rationale in `database/migrations/` and `docs/implementation-notes/003-backend-school-admin.md`
+- [ ] T007 [P] Define shared school-scope query helpers or scopes in `app/Models/Concerns/BelongsToSchool.php`
+- [ ] T008 [P] Define tenant context access helpers for school-scoped services in `app/Services/TenantContextService.php`
+- [ ] T009 Define shared tenant-context middleware behavior for `X-School-Id` failures in `app/Http/Middleware/ResolveSchoolContext.php`
+- [ ] T010 [P] Define shared API error code mappings for tenant mismatch, inactive record, forbidden, and validation failures in `app/Exceptions/Handler.php`
+- [ ] T011 [P] Define base pagination/resource envelope helpers for list responses in `app/Http/Resources/Concerns/WrapsApiResponses.php`
+- [ ] T012 Seed baseline platform and school permission definitions used by this slice in `database/seeders/PermissionSeeder.php`
+- [ ] T013 Define the school-admin route group with auth and tenant middleware only, without operation-specific route registration, in `routes/api.php`
 
 **Checkpoint**: Tenant context, permission seeds, shared envelopes, and route boundaries are ready for story work.
 
@@ -53,33 +53,33 @@
 
 ### Tests for User Story 1
 
-- [ ] T014 [P] [US1] Add PHPUnit feature tests for `GET /api/v1/permissions` in `schoolmaster-backend/tests/Feature/Api/V1/PermissionListTest.php`
-- [ ] T015 [P] [US1] Add PHPUnit feature tests for `GET /api/v1/roles` and `POST /api/v1/roles` in `schoolmaster-backend/tests/Feature/Api/V1/RoleManagementTest.php`
-- [ ] T016 [P] [US1] Add PHPUnit feature tests for `GET /api/v1/users` and `POST /api/v1/users` in `schoolmaster-backend/tests/Feature/Api/V1/UserManagementTest.php`
-- [ ] T017 [P] [US1] Add unit tests for role-permission scope compatibility in `schoolmaster-backend/tests/Unit/Services/RolePermissionScopeTest.php`
-- [ ] T018 [P] [US1] Add unit tests for same-school user role assignment validation in `schoolmaster-backend/tests/Unit/Services/UserRoleAssignmentTest.php`
+- [ ] T014 [P] [US1] Add PHPUnit feature tests for `GET /api/v1/permissions` in `tests/Feature/Api/V1/PermissionListTest.php`
+- [ ] T015 [P] [US1] Add PHPUnit feature tests for `GET /api/v1/roles` and `POST /api/v1/roles` in `tests/Feature/Api/V1/RoleManagementTest.php`
+- [ ] T016 [P] [US1] Add PHPUnit feature tests for `GET /api/v1/users` and `POST /api/v1/users` in `tests/Feature/Api/V1/UserManagementTest.php`
+- [ ] T017 [P] [US1] Add unit tests for role-permission scope compatibility in `tests/Unit/Services/RolePermissionScopeTest.php`
+- [ ] T018 [P] [US1] Add unit tests for same-school user role assignment validation in `tests/Unit/Services/UserRoleAssignmentTest.php`
 
 ### Implementation for User Story 1
 
-- [ ] T019 [P] [US1] Verify or implement `Role` and `Permission` model relationships in `schoolmaster-backend/app/Models/Role.php`
-- [ ] T020 [P] [US1] Verify or implement permission relationships and active-scope helpers in `schoolmaster-backend/app/Models/Permission.php`
-- [ ] T021 [P] [US1] Verify or implement user role relationships and school scope helpers in `schoolmaster-backend/app/Models/User.php`
-- [ ] T022 [US1] Implement role creation input DTO in `schoolmaster-backend/app/DTOs/Roles/CreateRoleData.php`
-- [ ] T023 [US1] Implement user creation input DTO in `schoolmaster-backend/app/DTOs/Users/CreateUserData.php`
-- [ ] T024 [P] [US1] Implement role creation validation in `schoolmaster-backend/app/Http/Requests/Api/V1/CreateRoleRequest.php`
-- [ ] T025 [P] [US1] Implement user creation validation in `schoolmaster-backend/app/Http/Requests/Api/V1/CreateUserRequest.php`
-- [ ] T026 [P] [US1] Implement role response shape in `schoolmaster-backend/app/Http/Resources/Api/V1/RoleResource.php`
-- [ ] T027 [P] [US1] Implement permission response shape in `schoolmaster-backend/app/Http/Resources/Api/V1/PermissionResource.php`
-- [ ] T028 [P] [US1] Implement user response shape in `schoolmaster-backend/app/Http/Resources/Api/V1/UserResource.php`
-- [ ] T029 [P] [US1] Implement role authorization policy in `schoolmaster-backend/app/Policies/RolePolicy.php`
-- [ ] T030 [P] [US1] Implement user authorization policy in `schoolmaster-backend/app/Policies/UserPolicy.php`
-- [ ] T031 [US1] Implement permission listing service in `schoolmaster-backend/app/Services/Permissions/PermissionQueryService.php`
-- [ ] T032 [US1] Implement role listing and creation service in `schoolmaster-backend/app/Services/Roles/RoleService.php`
-- [ ] T033 [US1] Implement user listing and creation service in `schoolmaster-backend/app/Services/Users/UserService.php`
-- [ ] T034 [US1] Implement permission list controller action in `schoolmaster-backend/app/Http/Controllers/Api/V1/PermissionController.php`
-- [ ] T035 [US1] Implement role list/create controller actions in `schoolmaster-backend/app/Http/Controllers/Api/V1/RoleController.php`
-- [ ] T036 [US1] Implement user list/create controller actions in `schoolmaster-backend/app/Http/Controllers/Api/V1/UserController.php`
-- [ ] T037 [US1] Wire `listPermissions`, `listRoles`, `createRole`, `listUsers`, and `createUser` routes in `schoolmaster-backend/routes/api.php`
+- [ ] T019 [P] [US1] Verify or implement `Role` and `Permission` model relationships in `app/Models/Role.php`
+- [ ] T020 [P] [US1] Verify or implement permission relationships and active-scope helpers in `app/Models/Permission.php`
+- [ ] T021 [P] [US1] Verify or implement user role relationships and school scope helpers in `app/Models/User.php`
+- [ ] T022 [US1] Implement role creation input DTO in `app/DTOs/Roles/CreateRoleData.php`
+- [ ] T023 [US1] Implement user creation input DTO in `app/DTOs/Users/CreateUserData.php`
+- [ ] T024 [P] [US1] Implement role creation validation in `app/Http/Requests/Api/V1/CreateRoleRequest.php`
+- [ ] T025 [P] [US1] Implement user creation validation in `app/Http/Requests/Api/V1/CreateUserRequest.php`
+- [ ] T026 [P] [US1] Implement role response shape in `app/Http/Resources/Api/V1/RoleResource.php`
+- [ ] T027 [P] [US1] Implement permission response shape in `app/Http/Resources/Api/V1/PermissionResource.php`
+- [ ] T028 [P] [US1] Implement user response shape in `app/Http/Resources/Api/V1/UserResource.php`
+- [ ] T029 [P] [US1] Implement role authorization policy in `app/Policies/RolePolicy.php`
+- [ ] T030 [P] [US1] Implement user authorization policy in `app/Policies/UserPolicy.php`
+- [ ] T031 [US1] Implement permission listing service in `app/Services/Permissions/PermissionQueryService.php`
+- [ ] T032 [US1] Implement role listing and creation service in `app/Services/Roles/RoleService.php`
+- [ ] T033 [US1] Implement user listing and creation service in `app/Services/Users/UserService.php`
+- [ ] T034 [US1] Implement permission list controller action in `app/Http/Controllers/Api/V1/PermissionController.php`
+- [ ] T035 [US1] Implement role list/create controller actions in `app/Http/Controllers/Api/V1/RoleController.php`
+- [ ] T036 [US1] Implement user list/create controller actions in `app/Http/Controllers/Api/V1/UserController.php`
+- [ ] T037 [US1] Wire `listPermissions`, `listRoles`, `createRole`, `listUsers`, and `createUser` routes in `routes/api.php`
 
 **Checkpoint**: User Story 1 is independently functional and can be validated without academic or guardian workflows.
 
@@ -93,27 +93,27 @@
 
 ### Tests for User Story 2
 
-- [ ] T038 [P] [US2] Add PHPUnit feature tests for `GET /api/v1/academic-years` and `POST /api/v1/academic-years` in `schoolmaster-backend/tests/Feature/Api/V1/AcademicYearManagementTest.php`
-- [ ] T039 [P] [US2] Add PHPUnit feature tests for `GET /api/v1/academic-periods` and `POST /api/v1/academic-periods` in `schoolmaster-backend/tests/Feature/Api/V1/AcademicPeriodManagementTest.php`
-- [ ] T040 [P] [US2] Add unit tests for academic period date containment and sequence uniqueness in `schoolmaster-backend/tests/Unit/Services/AcademicPeriodValidationTest.php`
+- [ ] T038 [P] [US2] Add PHPUnit feature tests for `GET /api/v1/academic-years` and `POST /api/v1/academic-years` in `tests/Feature/Api/V1/AcademicYearManagementTest.php`
+- [ ] T039 [P] [US2] Add PHPUnit feature tests for `GET /api/v1/academic-periods` and `POST /api/v1/academic-periods` in `tests/Feature/Api/V1/AcademicPeriodManagementTest.php`
+- [ ] T040 [P] [US2] Add unit tests for academic period date containment and sequence uniqueness in `tests/Unit/Services/AcademicPeriodValidationTest.php`
 
 ### Implementation for User Story 2
 
-- [ ] T041 [P] [US2] Implement or verify `AcademicYear` model fields, relationships, and school scope in `schoolmaster-backend/app/Models/AcademicYear.php`
-- [ ] T042 [P] [US2] Implement or verify `AcademicPeriod` model fields, relationships, and school scope in `schoolmaster-backend/app/Models/AcademicPeriod.php`
-- [ ] T043 [US2] Implement academic year creation input DTO in `schoolmaster-backend/app/DTOs/AcademicYears/CreateAcademicYearData.php`
-- [ ] T044 [US2] Implement academic period creation input DTO in `schoolmaster-backend/app/DTOs/AcademicPeriods/CreateAcademicPeriodData.php`
-- [ ] T045 [P] [US2] Implement academic year validation in `schoolmaster-backend/app/Http/Requests/Api/V1/CreateAcademicYearRequest.php`
-- [ ] T046 [P] [US2] Implement academic period validation in `schoolmaster-backend/app/Http/Requests/Api/V1/CreateAcademicPeriodRequest.php`
-- [ ] T047 [P] [US2] Implement academic year response shape in `schoolmaster-backend/app/Http/Resources/Api/V1/AcademicYearResource.php`
-- [ ] T048 [P] [US2] Implement academic period response shape in `schoolmaster-backend/app/Http/Resources/Api/V1/AcademicPeriodResource.php`
-- [ ] T049 [P] [US2] Implement academic year authorization policy in `schoolmaster-backend/app/Policies/AcademicYearPolicy.php`
-- [ ] T050 [P] [US2] Implement academic period authorization policy in `schoolmaster-backend/app/Policies/AcademicPeriodPolicy.php`
-- [ ] T051 [US2] Implement academic year listing and creation service in `schoolmaster-backend/app/Services/AcademicYears/AcademicYearService.php`
-- [ ] T052 [US2] Implement academic period listing and creation service in `schoolmaster-backend/app/Services/AcademicPeriods/AcademicPeriodService.php`
-- [ ] T053 [US2] Implement academic year list/create controller actions in `schoolmaster-backend/app/Http/Controllers/Api/V1/AcademicYearController.php`
-- [ ] T054 [US2] Implement academic period list/create controller actions in `schoolmaster-backend/app/Http/Controllers/Api/V1/AcademicPeriodController.php`
-- [ ] T055 [US2] Wire `listAcademicYears`, `createAcademicYear`, `listAcademicPeriods`, and `createAcademicPeriod` routes in `schoolmaster-backend/routes/api.php`
+- [ ] T041 [P] [US2] Implement or verify `AcademicYear` model fields, relationships, and school scope in `app/Models/AcademicYear.php`
+- [ ] T042 [P] [US2] Implement or verify `AcademicPeriod` model fields, relationships, and school scope in `app/Models/AcademicPeriod.php`
+- [ ] T043 [US2] Implement academic year creation input DTO in `app/DTOs/AcademicYears/CreateAcademicYearData.php`
+- [ ] T044 [US2] Implement academic period creation input DTO in `app/DTOs/AcademicPeriods/CreateAcademicPeriodData.php`
+- [ ] T045 [P] [US2] Implement academic year validation in `app/Http/Requests/Api/V1/CreateAcademicYearRequest.php`
+- [ ] T046 [P] [US2] Implement academic period validation in `app/Http/Requests/Api/V1/CreateAcademicPeriodRequest.php`
+- [ ] T047 [P] [US2] Implement academic year response shape in `app/Http/Resources/Api/V1/AcademicYearResource.php`
+- [ ] T048 [P] [US2] Implement academic period response shape in `app/Http/Resources/Api/V1/AcademicPeriodResource.php`
+- [ ] T049 [P] [US2] Implement academic year authorization policy in `app/Policies/AcademicYearPolicy.php`
+- [ ] T050 [P] [US2] Implement academic period authorization policy in `app/Policies/AcademicPeriodPolicy.php`
+- [ ] T051 [US2] Implement academic year listing and creation service in `app/Services/AcademicYears/AcademicYearService.php`
+- [ ] T052 [US2] Implement academic period listing and creation service in `app/Services/AcademicPeriods/AcademicPeriodService.php`
+- [ ] T053 [US2] Implement academic year list/create controller actions in `app/Http/Controllers/Api/V1/AcademicYearController.php`
+- [ ] T054 [US2] Implement academic period list/create controller actions in `app/Http/Controllers/Api/V1/AcademicPeriodController.php`
+- [ ] T055 [US2] Wire `listAcademicYears`, `createAcademicYear`, `listAcademicPeriods`, and `createAcademicPeriod` routes in `routes/api.php`
 
 **Checkpoint**: User Story 2 is independently functional after the shared tenant and authorization foundation.
 
@@ -127,20 +127,20 @@
 
 ### Tests for User Story 3
 
-- [ ] T056 [P] [US3] Add PHPUnit feature tests for `GET /api/v1/guardians` and `POST /api/v1/guardians` in `schoolmaster-backend/tests/Feature/Api/V1/GuardianManagementTest.php`
-- [ ] T057 [P] [US3] Add unit tests for atomic guardian-student association validation in `schoolmaster-backend/tests/Unit/Services/GuardianAssociationTest.php`
+- [ ] T056 [P] [US3] Add PHPUnit feature tests for `GET /api/v1/guardians` and `POST /api/v1/guardians` in `tests/Feature/Api/V1/GuardianManagementTest.php`
+- [ ] T057 [P] [US3] Add unit tests for atomic guardian-student association validation in `tests/Unit/Services/GuardianAssociationTest.php`
 
 ### Implementation for User Story 3
 
-- [ ] T058 [P] [US3] Implement or verify `Guardian` model fields, relationships, and school scope in `schoolmaster-backend/app/Models/Guardian.php`
-- [ ] T059 [P] [US3] Implement or verify `StudentProfile` relationship helpers needed for guardian association validation in `schoolmaster-backend/app/Models/StudentProfile.php`
-- [ ] T060 [US3] Implement guardian creation input DTO in `schoolmaster-backend/app/DTOs/Guardians/CreateGuardianData.php`
-- [ ] T061 [P] [US3] Implement guardian validation in `schoolmaster-backend/app/Http/Requests/Api/V1/CreateGuardianRequest.php`
-- [ ] T062 [P] [US3] Implement guardian response shape in `schoolmaster-backend/app/Http/Resources/Api/V1/GuardianResource.php`
-- [ ] T063 [P] [US3] Implement guardian authorization policy in `schoolmaster-backend/app/Policies/GuardianPolicy.php`
-- [ ] T064 [US3] Implement guardian listing, creation, and atomic student association service in `schoolmaster-backend/app/Services/Guardians/GuardianService.php`
-- [ ] T065 [US3] Implement guardian list/create controller actions in `schoolmaster-backend/app/Http/Controllers/Api/V1/GuardianController.php`
-- [ ] T066 [US3] Wire `listGuardians` and `createGuardian` routes in `schoolmaster-backend/routes/api.php`
+- [ ] T058 [P] [US3] Implement or verify `Guardian` model fields, relationships, and school scope in `app/Models/Guardian.php`
+- [ ] T059 [P] [US3] Implement or verify `StudentProfile` relationship helpers needed for guardian association validation in `app/Models/StudentProfile.php`
+- [ ] T060 [US3] Implement guardian creation input DTO in `app/DTOs/Guardians/CreateGuardianData.php`
+- [ ] T061 [P] [US3] Implement guardian validation in `app/Http/Requests/Api/V1/CreateGuardianRequest.php`
+- [ ] T062 [P] [US3] Implement guardian response shape in `app/Http/Resources/Api/V1/GuardianResource.php`
+- [ ] T063 [P] [US3] Implement guardian authorization policy in `app/Policies/GuardianPolicy.php`
+- [ ] T064 [US3] Implement guardian listing, creation, and atomic student association service in `app/Services/Guardians/GuardianService.php`
+- [ ] T065 [US3] Implement guardian list/create controller actions in `app/Http/Controllers/Api/V1/GuardianController.php`
+- [ ] T066 [US3] Wire `listGuardians` and `createGuardian` routes in `routes/api.php`
 
 **Checkpoint**: User Story 3 is independently functional after shared foundations and optional student-profile references are validated safely.
 
@@ -150,13 +150,13 @@
 
 **Purpose**: Final contract compliance, verification, documentation, and cleanup across all selected stories.
 
-- [ ] T067 [P] Run backend test suite and record result in `schoolmaster-backend/docs/implementation-notes/003-backend-school-admin.md`
-- [ ] T068 [P] Run Redocly validation and record result in `schoolmaster-backend/docs/implementation-notes/003-backend-school-admin.md`
-- [ ] T069 [P] Add response-shape regression coverage for all eleven operation IDs in `schoolmaster-backend/tests/Feature/Api/V1/SchoolAdminResponseShapeTest.php`
-- [ ] T070 [P] Add validation-contract regression coverage for undocumented request fields, unsupported filters, unsupported sort values, and invalid payload shapes across all eleven operation IDs in `schoolmaster-backend/tests/Feature/Api/V1/SchoolAdminValidationContractTest.php`
-- [ ] T071 [P] Add tenant-isolation regression coverage across users, roles, academic years, academic periods, and guardians in `schoolmaster-backend/tests/Feature/Api/V1/SchoolAdminTenantIsolationTest.php`
-- [ ] T072 Review implemented backend routes against the blocked-operation list in `schoolmaster-backend/routes/api.php`
-- [ ] T073 Update implementation notes with final operation IDs, test commands, and blocked follow-up contract gaps in `schoolmaster-backend/docs/implementation-notes/003-backend-school-admin.md`
+- [ ] T067 [P] Run backend test suite and record result in `docs/implementation-notes/003-backend-school-admin.md`
+- [ ] T068 [P] Run Redocly validation and record result in `docs/implementation-notes/003-backend-school-admin.md`
+- [ ] T069 [P] Add response-shape regression coverage for all eleven operation IDs in `tests/Feature/Api/V1/SchoolAdminResponseShapeTest.php`
+- [ ] T070 [P] Add validation-contract regression coverage for undocumented request fields, unsupported filters, unsupported sort values, and invalid payload shapes across all eleven operation IDs in `tests/Feature/Api/V1/SchoolAdminValidationContractTest.php`
+- [ ] T071 [P] Add tenant-isolation regression coverage across users, roles, academic years, academic periods, and guardians in `tests/Feature/Api/V1/SchoolAdminTenantIsolationTest.php`
+- [ ] T072 Review implemented backend routes against the blocked-operation list in `routes/api.php`
+- [ ] T073 Update implementation notes with final operation IDs, test commands, and blocked follow-up contract gaps in `docs/implementation-notes/003-backend-school-admin.md`
 
 ---
 
@@ -195,32 +195,32 @@
 ## Parallel Example: User Story 1
 
 ```text
-Task: "T014 Add PHPUnit feature tests for GET /api/v1/permissions in schoolmaster-backend/tests/Feature/Api/V1/PermissionListTest.php"
-Task: "T015 Add PHPUnit feature tests for GET /api/v1/roles and POST /api/v1/roles in schoolmaster-backend/tests/Feature/Api/V1/RoleManagementTest.php"
-Task: "T016 Add PHPUnit feature tests for GET /api/v1/users and POST /api/v1/users in schoolmaster-backend/tests/Feature/Api/V1/UserManagementTest.php"
-Task: "T017 Add unit tests for role-permission scope compatibility in schoolmaster-backend/tests/Unit/Services/RolePermissionScopeTest.php"
-Task: "T018 Add unit tests for same-school user role assignment validation in schoolmaster-backend/tests/Unit/Services/UserRoleAssignmentTest.php"
+Task: "T014 Add PHPUnit feature tests for GET /api/v1/permissions in tests/Feature/Api/V1/PermissionListTest.php"
+Task: "T015 Add PHPUnit feature tests for GET /api/v1/roles and POST /api/v1/roles in tests/Feature/Api/V1/RoleManagementTest.php"
+Task: "T016 Add PHPUnit feature tests for GET /api/v1/users and POST /api/v1/users in tests/Feature/Api/V1/UserManagementTest.php"
+Task: "T017 Add unit tests for role-permission scope compatibility in tests/Unit/Services/RolePermissionScopeTest.php"
+Task: "T018 Add unit tests for same-school user role assignment validation in tests/Unit/Services/UserRoleAssignmentTest.php"
 ```
 
 ## Parallel Example: User Story 2
 
 ```text
-Task: "T045 Implement academic year validation in schoolmaster-backend/app/Http/Requests/Api/V1/CreateAcademicYearRequest.php"
-Task: "T046 Implement academic period validation in schoolmaster-backend/app/Http/Requests/Api/V1/CreateAcademicPeriodRequest.php"
-Task: "T047 Implement academic year response shape in schoolmaster-backend/app/Http/Resources/Api/V1/AcademicYearResource.php"
-Task: "T048 Implement academic period response shape in schoolmaster-backend/app/Http/Resources/Api/V1/AcademicPeriodResource.php"
-Task: "T049 Implement academic year authorization policy in schoolmaster-backend/app/Policies/AcademicYearPolicy.php"
-Task: "T050 Implement academic period authorization policy in schoolmaster-backend/app/Policies/AcademicPeriodPolicy.php"
+Task: "T045 Implement academic year validation in app/Http/Requests/Api/V1/CreateAcademicYearRequest.php"
+Task: "T046 Implement academic period validation in app/Http/Requests/Api/V1/CreateAcademicPeriodRequest.php"
+Task: "T047 Implement academic year response shape in app/Http/Resources/Api/V1/AcademicYearResource.php"
+Task: "T048 Implement academic period response shape in app/Http/Resources/Api/V1/AcademicPeriodResource.php"
+Task: "T049 Implement academic year authorization policy in app/Policies/AcademicYearPolicy.php"
+Task: "T050 Implement academic period authorization policy in app/Policies/AcademicPeriodPolicy.php"
 ```
 
 ## Parallel Example: User Story 3
 
 ```text
-Task: "T058 Implement or verify Guardian model fields, relationships, and school scope in schoolmaster-backend/app/Models/Guardian.php"
-Task: "T059 Implement or verify StudentProfile relationship helpers needed for guardian association validation in schoolmaster-backend/app/Models/StudentProfile.php"
-Task: "T061 Implement guardian validation in schoolmaster-backend/app/Http/Requests/Api/V1/CreateGuardianRequest.php"
-Task: "T062 Implement guardian response shape in schoolmaster-backend/app/Http/Resources/Api/V1/GuardianResource.php"
-Task: "T063 Implement guardian authorization policy in schoolmaster-backend/app/Policies/GuardianPolicy.php"
+Task: "T058 Implement or verify Guardian model fields, relationships, and school scope in app/Models/Guardian.php"
+Task: "T059 Implement or verify StudentProfile relationship helpers needed for guardian association validation in app/Models/StudentProfile.php"
+Task: "T061 Implement guardian validation in app/Http/Requests/Api/V1/CreateGuardianRequest.php"
+Task: "T062 Implement guardian response shape in app/Http/Resources/Api/V1/GuardianResource.php"
+Task: "T063 Implement guardian authorization policy in app/Policies/GuardianPolicy.php"
 ```
 
 ## Implementation Strategy
