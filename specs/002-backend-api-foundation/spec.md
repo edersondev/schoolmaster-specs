@@ -1,6 +1,6 @@
 # Feature Specification: Backend API Foundation
 
-**Feature Branch**: `001-backend-api-foundation`  
+**Feature Branch**: `002-backend-api-foundation`  
 **Created**: 2026-05-14  
 **Status**: Draft  
 **Input**: User description: "Prepare the SchoolMaster Laravel backend repository based on the specifications mounted at /specs. This repository is the API-only backend for the SchoolMaster SaaS platform. Use /specs as the source of truth, especially /specs/AGENTS.md, /specs/specs, /specs/api/openapi.yaml, /specs/docs, and /specs/decisions. The goal of this backend specification is to define the initial backend setup and implementation boundaries before coding."
@@ -84,8 +84,8 @@ A backend maintainer prepares the first implementation boundary for authenticati
 
 ### API Contract Impact
 
-- **OpenAPI update required**: Yes. The backend readiness feature clarifies product-visible authentication behavior that is not fully documented yet. OpenAPI must be updated before authentication implementation to document logout revocation, token-expiry rejection, inactive user or school token rejection, failed-login lockout, and audit-relevant response semantics.
-- **Versioned endpoints affected**: The first implementation boundary is limited to `/api/v1/auth/login`, `/api/v1/auth/me`, `/api/v1/auth/logout`, `/api/v1/schools`, and `/api/v1/schools/{schoolId}` after OpenAPI documents logout revocation behavior.
+- **OpenAPI update required**: Completed for this foundation slice. The aggregate and active feature contracts document logout revocation, 8-hour token expiry, inactive user or school token rejection, failed-login lockout, and audit-relevant response semantics before authentication implementation.
+- **Versioned endpoints affected**: The first implementation boundary is limited to `/api/v1/auth/login`, `/api/v1/auth/me`, `/api/v1/auth/logout`, `/api/v1/schools`, and `/api/v1/schools/{schoolId}`.
 - **JSON response impact**: Backend setup must adopt the success, paginated, validation, unauthorized, forbidden, tenant-mismatch, inactive-record, and not-found envelopes documented in OpenAPI.
 - **Authentication/authorization impact**: Authentication follows the accepted Laravel-native authentication decision and OpenAPI contract. Authorization must keep platform-scope school provisioning separate from school-scoped permissions.
 - **Compatibility impact**: This is a greenfield backend foundation. Once implemented, externally visible changes must be additive unless a future approved contract revision defines a migration path.

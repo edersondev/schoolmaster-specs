@@ -22,7 +22,7 @@ The first backend product slice may implement only these published operations un
 |--------------|-----------------|----------|
 | `login` | `POST /api/v1/auth/login` | Authenticate a platform or school-scoped user according to the published request and `AuthSession` response shape |
 | `getCurrentUser` | `GET /api/v1/auth/me` | Return authenticated user, resolved tenant, roles, and permissions |
-| `logout` | `POST /api/v1/auth/logout` | Revoke continued access for the current bearer token after OpenAPI documents logout behavior |
+| `logout` | `POST /api/v1/auth/logout` | Revoke continued access for the current bearer token using the documented logout behavior |
 | `listSchools` | `GET /api/v1/schools` | List schools visible to the requester through platform-scope authorization |
 | `createSchool` | `POST /api/v1/schools` | Create a school tenant through platform-scope authorization |
 | `getSchool` | `GET /api/v1/schools/{schoolId}` | Review one school tenant in permitted scope |
@@ -43,9 +43,9 @@ Backend implementation must follow the OpenAPI response components:
 
 No backend-local success or error envelope may be introduced for product APIs without updating OpenAPI first.
 
-## Required Authentication Contract Updates Before Coding
+## Documented Authentication Contract Behavior
 
-The clarified spec requires OpenAPI to document these before authentication implementation merges:
+The clarified spec requires OpenAPI to document these before authentication implementation merges. The aggregate and active feature contracts now include:
 
 - bearer tokens expire after 8 hours
 - logout operation and response semantics

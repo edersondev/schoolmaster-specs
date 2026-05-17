@@ -6,7 +6,7 @@ Use this guide to validate backend readiness before implementation begins for au
 
 ## Prerequisites
 
-- Current branch: `001-backend-api-foundation`
+- Current branch: `002-backend-api-foundation`
 - Active spec: `specs/specs/002-backend-api-foundation/spec.md`
 - Active plan: `specs/specs/002-backend-api-foundation/plan.md`
 - Source-of-truth specs mounted at `specs/`
@@ -36,6 +36,12 @@ npx @redocly/cli lint specs/specs/001-schoolmaster-platform/contracts/openapi.ya
 ```
 
 Expected result: both contracts validate. Existing metadata warnings, such as a missing `info.license`, should be recorded but do not by themselves define backend behavior.
+
+Latest result, 2026-05-16: both `api/openapi.yaml` and `specs/001-schoolmaster-platform/contracts/openapi.yaml` validated successfully with Redocly after adding logout revocation, 8-hour token expiry, token rejection, login lockout, and audit-relevant auth semantics.
+
+Latest backend implementation result, 2026-05-16: both aggregate and active
+feature OpenAPI contracts validated successfully with Redocly. Each contract
+still reports the existing `info.license` warning only.
 
 ## Required Contract Sync Before Auth Coding
 
@@ -69,6 +75,23 @@ Readiness expectations:
 - Backend setup documentation identifies MySQL, `/specs`, test commands, and contract validation commands.
 - `routes/api.php` is the product API route entry point.
 - The first product slice is limited to authentication and school management operations documented in OpenAPI.
+
+Latest route result, 2026-05-16: `php artisan route:list` shows the approved
+first-slice product routes under `/api/v1`:
+
+- `POST /api/v1/auth/login`
+- `GET /api/v1/auth/me`
+- `POST /api/v1/auth/logout`
+- `GET /api/v1/schools`
+- `POST /api/v1/schools`
+- `GET /api/v1/schools/{schoolId}`
+- `PATCH /api/v1/schools/{schoolId}`
+
+Latest Docker/MySQL test result, 2026-05-16: `docker compose run --rm app php
+artisan test` passed with 17 tests and 88 assertions against the
+`schoolmaster_testing` MySQL database. The host PHP runtime still has no PDO
+drivers, so full database-backed validation should use Docker Compose unless
+the host PHP installation is extended with `pdo_mysql`.
 
 ## First Slice Contract Boundary
 
@@ -113,4 +136,4 @@ Backend design and tests must verify:
 - `AGENTS.md` points to this active plan between the Speckit markers.
 - OpenAPI validation can be run and results recorded.
 - OpenAPI is updated for token expiry, revocation, lockout, token rejection, and audit behavior before authentication coding.
-- No backend implementation tasks have been generated unless `/speckit-tasks` is explicitly requested.
+- Generated implementation tasks remain bounded to this plan and must preserve the contract-first guardrails before backend product coding.
