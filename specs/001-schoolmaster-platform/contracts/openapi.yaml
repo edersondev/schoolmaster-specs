@@ -565,6 +565,8 @@ paths:
           $ref: '#/components/responses/Unauthorized'
         '403':
           $ref: '#/components/responses/TenantMismatch'
+        '422':
+          $ref: '#/components/responses/ValidationError'
     post:
       tags: [Teacher Content]
       summary: Create a tenant-scoped teacher content item
@@ -622,6 +624,8 @@ paths:
           $ref: '#/components/responses/Unauthorized'
         '403':
           $ref: '#/components/responses/TenantMismatch'
+        '422':
+          $ref: '#/components/responses/ValidationError'
     post:
       tags: [Questionnaires]
       summary: Create a questionnaire with v1 supported question types
@@ -679,6 +683,8 @@ paths:
           $ref: '#/components/responses/Unauthorized'
         '403':
           $ref: '#/components/responses/TenantMismatch'
+        '422':
+          $ref: '#/components/responses/ValidationError'
     post:
       tags: [Learning Sets]
       summary: Create a learning set with ordered entries and direct student assignments
@@ -736,6 +742,8 @@ paths:
           $ref: '#/components/responses/Unauthorized'
         '403':
           $ref: '#/components/responses/TenantMismatch'
+        '422':
+          $ref: '#/components/responses/ValidationError'
     post:
       tags: [Grades]
       summary: Record a grade for a student in an academic period
@@ -793,6 +801,8 @@ paths:
           $ref: '#/components/responses/Unauthorized'
         '403':
           $ref: '#/components/responses/TenantMismatch'
+        '422':
+          $ref: '#/components/responses/ValidationError'
     post:
       tags: [Attendance]
       summary: Record attendance for a student in an academic period
