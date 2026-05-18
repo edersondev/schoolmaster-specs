@@ -33,19 +33,16 @@ The backend may implement only these operation IDs in this slice unless `/specs`
 
 ## Required Response Shapes
 
-Backend implementation must follow the OpenAPI response components:
+Backend implementation must follow the response statuses and components declared on each approved OpenAPI operation:
 
 - `SuccessEnvelope`
 - `PaginatedEnvelope`
 - `ErrorEnvelope`
 - `ValidationError`
 - `Unauthorized`
-- `Forbidden`
 - `TenantMismatch`
-- `TokenRejected`
-- `NotFound`
 
-No backend-local product envelope, ad hoc error response, undocumented field, undocumented filter, or undocumented sort behavior is approved in this slice.
+The shared OpenAPI contract also defines `Forbidden`, `TokenRejected`, and `NotFound` components for other operations. Those components are not approved for these ten teacher workflow operations unless OpenAPI first attaches them to the relevant operation. No backend-local product envelope, ad hoc error response, undocumented status code, undocumented field, undocumented filter, or undocumented sort behavior is approved in this slice.
 
 ## Tenant Behavior
 

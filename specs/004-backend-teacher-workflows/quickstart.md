@@ -83,7 +83,7 @@ Do not implement student self-service, reporting, classroom/course/section/roste
 
 - Confirm successful creates use `SuccessEnvelope`.
 - Confirm lists use `PaginatedEnvelope`.
-- Confirm validation, unauthorized, forbidden, tenant-mismatch, token-rejection or inactive-user/inactive-school, and not-found cases use documented error envelopes or codes.
+- Confirm validation where applicable, unauthorized, and tenant-mismatch cases use only the error envelopes or codes documented on each affected OpenAPI operation.
 
 ## Verification Commands
 
