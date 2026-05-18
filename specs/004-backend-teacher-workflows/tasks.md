@@ -18,11 +18,11 @@
 
 **Purpose**: Align backend implementation with the approved teacher workflow specification and contract before code changes.
 
-- [ ] T001 Create feature implementation notes with approved operation IDs in `docs/implementation-notes/004-backend-teacher-workflows.md`
-- [ ] T002 [P] Verify the backend specs mount references `specs/specs/004-backend-teacher-workflows/quickstart.md` in `AGENTS.md`
-- [ ] T003 Run contract validation and record the result in `docs/implementation-notes/004-backend-teacher-workflows.md`
-- [ ] T004 Confirm no undocumented teacher workflow routes exist and document the route inventory in `docs/implementation-notes/004-backend-teacher-workflows.md`
-- [ ] T005 Record blocked contract gaps for folder CRUD, downloads, updates, corrections, student self-service, reports, and classroom/course workflows in `docs/implementation-notes/004-backend-teacher-workflows.md`
+- [X] T001 Create feature implementation notes with approved operation IDs in `docs/implementation-notes/004-backend-teacher-workflows.md`
+- [X] T002 [P] Verify the backend specs mount references `specs/specs/004-backend-teacher-workflows/quickstart.md` in `AGENTS.md`
+- [X] T003 Run contract validation and record the result in `docs/implementation-notes/004-backend-teacher-workflows.md`
+- [X] T004 Confirm no undocumented teacher workflow routes exist and document the route inventory in `docs/implementation-notes/004-backend-teacher-workflows.md`
+- [X] T005 Record blocked contract gaps for folder CRUD, downloads, updates, corrections, student self-service, reports, and classroom/course workflows in `docs/implementation-notes/004-backend-teacher-workflows.md`
 
 ---
 
@@ -32,17 +32,17 @@
 
 **Critical**: No user story work should begin until this phase is complete.
 
-- [ ] T006 Inspect existing backend migrations for `TeacherContentFolder`, `TeacherContentItem`, `Questionnaire`, `QuestionnaireQuestion`, `LearningSet`, `LearningSetEntry`, `LearningSetAssignment`, `GradeRecord`, and `AttendanceRecord` UUID/status/tenant/soft-delete columns and document the inventory in `docs/implementation-notes/004-backend-teacher-workflows.md`
-- [ ] T007 Add only missing teacher workflow persistence changes with tenant indexes and status fields in `database/migrations/2026_05_18_000001_create_teacher_workflow_tables.php`
-- [ ] T008 [P] Seed baseline teacher workflow permission definitions for content, questionnaires, learning sets, grades, and attendance in `database/seeders/PermissionSeeder.php`
-- [ ] T009 [P] Configure private tenant-scoped teacher content storage without public URLs in `config/filesystems.php`
-- [ ] T010 [P] Define teacher workflow authorization helper methods in `app/Services/Concerns/AuthorizesTeacherWorkflows.php`
-- [ ] T011 [P] Define shared teacher workflow list-query validation rules in `app/Services/TeacherWorkflows/TeacherWorkflowListQuery.php`
-- [ ] T012 [P] Define upload type, size, detected-content, filename, metadata, and storage-path sanitization helper in `app/Services/TeacherContent/TeacherContentUploadValidator.php`
-- [ ] T013 [P] Define malware scan status transition service in `app/Services/TeacherContent/TeacherContentScanService.php`
-- [ ] T014 [P] Define asynchronous scan-status job boundary in `app/Jobs/ProcessTeacherContentScan.php`
-- [ ] T015 [P] Add teacher workflow model factories for tests in `database/factories/TeacherWorkflowFactory.php`
-- [ ] T016 Define the teacher workflow route group with auth and tenant middleware only, without operation-specific route registration, in `routes/api.php`
+- [X] T006 Inspect existing backend migrations for `TeacherContentFolder`, `TeacherContentItem`, `Questionnaire`, `QuestionnaireQuestion`, `LearningSet`, `LearningSetEntry`, `LearningSetAssignment`, `GradeRecord`, and `AttendanceRecord` UUID/status/tenant/soft-delete columns and document the inventory in `docs/implementation-notes/004-backend-teacher-workflows.md`
+- [X] T007 Add only missing teacher workflow persistence changes with tenant indexes and status fields in `database/migrations/2026_05_18_000001_create_teacher_workflow_tables.php`
+- [X] T008 [P] Seed baseline teacher workflow permission definitions for content, questionnaires, learning sets, grades, and attendance in `database/seeders/PermissionSeeder.php`
+- [X] T009 [P] Configure private tenant-scoped teacher content storage without public URLs in `config/filesystems.php`
+- [X] T010 [P] Define teacher workflow authorization helper methods in `app/Services/Concerns/AuthorizesTeacherWorkflows.php`
+- [X] T011 [P] Define shared teacher workflow list-query validation rules in `app/Services/TeacherWorkflows/TeacherWorkflowListQuery.php`
+- [X] T012 [P] Define upload type, size, detected-content, filename, metadata, and storage-path sanitization helper in `app/Services/TeacherContent/TeacherContentUploadValidator.php`
+- [X] T013 [P] Define malware scan status transition service in `app/Services/TeacherContent/TeacherContentScanService.php`
+- [X] T014 [P] Define asynchronous scan-status job boundary in `app/Jobs/ProcessTeacherContentScan.php`
+- [X] T015 [P] Add teacher workflow model factories for tests in `database/factories/TeacherWorkflowFactory.php`
+- [X] T016 Define the teacher workflow route group with auth and tenant middleware only, without operation-specific route registration, in `routes/api.php`
 
 **Checkpoint**: Persistence, permissions, private storage, scan-status, authorization helpers, and route boundaries are ready for story work.
 
@@ -56,32 +56,32 @@
 
 ### Tests for User Story 1
 
-- [ ] T017 [P] [US1] Add PHPUnit feature tests for `GET /api/v1/teacher-content` and `POST /api/v1/teacher-content` in `tests/Feature/Api/V1/TeacherContentManagementTest.php`
-- [ ] T018 [P] [US1] Add PHPUnit feature tests for `GET /api/v1/questionnaires` and `POST /api/v1/questionnaires` in `tests/Feature/Api/V1/QuestionnaireManagementTest.php`
-- [ ] T019 [P] [US1] Add unit tests for upload type, size, executable/archive, declared/detected content-type, filename, metadata, and storage-path sanitization in `tests/Unit/Services/TeacherContentUploadValidationTest.php`
-- [ ] T020 [P] [US1] Add unit tests for malware scan status transitions and availability gating in `tests/Unit/Services/TeacherContentScanStatusTest.php`
-- [ ] T021 [P] [US1] Add unit tests for questionnaire question type and sequence validation in `tests/Unit/Services/QuestionnaireValidationTest.php`
+- [X] T017 [P] [US1] Add PHPUnit feature tests for `GET /api/v1/teacher-content` and `POST /api/v1/teacher-content` in `tests/Feature/Api/V1/TeacherContentManagementTest.php`
+- [X] T018 [P] [US1] Add PHPUnit feature tests for `GET /api/v1/questionnaires` and `POST /api/v1/questionnaires` in `tests/Feature/Api/V1/QuestionnaireManagementTest.php`
+- [X] T019 [P] [US1] Add unit tests for upload type, size, executable/archive, declared/detected content-type, filename, metadata, and storage-path sanitization in `tests/Unit/Services/TeacherContentUploadValidationTest.php`
+- [X] T020 [P] [US1] Add unit tests for malware scan status transitions and availability gating in `tests/Unit/Services/TeacherContentScanStatusTest.php`
+- [X] T021 [P] [US1] Add unit tests for questionnaire question type and sequence validation in `tests/Unit/Services/QuestionnaireValidationTest.php`
 
 ### Implementation for User Story 1
 
-- [ ] T022 [P] [US1] Implement or verify internal/pre-existing `TeacherContentFolder` model relationships and same-school `folder_id` validation support in `app/Models/TeacherContentFolder.php`
-- [ ] T023 [P] [US1] Implement `TeacherContentItem` model relationships, school scope, and scan-status helpers in `app/Models/TeacherContentItem.php`
-- [ ] T024 [P] [US1] Implement `Questionnaire` model relationships and school scope in `app/Models/Questionnaire.php`
-- [ ] T025 [P] [US1] Implement `QuestionnaireQuestion` model relationships and sequence helpers in `app/Models/QuestionnaireQuestion.php`
-- [ ] T026 [US1] Implement teacher content creation input DTO in `app/DTOs/TeacherContent/CreateTeacherContentData.php`
-- [ ] T027 [US1] Implement questionnaire creation input DTO in `app/DTOs/Questionnaires/CreateQuestionnaireData.php`
-- [ ] T028 [P] [US1] Implement teacher content upload validation request in `app/Http/Requests/TeacherContent/CreateTeacherContentRequest.php`
-- [ ] T029 [P] [US1] Implement questionnaire validation request in `app/Http/Requests/Questionnaires/CreateQuestionnaireRequest.php`
-- [ ] T030 [P] [US1] Implement teacher content response shape in `app/Http/Resources/TeacherContentResource.php`
-- [ ] T031 [P] [US1] Implement questionnaire response shape in `app/Http/Resources/QuestionnaireResource.php`
-- [ ] T032 [P] [US1] Implement questionnaire question response shape in `app/Http/Resources/QuestionnaireQuestionResource.php`
-- [ ] T033 [P] [US1] Implement teacher content authorization policy in `app/Policies/TeacherContentPolicy.php`
-- [ ] T034 [P] [US1] Implement questionnaire authorization policy in `app/Policies/QuestionnairePolicy.php`
-- [ ] T035 [US1] Implement teacher content listing, upload, private storage, and scan-status service in `app/Services/TeacherContent/TeacherContentService.php`
-- [ ] T036 [US1] Implement questionnaire listing and creation service in `app/Services/Questionnaires/QuestionnaireService.php`
-- [ ] T037 [US1] Implement teacher content list/create controller actions in `app/Http/Controllers/Api/V1/TeacherContentController.php`
-- [ ] T038 [US1] Implement questionnaire list/create controller actions in `app/Http/Controllers/Api/V1/QuestionnaireController.php`
-- [ ] T039 [US1] Wire `listTeacherContent`, `createTeacherContent`, `listQuestionnaires`, and `createQuestionnaire` routes in `routes/api.php`
+- [X] T022 [P] [US1] Implement or verify internal/pre-existing `TeacherContentFolder` model relationships and same-school `folder_id` validation support in `app/Models/TeacherContentFolder.php`
+- [X] T023 [P] [US1] Implement `TeacherContentItem` model relationships, school scope, and scan-status helpers in `app/Models/TeacherContentItem.php`
+- [X] T024 [P] [US1] Implement `Questionnaire` model relationships and school scope in `app/Models/Questionnaire.php`
+- [X] T025 [P] [US1] Implement `QuestionnaireQuestion` model relationships and sequence helpers in `app/Models/QuestionnaireQuestion.php`
+- [X] T026 [US1] Implement teacher content creation input DTO in `app/DTOs/TeacherContent/CreateTeacherContentData.php`
+- [X] T027 [US1] Implement questionnaire creation input DTO in `app/DTOs/Questionnaires/CreateQuestionnaireData.php`
+- [X] T028 [P] [US1] Implement teacher content upload validation request in `app/Http/Requests/TeacherContent/CreateTeacherContentRequest.php`
+- [X] T029 [P] [US1] Implement questionnaire validation request in `app/Http/Requests/Questionnaires/CreateQuestionnaireRequest.php`
+- [X] T030 [P] [US1] Implement teacher content response shape in `app/Http/Resources/TeacherContentResource.php`
+- [X] T031 [P] [US1] Implement questionnaire response shape in `app/Http/Resources/QuestionnaireResource.php`
+- [X] T032 [P] [US1] Implement questionnaire question response shape in `app/Http/Resources/QuestionnaireQuestionResource.php`
+- [X] T033 [P] [US1] Implement teacher content authorization policy in `app/Policies/TeacherContentPolicy.php`
+- [X] T034 [P] [US1] Implement questionnaire authorization policy in `app/Policies/QuestionnairePolicy.php`
+- [X] T035 [US1] Implement teacher content listing, upload, private storage, and scan-status service in `app/Services/TeacherContent/TeacherContentService.php`
+- [X] T036 [US1] Implement questionnaire listing and creation service in `app/Services/Questionnaires/QuestionnaireService.php`
+- [X] T037 [US1] Implement teacher content list/create controller actions in `app/Http/Controllers/Api/V1/TeacherContentController.php`
+- [X] T038 [US1] Implement questionnaire list/create controller actions in `app/Http/Controllers/Api/V1/QuestionnaireController.php`
+- [X] T039 [US1] Wire `listTeacherContent`, `createTeacherContent`, `listQuestionnaires`, and `createQuestionnaire` routes in `routes/api.php`
 
 **Checkpoint**: User Story 1 is independently functional and can be validated without learning set, grade, attendance, student self-service, or reporting workflows.
 
@@ -95,27 +95,27 @@
 
 ### Tests for User Story 2
 
-- [ ] T040 [P] [US2] Add PHPUnit feature tests for `GET /api/v1/learning-sets` and `POST /api/v1/learning-sets` in `tests/Feature/Api/V1/LearningSetManagementTest.php`
-- [ ] T041 [P] [US2] Add unit tests for clean-content and active-questionnaire entry validation in `tests/Unit/Services/LearningSetEntryValidationTest.php`
-- [ ] T042 [P] [US2] Add unit tests for direct selected-student assignment validation in `tests/Unit/Services/LearningSetAssignmentValidationTest.php`
-- [ ] T043 [P] [US2] Add unit tests for atomic learning set creation rollback behavior in `tests/Unit/Services/LearningSetAtomicCreationTest.php`
+- [X] T040 [P] [US2] Add PHPUnit feature tests for `GET /api/v1/learning-sets` and `POST /api/v1/learning-sets` in `tests/Feature/Api/V1/LearningSetManagementTest.php`
+- [X] T041 [P] [US2] Add unit tests for clean-content and active-questionnaire entry validation in `tests/Unit/Services/LearningSetEntryValidationTest.php`
+- [X] T042 [P] [US2] Add unit tests for direct selected-student assignment validation in `tests/Unit/Services/LearningSetAssignmentValidationTest.php`
+- [X] T043 [P] [US2] Add unit tests for atomic learning set creation rollback behavior in `tests/Unit/Services/LearningSetAtomicCreationTest.php`
 
 ### Implementation for User Story 2
 
-- [ ] T044 [P] [US2] Implement `LearningSet` model relationships and school scope in `app/Models/LearningSet.php`
-- [ ] T045 [P] [US2] Implement `LearningSetEntry` model relationships and sequence helpers in `app/Models/LearningSetEntry.php`
-- [ ] T046 [P] [US2] Implement `LearningSetAssignment` model relationships and school scope in `app/Models/LearningSetAssignment.php`
-- [ ] T047 [US2] Implement learning set creation input DTO in `app/DTOs/LearningSets/CreateLearningSetData.php`
-- [ ] T048 [P] [US2] Implement learning set validation request in `app/Http/Requests/LearningSets/CreateLearningSetRequest.php`
-- [ ] T049 [P] [US2] Implement learning set response shape in `app/Http/Resources/LearningSetResource.php`
-- [ ] T050 [P] [US2] Implement learning set entry response shape in `app/Http/Resources/LearningSetEntryResource.php`
-- [ ] T051 [P] [US2] Implement learning set assignment response shape in `app/Http/Resources/LearningSetAssignmentResource.php`
-- [ ] T052 [P] [US2] Implement learning set authorization policy in `app/Policies/LearningSetPolicy.php`
-- [ ] T053 [US2] Implement learning set entry validation service for clean content and active questionnaires in `app/Services/LearningSets/LearningSetEntryValidator.php`
-- [ ] T054 [US2] Implement selected-student assignment validation service in `app/Services/LearningSets/LearningSetAssignmentValidator.php`
-- [ ] T055 [US2] Implement learning set listing and atomic creation service in `app/Services/LearningSets/LearningSetService.php`
-- [ ] T056 [US2] Implement learning set list/create controller actions in `app/Http/Controllers/Api/V1/LearningSetController.php`
-- [ ] T057 [US2] Wire `listLearningSets` and `createLearningSet` routes in `routes/api.php`
+- [X] T044 [P] [US2] Implement `LearningSet` model relationships and school scope in `app/Models/LearningSet.php`
+- [X] T045 [P] [US2] Implement `LearningSetEntry` model relationships and sequence helpers in `app/Models/LearningSetEntry.php`
+- [X] T046 [P] [US2] Implement `LearningSetAssignment` model relationships and school scope in `app/Models/LearningSetAssignment.php`
+- [X] T047 [US2] Implement learning set creation input DTO in `app/DTOs/LearningSets/CreateLearningSetData.php`
+- [X] T048 [P] [US2] Implement learning set validation request in `app/Http/Requests/LearningSets/CreateLearningSetRequest.php`
+- [X] T049 [P] [US2] Implement learning set response shape in `app/Http/Resources/LearningSetResource.php`
+- [X] T050 [P] [US2] Implement learning set entry response shape in `app/Http/Resources/LearningSetEntryResource.php`
+- [X] T051 [P] [US2] Implement learning set assignment response shape in `app/Http/Resources/LearningSetAssignmentResource.php`
+- [X] T052 [P] [US2] Implement learning set authorization policy in `app/Policies/LearningSetPolicy.php`
+- [X] T053 [US2] Implement learning set entry validation service for clean content and active questionnaires in `app/Services/LearningSets/LearningSetEntryValidator.php`
+- [X] T054 [US2] Implement selected-student assignment validation service in `app/Services/LearningSets/LearningSetAssignmentValidator.php`
+- [X] T055 [US2] Implement learning set listing and atomic creation service in `app/Services/LearningSets/LearningSetService.php`
+- [X] T056 [US2] Implement learning set list/create controller actions in `app/Http/Controllers/Api/V1/LearningSetController.php`
+- [X] T057 [US2] Wire `listLearningSets` and `createLearningSet` routes in `routes/api.php`
 
 **Checkpoint**: User Story 2 is independently functional after shared foundations and US1 content/questionnaire prerequisites.
 
@@ -129,29 +129,29 @@
 
 ### Tests for User Story 3
 
-- [ ] T058 [P] [US3] Add PHPUnit feature tests for `GET /api/v1/grades` and `POST /api/v1/grades` in `tests/Feature/Api/V1/GradeManagementTest.php`
-- [ ] T059 [P] [US3] Add PHPUnit feature tests for `GET /api/v1/attendance` and `POST /api/v1/attendance` in `tests/Feature/Api/V1/AttendanceManagementTest.php`
-- [ ] T060 [P] [US3] Add unit tests for grade value, student profile, teacher recorder, and active-period validation in `tests/Unit/Services/GradeRecordValidationTest.php`
-- [ ] T061 [P] [US3] Add unit tests for attendance status, student profile, teacher recorder, and active-period validation in `tests/Unit/Services/AttendanceRecordValidationTest.php`
+- [X] T058 [P] [US3] Add PHPUnit feature tests for `GET /api/v1/grades` and `POST /api/v1/grades` in `tests/Feature/Api/V1/GradeManagementTest.php`
+- [X] T059 [P] [US3] Add PHPUnit feature tests for `GET /api/v1/attendance` and `POST /api/v1/attendance` in `tests/Feature/Api/V1/AttendanceManagementTest.php`
+- [X] T060 [P] [US3] Add unit tests for grade value, student profile, teacher recorder, and active-period validation in `tests/Unit/Services/GradeRecordValidationTest.php`
+- [X] T061 [P] [US3] Add unit tests for attendance status, student profile, teacher recorder, and active-period validation in `tests/Unit/Services/AttendanceRecordValidationTest.php`
 
 ### Implementation for User Story 3
 
-- [ ] T062 [P] [US3] Implement `GradeRecord` model relationships and school scope in `app/Models/GradeRecord.php`
-- [ ] T063 [P] [US3] Implement `AttendanceRecord` model relationships and school scope in `app/Models/AttendanceRecord.php`
-- [ ] T064 [US3] Implement grade creation input DTO in `app/DTOs/Grades/CreateGradeData.php`
-- [ ] T065 [US3] Implement attendance creation input DTO in `app/DTOs/Attendance/CreateAttendanceData.php`
-- [ ] T066 [P] [US3] Implement grade validation request in `app/Http/Requests/Grades/CreateGradeRequest.php`
-- [ ] T067 [P] [US3] Implement attendance validation request in `app/Http/Requests/Attendance/CreateAttendanceRequest.php`
-- [ ] T068 [P] [US3] Implement grade response shape in `app/Http/Resources/GradeRecordResource.php`
-- [ ] T069 [P] [US3] Implement attendance response shape in `app/Http/Resources/AttendanceRecordResource.php`
-- [ ] T070 [P] [US3] Implement grade authorization policy in `app/Policies/GradeRecordPolicy.php`
-- [ ] T071 [P] [US3] Implement attendance authorization policy in `app/Policies/AttendanceRecordPolicy.php`
-- [ ] T072 [US3] Implement shared active-period and same-school student validation service in `app/Services/TeacherWorkflows/AcademicRecordTargetValidator.php`
-- [ ] T073 [US3] Implement grade listing and creation service in `app/Services/Grades/GradeRecordService.php`
-- [ ] T074 [US3] Implement attendance listing and creation service in `app/Services/Attendance/AttendanceRecordService.php`
-- [ ] T075 [US3] Implement grade list/create controller actions in `app/Http/Controllers/Api/V1/GradeController.php`
-- [ ] T076 [US3] Implement attendance list/create controller actions in `app/Http/Controllers/Api/V1/AttendanceController.php`
-- [ ] T077 [US3] Wire `listGrades`, `createGrade`, `listAttendance`, and `createAttendance` routes in `routes/api.php`
+- [X] T062 [P] [US3] Implement `GradeRecord` model relationships and school scope in `app/Models/GradeRecord.php`
+- [X] T063 [P] [US3] Implement `AttendanceRecord` model relationships and school scope in `app/Models/AttendanceRecord.php`
+- [X] T064 [US3] Implement grade creation input DTO in `app/DTOs/Grades/CreateGradeData.php`
+- [X] T065 [US3] Implement attendance creation input DTO in `app/DTOs/Attendance/CreateAttendanceData.php`
+- [X] T066 [P] [US3] Implement grade validation request in `app/Http/Requests/Grades/CreateGradeRequest.php`
+- [X] T067 [P] [US3] Implement attendance validation request in `app/Http/Requests/Attendance/CreateAttendanceRequest.php`
+- [X] T068 [P] [US3] Implement grade response shape in `app/Http/Resources/GradeRecordResource.php`
+- [X] T069 [P] [US3] Implement attendance response shape in `app/Http/Resources/AttendanceRecordResource.php`
+- [X] T070 [P] [US3] Implement grade authorization policy in `app/Policies/GradeRecordPolicy.php`
+- [X] T071 [P] [US3] Implement attendance authorization policy in `app/Policies/AttendanceRecordPolicy.php`
+- [X] T072 [US3] Implement shared active-period and same-school student validation service in `app/Services/TeacherWorkflows/AcademicRecordTargetValidator.php`
+- [X] T073 [US3] Implement grade listing and creation service in `app/Services/Grades/GradeRecordService.php`
+- [X] T074 [US3] Implement attendance listing and creation service in `app/Services/Attendance/AttendanceRecordService.php`
+- [X] T075 [US3] Implement grade list/create controller actions in `app/Http/Controllers/Api/V1/GradeController.php`
+- [X] T076 [US3] Implement attendance list/create controller actions in `app/Http/Controllers/Api/V1/AttendanceController.php`
+- [X] T077 [US3] Wire `listGrades`, `createGrade`, `listAttendance`, and `createAttendance` routes in `routes/api.php`
 
 **Checkpoint**: User Story 3 is independently functional after shared foundations and existing school-admin student profile and academic period data.
 
@@ -161,17 +161,17 @@
 
 **Purpose**: Final contract compliance, verification, documentation, and cleanup across all selected stories.
 
-- [ ] T078 Run backend PHP syntax checks and record result in `docs/implementation-notes/004-backend-teacher-workflows.md`
-- [ ] T079 Run backend style checks and record result in `docs/implementation-notes/004-backend-teacher-workflows.md`
-- [ ] T080 Run backend PHPUnit suite and record result in `docs/implementation-notes/004-backend-teacher-workflows.md`
-- [ ] T081 Run Redocly validation and record result in `docs/implementation-notes/004-backend-teacher-workflows.md`
-- [ ] T082 [P] Add response-shape regression coverage for all ten teacher workflow operation IDs, including success, validation for create operations, unauthorized, and tenant-mismatch outcomes exactly as declared by OpenAPI for each operation, in `tests/Feature/Api/V1/TeacherWorkflowResponseShapeTest.php`
-- [ ] T083 [P] Add validation-contract regression coverage for undocumented request fields, unsupported filters, unsupported sort values, invalid payload shapes, upload errors, and invalid references across all ten operation IDs in `tests/Feature/Api/V1/TeacherWorkflowValidationContractTest.php`
-- [ ] T084 [P] Add tenant-isolation regression coverage across teacher content, questionnaires, learning sets, grades, and attendance in `tests/Feature/Api/V1/TeacherWorkflowTenantIsolationTest.php`
-- [ ] T085 [P] Add blocked-operation regression coverage for folder CRUD, downloads, updates, corrections, student self-service, reports, and classroom/course routes in `tests/Feature/Api/V1/TeacherWorkflowBlockedOperationsTest.php`
-- [ ] T086 [P] Add end-to-end teacher workflow happy-path coverage from clean content and questionnaire through learning set assignment, grade creation, and attendance creation in `tests/Feature/Api/V1/TeacherWorkflowHappyPathTest.php`
-- [ ] T087 Review implemented backend routes against the blocked-operation list in `routes/api.php`
-- [ ] T088 Update implementation notes with final operation IDs, test commands, storage behavior, scan-status behavior, and blocked follow-up contract gaps in `docs/implementation-notes/004-backend-teacher-workflows.md`
+- [X] T078 Run backend PHP syntax checks and record result in `docs/implementation-notes/004-backend-teacher-workflows.md`
+- [X] T079 Run backend style checks and record result in `docs/implementation-notes/004-backend-teacher-workflows.md`
+- [X] T080 Run backend PHPUnit suite and record result in `docs/implementation-notes/004-backend-teacher-workflows.md`
+- [X] T081 Run Redocly validation and record result in `docs/implementation-notes/004-backend-teacher-workflows.md`
+- [X] T082 [P] Add response-shape regression coverage for all ten teacher workflow operation IDs, including success, validation for create operations, unauthorized, and tenant-mismatch outcomes exactly as declared by OpenAPI for each operation, in `tests/Feature/Api/V1/TeacherWorkflowResponseShapeTest.php`
+- [X] T083 [P] Add validation-contract regression coverage for undocumented request fields, unsupported filters, unsupported sort values, invalid payload shapes, upload errors, and invalid references across all ten operation IDs in `tests/Feature/Api/V1/TeacherWorkflowValidationContractTest.php`
+- [X] T084 [P] Add tenant-isolation regression coverage across teacher content, questionnaires, learning sets, grades, and attendance in `tests/Feature/Api/V1/TeacherWorkflowTenantIsolationTest.php`
+- [X] T085 [P] Add blocked-operation regression coverage for folder CRUD, downloads, updates, corrections, student self-service, reports, and classroom/course routes in `tests/Feature/Api/V1/TeacherWorkflowBlockedOperationsTest.php`
+- [X] T086 [P] Add end-to-end teacher workflow happy-path coverage from clean content and questionnaire through learning set assignment, grade creation, and attendance creation in `tests/Feature/Api/V1/TeacherWorkflowHappyPathTest.php`
+- [X] T087 Review implemented backend routes against the blocked-operation list in `routes/api.php`
+- [X] T088 Update implementation notes with final operation IDs, test commands, storage behavior, scan-status behavior, and blocked follow-up contract gaps in `docs/implementation-notes/004-backend-teacher-workflows.md`
 
 ---
 
