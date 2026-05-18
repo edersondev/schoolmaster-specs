@@ -37,7 +37,7 @@
 - **Core attributes**:
   - aggregate_contract_path: `specs/api/openapi.yaml`
   - active_feature_contract_path: `specs/specs/001-schoolmaster-platform/contracts/openapi.yaml`
-  - approved_operations: `login`, `getCurrentUser`, `listSchools`, `createSchool`, `getSchool`, `updateSchool` for the first product slice
+  - approved_operations: `login`, `getCurrentUser`, `logout`, `listSchools`, `createSchool`, `getSchool`, `updateSchool` for the first product slice
   - response_envelopes: success, paginated, validation error, unauthorized, forbidden, tenant mismatch, not found
   - required_auth_updates: token expiry, logout revocation, inactive-context token rejection, login lockout response
 - **Relationships**:

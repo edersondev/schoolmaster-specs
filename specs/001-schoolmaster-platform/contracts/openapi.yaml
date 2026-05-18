@@ -58,6 +58,7 @@ paths:
     post:
       tags: [Auth]
       summary: Authenticate a user in platform or school context
+      description: Successful bearer tokens expire 8 hours after issuance. Inactive users and inactive school contexts cannot authenticate or continue protected workflows.
       operationId: login
       security: []
       requestBody:
@@ -78,6 +79,10 @@ paths:
                     properties:
                       data:
                         $ref: '#/components/schemas/AuthSession'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '429':
+          $ref: '#/components/responses/AuthLockout'
         '422':
           $ref: '#/components/responses/ValidationError'
   /api/v1/auth/me:
@@ -100,9 +105,29 @@ paths:
                       data:
                         $ref: '#/components/schemas/AuthSession'
         '401':
-          $ref: '#/components/responses/Unauthorized'
+          $ref: '#/components/responses/TokenRejected'
         '403':
           $ref: '#/components/responses/TenantMismatch'
+  /api/v1/auth/logout:
+    post:
+      tags: [Auth]
+      summary: Revoke the current bearer token
+      description: Revokes continued access for the bearer token used on the request. Already expired, revoked, inactive-user, or inactive-school tokens return the token rejection envelope.
+      operationId: logout
+      responses:
+        '200':
+          description: Logout succeeded and the current bearer token was revoked
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessEnvelope'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/LogoutResult'
+        '401':
+          $ref: '#/components/responses/TokenRejected'
   /api/v1/schools:
     get:
       tags: [Schools]
@@ -1077,6 +1102,24 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/ErrorEnvelope'
+    AuthLockout:
+      description: Login is locked after 5 failed attempts for either submitted email or source IP within 15 minutes
+      headers:
+        Retry-After:
+          description: Seconds until another login attempt may be accepted.
+          schema:
+            type: integer
+            minimum: 1
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorEnvelope'
+    TokenRejected:
+      description: Bearer token is expired, revoked, or tied to an inactive user or inactive school
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorEnvelope'
     Forbidden:
       description: The authenticated user lacks permission for this action
       content:
@@ -1145,7 +1188,7 @@ components:
           properties:
             code:
               type: string
-              examples: [validation_failed, forbidden, tenant_mismatch]
+              examples: [validation_failed, forbidden, tenant_mismatch, auth_locked, token_expired, token_revoked, inactive_user, inactive_school]
             message:
               type: string
             details:
@@ -1166,12 +1209,23 @@ components:
             - string
             - 'null'
           format: uuid
+    LogoutResult:
+      type: object
+      required: [revoked]
+      properties:
+        revoked:
+          type: boolean
+          description: Indicates the current bearer token was revoked by logout.
     AuthSession:
       type: object
-      required: [token, user, roles, permissions]
+      required: [token, token_expires_at, user, roles, permissions]
       properties:
         token:
           type: string
+        token_expires_at:
+          type: string
+          format: date-time
+          description: Bearer token expiration timestamp, 8 hours after issuance.
         user:
           $ref: '#/components/schemas/User'
         resolved_school:
