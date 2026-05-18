@@ -63,5 +63,5 @@ When implementing or modifying features:
 - only then implementation repositories should change
 
 <!-- SPECKIT START -->
-Active implementation plan: `specs/002-backend-api-foundation/plan.md`
+Active implementation plan: `specs/003-backend-school-admin/plan.md`
 <!-- SPECKIT END -->
