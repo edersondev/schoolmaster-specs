@@ -564,7 +564,7 @@ paths:
         '401':
           $ref: '#/components/responses/Unauthorized'
         '403':
-          $ref: '#/components/responses/TenantMismatch'
+          $ref: '#/components/responses/TeacherWorkflowForbidden'
         '422':
           $ref: '#/components/responses/ValidationError'
     post:
@@ -594,7 +594,7 @@ paths:
         '401':
           $ref: '#/components/responses/Unauthorized'
         '403':
-          $ref: '#/components/responses/TenantMismatch'
+          $ref: '#/components/responses/TeacherWorkflowForbidden'
         '422':
           $ref: '#/components/responses/ValidationError'
   /api/v1/questionnaires:
@@ -623,7 +623,7 @@ paths:
         '401':
           $ref: '#/components/responses/Unauthorized'
         '403':
-          $ref: '#/components/responses/TenantMismatch'
+          $ref: '#/components/responses/TeacherWorkflowForbidden'
         '422':
           $ref: '#/components/responses/ValidationError'
     post:
@@ -653,7 +653,7 @@ paths:
         '401':
           $ref: '#/components/responses/Unauthorized'
         '403':
-          $ref: '#/components/responses/TenantMismatch'
+          $ref: '#/components/responses/TeacherWorkflowForbidden'
         '422':
           $ref: '#/components/responses/ValidationError'
   /api/v1/learning-sets:
@@ -682,7 +682,7 @@ paths:
         '401':
           $ref: '#/components/responses/Unauthorized'
         '403':
-          $ref: '#/components/responses/TenantMismatch'
+          $ref: '#/components/responses/TeacherWorkflowForbidden'
         '422':
           $ref: '#/components/responses/ValidationError'
     post:
@@ -712,7 +712,7 @@ paths:
         '401':
           $ref: '#/components/responses/Unauthorized'
         '403':
-          $ref: '#/components/responses/TenantMismatch'
+          $ref: '#/components/responses/TeacherWorkflowForbidden'
         '422':
           $ref: '#/components/responses/ValidationError'
   /api/v1/grades:
@@ -741,7 +741,7 @@ paths:
         '401':
           $ref: '#/components/responses/Unauthorized'
         '403':
-          $ref: '#/components/responses/TenantMismatch'
+          $ref: '#/components/responses/TeacherWorkflowForbidden'
         '422':
           $ref: '#/components/responses/ValidationError'
     post:
@@ -771,7 +771,7 @@ paths:
         '401':
           $ref: '#/components/responses/Unauthorized'
         '403':
-          $ref: '#/components/responses/TenantMismatch'
+          $ref: '#/components/responses/TeacherWorkflowForbidden'
         '422':
           $ref: '#/components/responses/ValidationError'
   /api/v1/attendance:
@@ -800,7 +800,7 @@ paths:
         '401':
           $ref: '#/components/responses/Unauthorized'
         '403':
-          $ref: '#/components/responses/TenantMismatch'
+          $ref: '#/components/responses/TeacherWorkflowForbidden'
         '422':
           $ref: '#/components/responses/ValidationError'
     post:
@@ -830,7 +830,7 @@ paths:
         '401':
           $ref: '#/components/responses/Unauthorized'
         '403':
-          $ref: '#/components/responses/TenantMismatch'
+          $ref: '#/components/responses/TeacherWorkflowForbidden'
         '422':
           $ref: '#/components/responses/ValidationError'
   /api/v1/student/learning-sets:
@@ -1138,6 +1138,12 @@ components:
             $ref: '#/components/schemas/ErrorEnvelope'
     TenantMismatch:
       description: Tenant context is missing, inactive, or outside permitted scope
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorEnvelope'
+    TeacherWorkflowForbidden:
+      description: Tenant context is missing, inactive, or outside permitted scope, or the authenticated user lacks the required teacher workflow permission.
       content:
         application/json:
           schema:

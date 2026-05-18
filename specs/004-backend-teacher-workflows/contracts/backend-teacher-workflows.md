@@ -41,8 +41,9 @@ Backend implementation must follow the response statuses and components declared
 - `ValidationError`
 - `Unauthorized`
 - `TenantMismatch`
+- `TeacherWorkflowForbidden`
 
-The shared OpenAPI contract also defines `Forbidden`, `TokenRejected`, and `NotFound` components for other operations. Those components are not approved for these ten teacher workflow operations unless OpenAPI first attaches them to the relevant operation. No backend-local product envelope, ad hoc error response, undocumented status code, undocumented field, undocumented filter, or undocumented sort behavior is approved in this slice.
+The `TeacherWorkflowForbidden` component covers both tenant-context failures and valid-tenant permission failures for these ten operations. The shared OpenAPI contract also defines `Forbidden`, `TokenRejected`, and `NotFound` components for other operations. Those components are not approved for these ten teacher workflow operations unless OpenAPI first attaches them to the relevant operation. No backend-local product envelope, ad hoc error response, undocumented status code, undocumented field, undocumented filter, or undocumented sort behavior is approved in this slice.
 
 ## Tenant Behavior
 
