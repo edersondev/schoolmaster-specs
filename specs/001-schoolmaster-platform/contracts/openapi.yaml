@@ -861,6 +861,8 @@ paths:
           $ref: '#/components/responses/Unauthorized'
         '403':
           $ref: '#/components/responses/TenantMismatch'
+        '422':
+          $ref: '#/components/responses/ValidationError'
   /api/v1/student/teacher-content/{contentItemId}/download:
     get:
       tags: [Teacher Content]
@@ -883,6 +885,8 @@ paths:
           $ref: '#/components/responses/TenantMismatch'
         '404':
           $ref: '#/components/responses/NotFound'
+        '422':
+          $ref: '#/components/responses/ValidationError'
   /api/v1/student/grades:
     get:
       tags: [Grades]
@@ -911,6 +915,8 @@ paths:
           $ref: '#/components/responses/Unauthorized'
         '403':
           $ref: '#/components/responses/TenantMismatch'
+        '422':
+          $ref: '#/components/responses/ValidationError'
   /api/v1/student/attendance:
     get:
       tags: [Attendance]
@@ -939,6 +945,8 @@ paths:
           $ref: '#/components/responses/Unauthorized'
         '403':
           $ref: '#/components/responses/TenantMismatch'
+        '422':
+          $ref: '#/components/responses/ValidationError'
   /api/v1/reports:
     get:
       tags: [Reports]
@@ -970,6 +978,8 @@ paths:
           $ref: '#/components/responses/Unauthorized'
         '403':
           $ref: '#/components/responses/TenantMismatch'
+        '422':
+          $ref: '#/components/responses/ValidationError'
     post:
       tags: [Reports]
       summary: Request a tenant-scoped report
@@ -994,6 +1004,8 @@ paths:
                     properties:
                       data:
                         $ref: '#/components/schemas/ReportRun'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
         '403':
           $ref: '#/components/responses/TenantMismatch'
         '422':
@@ -1027,6 +1039,8 @@ paths:
           $ref: '#/components/responses/NotFound'
         '410':
           $ref: '#/components/responses/OutputExpired'
+        '422':
+          $ref: '#/components/responses/ValidationError'
 components:
   securitySchemes:
     bearerAuth:
