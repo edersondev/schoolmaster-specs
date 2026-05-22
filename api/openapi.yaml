@@ -578,7 +578,7 @@ paths:
         '401':
           $ref: '#/components/responses/Unauthorized'
         '403':
-          $ref: '#/components/responses/TenantMismatch'
+          $ref: '#/components/responses/StudentProfileForbidden'
         '422':
           $ref: '#/components/responses/ValidationError'
     post:
@@ -609,7 +609,7 @@ paths:
         '401':
           $ref: '#/components/responses/Unauthorized'
         '403':
-          $ref: '#/components/responses/TenantMismatch'
+          $ref: '#/components/responses/StudentProfileForbidden'
         '409':
           $ref: '#/components/responses/Conflict'
         '422':
@@ -638,7 +638,7 @@ paths:
         '401':
           $ref: '#/components/responses/Unauthorized'
         '403':
-          $ref: '#/components/responses/TenantMismatch'
+          $ref: '#/components/responses/StudentProfileForbidden'
         '404':
           $ref: '#/components/responses/NotFound'
   /api/v1/student-profiles/{studentProfileId}/status:
@@ -671,7 +671,7 @@ paths:
         '401':
           $ref: '#/components/responses/Unauthorized'
         '403':
-          $ref: '#/components/responses/TenantMismatch'
+          $ref: '#/components/responses/StudentProfileForbidden'
         '404':
           $ref: '#/components/responses/NotFound'
         '409':
@@ -708,7 +708,7 @@ paths:
         '401':
           $ref: '#/components/responses/Unauthorized'
         '403':
-          $ref: '#/components/responses/TenantMismatch'
+          $ref: '#/components/responses/StudentProfileForbidden'
         '404':
           $ref: '#/components/responses/NotFound'
         '409':
@@ -1366,6 +1366,25 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/ErrorEnvelope'
+    StudentProfileForbidden:
+      description: Student profile access is forbidden because the tenant context is missing, inactive, or outside permitted scope, or because the authenticated user lacks student profile administration permission in an otherwise valid school context.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorEnvelope'
+          examples:
+            tenantMismatch:
+              summary: Tenant context is invalid for this school-scoped operation
+              value:
+                error:
+                  code: tenant_mismatch
+                  message: Tenant context is missing, inactive, or outside permitted scope.
+            insufficientPermission:
+              summary: Tenant context is valid but the actor lacks student profile administration permission
+              value:
+                error:
+                  code: forbidden
+                  message: The authenticated user lacks permission for this action.
     TeacherWorkflowForbidden:
       description: Tenant context is missing, inactive, or outside permitted scope, or the authenticated user lacks the required teacher workflow permission.
       content:
@@ -1757,6 +1776,7 @@ components:
           format: date
         guardian_associations:
           type: array
+          description: Optional same-school guardian links to create with the student profile. Each `guardian_id` may appear at most once in a request, even if `relationship_type` differs. Duplicate guardian references are rejected with a validation error.
           items:
             $ref: '#/components/schemas/StudentProfileGuardianInput'
           uniqueItems: true

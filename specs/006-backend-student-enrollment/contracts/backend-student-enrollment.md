@@ -54,6 +54,8 @@ Backend implementation must follow only the response statuses, content types, an
 - conflict response for duplicate identifiers or incompatible lifecycle state
 - not-found response that does not disclose cross-tenant records
 
+For the student profile and enrollment operations in this slice, OpenAPI must document `403` outcomes that let clients distinguish a tenant-context failure (`error.code = tenant_mismatch`) from a valid-tenant permission failure (`error.code = forbidden`) without introducing undocumented status codes.
+
 No backend-local product envelope, ad hoc error response, undocumented status code, undocumented field, undocumented filter, undocumented sort behavior, or undocumented status value is approved in this slice.
 
 ## Tenant Behavior
@@ -77,6 +79,7 @@ No backend-local product envelope, ad hoc error response, undocumented status co
 
 - Profile creation rejects duplicate same-school identifiers, malformed identity fields, unsupported statuses, undocumented fields, cross-tenant references, and invalid guardian references.
 - Guardian references must resolve to active same-school guardians before any profile or association is created.
+- Guardian association input must reject duplicate guardian references by `guardian_id`, even when the duplicate objects use different `relationship_type` values.
 - Profile listing accepts only documented filters and sort options.
 - Profile detail rejects missing, inactive, cross-tenant, unauthorized, or not-found profiles using documented error semantics.
 - Status updates accept only documented lifecycle transitions and require effective dates, reasons, and actor context where documented.
