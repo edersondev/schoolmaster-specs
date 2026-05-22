@@ -2,7 +2,7 @@
 
 **Feature Branch**: `006-backend-student-enrollment`  
 **Created**: 2026-05-21  
-**Status**: Draft  
+**Status**: Ready for Implementation  
 **Input**: User description: "Define the next SchoolMaster backend implementation slice after 005-backend-student-reporting. The backend must implement student profile and enrollment management for school administrators: create, list, view, update status, transfer within allowed school lifecycle rules, and maintain enrollment history for StudentProfile records. Preserve contract-first delivery, tenant-by-column isolation with School as tenant root and school_id for school-owned records, explicit platform versus school authorization, API-only /api/v1 behavior, OpenAPI-aligned response envelopes, validation, inactive-status handling, guardian association compatibility, academic-period consistency, audit/history preservation, and regression coverage. Do not include frontend implementation, classroom/course/section/roster workflows, guardian self-service, student academic record correction workflows, report changes, bulk import, billing, messaging, or undocumented APIs in this slice."
 
 ## User Scenarios & Testing *(mandatory)*

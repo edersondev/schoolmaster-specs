@@ -41,6 +41,8 @@ tags:
     description: Periods inside academic years for academic operations.
   - name: Guardians
     description: Guardian records linked to student profiles.
+  - name: Student Profiles
+    description: School-scoped student profile and enrollment lifecycle management.
   - name: Teacher Content
     description: Teacher-managed folders and instructional content.
   - name: Questionnaires
@@ -536,6 +538,168 @@ paths:
                     properties:
                       data:
                         $ref: '#/components/schemas/Guardian'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+  /api/v1/student-profiles:
+    get:
+      tags: [Student Profiles]
+      summary: List student profiles in the resolved school context
+      operationId: listStudentProfiles
+      parameters:
+        - $ref: '#/components/parameters/TenantContext'
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/PerPage'
+        - $ref: '#/components/parameters/StudentProfileStatusFilter'
+        - $ref: '#/components/parameters/StudentProfileSearch'
+        - $ref: '#/components/parameters/StudentProfileSort'
+      responses:
+        '200':
+          description: Student profile collection
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/PaginatedEnvelope'
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/StudentProfileSummary'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/TenantMismatch'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+    post:
+      tags: [Student Profiles]
+      summary: Create a same-school student profile
+      operationId: createStudentProfile
+      parameters:
+        - $ref: '#/components/parameters/TenantContext'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StudentProfileCreateRequest'
+      responses:
+        '201':
+          description: Student profile created
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessEnvelope'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/StudentProfile'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/TenantMismatch'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+  /api/v1/student-profiles/{studentProfileId}:
+    get:
+      tags: [Student Profiles]
+      summary: Retrieve a same-school student profile
+      operationId: getStudentProfile
+      parameters:
+        - $ref: '#/components/parameters/TenantContext'
+        - $ref: '#/components/parameters/StudentProfileId'
+      responses:
+        '200':
+          description: Student profile detail
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessEnvelope'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/StudentProfile'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/TenantMismatch'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /api/v1/student-profiles/{studentProfileId}/status:
+    patch:
+      tags: [Student Profiles]
+      summary: Update a non-transfer student profile lifecycle status
+      operationId: updateStudentProfileStatus
+      parameters:
+        - $ref: '#/components/parameters/TenantContext'
+        - $ref: '#/components/parameters/StudentProfileId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StudentProfileStatusUpdateRequest'
+      responses:
+        '200':
+          description: Student profile lifecycle status updated
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessEnvelope'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/StudentProfileLifecycleResult'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/TenantMismatch'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+  /api/v1/student-profiles/{studentProfileId}/transfer:
+    post:
+      tags: [Student Profiles]
+      summary: Record a source-school student transfer
+      operationId: transferStudentProfile
+      parameters:
+        - $ref: '#/components/parameters/TenantContext'
+        - $ref: '#/components/parameters/StudentProfileId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StudentProfileTransferRequest'
+      responses:
+        '200':
+          description: Student transfer recorded
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessEnvelope'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/StudentTransferResult'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/TenantMismatch'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
         '422':
           $ref: '#/components/responses/ValidationError'
   /api/v1/teacher-content:
@@ -1066,6 +1230,13 @@ components:
       schema:
         type: string
         format: uuid
+    StudentProfileId:
+      name: studentProfileId
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
     ContentItemId:
       name: contentItemId
       in: path
@@ -1111,6 +1282,24 @@ components:
     StatusFilter:
       name: status
       in: query
+      schema:
+        type: string
+    StudentProfileStatusFilter:
+      name: status
+      in: query
+      schema:
+        $ref: '#/components/schemas/StudentProfileStatus'
+    StudentProfileSearch:
+      name: search
+      in: query
+      schema:
+        type: string
+        minLength: 1
+        maxLength: 120
+    StudentProfileSort:
+      name: sort
+      in: query
+      description: Comma-separated field names; allowed values are full_name, registration_number, enrolled_at, status, and created_at. Prefix with '-' for descending.
       schema:
         type: string
     Sort:
@@ -1164,6 +1353,12 @@ components:
             $ref: '#/components/schemas/ErrorEnvelope'
     NotFound:
       description: Resource was not found in the permitted scope
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorEnvelope'
+    Conflict:
+      description: Request conflicts with an existing identifier or incompatible lifecycle state
       content:
         application/json:
           schema:
@@ -1544,6 +1739,248 @@ components:
           items:
             type: string
             format: uuid
+    StudentProfileStatus:
+      type: string
+      enum: [active, inactive, transferred]
+    StudentProfileGuardianInput:
+      type: object
+      required: [guardian_id, relationship_type]
+      additionalProperties: false
+      properties:
+        guardian_id:
+          type: string
+          format: uuid
+        relationship_type:
+          type: string
+          minLength: 1
+          maxLength: 80
+    StudentProfileCreateRequest:
+      type: object
+      required: [registration_number, first_name, last_name, enrolled_at]
+      additionalProperties: false
+      properties:
+        user_id:
+          type: string
+          format: uuid
+        registration_number:
+          type: string
+          minLength: 1
+          maxLength: 80
+        first_name:
+          type: string
+          minLength: 1
+          maxLength: 120
+        last_name:
+          type: string
+          minLength: 1
+          maxLength: 120
+        date_of_birth:
+          type: string
+          format: date
+        contact_email:
+          type: string
+          format: email
+        contact_phone:
+          type: string
+          maxLength: 40
+        current_academic_year_id:
+          type: string
+          format: uuid
+        status:
+          type: string
+          enum: [active, inactive]
+          default: active
+        enrolled_at:
+          type: string
+          format: date
+        guardian_associations:
+          type: array
+          items:
+            $ref: '#/components/schemas/StudentProfileGuardianInput'
+          uniqueItems: true
+    StudentProfileStatusUpdateRequest:
+      type: object
+      required: [status, effective_at, reason]
+      additionalProperties: false
+      properties:
+        status:
+          type: string
+          enum: [active, inactive]
+        effective_at:
+          type: string
+          format: date
+        reason:
+          type: string
+          minLength: 1
+          maxLength: 500
+    StudentProfileTransferRequest:
+      type: object
+      required: [effective_at, reason]
+      additionalProperties: false
+      properties:
+        effective_at:
+          type: string
+          format: date
+        reason:
+          type: string
+          minLength: 1
+          maxLength: 500
+        destination_school_id:
+          type: string
+          format: uuid
+        destination_student_profile_id:
+          type: string
+          format: uuid
+    EnrollmentHistory:
+      type: object
+      required: [id, school_id, student_profile_id, event_type, to_status, effective_at, reason, actor_user_id, created_at]
+      properties:
+        id:
+          type: string
+          format: uuid
+        school_id:
+          type: string
+          format: uuid
+        student_profile_id:
+          type: string
+          format: uuid
+        event_type:
+          type: string
+          enum: [created, activated, inactivated, transferred_out, destination_profile_linked]
+        from_status:
+          type:
+            - string
+            - 'null'
+          enum: [active, inactive, transferred, null]
+        to_status:
+          $ref: '#/components/schemas/StudentProfileStatus'
+        effective_at:
+          type: string
+          format: date
+        reason:
+          type: string
+        actor_user_id:
+          type: string
+          format: uuid
+        metadata_summary:
+          type: object
+          additionalProperties: true
+        created_at:
+          type: string
+          format: date-time
+    StudentProfileSummary:
+      type: object
+      required: [id, school_id, registration_number, full_name, status, enrolled_at]
+      properties:
+        id:
+          type: string
+          format: uuid
+        school_id:
+          type: string
+          format: uuid
+        user_id:
+          type:
+            - string
+            - 'null'
+          format: uuid
+        registration_number:
+          type: string
+        first_name:
+          type: string
+        last_name:
+          type: string
+        full_name:
+          type: string
+        status:
+          $ref: '#/components/schemas/StudentProfileStatus'
+        enrolled_at:
+          type: string
+          format: date
+        status_effective_at:
+          type:
+            - string
+            - 'null'
+          format: date
+    StudentProfile:
+      allOf:
+        - $ref: '#/components/schemas/StudentProfileSummary'
+        - type: object
+          required: [guardian_associations, enrollment_history]
+          properties:
+            date_of_birth:
+              type:
+                - string
+                - 'null'
+              format: date
+            contact_email:
+              type:
+                - string
+                - 'null'
+              format: email
+            contact_phone:
+              type:
+                - string
+                - 'null'
+            current_academic_year_id:
+              type:
+                - string
+                - 'null'
+              format: uuid
+            guardian_associations:
+              type: array
+              items:
+                $ref: '#/components/schemas/Guardian'
+            enrollment_history:
+              type: array
+              items:
+                $ref: '#/components/schemas/EnrollmentHistory'
+    StudentProfileLifecycleResult:
+      type: object
+      required: [student_profile, enrollment_history]
+      properties:
+        student_profile:
+          $ref: '#/components/schemas/StudentProfile'
+        enrollment_history:
+          $ref: '#/components/schemas/EnrollmentHistory'
+    StudentTransferResult:
+      type: object
+      required: [student_profile, transfer, enrollment_history]
+      properties:
+        student_profile:
+          $ref: '#/components/schemas/StudentProfile'
+        transfer:
+          type: object
+          required: [id, school_id, student_profile_id, effective_at, reason, actor_user_id]
+          properties:
+            id:
+              type: string
+              format: uuid
+            school_id:
+              type: string
+              format: uuid
+            student_profile_id:
+              type: string
+              format: uuid
+            destination_school_id:
+              type:
+                - string
+                - 'null'
+              format: uuid
+            destination_student_profile_id:
+              type:
+                - string
+                - 'null'
+              format: uuid
+            effective_at:
+              type: string
+              format: date
+            reason:
+              type: string
+            actor_user_id:
+              type: string
+              format: uuid
+        enrollment_history:
+          $ref: '#/components/schemas/EnrollmentHistory'
     TeacherContentType:
       type: string
       enum: [pdf, image, text, office_document]

@@ -18,13 +18,13 @@
 
 **Purpose**: Expand the approved contract and align backend implementation with the student profile/enrollment specification before backend code changes.
 
-- [ ] T001 Create feature implementation notes with approved operation boundary and blocked scope in `docs/implementation-notes/006-backend-student-enrollment.md`
-- [ ] T002 Add student profile and enrollment operation paths, operation IDs, parameters, request schemas, response schemas, and error responses in `specs/001-schoolmaster-platform/contracts/openapi.yaml`
-- [ ] T003 Mirror the approved student profile and enrollment contract behavior in `api/openapi.yaml`
-- [ ] T004 Run Redocly contract validation for the aggregate and platform contracts and record the result in `docs/implementation-notes/006-backend-student-enrollment.md`
-- [ ] T005 Confirm the approved operation IDs `listStudentProfiles`, `createStudentProfile`, `getStudentProfile`, `updateStudentProfileStatus`, and `transferStudentProfile` exist in the mounted OpenAPI contract and record the inventory in `docs/implementation-notes/006-backend-student-enrollment.md`
-- [ ] T006 Confirm no undocumented student profile, enrollment, transfer, classroom, roster, guardian self-service, correction, bulk import, report, or frontend routes exist and document the route inventory in `docs/implementation-notes/006-backend-student-enrollment.md`
-- [ ] T007 Record blocked contract gaps for frontend student administration, classroom/course/section/roster, teacher assignment, guardian self-service, academic-record correction, report lifecycle changes, bulk import, merge, anonymization, deletion, restore, purge, account lifecycle, and additional filters in `docs/implementation-notes/006-backend-student-enrollment.md`
+- [X] T001 Create feature implementation notes with approved operation boundary and blocked scope in `docs/implementation-notes/006-backend-student-enrollment.md`
+- [X] T002 Add student profile and enrollment operation paths, operation IDs, parameters, request schemas, response schemas, and error responses in `specs/001-schoolmaster-platform/contracts/openapi.yaml`
+- [X] T003 Mirror the approved student profile and enrollment contract behavior in `api/openapi.yaml`
+- [X] T004 Run Redocly contract validation for the aggregate and platform contracts and record the result in `docs/implementation-notes/006-backend-student-enrollment.md`
+- [X] T005 Confirm the approved operation IDs `listStudentProfiles`, `createStudentProfile`, `getStudentProfile`, `updateStudentProfileStatus`, and `transferStudentProfile` exist in the mounted OpenAPI contract and record the inventory in `docs/implementation-notes/006-backend-student-enrollment.md`
+- [X] T006 Confirm no undocumented student profile, enrollment, transfer, classroom, roster, guardian self-service, correction, bulk import, report, or frontend routes exist and document the route inventory in `docs/implementation-notes/006-backend-student-enrollment.md`
+- [X] T007 Record blocked contract gaps for frontend student administration, classroom/course/section/roster, teacher assignment, guardian self-service, academic-record correction, report lifecycle changes, bulk import, merge, anonymization, deletion, restore, purge, account lifecycle, and additional filters in `docs/implementation-notes/006-backend-student-enrollment.md`
 
 ---
 
@@ -34,22 +34,22 @@
 
 **Critical**: No user story work should begin until this phase is complete.
 
-- [ ] T008 Inspect existing backend migrations and models for `StudentProfile`, `Guardian`, guardian association pivot records, `School`, `User`, `AcademicPeriod`, `GradeRecord`, `AttendanceRecord`, `LearningSetAssignment`, and `ReportRun` tenant/status/UUID columns and document the inventory in `docs/implementation-notes/006-backend-student-enrollment.md`
-- [ ] T009 Add only missing student profile lifecycle, enrollment history, guardian association, and transfer metadata persistence changes with tenant indexes and UUIDs in `database/migrations/2026_05_21_000001_add_student_profile_enrollment_management.php`
-- [ ] T010 [P] Seed baseline school-scoped student administration permission definitions in `database/seeders/PermissionSeeder.php`
-- [ ] T011 [P] Define shared student enrollment tenant assertion helpers in `app/Services/Concerns/AssertsStudentEnrollmentTenantScope.php`
-- [ ] T012 [P] Define shared student administration authorization helper methods in `app/Services/Concerns/AuthorizesStudentAdministration.php`
-- [ ] T013 [P] Define documented student profile list-query validation rules for pagination, filters, and sorting in `app/Services/StudentProfiles/StudentProfileListQuery.php`
-- [ ] T014 [P] Define documented student profile lifecycle transition validation rules in `app/Services/StudentProfiles/StudentProfileLifecycleRules.php`
-- [ ] T015 [P] Define documented guardian association validation rules for profile creation in `app/Services/StudentProfiles/GuardianAssociationValidator.php`
-- [ ] T016 [P] Define documented transfer validation rules for source and destination school behavior in `app/Services/StudentProfiles/StudentTransferValidator.php`
-- [ ] T017 [P] Implement or verify `StudentProfile` model UUIDs, school scope, user relationship, status helpers, guardian associations, and history relationship in `app/Models/StudentProfile.php`
-- [ ] T018 [P] Implement `EnrollmentHistory` model UUIDs, school scope, profile relationship, actor relationship, event type helpers, and immutable-history guard in `app/Models/EnrollmentHistory.php`
-- [ ] T019 [P] Implement or verify student guardian association model or pivot behavior with school scope and active status in `app/Models/GuardianAssociation.php`
-- [ ] T020 [P] Implement `StudentTransfer` model UUIDs, source school scope, source profile relationship, destination references, and actor relationship in `app/Models/StudentTransfer.php`
-- [ ] T021 [P] Add student enrollment model factories for tests in `database/factories/StudentEnrollmentFactory.php`
-- [ ] T022 Define the student profile route group with auth and tenant middleware only, without operation-specific route registration, in `routes/api.php`
-- [ ] T023 Register student profile and enrollment policies in `app/Providers/AuthServiceProvider.php`
+- [X] T008 Inspect existing backend migrations and models for `StudentProfile`, `Guardian`, guardian association pivot records, `School`, `User`, `AcademicPeriod`, `GradeRecord`, `AttendanceRecord`, `LearningSetAssignment`, and `ReportRun` tenant/status/UUID columns and document the inventory in `docs/implementation-notes/006-backend-student-enrollment.md`
+- [X] T009 Add only missing student profile lifecycle, enrollment history, guardian association, and transfer metadata persistence changes with tenant indexes and UUIDs in `database/migrations/2026_05_21_000001_add_student_profile_enrollment_management.php`
+- [X] T010 [P] Seed baseline school-scoped student administration permission definitions in `database/seeders/PermissionSeeder.php`
+- [X] T011 [P] Define shared student enrollment tenant assertion helpers in `app/Services/Concerns/AssertsStudentEnrollmentTenantScope.php`
+- [X] T012 [P] Define shared student administration authorization helper methods in `app/Services/Concerns/AuthorizesStudentAdministration.php`
+- [X] T013 [P] Define documented student profile list-query validation rules for pagination, filters, and sorting in `app/Services/StudentProfiles/StudentProfileListQuery.php`
+- [X] T014 [P] Define documented student profile lifecycle transition validation rules in `app/Services/StudentProfiles/StudentProfileLifecycleRules.php`
+- [X] T015 [P] Define documented guardian association validation rules for profile creation in `app/Services/StudentProfiles/GuardianAssociationValidator.php`
+- [X] T016 [P] Define documented transfer validation rules for source and destination school behavior in `app/Services/StudentProfiles/StudentTransferValidator.php`
+- [X] T017 [P] Implement or verify `StudentProfile` model UUIDs, school scope, user relationship, status helpers, guardian associations, and history relationship in `app/Models/StudentProfile.php`
+- [X] T018 [P] Implement `EnrollmentHistory` model UUIDs, school scope, profile relationship, actor relationship, event type helpers, and immutable-history guard in `app/Models/EnrollmentHistory.php`
+- [X] T019 [P] Implement or verify student guardian association model or pivot behavior with school scope and active status in `app/Models/GuardianAssociation.php`
+- [X] T020 [P] Implement `StudentTransfer` model UUIDs, source school scope, source profile relationship, destination references, and actor relationship in `app/Models/StudentTransfer.php`
+- [X] T021 [P] Add student enrollment model factories for tests in `database/factories/StudentEnrollmentFactory.php`
+- [X] T022 Define the student profile route group with auth and tenant middleware only, without operation-specific route registration, in `routes/api.php`
+- [X] T023 Register student profile and enrollment policies in `app/Providers/AuthServiceProvider.php`
 
 **Checkpoint**: Persistence, permissions, tenant helpers, lifecycle rules, guardian validation, transfer validation, models, factories, and route boundaries are ready for story work.
 
@@ -63,30 +63,30 @@
 
 ### Tests for User Story 1
 
-- [ ] T024 [P] [US1] Add PHPUnit feature tests for `POST /api/v1/student-profiles` success, response shape, initial enrollment history, and same-school guardian association behavior in `tests/Feature/Api/V1/StudentProfileCreateTest.php`
-- [ ] T025 [P] [US1] Add PHPUnit feature tests for `GET /api/v1/student-profiles` pagination, filters, sorting, same-school visibility, and response shape in `tests/Feature/Api/V1/StudentProfileListTest.php`
-- [ ] T026 [P] [US1] Add PHPUnit feature tests for `GET /api/v1/student-profiles/{studentProfileId}` success, inactive/transferred visibility, not-found behavior, and response shape in `tests/Feature/Api/V1/StudentProfileDetailTest.php`
-- [ ] T027 [P] [US1] Add PHPUnit feature tests for missing, inactive, mismatched, and unauthorized tenant context across create, list, and detail operations in `tests/Feature/Api/V1/StudentProfileTenantTest.php`
-- [ ] T028 [P] [US1] Add PHPUnit feature tests for duplicate same-school identifiers, invalid required fields, unsupported status values, undocumented fields, cross-tenant user references, and cross-tenant guardian references in `tests/Feature/Api/V1/StudentProfileValidationTest.php`
-- [ ] T029 [P] [US1] Add unit tests for atomic profile creation, guardian association validation, and initial enrollment history creation in `tests/Unit/Services/StudentProfileCreationTest.php`
-- [ ] T030 [P] [US1] Add OpenAPI response-shape regression coverage for `listStudentProfiles`, `createStudentProfile`, and `getStudentProfile` in `tests/Feature/Api/V1/StudentProfileContractTest.php`
+- [X] T024 [P] [US1] Add PHPUnit feature tests for `POST /api/v1/student-profiles` success, response shape, initial enrollment history, and same-school guardian association behavior in `tests/Feature/Api/V1/StudentProfileCreateTest.php`
+- [X] T025 [P] [US1] Add PHPUnit feature tests for `GET /api/v1/student-profiles` pagination, filters, sorting, same-school visibility, and response shape in `tests/Feature/Api/V1/StudentProfileListTest.php`
+- [X] T026 [P] [US1] Add PHPUnit feature tests for `GET /api/v1/student-profiles/{studentProfileId}` success, inactive/transferred visibility, not-found behavior, and response shape in `tests/Feature/Api/V1/StudentProfileDetailTest.php`
+- [X] T027 [P] [US1] Add PHPUnit feature tests for missing, inactive, mismatched, and unauthorized tenant context across create, list, and detail operations in `tests/Feature/Api/V1/StudentProfileTenantTest.php`
+- [X] T028 [P] [US1] Add PHPUnit feature tests for duplicate same-school identifiers, invalid required fields, unsupported status values, undocumented fields, cross-tenant user references, and cross-tenant guardian references in `tests/Feature/Api/V1/StudentProfileValidationTest.php`
+- [X] T029 [P] [US1] Add unit tests for atomic profile creation, guardian association validation, and initial enrollment history creation in `tests/Unit/Services/StudentProfileCreationTest.php`
+- [X] T030 [P] [US1] Add OpenAPI response-shape regression coverage for `listStudentProfiles`, `createStudentProfile`, and `getStudentProfile` in `tests/Feature/Api/V1/StudentProfileContractTest.php`
 
 ### Implementation for User Story 1
 
-- [ ] T031 [P] [US1] Implement student profile creation input DTO in `app/DTOs/StudentProfiles/CreateStudentProfileData.php`
-- [ ] T032 [P] [US1] Implement student profile list request validation in `app/Http/Requests/StudentProfiles/ListStudentProfilesRequest.php`
-- [ ] T033 [P] [US1] Implement student profile create request validation in `app/Http/Requests/StudentProfiles/CreateStudentProfileRequest.php`
-- [ ] T034 [P] [US1] Implement student profile detail request validation in `app/Http/Requests/StudentProfiles/GetStudentProfileRequest.php`
-- [ ] T035 [P] [US1] Implement student profile summary resource using the published list shape in `app/Http/Resources/StudentProfiles/StudentProfileSummaryResource.php`
-- [ ] T036 [P] [US1] Implement student profile detail resource using the published detail shape in `app/Http/Resources/StudentProfiles/StudentProfileResource.php`
-- [ ] T037 [P] [US1] Implement enrollment history summary resource using the published history shape in `app/Http/Resources/StudentProfiles/EnrollmentHistoryResource.php`
-- [ ] T038 [P] [US1] Implement student profile authorization policy for list, create, and view behavior in `app/Policies/StudentProfilePolicy.php`
-- [ ] T039 [US1] Implement student profile listing service with tenant, permission, pagination, filters, sorting, and response-scope rules in `app/Services/StudentProfiles/StudentProfileListService.php`
-- [ ] T040 [US1] Implement student profile creation service with tenant, duplicate, user reference, guardian association, lifecycle status, and initial history rules in `app/Services/StudentProfiles/StudentProfileCreationService.php`
-- [ ] T041 [US1] Implement student profile detail service with tenant, permission, inactive/transferred visibility, and not-found behavior in `app/Services/StudentProfiles/StudentProfileDetailService.php`
-- [ ] T042 [US1] Implement student profile list, create, and detail controller actions in `app/Http/Controllers/Api/V1/StudentProfileController.php`
-- [ ] T043 [US1] Wire `listStudentProfiles`, `createStudentProfile`, and `getStudentProfile` routes in `routes/api.php`
-- [ ] T044 [US1] Update implementation notes with final create/list/detail operation IDs, route inventory, test commands, and blocked scope in `docs/implementation-notes/006-backend-student-enrollment.md`
+- [X] T031 [P] [US1] Implement student profile creation input DTO in `app/DTOs/StudentProfiles/CreateStudentProfileData.php`
+- [X] T032 [P] [US1] Implement student profile list request validation in `app/Http/Requests/StudentProfiles/ListStudentProfilesRequest.php`
+- [X] T033 [P] [US1] Implement student profile create request validation in `app/Http/Requests/StudentProfiles/CreateStudentProfileRequest.php`
+- [X] T034 [P] [US1] Implement student profile detail request validation in `app/Http/Requests/StudentProfiles/GetStudentProfileRequest.php`
+- [X] T035 [P] [US1] Implement student profile summary resource using the published list shape in `app/Http/Resources/StudentProfiles/StudentProfileSummaryResource.php`
+- [X] T036 [P] [US1] Implement student profile detail resource using the published detail shape in `app/Http/Resources/StudentProfiles/StudentProfileResource.php`
+- [X] T037 [P] [US1] Implement enrollment history summary resource using the published history shape in `app/Http/Resources/StudentProfiles/EnrollmentHistoryResource.php`
+- [X] T038 [P] [US1] Implement student profile authorization policy for list, create, and view behavior in `app/Policies/StudentProfilePolicy.php`
+- [X] T039 [US1] Implement student profile listing service with tenant, permission, pagination, filters, sorting, and response-scope rules in `app/Services/StudentProfiles/StudentProfileListService.php`
+- [X] T040 [US1] Implement student profile creation service with tenant, duplicate, user reference, guardian association, lifecycle status, and initial history rules in `app/Services/StudentProfiles/StudentProfileCreationService.php`
+- [X] T041 [US1] Implement student profile detail service with tenant, permission, inactive/transferred visibility, and not-found behavior in `app/Services/StudentProfiles/StudentProfileDetailService.php`
+- [X] T042 [US1] Implement student profile list, create, and detail controller actions in `app/Http/Controllers/Api/V1/StudentProfileController.php`
+- [X] T043 [US1] Wire `listStudentProfiles`, `createStudentProfile`, and `getStudentProfile` routes in `routes/api.php`
+- [X] T044 [US1] Update implementation notes with final create/list/detail operation IDs, route inventory, test commands, and blocked scope in `docs/implementation-notes/006-backend-student-enrollment.md`
 
 **Checkpoint**: User Story 1 is independently functional and can be validated without lifecycle status updates or transfers.
 
@@ -100,23 +100,23 @@
 
 ### Tests for User Story 2
 
-- [ ] T045 [P] [US2] Add PHPUnit feature tests for `PATCH /api/v1/student-profiles/{studentProfileId}/status` active-to-inactive success, response shape, effective date, reason, and history write behavior in `tests/Feature/Api/V1/StudentProfileStatusUpdateTest.php`
-- [ ] T046 [P] [US2] Add PHPUnit feature tests for unsupported lifecycle transitions, transfer status rejection through the status endpoint, missing lifecycle fields, invalid effective dates, cross-tenant profiles, inactive tenant context, and undocumented fields in `tests/Feature/Api/V1/StudentProfileStatusValidationTest.php`
-- [ ] T047 [P] [US2] Add PHPUnit feature tests confirming historical grades, attendance, learning-set assignments, guardian associations, report references, and audit records remain retained after status changes in `tests/Feature/Api/V1/StudentProfileHistoryPreservationTest.php`
-- [ ] T048 [P] [US2] Add PHPUnit feature tests confirming inactive or transferred profiles cannot use active student self-view or new active workflow participation where prohibited in `tests/Feature/Api/V1/StudentProfileLifecycleAccessTest.php`
-- [ ] T049 [P] [US2] Add unit tests for non-transfer lifecycle transition rules, enrollment history event generation, and atomic rollback on lifecycle failure in `tests/Unit/Services/StudentProfileLifecycleRulesTest.php`
-- [ ] T050 [P] [US2] Add OpenAPI response-shape regression coverage for `updateStudentProfileStatus` in `tests/Feature/Api/V1/StudentProfileStatusContractTest.php`
+- [X] T045 [P] [US2] Add PHPUnit feature tests for `PATCH /api/v1/student-profiles/{studentProfileId}/status` active-to-inactive success, response shape, effective date, reason, and history write behavior in `tests/Feature/Api/V1/StudentProfileStatusUpdateTest.php`
+- [X] T046 [P] [US2] Add PHPUnit feature tests for unsupported lifecycle transitions, transfer status rejection through the status endpoint, missing lifecycle fields, invalid effective dates, cross-tenant profiles, inactive tenant context, and undocumented fields in `tests/Feature/Api/V1/StudentProfileStatusValidationTest.php`
+- [X] T047 [P] [US2] Add PHPUnit feature tests confirming historical grades, attendance, learning-set assignments, guardian associations, report references, and audit records remain retained after status changes in `tests/Feature/Api/V1/StudentProfileHistoryPreservationTest.php`
+- [X] T048 [P] [US2] Add PHPUnit feature tests confirming inactive or transferred profiles cannot use active student self-view or new active workflow participation where prohibited in `tests/Feature/Api/V1/StudentProfileLifecycleAccessTest.php`
+- [X] T049 [P] [US2] Add unit tests for non-transfer lifecycle transition rules, enrollment history event generation, and atomic rollback on lifecycle failure in `tests/Unit/Services/StudentProfileLifecycleRulesTest.php`
+- [X] T050 [P] [US2] Add OpenAPI response-shape regression coverage for `updateStudentProfileStatus` in `tests/Feature/Api/V1/StudentProfileStatusContractTest.php`
 
 ### Implementation for User Story 2
 
-- [ ] T051 [P] [US2] Implement student profile status update input DTO in `app/DTOs/StudentProfiles/UpdateStudentProfileStatusData.php`
-- [ ] T052 [P] [US2] Implement student profile status update request validation in `app/Http/Requests/StudentProfiles/UpdateStudentProfileStatusRequest.php`
-- [ ] T053 [P] [US2] Extend student profile authorization policy for lifecycle status update behavior in `app/Policies/StudentProfilePolicy.php`
-- [ ] T054 [P] [US2] Implement lifecycle status response resource using the published lifecycle outcome shape in `app/Http/Resources/StudentProfiles/StudentProfileLifecycleResource.php`
-- [ ] T055 [US2] Implement non-transfer student profile lifecycle service with transition, effective-date, reason, actor, history, and atomic rollback rules in `app/Services/StudentProfiles/StudentProfileLifecycleService.php`
-- [ ] T056 [US2] Implement student profile status update controller action in `app/Http/Controllers/Api/V1/StudentProfileController.php`
-- [ ] T057 [US2] Wire `updateStudentProfileStatus` route in `routes/api.php`
-- [ ] T058 [US2] Update implementation notes with final lifecycle operation ID, transition matrix, history behavior, self-view impact, and test commands in `docs/implementation-notes/006-backend-student-enrollment.md`
+- [X] T051 [P] [US2] Implement student profile status update input DTO in `app/DTOs/StudentProfiles/UpdateStudentProfileStatusData.php`
+- [X] T052 [P] [US2] Implement student profile status update request validation in `app/Http/Requests/StudentProfiles/UpdateStudentProfileStatusRequest.php`
+- [X] T053 [P] [US2] Extend student profile authorization policy for lifecycle status update behavior in `app/Policies/StudentProfilePolicy.php`
+- [X] T054 [P] [US2] Implement lifecycle status response resource using the published lifecycle outcome shape in `app/Http/Resources/StudentProfiles/StudentProfileLifecycleResource.php`
+- [X] T055 [US2] Implement non-transfer student profile lifecycle service with transition, effective-date, reason, actor, history, and atomic rollback rules in `app/Services/StudentProfiles/StudentProfileLifecycleService.php`
+- [X] T056 [US2] Implement student profile status update controller action in `app/Http/Controllers/Api/V1/StudentProfileController.php`
+- [X] T057 [US2] Wire `updateStudentProfileStatus` route in `routes/api.php`
+- [X] T058 [US2] Update implementation notes with final lifecycle operation ID, transition matrix, history behavior, self-view impact, and test commands in `docs/implementation-notes/006-backend-student-enrollment.md`
 
 **Checkpoint**: User Story 2 is independently functional after shared foundations and User Story 1 profile retrieval behavior.
 
@@ -130,23 +130,23 @@
 
 ### Tests for User Story 3
 
-- [ ] T059 [P] [US3] Add PHPUnit feature tests for `POST /api/v1/student-profiles/{studentProfileId}/transfer` source-school transfer success, response shape, source profile status, and enrollment history write behavior in `tests/Feature/Api/V1/StudentProfileTransferTest.php`
-- [ ] T060 [P] [US3] Add PHPUnit feature tests for destination-school profile creation or linking when documented and explicitly authorized in `tests/Feature/Api/V1/StudentProfileTransferDestinationTest.php`
-- [ ] T061 [P] [US3] Add PHPUnit feature tests for missing destination permission, inactive destination school, invalid source profile status, cross-tenant source profile, invalid effective date, unsupported transfer mode, and undocumented fields in `tests/Feature/Api/V1/StudentProfileTransferValidationTest.php`
-- [ ] T062 [P] [US3] Add PHPUnit feature tests confirming source-school grades, attendance, learning sets, private content, guardian links, report runs, and report outputs are not copied or exposed to destination school during transfer in `tests/Feature/Api/V1/StudentProfileTransferTenantIsolationTest.php`
-- [ ] T063 [P] [US3] Add unit tests for transfer validation, destination permission checks, source-profile lifecycle changes, and atomic rollback on transfer failure in `tests/Unit/Services/StudentProfileTransferServiceTest.php`
-- [ ] T064 [P] [US3] Add OpenAPI response-shape regression coverage for `transferStudentProfile` in `tests/Feature/Api/V1/StudentProfileTransferContractTest.php`
+- [X] T059 [P] [US3] Add PHPUnit feature tests for `POST /api/v1/student-profiles/{studentProfileId}/transfer` source-school transfer success, response shape, source profile status, and enrollment history write behavior in `tests/Feature/Api/V1/StudentProfileTransferTest.php`
+- [X] T060 [P] [US3] Add PHPUnit feature tests for destination-school profile creation or linking when documented and explicitly authorized in `tests/Feature/Api/V1/StudentProfileTransferDestinationTest.php`
+- [X] T061 [P] [US3] Add PHPUnit feature tests for missing destination permission, inactive destination school, invalid source profile status, cross-tenant source profile, invalid effective date, unsupported transfer mode, and undocumented fields in `tests/Feature/Api/V1/StudentProfileTransferValidationTest.php`
+- [X] T062 [P] [US3] Add PHPUnit feature tests confirming source-school grades, attendance, learning sets, private content, guardian links, report runs, and report outputs are not copied or exposed to destination school during transfer in `tests/Feature/Api/V1/StudentProfileTransferTenantIsolationTest.php`
+- [X] T063 [P] [US3] Add unit tests for transfer validation, destination permission checks, source-profile lifecycle changes, and atomic rollback on transfer failure in `tests/Unit/Services/StudentProfileTransferServiceTest.php`
+- [X] T064 [P] [US3] Add OpenAPI response-shape regression coverage for `transferStudentProfile` in `tests/Feature/Api/V1/StudentProfileTransferContractTest.php`
 
 ### Implementation for User Story 3
 
-- [ ] T065 [P] [US3] Implement student transfer input DTO in `app/DTOs/StudentProfiles/TransferStudentProfileData.php`
-- [ ] T066 [P] [US3] Implement student transfer request validation in `app/Http/Requests/StudentProfiles/TransferStudentProfileRequest.php`
-- [ ] T067 [P] [US3] Extend student profile authorization policy for transfer behavior and destination-school permission requirements in `app/Policies/StudentProfilePolicy.php`
-- [ ] T068 [P] [US3] Implement student transfer response resource using the published transfer outcome shape in `app/Http/Resources/StudentProfiles/StudentTransferResource.php`
-- [ ] T069 [US3] Implement student transfer service with source-school lifecycle, destination permission, destination profile, transfer metadata, no-copy, history, and atomic rollback rules in `app/Services/StudentProfiles/StudentProfileTransferService.php`
-- [ ] T070 [US3] Implement student transfer controller action in `app/Http/Controllers/Api/V1/StudentProfileController.php`
-- [ ] T071 [US3] Wire `transferStudentProfile` route in `routes/api.php`
-- [ ] T072 [US3] Update implementation notes with final transfer operation ID, destination permission behavior, tenant-isolation guarantees, no-copy evidence, and test commands in `docs/implementation-notes/006-backend-student-enrollment.md`
+- [X] T065 [P] [US3] Implement student transfer input DTO in `app/DTOs/StudentProfiles/TransferStudentProfileData.php`
+- [X] T066 [P] [US3] Implement student transfer request validation in `app/Http/Requests/StudentProfiles/TransferStudentProfileRequest.php`
+- [X] T067 [P] [US3] Extend student profile authorization policy for transfer behavior and destination-school permission requirements in `app/Policies/StudentProfilePolicy.php`
+- [X] T068 [P] [US3] Implement student transfer response resource using the published transfer outcome shape in `app/Http/Resources/StudentProfiles/StudentTransferResource.php`
+- [X] T069 [US3] Implement student transfer service with source-school lifecycle, destination permission, destination profile, transfer metadata, no-copy, history, and atomic rollback rules in `app/Services/StudentProfiles/StudentProfileTransferService.php`
+- [X] T070 [US3] Implement student transfer controller action in `app/Http/Controllers/Api/V1/StudentProfileController.php`
+- [X] T071 [US3] Wire `transferStudentProfile` route in `routes/api.php`
+- [X] T072 [US3] Update implementation notes with final transfer operation ID, destination permission behavior, tenant-isolation guarantees, no-copy evidence, and test commands in `docs/implementation-notes/006-backend-student-enrollment.md`
 
 **Checkpoint**: User Story 3 is independently functional after shared foundations and profile lifecycle behavior.
 
@@ -156,18 +156,18 @@
 
 **Purpose**: Final contract compliance, verification, documentation, and cleanup across all selected stories.
 
-- [ ] T073 [P] Add response-shape regression coverage for all five student profile/enrollment operation IDs, including success, validation, unauthorized, forbidden, tenant-mismatch, inactive-record, conflict, and not-found outcomes exactly as declared by OpenAPI, in `tests/Feature/Api/V1/StudentProfileEnrollmentResponseShapeTest.php`
-- [ ] T074 [P] Add validation-contract regression coverage for undocumented request fields, unsupported filters, unsupported sort values, invalid payload shapes, duplicate identifiers, invalid guardians, invalid lifecycle transitions, invalid effective dates, unsupported transfer modes, inactive references, and invalid cross-tenant references in `tests/Feature/Api/V1/StudentProfileEnrollmentValidationContractTest.php`
-- [ ] T075 [P] Add tenant-isolation regression coverage across profile creation, listing, detail, status update, transfer, guardian association, history lookup, and destination-school checks in `tests/Feature/Api/V1/StudentProfileEnrollmentTenantIsolationTest.php`
-- [ ] T076 [P] Add authorization matrix regression coverage for platform administrators, school administrators, teachers, students, inactive users, unauthorized school context, and cross-tenant school context across all five student profile/enrollment operation IDs in `tests/Feature/Api/V1/StudentProfileEnrollmentAuthorizationTest.php`
-- [ ] T077 [P] Add blocked-operation regression coverage for classroom/course/section/roster, teacher assignment, guardian self-service, correction workflows, report lifecycle changes, bulk import, merge, anonymization, permanent deletion, restore, purge, frontend-only behavior, and account lifecycle routes in `tests/Feature/Api/V1/StudentProfileEnrollmentBlockedOperationsTest.php`
-- [ ] T078 [P] Add end-to-end student profile/enrollment happy-path coverage from same-school profile creation through guardian association, list/detail retrieval, status change, transfer recording, and history preservation in `tests/Feature/Api/V1/StudentProfileEnrollmentHappyPathTest.php`
-- [ ] T079 Review implemented backend routes against the blocked-operation list in `routes/api.php`
-- [ ] T080 Run backend PHP syntax checks and record result in `docs/implementation-notes/006-backend-student-enrollment.md`
-- [ ] T081 Run backend style checks and record result in `docs/implementation-notes/006-backend-student-enrollment.md`
-- [ ] T082 Run backend PHPUnit suite and record result in `docs/implementation-notes/006-backend-student-enrollment.md`
-- [ ] T083 Run Redocly validation and record result in `docs/implementation-notes/006-backend-student-enrollment.md`
-- [ ] T084 Update implementation notes with final operation IDs, test commands, tenant rules, guardian association behavior, lifecycle behavior, transfer behavior, history preservation behavior, and blocked follow-up contract gaps in `docs/implementation-notes/006-backend-student-enrollment.md`
+- [X] T073 [P] Add response-shape regression coverage for all five student profile/enrollment operation IDs, including success, validation, unauthorized, forbidden, tenant-mismatch, inactive-record, conflict, and not-found outcomes exactly as declared by OpenAPI, in `tests/Feature/Api/V1/StudentProfileEnrollmentResponseShapeTest.php`
+- [X] T074 [P] Add validation-contract regression coverage for undocumented request fields, unsupported filters, unsupported sort values, invalid payload shapes, duplicate identifiers, invalid guardians, invalid lifecycle transitions, invalid effective dates, unsupported transfer modes, inactive references, and invalid cross-tenant references in `tests/Feature/Api/V1/StudentProfileEnrollmentValidationContractTest.php`
+- [X] T075 [P] Add tenant-isolation regression coverage across profile creation, listing, detail, status update, transfer, guardian association, history lookup, and destination-school checks in `tests/Feature/Api/V1/StudentProfileEnrollmentTenantIsolationTest.php`
+- [X] T076 [P] Add authorization matrix regression coverage for platform administrators, school administrators, teachers, students, inactive users, unauthorized school context, and cross-tenant school context across all five student profile/enrollment operation IDs in `tests/Feature/Api/V1/StudentProfileEnrollmentAuthorizationTest.php`
+- [X] T077 [P] Add blocked-operation regression coverage for classroom/course/section/roster, teacher assignment, guardian self-service, correction workflows, report lifecycle changes, bulk import, merge, anonymization, permanent deletion, restore, purge, frontend-only behavior, and account lifecycle routes in `tests/Feature/Api/V1/StudentProfileEnrollmentBlockedOperationsTest.php`
+- [X] T078 [P] Add end-to-end student profile/enrollment happy-path coverage from same-school profile creation through guardian association, list/detail retrieval, status change, transfer recording, and history preservation in `tests/Feature/Api/V1/StudentProfileEnrollmentHappyPathTest.php`
+- [X] T079 Review implemented backend routes against the blocked-operation list in `routes/api.php`
+- [X] T080 Run backend PHP syntax checks and record result in `docs/implementation-notes/006-backend-student-enrollment.md`
+- [X] T081 Run backend style checks and record result in `docs/implementation-notes/006-backend-student-enrollment.md`
+- [X] T082 Run backend PHPUnit suite and record result in `docs/implementation-notes/006-backend-student-enrollment.md`
+- [X] T083 Run Redocly validation and record result in `docs/implementation-notes/006-backend-student-enrollment.md`
+- [X] T084 Update implementation notes with final operation IDs, test commands, tenant rules, guardian association behavior, lifecycle behavior, transfer behavior, history preservation behavior, and blocked follow-up contract gaps in `docs/implementation-notes/006-backend-student-enrollment.md`
 
 ---
 
