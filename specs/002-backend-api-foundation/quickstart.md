@@ -64,7 +64,7 @@ Confirm the repository is prepared as an API backend before product endpoints ar
 
 ```bash
 php artisan route:list
-php artisan test
+docker exec schoolmaster-backend-app-1 php artisan test
 ```
 
 Readiness expectations:
@@ -87,11 +87,13 @@ first-slice product routes under `/api/v1`:
 - `GET /api/v1/schools/{schoolId}`
 - `PATCH /api/v1/schools/{schoolId}`
 
-Latest Docker/MySQL test result, 2026-05-16: `docker compose run --rm app php
-artisan test` passed with 17 tests and 88 assertions against the
-`schoolmaster_testing` MySQL database. The host PHP runtime still has no PDO
-drivers, so full database-backed validation should use Docker Compose unless
-the host PHP installation is extended with `pdo_mysql`.
+Current backend test command: `docker exec schoolmaster-backend-app-1 php
+artisan test`.
+
+Latest Docker/MySQL test result, 2026-05-16: the suite passed with 17 tests and
+88 assertions against the `schoolmaster_testing` MySQL database. The host PHP
+runtime still has no PDO drivers, so database-backed validation must run inside
+the backend Docker container.
 
 ## First Slice Contract Boundary
 
