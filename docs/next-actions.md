@@ -20,12 +20,18 @@
 
 ## Immediate Sequence
 
-1. Review and approve the repository documentation updates.
-2. Run the approved OpenAPI validation command before promoting contract
+1. Review the `006-backend-student-enrollment` plan and design artifacts.
+2. Run `/speckit-analyze` for cross-artifact consistency before task
+   generation.
+3. Expand OpenAPI for the approved student profile and enrollment operations
+   before backend implementation.
+4. Use [Backend feature roadmap](backend-feature-roadmap.md) for the remaining
+   backend feature sequence after `006`.
+5. Run the approved OpenAPI validation command before promoting contract
    behavior.
-3. Keep P1 implementation aligned to the active feature contract until a
+6. Keep P1 implementation aligned to the active feature contract until a
    deliberate promotion updates `api/openapi.yaml`.
-4. Keep backend and frontend repositories pinned to an approved
+7. Keep backend and frontend repositories pinned to an approved
    `schoolmaster-specs` commit or submodule revision.
 
 ## Resolved Decisions

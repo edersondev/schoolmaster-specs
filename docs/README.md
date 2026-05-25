@@ -9,6 +9,8 @@ consume `schoolmaster-specs`.
   repositories consume this repository through git submodules.
 - [Next actions](next-actions.md): current readiness status, decision gates,
   and recommended sequencing.
+- [Backend feature roadmap](backend-feature-roadmap.md): backend feature areas
+  still blocked or not yet specified, ordered by recommended sequence.
 - [Architecture overview](architecture.md): repository model, module
   boundaries, release workflow, and non-functional constraints.
 - [Backend guidelines](backend-guidelines.md): Laravel API implementation
