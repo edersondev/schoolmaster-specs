@@ -2,7 +2,7 @@
 
 **Feature Branch**: `007-administration-lifecycle`  
 **Created**: 2026-05-25  
-**Status**: Draft  
+**Status**: Ready for Implementation  
 **Input**: User description: "Define the next SchoolMaster backend implementation slice after student profile and enrollment management. The backend must add administration lifecycle management for existing school and school-administration resources: individual detail, update, activate/deactivate, delete/restore operations for schools, users, roles, academic years, academic periods, and guardians where allowed, plus selected bulk operations only for school-owned users, roles, academic years, academic periods, and guardians. Preserve contract-first delivery, tenant-by-column isolation with School as tenant root and school_id for school-owned records, explicit platform versus school authorization, API-only /api/v1 behavior, OpenAPI-aligned response envelopes, validation, inactive-status handling, soft-delete and history preservation, conflict rules, authorization boundaries, and regression coverage. Do not include invitations, password setup or reset, classroom/course/section/roster workflows, teacher correction workflows, guardian self-service, report lifecycle expansion, frontend implementation, billing, messaging, or undocumented APIs in this slice."
 
 ## User Scenarios & Testing *(mandatory)*
