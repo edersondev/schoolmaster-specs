@@ -183,7 +183,7 @@
   - reason where required
   - actor context derived from authentication
 - **Validation rules**:
-  - one resource type per request
+  - one resource type per request, and the submitted resource type must match the resource-specific bulk endpoint
   - one lifecycle action per request
   - one platform or school scope per request
   - maximum unique record count defined by OpenAPI

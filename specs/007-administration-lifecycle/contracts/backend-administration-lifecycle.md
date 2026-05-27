@@ -45,6 +45,7 @@ OpenAPI must define, at minimum:
 - validation errors for invalid transitions, invalid effective dates, duplicate identifiers, dependency conflicts, unsupported fields, unsupported actions, mixed-scope bulk requests, inactive references, and cross-tenant references
 - authorization and tenant-context errors for platform-scoped and school-scoped access
 - bulk request maximum count, all-or-nothing semantics, and duplicate-identifier behavior
+- resource-specific bulk request schemas that make the submitted `resource_type` match the route resource
 - not-found behavior that does not reveal cross-tenant existence
 
 ## Required Response Shapes
@@ -89,7 +90,7 @@ No backend-local product envelope, ad hoc error response, undocumented status co
 - Lifecycle operations require reason, effective date, and actor context where OpenAPI documents them.
 - Dependency checks must reject transitions that would orphan active users, invalidate role assignments, break academic periods, invalidate grades or attendance, expose guardian or student history, invalidate report references, or violate inactive-school rules.
 - Restore operations must validate active parent context, uniqueness constraints, dependency eligibility, and tenant or platform scope before making records available for new operational use.
-- Bulk lifecycle operations reject mixed resource types, mixed actions, mixed tenant scopes, duplicate identifiers, over-limit record sets, unsupported actions, dependency-blocked records, unauthorized records, missing records, and cross-tenant records.
+- Bulk lifecycle operations reject mixed resource types, resource types that do not match the bulk endpoint path, mixed actions, mixed tenant scopes, duplicate identifiers, over-limit record sets, unsupported actions, dependency-blocked records, unauthorized records, missing records, and cross-tenant records.
 - Bulk lifecycle operations use all-or-nothing behavior: any invalid selected record prevents every selected record from changing.
 
 ## Blocked Until Contract Expansion

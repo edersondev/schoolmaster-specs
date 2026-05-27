@@ -657,7 +657,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/BulkLifecycleActionRequest'
+              $ref: '#/components/schemas/UserBulkLifecycleActionRequest'
       responses:
         '200':
           description: Bulk user lifecycle action completed
@@ -957,7 +957,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/BulkLifecycleActionRequest'
+              $ref: '#/components/schemas/RoleBulkLifecycleActionRequest'
       responses:
         '200':
           description: Bulk role lifecycle action completed
@@ -1285,7 +1285,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/BulkLifecycleActionRequest'
+              $ref: '#/components/schemas/AcademicYearBulkLifecycleActionRequest'
       responses:
         '200':
           description: Bulk academic year lifecycle action completed
@@ -1590,7 +1590,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/BulkLifecycleActionRequest'
+              $ref: '#/components/schemas/AcademicPeriodBulkLifecycleActionRequest'
       responses:
         '200':
           description: Bulk academic period lifecycle action completed
@@ -1890,7 +1890,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/BulkLifecycleActionRequest'
+              $ref: '#/components/schemas/GuardianBulkLifecycleActionRequest'
       responses:
         '200':
           description: Bulk guardian lifecycle action completed
@@ -3890,7 +3890,7 @@ components:
           type: string
           minLength: 1
           maxLength: 500
-    BulkLifecycleActionRequest:
+    UserBulkLifecycleActionRequest:
       type: object
       required:
       - resource_type
@@ -3901,7 +3901,133 @@ components:
       additionalProperties: false
       properties:
         resource_type:
-          $ref: '#/components/schemas/AdministrationResourceType'
+          type: string
+          enum:
+          - users
+        action:
+          $ref: '#/components/schemas/LifecycleAction'
+        record_ids:
+          type: array
+          minItems: 1
+          maxItems: 50
+          uniqueItems: true
+          items:
+            type: string
+            format: uuid
+        effective_at:
+          type: string
+          format: date
+        reason:
+          type: string
+          minLength: 1
+          maxLength: 500
+    RoleBulkLifecycleActionRequest:
+      type: object
+      required:
+      - resource_type
+      - action
+      - record_ids
+      - effective_at
+      - reason
+      additionalProperties: false
+      properties:
+        resource_type:
+          type: string
+          enum:
+          - roles
+        action:
+          $ref: '#/components/schemas/LifecycleAction'
+        record_ids:
+          type: array
+          minItems: 1
+          maxItems: 50
+          uniqueItems: true
+          items:
+            type: string
+            format: uuid
+        effective_at:
+          type: string
+          format: date
+        reason:
+          type: string
+          minLength: 1
+          maxLength: 500
+    AcademicYearBulkLifecycleActionRequest:
+      type: object
+      required:
+      - resource_type
+      - action
+      - record_ids
+      - effective_at
+      - reason
+      additionalProperties: false
+      properties:
+        resource_type:
+          type: string
+          enum:
+          - academic_years
+        action:
+          $ref: '#/components/schemas/LifecycleAction'
+        record_ids:
+          type: array
+          minItems: 1
+          maxItems: 50
+          uniqueItems: true
+          items:
+            type: string
+            format: uuid
+        effective_at:
+          type: string
+          format: date
+        reason:
+          type: string
+          minLength: 1
+          maxLength: 500
+    AcademicPeriodBulkLifecycleActionRequest:
+      type: object
+      required:
+      - resource_type
+      - action
+      - record_ids
+      - effective_at
+      - reason
+      additionalProperties: false
+      properties:
+        resource_type:
+          type: string
+          enum:
+          - academic_periods
+        action:
+          $ref: '#/components/schemas/LifecycleAction'
+        record_ids:
+          type: array
+          minItems: 1
+          maxItems: 50
+          uniqueItems: true
+          items:
+            type: string
+            format: uuid
+        effective_at:
+          type: string
+          format: date
+        reason:
+          type: string
+          minLength: 1
+          maxLength: 500
+    GuardianBulkLifecycleActionRequest:
+      type: object
+      required:
+      - resource_type
+      - action
+      - record_ids
+      - effective_at
+      - reason
+      additionalProperties: false
+      properties:
+        resource_type:
+          type: string
+          enum:
+          - guardians
         action:
           $ref: '#/components/schemas/LifecycleAction'
         record_ids:
