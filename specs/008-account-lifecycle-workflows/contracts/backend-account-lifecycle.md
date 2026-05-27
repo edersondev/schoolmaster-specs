@@ -29,6 +29,22 @@ The exact operation IDs must be finalized in OpenAPI, but the backend slice shou
 
 No backend implementation may expose these or adjacent routes until OpenAPI documents them.
 
+## Implemented Route-to-Operation Mapping
+
+The backend implementation exposes only the account lifecycle routes below, each mapped to an approved OpenAPI operation ID in both authoritative contracts.
+
+| Method | Route | OpenAPI operation ID |
+|--------|-------|----------------------|
+| `POST` | `/api/v1/account-invitations` | `createAccountInvitation` |
+| `POST` | `/api/v1/account-invitations/{invitationToken}/resend` | `resendAccountInvitation` |
+| `POST` | `/api/v1/account-invitations/{invitationToken}/setup` | `completeAccountInvitation` |
+| `POST` | `/api/v1/auth/password-reset-requests` | `requestPasswordReset` |
+| `POST` | `/api/v1/auth/password-resets` | `completePasswordReset` |
+| `GET` | `/api/v1/users/{userId}/account-lock` | `getAccountLock` |
+| `POST` | `/api/v1/users/{userId}/account-lock` | `lockAccount` |
+| `DELETE` | `/api/v1/users/{userId}/account-lock` | `unlockAccount` |
+| `POST` | `/api/v1/users/{userId}/account-reactivation` | `reactivateAccount` |
+
 ## Required Contract Expansion
 
 OpenAPI must define, at minimum:

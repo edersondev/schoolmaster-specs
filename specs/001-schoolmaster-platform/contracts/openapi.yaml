@@ -45,6 +45,8 @@ tags:
   description: Student attendance records in permitted scope.
 - name: Reports
   description: Tenant-scoped report requests and outputs.
+- name: Account Lifecycle
+  description: Account invitation, password setup, password reset, lock, recovery, and reactivation workflows.
 paths:
   /api/v1/auth/login:
     post:
@@ -123,6 +125,297 @@ paths:
                       $ref: '#/components/schemas/LogoutResult'
         '401':
           $ref: '#/components/responses/TokenRejected'
+  /api/v1/account-invitations:
+    post:
+      tags:
+      - Account Lifecycle
+      summary: Create or replace an account invitation
+      description: Creates a 7-day single-use invitation for an eligible platform or same-school user. The response never exposes reusable invitation token secrets. Creating a new invitation supersedes prior unused invitations for the same user and scope.
+      operationId: createAccountInvitation
+      parameters:
+      - $ref: '#/components/parameters/TenantContext'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AccountInvitationCreateRequest'
+      responses:
+        '201':
+          description: Invitation created or replaced
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/SuccessEnvelope'
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/AccountInvitation'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/AccountLifecycleForbidden'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+  /api/v1/account-invitations/{invitationToken}/resend:
+    post:
+      tags:
+      - Account Lifecycle
+      summary: Resend or replace an invitation
+      description: Requests new email delivery metadata for an existing pending invitation and rotates the single-use token. Resends are limited to 3 sends or resends per user and scope within 24 hours.
+      operationId: resendAccountInvitation
+      parameters:
+      - $ref: '#/components/parameters/TenantContext'
+      - $ref: '#/components/parameters/InvitationToken'
+      responses:
+        '200':
+          description: Invitation was replaced and delivery metadata was recorded
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/SuccessEnvelope'
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/AccountInvitation'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/AccountLifecycleForbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+  /api/v1/account-invitations/{invitationToken}/setup:
+    post:
+      tags:
+      - Account Lifecycle
+      summary: Complete invitation and initial password setup
+      description: Completes first password setup with a valid unexpired single-use invitation token. Failed completion attempts revoke the invitation after 5 failures per invitation, account, or IP within 15 minutes.
+      operationId: completeAccountInvitation
+      security: []
+      parameters:
+      - $ref: '#/components/parameters/InvitationToken'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PasswordSetupRequest'
+      responses:
+        '200':
+          description: Invitation completed and password setup was accepted
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/SuccessEnvelope'
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/AccountLifecycleResult'
+        '401':
+          $ref: '#/components/responses/TokenInvalid'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+  /api/v1/auth/password-reset-requests:
+    post:
+      tags:
+      - Account Lifecycle
+      summary: Request password reset with non-enumerating response
+      description: Always returns the same accepted envelope for eligible, missing, inactive, locked, deleted, unauthorized, and over-limit identifiers. Requests beyond 3 per account or IP within 1 hour create no reset token and no email delivery request.
+      operationId: requestPasswordReset
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PasswordResetRequestCreateRequest'
+      responses:
+        '202':
+          description: Reset request accepted without revealing account state
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/SuccessEnvelope'
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/PasswordResetRequestResult'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+  /api/v1/auth/password-resets:
+    post:
+      tags:
+      - Account Lifecycle
+      summary: Complete password reset
+      description: Completes credential replacement with a valid unexpired single-use reset token. Successful completion revokes all active bearer tokens for the affected user.
+      operationId: completePasswordReset
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PasswordResetCompletionRequest'
+      responses:
+        '200':
+          description: Password reset completed
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/SuccessEnvelope'
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/AccountLifecycleResult'
+        '401':
+          $ref: '#/components/responses/TokenInvalid'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+  /api/v1/users/{userId}/account-lock:
+    get:
+      tags:
+      - Account Lifecycle
+      summary: Review account lock state
+      operationId: getAccountLock
+      parameters:
+      - $ref: '#/components/parameters/TenantContext'
+      - $ref: '#/components/parameters/UserId'
+      responses:
+        '200':
+          description: Account lock state
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/SuccessEnvelope'
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/AccountLock'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/AccountLifecycleForbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    post:
+      tags:
+      - Account Lifecycle
+      summary: Administratively lock an account
+      description: Administrative locks remain active until an authorized unlock or recovery action clears them and revoke all active bearer tokens for the affected user.
+      operationId: lockAccount
+      parameters:
+      - $ref: '#/components/parameters/TenantContext'
+      - $ref: '#/components/parameters/UserId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AccountLockRequest'
+      responses:
+        '200':
+          description: Account locked
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/SuccessEnvelope'
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/AccountLock'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/AccountLifecycleForbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+    delete:
+      tags:
+      - Account Lifecycle
+      summary: Unlock or clear administrative account lock
+      operationId: unlockAccount
+      parameters:
+      - $ref: '#/components/parameters/TenantContext'
+      - $ref: '#/components/parameters/UserId'
+      responses:
+        '200':
+          description: Account lock cleared
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/SuccessEnvelope'
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/AccountLifecycleResult'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/AccountLifecycleForbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+  /api/v1/users/{userId}/account-reactivation:
+    post:
+      tags:
+      - Account Lifecycle
+      summary: Recover or reactivate an eligible account
+      description: Reactivation validates user lifecycle state, school lifecycle state, active role assignments, password setup state, lock state, and tenant or platform scope before authentication may resume.
+      operationId: reactivateAccount
+      parameters:
+      - $ref: '#/components/parameters/TenantContext'
+      - $ref: '#/components/parameters/UserId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AccountRecoveryRequest'
+      responses:
+        '200':
+          description: Account recovery or reactivation completed
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/SuccessEnvelope'
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/AccountLifecycleResult'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/AccountLifecycleForbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '422':
+          $ref: '#/components/responses/ValidationError'
   /api/v1/schools:
     get:
       tags:
@@ -2732,6 +3025,15 @@ components:
       schema:
         type: string
         format: uuid
+    InvitationToken:
+      name: invitationToken
+      in: path
+      required: true
+      description: Opaque single-use invitation token value delivered out of band.
+      schema:
+        type: string
+        minLength: 32
+        maxLength: 255
   responses:
     Forbidden:
       description: The authenticated user lacks permission for this action
@@ -2808,6 +3110,25 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/ErrorEnvelope'
+    AccountLifecycleForbidden:
+      description: Account lifecycle access is forbidden because tenant context is missing, inactive, or outside permitted scope, or because the actor lacks platform account administration or same-school user administration permission.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorEnvelope'
+          examples:
+            tenantMismatch:
+              summary: Tenant context is invalid for a school-scoped account lifecycle operation
+              value:
+                error:
+                  code: tenant_mismatch
+                  message: Tenant context is missing, inactive, or outside permitted scope.
+            insufficientPermission:
+              summary: Actor lacks account lifecycle permission in an otherwise valid scope
+              value:
+                error:
+                  code: forbidden
+                  message: The authenticated user lacks permission for this action.
     AuthLockout:
       description: Login is locked after 5 failed attempts for either submitted email or source IP within 15 minutes
       headers:
@@ -2832,6 +3153,12 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/ErrorEnvelope'
+    TokenInvalid:
+      description: Lifecycle token is expired, reused, superseded, revoked, malformed, missing, mismatched, or scope-incompatible
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorEnvelope'
     ValidationError:
       description: Validation failed
       content:
@@ -2839,6 +3166,236 @@ components:
           schema:
             $ref: '#/components/schemas/ErrorEnvelope'
   schemas:
+    AccountInvitation:
+      type: object
+      required:
+      - id
+      - user_id
+      - scope
+      - status
+      - expires_at
+      - delivery_channel
+      properties:
+        id:
+          type: string
+          format: uuid
+        user_id:
+          type: string
+          format: uuid
+        school_id:
+          type:
+          - string
+          - 'null'
+          format: uuid
+        scope:
+          type: string
+          enum:
+          - platform
+          - school
+        status:
+          type: string
+          enum:
+          - pending
+          - completed
+          - expired
+          - superseded
+          - revoked
+        expires_at:
+          type: string
+          format: date-time
+        completed_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+        delivery_channel:
+          type: string
+          enum:
+          - email
+        delivery_requested_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+    AccountInvitationCreateRequest:
+      type: object
+      additionalProperties: false
+      required:
+      - scope
+      - full_name
+      - email
+      - role_ids
+      properties:
+        scope:
+          type: string
+          enum:
+          - platform
+          - school
+        school_id:
+          type:
+          - string
+          - 'null'
+          format: uuid
+        full_name:
+          type: string
+          minLength: 1
+          maxLength: 255
+        email:
+          type: string
+          format: email
+          maxLength: 255
+        role_ids:
+          type: array
+          minItems: 1
+          items:
+            type: string
+            format: uuid
+        delivery_metadata:
+          type: object
+          additionalProperties: true
+    PasswordSetupRequest:
+      type: object
+      additionalProperties: false
+      required:
+      - password
+      properties:
+        password:
+          type: string
+          minLength: 12
+          maxLength: 128
+          description: Passwords shorter than 12 characters, longer than 128 characters, or found in the common-password blocklist are rejected. Paste and password managers must be allowed by clients.
+    PasswordResetRequestCreateRequest:
+      type: object
+      additionalProperties: false
+      required:
+      - email
+      properties:
+        email:
+          type: string
+          format: email
+          maxLength: 255
+        school_id:
+          type:
+          - string
+          - 'null'
+          format: uuid
+        delivery_metadata:
+          type: object
+          additionalProperties: true
+    PasswordResetCompletionRequest:
+      type: object
+      additionalProperties: false
+      required:
+      - token
+      - password
+      properties:
+        token:
+          type: string
+          minLength: 32
+          maxLength: 255
+        password:
+          type: string
+          minLength: 12
+          maxLength: 128
+    PasswordResetRequestResult:
+      type: object
+      required:
+      - accepted
+      properties:
+        accepted:
+          type: boolean
+          const: true
+    AccountLifecycleResult:
+      type: object
+      required:
+      - user_id
+      - status
+      - action
+      properties:
+        user_id:
+          type: string
+          format: uuid
+        school_id:
+          type:
+          - string
+          - 'null'
+          format: uuid
+        status:
+          type: string
+        action:
+          type: string
+    AccountLock:
+      type: object
+      required:
+      - user_id
+      - status
+      properties:
+        id:
+          type:
+          - string
+          - 'null'
+          format: uuid
+        user_id:
+          type: string
+          format: uuid
+        school_id:
+          type:
+          - string
+          - 'null'
+          format: uuid
+        lock_type:
+          type:
+          - string
+          - 'null'
+          enum:
+          - administrative
+          - failed_login
+          - recovery_hold
+          - null
+        status:
+          type: string
+          enum:
+          - active
+          - cleared
+          - none
+        reason:
+          type:
+          - string
+          - 'null'
+        locked_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+        cleared_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
+    AccountLockRequest:
+      type: object
+      additionalProperties: false
+      required:
+      - reason
+      properties:
+        reason:
+          type: string
+          minLength: 1
+          maxLength: 500
+    AccountRecoveryRequest:
+      type: object
+      additionalProperties: false
+      required:
+      - action
+      properties:
+        action:
+          type: string
+          enum:
+          - unlock
+          - reactivate
+        reason:
+          type: string
+          maxLength: 500
     AcademicPeriod:
       type: object
       required:
@@ -4543,6 +5100,11 @@ x-promoted-scope:
   - /api/v1/auth/login
   - /api/v1/auth/me
   - /api/v1/auth/logout
+  - /api/v1/account-invitations
+  - /api/v1/account-invitations/{invitationToken}/resend
+  - /api/v1/account-invitations/{invitationToken}/setup
+  - /api/v1/auth/password-reset-requests
+  - /api/v1/auth/password-resets
   - /api/v1/schools
   - /api/v1/schools/{schoolId}
   - /api/v1/schools/{schoolId}/activate
@@ -4551,6 +5113,8 @@ x-promoted-scope:
   - /api/v1/users
   - /api/v1/users/{userId}
   - /api/v1/users/{userId}/activate
+  - /api/v1/users/{userId}/account-lock
+  - /api/v1/users/{userId}/account-reactivation
   - /api/v1/users/{userId}/deactivate
   - /api/v1/users/{userId}/restore
   - /api/v1/users/bulk-lifecycle

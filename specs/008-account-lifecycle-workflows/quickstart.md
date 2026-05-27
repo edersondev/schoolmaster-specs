@@ -15,6 +15,13 @@ Use this guide to validate the design intent before implementing the next School
 
 ## Delivery Boundary
 
+## Feature-to-Repository Implementation Notes
+
+- Run `/speckit-implement` from the `schoolmaster-backend` repository root.
+- Backend implementation paths in `tasks.md` are relative to `schoolmaster-backend`.
+- Specification and OpenAPI paths use the backend repository's `specs` symlink, which points to `../schoolmaster-specs`.
+- Contract changes must be made in both `specs/api/openapi.yaml` and `specs/specs/001-schoolmaster-platform/contracts/openapi.yaml` before the matching backend routes are exposed.
+
 Implement only OpenAPI-approved operations for:
 
 - account invitation creation for platform users by platform account administrators
@@ -113,6 +120,19 @@ docker exec schoolmaster-backend-app-1 php artisan test
 ```
 
 Implementation PRs should record the contract validation result, test result, feature id `008-account-lifecycle-workflows`, and the operation IDs implemented.
+
+## Implementation Verification Results
+
+Recorded on 2026-05-27 for feature `008-account-lifecycle-workflows`:
+
+- Contract validation: `npx @redocly/cli lint aggregate@v1 schoolmaster-platform@v1` passed for `api/openapi.yaml` and `specs/001-schoolmaster-platform/contracts/openapi.yaml`.
+- Backend validation: `docker exec schoolmaster-backend-app-1 php artisan test` passed with 178 tests and 810 assertions.
+- Route mapping: implemented account lifecycle routes map to `createAccountInvitation`, `resendAccountInvitation`, `completeAccountInvitation`, `requestPasswordReset`, `completePasswordReset`, `getAccountLock`, `lockAccount`, `unlockAccount`, and `reactivateAccount`.
+- Cross-cutting verification: feature tests cover secret non-exposure, response envelope consistency, account lifecycle authorization separation, administrative lock durability, reactivation eligibility, and bearer-token revocation after user deactivation.
+
+## Verified Out-of-Scope Behavior
+
+Implementation remains limited to account lifecycle workflows approved by OpenAPI. No frontend behavior, provider-specific delivery integration, SMS or messaging behavior, classroom/course/roster workflows, report lifecycle expansion, platform support override for school-owned accounts, purge/anonymization/legal-hold behavior, billing behavior, or undocumented API routes were added.
 
 ## Exit Criteria for Planning
 
