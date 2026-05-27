@@ -148,7 +148,7 @@ dependent backend or frontend work merges:
 
 ```bash
 # schoolmaster-backend
-php artisan test
+docker exec schoolmaster-backend-app-1 php artisan test
 
 # schoolmaster-frontend
 npm test

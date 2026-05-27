@@ -234,6 +234,149 @@ paths:
           $ref: '#/components/responses/NotFound'
         '422':
           $ref: '#/components/responses/ValidationError'
+    delete:
+      tags:
+      - Schools
+      summary: Soft delete a school tenant
+      operationId: deleteSchool
+      parameters:
+      - $ref: '#/components/parameters/SchoolId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LifecycleActionRequest'
+      responses:
+        '200':
+          description: School soft deleted
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/SuccessEnvelope'
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/LifecycleOutcome'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+  /api/v1/schools/{schoolId}/activate:
+    post:
+      tags:
+      - Schools
+      summary: Activate a school tenant
+      operationId: activateSchool
+      parameters:
+      - $ref: '#/components/parameters/SchoolId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LifecycleActionRequest'
+      responses:
+        '200':
+          description: School activated
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/SuccessEnvelope'
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/LifecycleOutcome'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+  /api/v1/schools/{schoolId}/deactivate:
+    post:
+      tags:
+      - Schools
+      summary: Deactivate a school tenant
+      operationId: deactivateSchool
+      parameters:
+      - $ref: '#/components/parameters/SchoolId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LifecycleActionRequest'
+      responses:
+        '200':
+          description: School deactivated
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/SuccessEnvelope'
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/LifecycleOutcome'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+  /api/v1/schools/{schoolId}/restore:
+    post:
+      tags:
+      - Schools
+      summary: Restore a soft-deleted school tenant
+      operationId: restoreSchool
+      parameters:
+      - $ref: '#/components/parameters/SchoolId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LifecycleActionRequest'
+      responses:
+        '200':
+          description: School restored
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/SuccessEnvelope'
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/LifecycleOutcome'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '422':
+          $ref: '#/components/responses/ValidationError'
   /api/v1/users:
     get:
       tags:
@@ -291,6 +434,250 @@ paths:
           $ref: '#/components/responses/TenantMismatch'
         '422':
           $ref: '#/components/responses/ValidationError'
+  /api/v1/users/{userId}:
+    get:
+      tags:
+      - Users
+      summary: Retrieve a user in permitted scope
+      operationId: getUser
+      parameters:
+      - $ref: '#/components/parameters/TenantContext'
+      - $ref: '#/components/parameters/UserId'
+      responses:
+        '200':
+          description: User detail
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/SuccessEnvelope'
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/User'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/AdministrationForbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    patch:
+      tags:
+      - Users
+      summary: Update documented user fields
+      operationId: updateUser
+      parameters:
+      - $ref: '#/components/parameters/TenantContext'
+      - $ref: '#/components/parameters/UserId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserUpdateRequest'
+      responses:
+        '200':
+          description: User updated
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/SuccessEnvelope'
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/User'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/AdministrationForbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+    delete:
+      tags:
+      - Users
+      summary: Soft delete a user
+      operationId: deleteUser
+      parameters:
+      - $ref: '#/components/parameters/TenantContext'
+      - $ref: '#/components/parameters/UserId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LifecycleActionRequest'
+      responses:
+        '200':
+          description: User soft deleted
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/SuccessEnvelope'
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/LifecycleOutcome'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/AdministrationForbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+  /api/v1/users/{userId}/activate:
+    post:
+      tags:
+      - Users
+      summary: Activate a user
+      operationId: activateUser
+      parameters:
+      - $ref: '#/components/parameters/TenantContext'
+      - $ref: '#/components/parameters/UserId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LifecycleActionRequest'
+      responses:
+        '200':
+          description: User activated
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/SuccessEnvelope'
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/LifecycleOutcome'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/AdministrationForbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+  /api/v1/users/{userId}/deactivate:
+    post:
+      tags:
+      - Users
+      summary: Deactivate a user
+      operationId: deactivateUser
+      parameters:
+      - $ref: '#/components/parameters/TenantContext'
+      - $ref: '#/components/parameters/UserId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LifecycleActionRequest'
+      responses:
+        '200':
+          description: User deactivated
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/SuccessEnvelope'
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/LifecycleOutcome'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/AdministrationForbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+  /api/v1/users/{userId}/restore:
+    post:
+      tags:
+      - Users
+      summary: Restore a soft-deleted user
+      operationId: restoreUser
+      parameters:
+      - $ref: '#/components/parameters/TenantContext'
+      - $ref: '#/components/parameters/UserId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LifecycleActionRequest'
+      responses:
+        '200':
+          description: User restored
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/SuccessEnvelope'
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/LifecycleOutcome'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/AdministrationForbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+  /api/v1/users/bulk-lifecycle:
+    post:
+      tags:
+      - Users
+      summary: Apply one lifecycle action to selected users
+      operationId: bulkLifecycleUsers
+      parameters:
+      - $ref: '#/components/parameters/TenantContext'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserBulkLifecycleActionRequest'
+      responses:
+        '200':
+          description: Bulk user lifecycle action completed
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/SuccessEnvelope'
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/BulkLifecycleOutcome'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/AdministrationForbidden'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '422':
+          $ref: '#/components/responses/ValidationError'
   /api/v1/roles:
     get:
       tags:
@@ -345,6 +732,250 @@ paths:
                   properties:
                     data:
                       $ref: '#/components/schemas/Role'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+  /api/v1/roles/{roleId}:
+    get:
+      tags:
+      - Roles
+      summary: Retrieve a role in permitted scope
+      operationId: getRole
+      parameters:
+      - $ref: '#/components/parameters/TenantContext'
+      - $ref: '#/components/parameters/RoleId'
+      responses:
+        '200':
+          description: Role detail
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/SuccessEnvelope'
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/Role'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/AdministrationForbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    patch:
+      tags:
+      - Roles
+      summary: Update documented role fields
+      operationId: updateRole
+      parameters:
+      - $ref: '#/components/parameters/TenantContext'
+      - $ref: '#/components/parameters/RoleId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RoleUpdateRequest'
+      responses:
+        '200':
+          description: Role updated
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/SuccessEnvelope'
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/Role'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/AdministrationForbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+    delete:
+      tags:
+      - Roles
+      summary: Soft delete a role
+      operationId: deleteRole
+      parameters:
+      - $ref: '#/components/parameters/TenantContext'
+      - $ref: '#/components/parameters/RoleId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LifecycleActionRequest'
+      responses:
+        '200':
+          description: Role soft deleted
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/SuccessEnvelope'
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/LifecycleOutcome'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/AdministrationForbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+  /api/v1/roles/{roleId}/activate:
+    post:
+      tags:
+      - Roles
+      summary: Activate a role
+      operationId: activateRole
+      parameters:
+      - $ref: '#/components/parameters/TenantContext'
+      - $ref: '#/components/parameters/RoleId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LifecycleActionRequest'
+      responses:
+        '200':
+          description: Role activated
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/SuccessEnvelope'
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/LifecycleOutcome'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/AdministrationForbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+  /api/v1/roles/{roleId}/deactivate:
+    post:
+      tags:
+      - Roles
+      summary: Deactivate a role
+      operationId: deactivateRole
+      parameters:
+      - $ref: '#/components/parameters/TenantContext'
+      - $ref: '#/components/parameters/RoleId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LifecycleActionRequest'
+      responses:
+        '200':
+          description: Role deactivated
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/SuccessEnvelope'
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/LifecycleOutcome'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/AdministrationForbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+  /api/v1/roles/{roleId}/restore:
+    post:
+      tags:
+      - Roles
+      summary: Restore a soft-deleted role
+      operationId: restoreRole
+      parameters:
+      - $ref: '#/components/parameters/TenantContext'
+      - $ref: '#/components/parameters/RoleId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LifecycleActionRequest'
+      responses:
+        '200':
+          description: Role restored
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/SuccessEnvelope'
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/LifecycleOutcome'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/AdministrationForbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+  /api/v1/roles/bulk-lifecycle:
+    post:
+      tags:
+      - Roles
+      summary: Apply one lifecycle action to selected roles
+      operationId: bulkLifecycleRoles
+      parameters:
+      - $ref: '#/components/parameters/TenantContext'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RoleBulkLifecycleActionRequest'
+      responses:
+        '200':
+          description: Bulk role lifecycle action completed
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/SuccessEnvelope'
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/BulkLifecycleOutcome'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/AdministrationForbidden'
+        '409':
+          $ref: '#/components/responses/Conflict'
         '422':
           $ref: '#/components/responses/ValidationError'
   /api/v1/permissions:
@@ -431,6 +1062,250 @@ paths:
                       $ref: '#/components/schemas/AcademicYear'
         '422':
           $ref: '#/components/responses/ValidationError'
+  /api/v1/academic-years/{academicYearId}:
+    get:
+      tags:
+      - Academic Years
+      summary: Retrieve an academic year
+      operationId: getAcademicYear
+      parameters:
+      - $ref: '#/components/parameters/TenantContext'
+      - $ref: '#/components/parameters/AcademicYearId'
+      responses:
+        '200':
+          description: Academic year detail
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/SuccessEnvelope'
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/AcademicYear'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/AdministrationForbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    patch:
+      tags:
+      - Academic Years
+      summary: Update documented academic year fields
+      operationId: updateAcademicYear
+      parameters:
+      - $ref: '#/components/parameters/TenantContext'
+      - $ref: '#/components/parameters/AcademicYearId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AcademicYearUpdateRequest'
+      responses:
+        '200':
+          description: Academic year updated
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/SuccessEnvelope'
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/AcademicYear'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/AdministrationForbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+    delete:
+      tags:
+      - Academic Years
+      summary: Soft delete an academic year
+      operationId: deleteAcademicYear
+      parameters:
+      - $ref: '#/components/parameters/TenantContext'
+      - $ref: '#/components/parameters/AcademicYearId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LifecycleActionRequest'
+      responses:
+        '200':
+          description: Academic year soft deleted
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/SuccessEnvelope'
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/LifecycleOutcome'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/AdministrationForbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+  /api/v1/academic-years/{academicYearId}/activate:
+    post:
+      tags:
+      - Academic Years
+      summary: Activate an academic year
+      operationId: activateAcademicYear
+      parameters:
+      - $ref: '#/components/parameters/TenantContext'
+      - $ref: '#/components/parameters/AcademicYearId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LifecycleActionRequest'
+      responses:
+        '200':
+          description: Academic year activated
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/SuccessEnvelope'
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/LifecycleOutcome'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/AdministrationForbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+  /api/v1/academic-years/{academicYearId}/deactivate:
+    post:
+      tags:
+      - Academic Years
+      summary: Deactivate an academic year
+      operationId: deactivateAcademicYear
+      parameters:
+      - $ref: '#/components/parameters/TenantContext'
+      - $ref: '#/components/parameters/AcademicYearId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LifecycleActionRequest'
+      responses:
+        '200':
+          description: Academic year deactivated
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/SuccessEnvelope'
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/LifecycleOutcome'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/AdministrationForbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+  /api/v1/academic-years/{academicYearId}/restore:
+    post:
+      tags:
+      - Academic Years
+      summary: Restore a soft-deleted academic year
+      operationId: restoreAcademicYear
+      parameters:
+      - $ref: '#/components/parameters/TenantContext'
+      - $ref: '#/components/parameters/AcademicYearId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LifecycleActionRequest'
+      responses:
+        '200':
+          description: Academic year restored
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/SuccessEnvelope'
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/LifecycleOutcome'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/AdministrationForbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+  /api/v1/academic-years/bulk-lifecycle:
+    post:
+      tags:
+      - Academic Years
+      summary: Apply one lifecycle action to selected academic years
+      operationId: bulkLifecycleAcademicYears
+      parameters:
+      - $ref: '#/components/parameters/TenantContext'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AcademicYearBulkLifecycleActionRequest'
+      responses:
+        '200':
+          description: Bulk academic year lifecycle action completed
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/SuccessEnvelope'
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/BulkLifecycleOutcome'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/AdministrationForbidden'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '422':
+          $ref: '#/components/responses/ValidationError'
   /api/v1/academic-periods:
     get:
       tags:
@@ -492,6 +1367,250 @@ paths:
                       $ref: '#/components/schemas/AcademicPeriod'
         '422':
           $ref: '#/components/responses/ValidationError'
+  /api/v1/academic-periods/{academicPeriodId}:
+    get:
+      tags:
+      - Academic Periods
+      summary: Retrieve an academic period
+      operationId: getAcademicPeriod
+      parameters:
+      - $ref: '#/components/parameters/TenantContext'
+      - $ref: '#/components/parameters/AcademicPeriodId'
+      responses:
+        '200':
+          description: Academic period detail
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/SuccessEnvelope'
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/AcademicPeriod'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/AdministrationForbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    patch:
+      tags:
+      - Academic Periods
+      summary: Update documented academic period fields
+      operationId: updateAcademicPeriod
+      parameters:
+      - $ref: '#/components/parameters/TenantContext'
+      - $ref: '#/components/parameters/AcademicPeriodId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AcademicPeriodUpdateRequest'
+      responses:
+        '200':
+          description: Academic period updated
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/SuccessEnvelope'
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/AcademicPeriod'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/AdministrationForbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+    delete:
+      tags:
+      - Academic Periods
+      summary: Soft delete an academic period
+      operationId: deleteAcademicPeriod
+      parameters:
+      - $ref: '#/components/parameters/TenantContext'
+      - $ref: '#/components/parameters/AcademicPeriodId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LifecycleActionRequest'
+      responses:
+        '200':
+          description: Academic period soft deleted
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/SuccessEnvelope'
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/LifecycleOutcome'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/AdministrationForbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+  /api/v1/academic-periods/{academicPeriodId}/activate:
+    post:
+      tags:
+      - Academic Periods
+      summary: Activate an academic period
+      operationId: activateAcademicPeriod
+      parameters:
+      - $ref: '#/components/parameters/TenantContext'
+      - $ref: '#/components/parameters/AcademicPeriodId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LifecycleActionRequest'
+      responses:
+        '200':
+          description: Academic period activated
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/SuccessEnvelope'
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/LifecycleOutcome'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/AdministrationForbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+  /api/v1/academic-periods/{academicPeriodId}/deactivate:
+    post:
+      tags:
+      - Academic Periods
+      summary: Deactivate an academic period
+      operationId: deactivateAcademicPeriod
+      parameters:
+      - $ref: '#/components/parameters/TenantContext'
+      - $ref: '#/components/parameters/AcademicPeriodId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LifecycleActionRequest'
+      responses:
+        '200':
+          description: Academic period deactivated
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/SuccessEnvelope'
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/LifecycleOutcome'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/AdministrationForbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+  /api/v1/academic-periods/{academicPeriodId}/restore:
+    post:
+      tags:
+      - Academic Periods
+      summary: Restore a soft-deleted academic period
+      operationId: restoreAcademicPeriod
+      parameters:
+      - $ref: '#/components/parameters/TenantContext'
+      - $ref: '#/components/parameters/AcademicPeriodId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LifecycleActionRequest'
+      responses:
+        '200':
+          description: Academic period restored
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/SuccessEnvelope'
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/LifecycleOutcome'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/AdministrationForbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+  /api/v1/academic-periods/bulk-lifecycle:
+    post:
+      tags:
+      - Academic Periods
+      summary: Apply one lifecycle action to selected academic periods
+      operationId: bulkLifecycleAcademicPeriods
+      parameters:
+      - $ref: '#/components/parameters/TenantContext'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AcademicPeriodBulkLifecycleActionRequest'
+      responses:
+        '200':
+          description: Bulk academic period lifecycle action completed
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/SuccessEnvelope'
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/BulkLifecycleOutcome'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/AdministrationForbidden'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '422':
+          $ref: '#/components/responses/ValidationError'
   /api/v1/guardians:
     get:
       tags:
@@ -546,6 +1665,250 @@ paths:
                   properties:
                     data:
                       $ref: '#/components/schemas/Guardian'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+  /api/v1/guardians/{guardianId}:
+    get:
+      tags:
+      - Guardians
+      summary: Retrieve a guardian
+      operationId: getGuardian
+      parameters:
+      - $ref: '#/components/parameters/TenantContext'
+      - $ref: '#/components/parameters/GuardianId'
+      responses:
+        '200':
+          description: Guardian detail
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/SuccessEnvelope'
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/Guardian'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/AdministrationForbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    patch:
+      tags:
+      - Guardians
+      summary: Update documented guardian fields
+      operationId: updateGuardian
+      parameters:
+      - $ref: '#/components/parameters/TenantContext'
+      - $ref: '#/components/parameters/GuardianId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GuardianUpdateRequest'
+      responses:
+        '200':
+          description: Guardian updated
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/SuccessEnvelope'
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/Guardian'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/AdministrationForbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+    delete:
+      tags:
+      - Guardians
+      summary: Soft delete a guardian
+      operationId: deleteGuardian
+      parameters:
+      - $ref: '#/components/parameters/TenantContext'
+      - $ref: '#/components/parameters/GuardianId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LifecycleActionRequest'
+      responses:
+        '200':
+          description: Guardian soft deleted
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/SuccessEnvelope'
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/LifecycleOutcome'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/AdministrationForbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+  /api/v1/guardians/{guardianId}/activate:
+    post:
+      tags:
+      - Guardians
+      summary: Activate a guardian
+      operationId: activateGuardian
+      parameters:
+      - $ref: '#/components/parameters/TenantContext'
+      - $ref: '#/components/parameters/GuardianId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LifecycleActionRequest'
+      responses:
+        '200':
+          description: Guardian activated
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/SuccessEnvelope'
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/LifecycleOutcome'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/AdministrationForbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+  /api/v1/guardians/{guardianId}/deactivate:
+    post:
+      tags:
+      - Guardians
+      summary: Deactivate a guardian
+      operationId: deactivateGuardian
+      parameters:
+      - $ref: '#/components/parameters/TenantContext'
+      - $ref: '#/components/parameters/GuardianId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LifecycleActionRequest'
+      responses:
+        '200':
+          description: Guardian deactivated
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/SuccessEnvelope'
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/LifecycleOutcome'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/AdministrationForbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+  /api/v1/guardians/{guardianId}/restore:
+    post:
+      tags:
+      - Guardians
+      summary: Restore a soft-deleted guardian
+      operationId: restoreGuardian
+      parameters:
+      - $ref: '#/components/parameters/TenantContext'
+      - $ref: '#/components/parameters/GuardianId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LifecycleActionRequest'
+      responses:
+        '200':
+          description: Guardian restored
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/SuccessEnvelope'
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/LifecycleOutcome'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/AdministrationForbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+  /api/v1/guardians/bulk-lifecycle:
+    post:
+      tags:
+      - Guardians
+      summary: Apply one lifecycle action to selected guardians
+      operationId: bulkLifecycleGuardians
+      parameters:
+      - $ref: '#/components/parameters/TenantContext'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GuardianBulkLifecycleActionRequest'
+      responses:
+        '200':
+          description: Bulk guardian lifecycle action completed
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/SuccessEnvelope'
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/BulkLifecycleOutcome'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/AdministrationForbidden'
+        '409':
+          $ref: '#/components/responses/Conflict'
         '422':
           $ref: '#/components/responses/ValidationError'
   /api/v1/student-profiles:
@@ -1286,6 +2649,41 @@ components:
       schema:
         type: string
         format: uuid
+    UserId:
+      name: userId
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+    RoleId:
+      name: roleId
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+    AcademicYearId:
+      name: academicYearId
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+    AcademicPeriodId:
+      name: academicPeriodId
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+    GuardianId:
+      name: guardianId
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
     StudentProfileId:
       name: studentProfileId
       in: path
@@ -1366,6 +2764,25 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/ErrorEnvelope'
+    AdministrationForbidden:
+      description: Administration lifecycle access is forbidden because the tenant context is missing, inactive, or outside permitted scope, or because the authenticated user lacks the required platform or school administration permission.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorEnvelope'
+          examples:
+            tenantMismatch:
+              summary: Tenant context is invalid for this school-scoped operation
+              value:
+                error:
+                  code: tenant_mismatch
+                  message: Tenant context is missing, inactive, or outside permitted scope.
+            insufficientPermission:
+              summary: Scope is valid but the actor lacks administration lifecycle permission
+              value:
+                error:
+                  code: forbidden
+                  message: The authenticated user lacks permission for this action.
     StudentProfileForbidden:
       description: Student profile access is forbidden because the tenant context is missing, inactive, or outside permitted scope, or because the authenticated user lacks student profile administration permission in an otherwise valid school context.
       content:
@@ -2357,6 +3774,7 @@ components:
           type: string
     SchoolUpdateRequest:
       type: object
+      additionalProperties: false
       properties:
         name:
           type: string
@@ -2369,6 +3787,358 @@ components:
           type: string
         address_summary:
           type: string
+    UserUpdateRequest:
+      type: object
+      additionalProperties: false
+      properties:
+        full_name:
+          type: string
+        email:
+          type: string
+          format: email
+        status:
+          $ref: '#/components/schemas/Status'
+        role_ids:
+          type: array
+          items:
+            type: string
+            format: uuid
+    RoleUpdateRequest:
+      type: object
+      additionalProperties: false
+      properties:
+        name:
+          type: string
+        status:
+          $ref: '#/components/schemas/Status'
+        permission_ids:
+          type: array
+          items:
+            type: string
+            format: uuid
+    AcademicYearUpdateRequest:
+      type: object
+      additionalProperties: false
+      properties:
+        name:
+          type: string
+        start_date:
+          type: string
+          format: date
+        end_date:
+          type: string
+          format: date
+        status:
+          $ref: '#/components/schemas/AcademicStatus'
+    AcademicPeriodUpdateRequest:
+      type: object
+      additionalProperties: false
+      properties:
+        name:
+          type: string
+        sequence:
+          type: integer
+        start_date:
+          type: string
+          format: date
+        end_date:
+          type: string
+          format: date
+        status:
+          $ref: '#/components/schemas/AcademicStatus'
+    GuardianUpdateRequest:
+      type: object
+      additionalProperties: false
+      properties:
+        full_name:
+          type: string
+        relationship_type:
+          type: string
+        contact_email:
+          type: string
+          format: email
+        contact_phone:
+          type: string
+        status:
+          $ref: '#/components/schemas/Status'
+    LifecycleAction:
+      type: string
+      enum:
+      - activate
+      - deactivate
+      - delete
+      - restore
+    AdministrationResourceType:
+      type: string
+      enum:
+      - users
+      - roles
+      - academic_years
+      - academic_periods
+      - guardians
+    LifecycleActionRequest:
+      type: object
+      required:
+      - effective_at
+      - reason
+      additionalProperties: false
+      properties:
+        effective_at:
+          type: string
+          format: date
+        reason:
+          type: string
+          minLength: 1
+          maxLength: 500
+    UserBulkLifecycleActionRequest:
+      type: object
+      required:
+      - resource_type
+      - action
+      - record_ids
+      - effective_at
+      - reason
+      additionalProperties: false
+      properties:
+        resource_type:
+          type: string
+          enum:
+          - users
+        action:
+          $ref: '#/components/schemas/LifecycleAction'
+        record_ids:
+          type: array
+          minItems: 1
+          maxItems: 50
+          uniqueItems: true
+          items:
+            type: string
+            format: uuid
+        effective_at:
+          type: string
+          format: date
+        reason:
+          type: string
+          minLength: 1
+          maxLength: 500
+    RoleBulkLifecycleActionRequest:
+      type: object
+      required:
+      - resource_type
+      - action
+      - record_ids
+      - effective_at
+      - reason
+      additionalProperties: false
+      properties:
+        resource_type:
+          type: string
+          enum:
+          - roles
+        action:
+          $ref: '#/components/schemas/LifecycleAction'
+        record_ids:
+          type: array
+          minItems: 1
+          maxItems: 50
+          uniqueItems: true
+          items:
+            type: string
+            format: uuid
+        effective_at:
+          type: string
+          format: date
+        reason:
+          type: string
+          minLength: 1
+          maxLength: 500
+    AcademicYearBulkLifecycleActionRequest:
+      type: object
+      required:
+      - resource_type
+      - action
+      - record_ids
+      - effective_at
+      - reason
+      additionalProperties: false
+      properties:
+        resource_type:
+          type: string
+          enum:
+          - academic_years
+        action:
+          $ref: '#/components/schemas/LifecycleAction'
+        record_ids:
+          type: array
+          minItems: 1
+          maxItems: 50
+          uniqueItems: true
+          items:
+            type: string
+            format: uuid
+        effective_at:
+          type: string
+          format: date
+        reason:
+          type: string
+          minLength: 1
+          maxLength: 500
+    AcademicPeriodBulkLifecycleActionRequest:
+      type: object
+      required:
+      - resource_type
+      - action
+      - record_ids
+      - effective_at
+      - reason
+      additionalProperties: false
+      properties:
+        resource_type:
+          type: string
+          enum:
+          - academic_periods
+        action:
+          $ref: '#/components/schemas/LifecycleAction'
+        record_ids:
+          type: array
+          minItems: 1
+          maxItems: 50
+          uniqueItems: true
+          items:
+            type: string
+            format: uuid
+        effective_at:
+          type: string
+          format: date
+        reason:
+          type: string
+          minLength: 1
+          maxLength: 500
+    GuardianBulkLifecycleActionRequest:
+      type: object
+      required:
+      - resource_type
+      - action
+      - record_ids
+      - effective_at
+      - reason
+      additionalProperties: false
+      properties:
+        resource_type:
+          type: string
+          enum:
+          - guardians
+        action:
+          $ref: '#/components/schemas/LifecycleAction'
+        record_ids:
+          type: array
+          minItems: 1
+          maxItems: 50
+          uniqueItems: true
+          items:
+            type: string
+            format: uuid
+        effective_at:
+          type: string
+          format: date
+        reason:
+          type: string
+          minLength: 1
+          maxLength: 500
+    LifecycleHistory:
+      type: object
+      required:
+      - id
+      - resource_type
+      - resource_id
+      - operation
+      - effective_at
+      - reason
+      - actor_user_id
+      - created_at
+      properties:
+        id:
+          type: string
+          format: uuid
+        school_id:
+          type:
+          - string
+          - 'null'
+          format: uuid
+        resource_type:
+          type: string
+        resource_id:
+          type: string
+          format: uuid
+        operation:
+          type: string
+          enum:
+          - updated
+          - activated
+          - deactivated
+          - deleted
+          - restored
+          - bulk_lifecycle
+        from_status:
+          type:
+          - string
+          - 'null'
+        to_status:
+          type:
+          - string
+          - 'null'
+        effective_at:
+          type: string
+          format: date
+        reason:
+          type: string
+        actor_user_id:
+          type: string
+          format: uuid
+        metadata_summary:
+          type: object
+          additionalProperties: true
+        created_at:
+          type: string
+          format: date-time
+    LifecycleOutcome:
+      type: object
+      required:
+      - resource_type
+      - resource_id
+      - action
+      - status
+      - lifecycle_history
+      properties:
+        resource_type:
+          type: string
+        resource_id:
+          type: string
+          format: uuid
+        action:
+          $ref: '#/components/schemas/LifecycleAction'
+        status:
+          type: string
+        lifecycle_history:
+          $ref: '#/components/schemas/LifecycleHistory'
+    BulkLifecycleOutcome:
+      type: object
+      required:
+      - resource_type
+      - action
+      - affected_count
+      - results
+      properties:
+        resource_type:
+          $ref: '#/components/schemas/AdministrationResourceType'
+        action:
+          $ref: '#/components/schemas/LifecycleAction'
+        affected_count:
+          type: integer
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/LifecycleOutcome'
     StudentLearningSetTimelineItem:
       type: object
       required:
@@ -2775,12 +4545,40 @@ x-promoted-scope:
   - /api/v1/auth/logout
   - /api/v1/schools
   - /api/v1/schools/{schoolId}
+  - /api/v1/schools/{schoolId}/activate
+  - /api/v1/schools/{schoolId}/deactivate
+  - /api/v1/schools/{schoolId}/restore
   - /api/v1/users
+  - /api/v1/users/{userId}
+  - /api/v1/users/{userId}/activate
+  - /api/v1/users/{userId}/deactivate
+  - /api/v1/users/{userId}/restore
+  - /api/v1/users/bulk-lifecycle
   - /api/v1/roles
+  - /api/v1/roles/{roleId}
+  - /api/v1/roles/{roleId}/activate
+  - /api/v1/roles/{roleId}/deactivate
+  - /api/v1/roles/{roleId}/restore
+  - /api/v1/roles/bulk-lifecycle
   - /api/v1/permissions
   - /api/v1/academic-years
+  - /api/v1/academic-years/{academicYearId}
+  - /api/v1/academic-years/{academicYearId}/activate
+  - /api/v1/academic-years/{academicYearId}/deactivate
+  - /api/v1/academic-years/{academicYearId}/restore
+  - /api/v1/academic-years/bulk-lifecycle
   - /api/v1/academic-periods
+  - /api/v1/academic-periods/{academicPeriodId}
+  - /api/v1/academic-periods/{academicPeriodId}/activate
+  - /api/v1/academic-periods/{academicPeriodId}/deactivate
+  - /api/v1/academic-periods/{academicPeriodId}/restore
+  - /api/v1/academic-periods/bulk-lifecycle
   - /api/v1/guardians
+  - /api/v1/guardians/{guardianId}
+  - /api/v1/guardians/{guardianId}/activate
+  - /api/v1/guardians/{guardianId}/deactivate
+  - /api/v1/guardians/{guardianId}/restore
+  - /api/v1/guardians/bulk-lifecycle
   - /api/v1/teacher-content
   - /api/v1/questionnaires
   - /api/v1/learning-sets

@@ -17,7 +17,7 @@
 
 **Purpose**: Prepare the backend repository for API-only work and contract-first validation.
 
-- [X] T001 Update `README.md` with SchoolMaster backend setup, `/specs` source-of-truth workflow, MySQL setup, `php artisan test`, and Redocly contract validation commands
+- [X] T001 Update `README.md` with SchoolMaster backend setup, `/specs` source-of-truth workflow, MySQL setup, `docker exec schoolmaster-backend-app-1 php artisan test`, and Redocly contract validation commands
 - [X] T002 Update `.env.example` to use MySQL defaults for SchoolMaster local development in `.env.example`
 - [X] T003 Update `phpunit.xml` to document the intended test database strategy and keep isolated test environment variables in `phpunit.xml`
 - [X] T004 Create backend architecture placeholder files in `app/DTOs/.gitkeep`, `app/Http/Controllers/Api/V1/.gitkeep`, `app/Http/Requests/.gitkeep`, `app/Http/Resources/.gitkeep`, `app/Policies/.gitkeep`, and `app/Services/.gitkeep`
@@ -67,7 +67,7 @@
 - [X] T023 [US1] Add non-product health route handling policy note to `README.md`
 - [X] T024 [US1] Add source-of-truth and mandatory read-order backend setup section to `AGENTS.md`
 - [X] T025 [US1] Verify `php artisan route:list` output contains no product route outside `/api/v1` and update `specs/specs/002-backend-api-foundation/quickstart.md`
-- [X] T026 [US1] Run `php artisan test` and update readiness result notes in `specs/specs/002-backend-api-foundation/quickstart.md`
+- [X] T026 [US1] Run `docker exec schoolmaster-backend-app-1 php artisan test` and update readiness result notes in `specs/specs/002-backend-api-foundation/quickstart.md`
 
 **Checkpoint**: User Story 1 is independently testable as backend repository readiness without implementing product behavior.
 

@@ -42,6 +42,18 @@ module-specific business logic runs.
 - Use DTOs when request input or service input has multiple coordinated fields.
 - Use repositories or explicit query objects for complex tenant-scoped access.
 
+## Backend Test Command
+
+Run the Laravel test suite inside the backend application container:
+
+```bash
+docker exec schoolmaster-backend-app-1 php artisan test
+```
+
+Do not run `php artisan test` directly on the host for documented backend
+verification, because the backend runtime and database drivers are provided by
+the Docker container.
+
 ## Response and Error Conventions
 
 Backend responses must follow the approved OpenAPI envelopes for successful

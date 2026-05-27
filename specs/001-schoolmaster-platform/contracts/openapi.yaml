@@ -1,64 +1,55 @@
 openapi: 3.1.0
 info:
   title: SchoolMaster API
-  version: 1.0.0
-  summary: Initial SchoolMaster SaaS v1 contract
-  description: >
-    Contract source of truth for the SchoolMaster v1 platform foundation.
-    All protected endpoints are versioned under /api/v1, return shared
-    envelopes, and enforce tenant scope before module-specific behavior.
+  version: 0.1.0
+  summary: Repository-level aggregate publication target for the SchoolMaster platform
+    API.
+  description: 'This OpenAPI document is the contract between the SchoolMaster frontend
+    and backend repositories once feature contracts are promoted into the aggregate.
+    The target implementations are a Laravel API and a Vue 3 SPA. Approved feature-level
+    contracts live under specs/*/contracts/ before promotion into this repository-level
+    aggregate.
+
+    '
 servers:
-  - url: https://api.schoolmaster.test
-x-contract-readiness:
-  feature_id: 001-schoolmaster-platform
-  aggregate_target: api/openapi.yaml
-  p1_scope: Baseline schemas and operations are defined for authentication,
-    schools, users, roles, permissions, academic years, academic periods, and
-    guardians.
-  p2_scope: Teacher content, questionnaires, learning sets, grades, and
-    attendance have module-ready baseline request, response, error, tenant, and
-    validation details.
-  p3_scope: Student learning timelines, student academic records, authorized
-    content downloads, asynchronous report requests, and report output downloads
-    have module-ready baseline request, response, error, tenant, validation,
-    retention, and expiry details.
-security:
-  - bearerAuth: []
+- url: /
+  description: API origin; promoted paths include the /api/v1 version prefix
 tags:
-  - name: Auth
-    description: Authentication and current-session operations.
-  - name: Schools
-    description: Platform-level school tenant provisioning and review.
-  - name: Users
-    description: Tenant-aware user account administration.
-  - name: Roles
-    description: Platform and school role management.
-  - name: Permissions
-    description: Permission definitions exposed through scoped roles.
-  - name: Academic Years
-    description: School-owned academic year management.
-  - name: Academic Periods
-    description: Periods inside academic years for academic operations.
-  - name: Guardians
-    description: Guardian records linked to student profiles.
-  - name: Student Profiles
-    description: School-scoped student profile and enrollment lifecycle management.
-  - name: Teacher Content
-    description: Teacher-managed folders and instructional content.
-  - name: Questionnaires
-    description: Teacher-authored instructional questionnaires.
-  - name: Learning Sets
-    description: Ordered instructional sequences for student use.
-  - name: Grades
-    description: Student grade records in permitted scope.
-  - name: Attendance
-    description: Student attendance records in permitted scope.
-  - name: Reports
-    description: Tenant-scoped report requests and outputs.
+- name: Auth
+  description: Authentication and current-session operations.
+- name: Schools
+  description: Platform-level school tenant provisioning and review.
+- name: Users
+  description: Tenant-aware user account administration.
+- name: Roles
+  description: Platform and school role management.
+- name: Permissions
+  description: Permission definitions exposed through scoped roles.
+- name: Academic Years
+  description: School-owned academic year management.
+- name: Academic Periods
+  description: Periods inside academic years for academic operations.
+- name: Guardians
+  description: Guardian records linked to student profiles.
+- name: Student Profiles
+  description: School-scoped student profile and enrollment lifecycle management.
+- name: Teacher Content
+  description: Teacher-managed folders and instructional content.
+- name: Questionnaires
+  description: Teacher-authored instructional questionnaires.
+- name: Learning Sets
+  description: Ordered instructional sequences for student use.
+- name: Grades
+  description: Student grade records in permitted scope.
+- name: Attendance
+  description: Student attendance records in permitted scope.
+- name: Reports
+  description: Tenant-scoped report requests and outputs.
 paths:
   /api/v1/auth/login:
     post:
-      tags: [Auth]
+      tags:
+      - Auth
       summary: Authenticate a user in platform or school context
       description: Successful bearer tokens expire 8 hours after issuance. Inactive users and inactive school contexts cannot authenticate or continue protected workflows.
       operationId: login
@@ -76,11 +67,11 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '#/components/schemas/SuccessEnvelope'
-                  - type: object
-                    properties:
-                      data:
-                        $ref: '#/components/schemas/AuthSession'
+                - $ref: '#/components/schemas/SuccessEnvelope'
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/AuthSession'
         '401':
           $ref: '#/components/responses/Unauthorized'
         '429':
@@ -89,11 +80,12 @@ paths:
           $ref: '#/components/responses/ValidationError'
   /api/v1/auth/me:
     get:
-      tags: [Auth]
+      tags:
+      - Auth
       summary: Return the authenticated user, resolved tenant, roles, and permissions
       operationId: getCurrentUser
       parameters:
-        - $ref: '#/components/parameters/TenantContext'
+      - $ref: '#/components/parameters/TenantContext'
       responses:
         '200':
           description: Current authenticated session
@@ -101,18 +93,19 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '#/components/schemas/SuccessEnvelope'
-                  - type: object
-                    properties:
-                      data:
-                        $ref: '#/components/schemas/AuthSession'
+                - $ref: '#/components/schemas/SuccessEnvelope'
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/AuthSession'
         '401':
           $ref: '#/components/responses/TokenRejected'
         '403':
           $ref: '#/components/responses/TenantMismatch'
   /api/v1/auth/logout:
     post:
-      tags: [Auth]
+      tags:
+      - Auth
       summary: Revoke the current bearer token
       description: Revokes continued access for the bearer token used on the request. Already expired, revoked, inactive-user, or inactive-school tokens return the token rejection envelope.
       operationId: logout
@@ -123,23 +116,24 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '#/components/schemas/SuccessEnvelope'
-                  - type: object
-                    properties:
-                      data:
-                        $ref: '#/components/schemas/LogoutResult'
+                - $ref: '#/components/schemas/SuccessEnvelope'
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/LogoutResult'
         '401':
           $ref: '#/components/responses/TokenRejected'
   /api/v1/schools:
     get:
-      tags: [Schools]
+      tags:
+      - Schools
       summary: List schools visible to the requester
       operationId: listSchools
       parameters:
-        - $ref: '#/components/parameters/Page'
-        - $ref: '#/components/parameters/PerPage'
-        - $ref: '#/components/parameters/StatusFilter'
-        - $ref: '#/components/parameters/Sort'
+      - $ref: '#/components/parameters/Page'
+      - $ref: '#/components/parameters/PerPage'
+      - $ref: '#/components/parameters/StatusFilter'
+      - $ref: '#/components/parameters/Sort'
       responses:
         '200':
           description: School collection
@@ -147,19 +141,20 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '#/components/schemas/PaginatedEnvelope'
-                  - type: object
-                    properties:
-                      data:
-                        type: array
-                        items:
-                          $ref: '#/components/schemas/School'
+                - $ref: '#/components/schemas/PaginatedEnvelope'
+                - type: object
+                  properties:
+                    data:
+                      type: array
+                      items:
+                        $ref: '#/components/schemas/School'
         '401':
           $ref: '#/components/responses/Unauthorized'
         '403':
           $ref: '#/components/responses/Forbidden'
     post:
-      tags: [Schools]
+      tags:
+      - Schools
       summary: Create a school tenant
       operationId: createSchool
       requestBody:
@@ -175,11 +170,11 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '#/components/schemas/SuccessEnvelope'
-                  - type: object
-                    properties:
-                      data:
-                        $ref: '#/components/schemas/School'
+                - $ref: '#/components/schemas/SuccessEnvelope'
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/School'
         '401':
           $ref: '#/components/responses/Unauthorized'
         '403':
@@ -188,11 +183,12 @@ paths:
           $ref: '#/components/responses/ValidationError'
   /api/v1/schools/{schoolId}:
     get:
-      tags: [Schools]
+      tags:
+      - Schools
       summary: Review one school tenant
       operationId: getSchool
       parameters:
-        - $ref: '#/components/parameters/SchoolId'
+      - $ref: '#/components/parameters/SchoolId'
       responses:
         '200':
           description: School detail
@@ -200,19 +196,20 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '#/components/schemas/SuccessEnvelope'
-                  - type: object
-                    properties:
-                      data:
-                        $ref: '#/components/schemas/School'
+                - $ref: '#/components/schemas/SuccessEnvelope'
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/School'
         '404':
           $ref: '#/components/responses/NotFound'
     patch:
-      tags: [Schools]
+      tags:
+      - Schools
       summary: Update school profile or operational status
       operationId: updateSchool
       parameters:
-        - $ref: '#/components/parameters/SchoolId'
+      - $ref: '#/components/parameters/SchoolId'
       requestBody:
         required: true
         content:
@@ -226,28 +223,172 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '#/components/schemas/SuccessEnvelope'
-                  - type: object
-                    properties:
-                      data:
-                        $ref: '#/components/schemas/School'
+                - $ref: '#/components/schemas/SuccessEnvelope'
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/School'
         '403':
           $ref: '#/components/responses/Forbidden'
         '404':
           $ref: '#/components/responses/NotFound'
         '422':
           $ref: '#/components/responses/ValidationError'
+    delete:
+      tags:
+      - Schools
+      summary: Soft delete a school tenant
+      operationId: deleteSchool
+      parameters:
+      - $ref: '#/components/parameters/SchoolId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LifecycleActionRequest'
+      responses:
+        '200':
+          description: School soft deleted
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/SuccessEnvelope'
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/LifecycleOutcome'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+  /api/v1/schools/{schoolId}/activate:
+    post:
+      tags:
+      - Schools
+      summary: Activate a school tenant
+      operationId: activateSchool
+      parameters:
+      - $ref: '#/components/parameters/SchoolId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LifecycleActionRequest'
+      responses:
+        '200':
+          description: School activated
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/SuccessEnvelope'
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/LifecycleOutcome'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+  /api/v1/schools/{schoolId}/deactivate:
+    post:
+      tags:
+      - Schools
+      summary: Deactivate a school tenant
+      operationId: deactivateSchool
+      parameters:
+      - $ref: '#/components/parameters/SchoolId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LifecycleActionRequest'
+      responses:
+        '200':
+          description: School deactivated
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/SuccessEnvelope'
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/LifecycleOutcome'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+  /api/v1/schools/{schoolId}/restore:
+    post:
+      tags:
+      - Schools
+      summary: Restore a soft-deleted school tenant
+      operationId: restoreSchool
+      parameters:
+      - $ref: '#/components/parameters/SchoolId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LifecycleActionRequest'
+      responses:
+        '200':
+          description: School restored
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/SuccessEnvelope'
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/LifecycleOutcome'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '422':
+          $ref: '#/components/responses/ValidationError'
   /api/v1/users:
     get:
-      tags: [Users]
+      tags:
+      - Users
       summary: List users in permitted scope
       operationId: listUsers
       parameters:
-        - $ref: '#/components/parameters/TenantContext'
-        - $ref: '#/components/parameters/Page'
-        - $ref: '#/components/parameters/PerPage'
-        - $ref: '#/components/parameters/StatusFilter'
-        - $ref: '#/components/parameters/Sort'
+      - $ref: '#/components/parameters/TenantContext'
+      - $ref: '#/components/parameters/Page'
+      - $ref: '#/components/parameters/PerPage'
+      - $ref: '#/components/parameters/StatusFilter'
+      - $ref: '#/components/parameters/Sort'
       responses:
         '200':
           description: User collection
@@ -255,21 +396,22 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '#/components/schemas/PaginatedEnvelope'
-                  - type: object
-                    properties:
-                      data:
-                        type: array
-                        items:
-                          $ref: '#/components/schemas/User'
+                - $ref: '#/components/schemas/PaginatedEnvelope'
+                - type: object
+                  properties:
+                    data:
+                      type: array
+                      items:
+                        $ref: '#/components/schemas/User'
         '403':
           $ref: '#/components/responses/TenantMismatch'
     post:
-      tags: [Users]
+      tags:
+      - Users
       summary: Create a user inside the permitted scope
       operationId: createUser
       parameters:
-        - $ref: '#/components/parameters/TenantContext'
+      - $ref: '#/components/parameters/TenantContext'
       requestBody:
         required: true
         content:
@@ -283,25 +425,270 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '#/components/schemas/SuccessEnvelope'
-                  - type: object
-                    properties:
-                      data:
-                        $ref: '#/components/schemas/User'
+                - $ref: '#/components/schemas/SuccessEnvelope'
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/User'
         '403':
           $ref: '#/components/responses/TenantMismatch'
         '422':
           $ref: '#/components/responses/ValidationError'
+  /api/v1/users/{userId}:
+    get:
+      tags:
+      - Users
+      summary: Retrieve a user in permitted scope
+      operationId: getUser
+      parameters:
+      - $ref: '#/components/parameters/TenantContext'
+      - $ref: '#/components/parameters/UserId'
+      responses:
+        '200':
+          description: User detail
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/SuccessEnvelope'
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/User'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/AdministrationForbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    patch:
+      tags:
+      - Users
+      summary: Update documented user fields
+      operationId: updateUser
+      parameters:
+      - $ref: '#/components/parameters/TenantContext'
+      - $ref: '#/components/parameters/UserId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserUpdateRequest'
+      responses:
+        '200':
+          description: User updated
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/SuccessEnvelope'
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/User'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/AdministrationForbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+    delete:
+      tags:
+      - Users
+      summary: Soft delete a user
+      operationId: deleteUser
+      parameters:
+      - $ref: '#/components/parameters/TenantContext'
+      - $ref: '#/components/parameters/UserId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LifecycleActionRequest'
+      responses:
+        '200':
+          description: User soft deleted
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/SuccessEnvelope'
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/LifecycleOutcome'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/AdministrationForbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+  /api/v1/users/{userId}/activate:
+    post:
+      tags:
+      - Users
+      summary: Activate a user
+      operationId: activateUser
+      parameters:
+      - $ref: '#/components/parameters/TenantContext'
+      - $ref: '#/components/parameters/UserId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LifecycleActionRequest'
+      responses:
+        '200':
+          description: User activated
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/SuccessEnvelope'
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/LifecycleOutcome'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/AdministrationForbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+  /api/v1/users/{userId}/deactivate:
+    post:
+      tags:
+      - Users
+      summary: Deactivate a user
+      operationId: deactivateUser
+      parameters:
+      - $ref: '#/components/parameters/TenantContext'
+      - $ref: '#/components/parameters/UserId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LifecycleActionRequest'
+      responses:
+        '200':
+          description: User deactivated
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/SuccessEnvelope'
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/LifecycleOutcome'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/AdministrationForbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+  /api/v1/users/{userId}/restore:
+    post:
+      tags:
+      - Users
+      summary: Restore a soft-deleted user
+      operationId: restoreUser
+      parameters:
+      - $ref: '#/components/parameters/TenantContext'
+      - $ref: '#/components/parameters/UserId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LifecycleActionRequest'
+      responses:
+        '200':
+          description: User restored
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/SuccessEnvelope'
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/LifecycleOutcome'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/AdministrationForbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+  /api/v1/users/bulk-lifecycle:
+    post:
+      tags:
+      - Users
+      summary: Apply one lifecycle action to selected users
+      operationId: bulkLifecycleUsers
+      parameters:
+      - $ref: '#/components/parameters/TenantContext'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserBulkLifecycleActionRequest'
+      responses:
+        '200':
+          description: Bulk user lifecycle action completed
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/SuccessEnvelope'
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/BulkLifecycleOutcome'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/AdministrationForbidden'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '422':
+          $ref: '#/components/responses/ValidationError'
   /api/v1/roles:
     get:
-      tags: [Roles]
+      tags:
+      - Roles
       summary: List roles in permitted scope with inherited permissions
       operationId: listRoles
       parameters:
-        - $ref: '#/components/parameters/TenantContext'
-        - $ref: '#/components/parameters/Page'
-        - $ref: '#/components/parameters/PerPage'
-        - $ref: '#/components/parameters/StatusFilter'
+      - $ref: '#/components/parameters/TenantContext'
+      - $ref: '#/components/parameters/Page'
+      - $ref: '#/components/parameters/PerPage'
+      - $ref: '#/components/parameters/StatusFilter'
       responses:
         '200':
           description: Role collection
@@ -309,23 +696,24 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '#/components/schemas/PaginatedEnvelope'
-                  - type: object
-                    properties:
-                      data:
-                        type: array
-                        items:
-                          $ref: '#/components/schemas/Role'
+                - $ref: '#/components/schemas/PaginatedEnvelope'
+                - type: object
+                  properties:
+                    data:
+                      type: array
+                      items:
+                        $ref: '#/components/schemas/Role'
         '401':
           $ref: '#/components/responses/Unauthorized'
         '403':
           $ref: '#/components/responses/TenantMismatch'
     post:
-      tags: [Roles]
+      tags:
+      - Roles
       summary: Create a scoped role
       operationId: createRole
       parameters:
-        - $ref: '#/components/parameters/TenantContext'
+      - $ref: '#/components/parameters/TenantContext'
       requestBody:
         required: true
         content:
@@ -339,22 +727,267 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '#/components/schemas/SuccessEnvelope'
-                  - type: object
-                    properties:
-                      data:
-                        $ref: '#/components/schemas/Role'
+                - $ref: '#/components/schemas/SuccessEnvelope'
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/Role'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+  /api/v1/roles/{roleId}:
+    get:
+      tags:
+      - Roles
+      summary: Retrieve a role in permitted scope
+      operationId: getRole
+      parameters:
+      - $ref: '#/components/parameters/TenantContext'
+      - $ref: '#/components/parameters/RoleId'
+      responses:
+        '200':
+          description: Role detail
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/SuccessEnvelope'
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/Role'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/AdministrationForbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    patch:
+      tags:
+      - Roles
+      summary: Update documented role fields
+      operationId: updateRole
+      parameters:
+      - $ref: '#/components/parameters/TenantContext'
+      - $ref: '#/components/parameters/RoleId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RoleUpdateRequest'
+      responses:
+        '200':
+          description: Role updated
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/SuccessEnvelope'
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/Role'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/AdministrationForbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+    delete:
+      tags:
+      - Roles
+      summary: Soft delete a role
+      operationId: deleteRole
+      parameters:
+      - $ref: '#/components/parameters/TenantContext'
+      - $ref: '#/components/parameters/RoleId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LifecycleActionRequest'
+      responses:
+        '200':
+          description: Role soft deleted
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/SuccessEnvelope'
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/LifecycleOutcome'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/AdministrationForbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+  /api/v1/roles/{roleId}/activate:
+    post:
+      tags:
+      - Roles
+      summary: Activate a role
+      operationId: activateRole
+      parameters:
+      - $ref: '#/components/parameters/TenantContext'
+      - $ref: '#/components/parameters/RoleId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LifecycleActionRequest'
+      responses:
+        '200':
+          description: Role activated
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/SuccessEnvelope'
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/LifecycleOutcome'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/AdministrationForbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+  /api/v1/roles/{roleId}/deactivate:
+    post:
+      tags:
+      - Roles
+      summary: Deactivate a role
+      operationId: deactivateRole
+      parameters:
+      - $ref: '#/components/parameters/TenantContext'
+      - $ref: '#/components/parameters/RoleId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LifecycleActionRequest'
+      responses:
+        '200':
+          description: Role deactivated
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/SuccessEnvelope'
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/LifecycleOutcome'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/AdministrationForbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+  /api/v1/roles/{roleId}/restore:
+    post:
+      tags:
+      - Roles
+      summary: Restore a soft-deleted role
+      operationId: restoreRole
+      parameters:
+      - $ref: '#/components/parameters/TenantContext'
+      - $ref: '#/components/parameters/RoleId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LifecycleActionRequest'
+      responses:
+        '200':
+          description: Role restored
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/SuccessEnvelope'
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/LifecycleOutcome'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/AdministrationForbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+  /api/v1/roles/bulk-lifecycle:
+    post:
+      tags:
+      - Roles
+      summary: Apply one lifecycle action to selected roles
+      operationId: bulkLifecycleRoles
+      parameters:
+      - $ref: '#/components/parameters/TenantContext'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RoleBulkLifecycleActionRequest'
+      responses:
+        '200':
+          description: Bulk role lifecycle action completed
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/SuccessEnvelope'
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/BulkLifecycleOutcome'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/AdministrationForbidden'
+        '409':
+          $ref: '#/components/responses/Conflict'
         '422':
           $ref: '#/components/responses/ValidationError'
   /api/v1/permissions:
     get:
-      tags: [Permissions]
+      tags:
+      - Permissions
       summary: List permission definitions available to the requester
       operationId: listPermissions
       parameters:
-        - $ref: '#/components/parameters/TenantContext'
-        - $ref: '#/components/parameters/Page'
-        - $ref: '#/components/parameters/PerPage'
+      - $ref: '#/components/parameters/TenantContext'
+      - $ref: '#/components/parameters/Page'
+      - $ref: '#/components/parameters/PerPage'
       responses:
         '200':
           description: Permission collection
@@ -362,27 +995,28 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '#/components/schemas/PaginatedEnvelope'
-                  - type: object
-                    properties:
-                      data:
-                        type: array
-                        items:
-                          $ref: '#/components/schemas/Permission'
+                - $ref: '#/components/schemas/PaginatedEnvelope'
+                - type: object
+                  properties:
+                    data:
+                      type: array
+                      items:
+                        $ref: '#/components/schemas/Permission'
         '401':
           $ref: '#/components/responses/Unauthorized'
         '403':
           $ref: '#/components/responses/Forbidden'
   /api/v1/academic-years:
     get:
-      tags: [Academic Years]
+      tags:
+      - Academic Years
       summary: List academic years for a school
       operationId: listAcademicYears
       parameters:
-        - $ref: '#/components/parameters/TenantContext'
-        - $ref: '#/components/parameters/Page'
-        - $ref: '#/components/parameters/PerPage'
-        - $ref: '#/components/parameters/StatusFilter'
+      - $ref: '#/components/parameters/TenantContext'
+      - $ref: '#/components/parameters/Page'
+      - $ref: '#/components/parameters/PerPage'
+      - $ref: '#/components/parameters/StatusFilter'
       responses:
         '200':
           description: Academic year collection
@@ -390,23 +1024,24 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '#/components/schemas/PaginatedEnvelope'
-                  - type: object
-                    properties:
-                      data:
-                        type: array
-                        items:
-                          $ref: '#/components/schemas/AcademicYear'
+                - $ref: '#/components/schemas/PaginatedEnvelope'
+                - type: object
+                  properties:
+                    data:
+                      type: array
+                      items:
+                        $ref: '#/components/schemas/AcademicYear'
         '401':
           $ref: '#/components/responses/Unauthorized'
         '403':
           $ref: '#/components/responses/TenantMismatch'
     post:
-      tags: [Academic Years]
+      tags:
+      - Academic Years
       summary: Create an academic year for the resolved school
       operationId: createAcademicYear
       parameters:
-        - $ref: '#/components/parameters/TenantContext'
+      - $ref: '#/components/parameters/TenantContext'
       requestBody:
         required: true
         content:
@@ -420,28 +1055,273 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '#/components/schemas/SuccessEnvelope'
-                  - type: object
-                    properties:
-                      data:
-                        $ref: '#/components/schemas/AcademicYear'
+                - $ref: '#/components/schemas/SuccessEnvelope'
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/AcademicYear'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+  /api/v1/academic-years/{academicYearId}:
+    get:
+      tags:
+      - Academic Years
+      summary: Retrieve an academic year
+      operationId: getAcademicYear
+      parameters:
+      - $ref: '#/components/parameters/TenantContext'
+      - $ref: '#/components/parameters/AcademicYearId'
+      responses:
+        '200':
+          description: Academic year detail
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/SuccessEnvelope'
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/AcademicYear'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/AdministrationForbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    patch:
+      tags:
+      - Academic Years
+      summary: Update documented academic year fields
+      operationId: updateAcademicYear
+      parameters:
+      - $ref: '#/components/parameters/TenantContext'
+      - $ref: '#/components/parameters/AcademicYearId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AcademicYearUpdateRequest'
+      responses:
+        '200':
+          description: Academic year updated
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/SuccessEnvelope'
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/AcademicYear'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/AdministrationForbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+    delete:
+      tags:
+      - Academic Years
+      summary: Soft delete an academic year
+      operationId: deleteAcademicYear
+      parameters:
+      - $ref: '#/components/parameters/TenantContext'
+      - $ref: '#/components/parameters/AcademicYearId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LifecycleActionRequest'
+      responses:
+        '200':
+          description: Academic year soft deleted
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/SuccessEnvelope'
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/LifecycleOutcome'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/AdministrationForbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+  /api/v1/academic-years/{academicYearId}/activate:
+    post:
+      tags:
+      - Academic Years
+      summary: Activate an academic year
+      operationId: activateAcademicYear
+      parameters:
+      - $ref: '#/components/parameters/TenantContext'
+      - $ref: '#/components/parameters/AcademicYearId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LifecycleActionRequest'
+      responses:
+        '200':
+          description: Academic year activated
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/SuccessEnvelope'
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/LifecycleOutcome'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/AdministrationForbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+  /api/v1/academic-years/{academicYearId}/deactivate:
+    post:
+      tags:
+      - Academic Years
+      summary: Deactivate an academic year
+      operationId: deactivateAcademicYear
+      parameters:
+      - $ref: '#/components/parameters/TenantContext'
+      - $ref: '#/components/parameters/AcademicYearId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LifecycleActionRequest'
+      responses:
+        '200':
+          description: Academic year deactivated
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/SuccessEnvelope'
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/LifecycleOutcome'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/AdministrationForbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+  /api/v1/academic-years/{academicYearId}/restore:
+    post:
+      tags:
+      - Academic Years
+      summary: Restore a soft-deleted academic year
+      operationId: restoreAcademicYear
+      parameters:
+      - $ref: '#/components/parameters/TenantContext'
+      - $ref: '#/components/parameters/AcademicYearId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LifecycleActionRequest'
+      responses:
+        '200':
+          description: Academic year restored
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/SuccessEnvelope'
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/LifecycleOutcome'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/AdministrationForbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+  /api/v1/academic-years/bulk-lifecycle:
+    post:
+      tags:
+      - Academic Years
+      summary: Apply one lifecycle action to selected academic years
+      operationId: bulkLifecycleAcademicYears
+      parameters:
+      - $ref: '#/components/parameters/TenantContext'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AcademicYearBulkLifecycleActionRequest'
+      responses:
+        '200':
+          description: Bulk academic year lifecycle action completed
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/SuccessEnvelope'
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/BulkLifecycleOutcome'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/AdministrationForbidden'
+        '409':
+          $ref: '#/components/responses/Conflict'
         '422':
           $ref: '#/components/responses/ValidationError'
   /api/v1/academic-periods:
     get:
-      tags: [Academic Periods]
+      tags:
+      - Academic Periods
       summary: List academic periods for a school
       operationId: listAcademicPeriods
       parameters:
-        - $ref: '#/components/parameters/TenantContext'
-        - $ref: '#/components/parameters/Page'
-        - $ref: '#/components/parameters/PerPage'
-        - $ref: '#/components/parameters/StatusFilter'
-        - name: academic_year_id
-          in: query
-          schema:
-            type: string
-            format: uuid
+      - $ref: '#/components/parameters/TenantContext'
+      - $ref: '#/components/parameters/Page'
+      - $ref: '#/components/parameters/PerPage'
+      - $ref: '#/components/parameters/StatusFilter'
+      - name: academic_year_id
+        in: query
+        schema:
+          type: string
+          format: uuid
       responses:
         '200':
           description: Academic period collection
@@ -449,23 +1329,24 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '#/components/schemas/PaginatedEnvelope'
-                  - type: object
-                    properties:
-                      data:
-                        type: array
-                        items:
-                          $ref: '#/components/schemas/AcademicPeriod'
+                - $ref: '#/components/schemas/PaginatedEnvelope'
+                - type: object
+                  properties:
+                    data:
+                      type: array
+                      items:
+                        $ref: '#/components/schemas/AcademicPeriod'
         '401':
           $ref: '#/components/responses/Unauthorized'
         '403':
           $ref: '#/components/responses/TenantMismatch'
     post:
-      tags: [Academic Periods]
+      tags:
+      - Academic Periods
       summary: Create an academic period inside an academic year
       operationId: createAcademicPeriod
       parameters:
-        - $ref: '#/components/parameters/TenantContext'
+      - $ref: '#/components/parameters/TenantContext'
       requestBody:
         required: true
         content:
@@ -479,23 +1360,268 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '#/components/schemas/SuccessEnvelope'
-                  - type: object
-                    properties:
-                      data:
-                        $ref: '#/components/schemas/AcademicPeriod'
+                - $ref: '#/components/schemas/SuccessEnvelope'
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/AcademicPeriod'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+  /api/v1/academic-periods/{academicPeriodId}:
+    get:
+      tags:
+      - Academic Periods
+      summary: Retrieve an academic period
+      operationId: getAcademicPeriod
+      parameters:
+      - $ref: '#/components/parameters/TenantContext'
+      - $ref: '#/components/parameters/AcademicPeriodId'
+      responses:
+        '200':
+          description: Academic period detail
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/SuccessEnvelope'
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/AcademicPeriod'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/AdministrationForbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    patch:
+      tags:
+      - Academic Periods
+      summary: Update documented academic period fields
+      operationId: updateAcademicPeriod
+      parameters:
+      - $ref: '#/components/parameters/TenantContext'
+      - $ref: '#/components/parameters/AcademicPeriodId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AcademicPeriodUpdateRequest'
+      responses:
+        '200':
+          description: Academic period updated
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/SuccessEnvelope'
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/AcademicPeriod'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/AdministrationForbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+    delete:
+      tags:
+      - Academic Periods
+      summary: Soft delete an academic period
+      operationId: deleteAcademicPeriod
+      parameters:
+      - $ref: '#/components/parameters/TenantContext'
+      - $ref: '#/components/parameters/AcademicPeriodId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LifecycleActionRequest'
+      responses:
+        '200':
+          description: Academic period soft deleted
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/SuccessEnvelope'
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/LifecycleOutcome'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/AdministrationForbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+  /api/v1/academic-periods/{academicPeriodId}/activate:
+    post:
+      tags:
+      - Academic Periods
+      summary: Activate an academic period
+      operationId: activateAcademicPeriod
+      parameters:
+      - $ref: '#/components/parameters/TenantContext'
+      - $ref: '#/components/parameters/AcademicPeriodId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LifecycleActionRequest'
+      responses:
+        '200':
+          description: Academic period activated
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/SuccessEnvelope'
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/LifecycleOutcome'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/AdministrationForbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+  /api/v1/academic-periods/{academicPeriodId}/deactivate:
+    post:
+      tags:
+      - Academic Periods
+      summary: Deactivate an academic period
+      operationId: deactivateAcademicPeriod
+      parameters:
+      - $ref: '#/components/parameters/TenantContext'
+      - $ref: '#/components/parameters/AcademicPeriodId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LifecycleActionRequest'
+      responses:
+        '200':
+          description: Academic period deactivated
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/SuccessEnvelope'
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/LifecycleOutcome'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/AdministrationForbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+  /api/v1/academic-periods/{academicPeriodId}/restore:
+    post:
+      tags:
+      - Academic Periods
+      summary: Restore a soft-deleted academic period
+      operationId: restoreAcademicPeriod
+      parameters:
+      - $ref: '#/components/parameters/TenantContext'
+      - $ref: '#/components/parameters/AcademicPeriodId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LifecycleActionRequest'
+      responses:
+        '200':
+          description: Academic period restored
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/SuccessEnvelope'
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/LifecycleOutcome'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/AdministrationForbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+  /api/v1/academic-periods/bulk-lifecycle:
+    post:
+      tags:
+      - Academic Periods
+      summary: Apply one lifecycle action to selected academic periods
+      operationId: bulkLifecycleAcademicPeriods
+      parameters:
+      - $ref: '#/components/parameters/TenantContext'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AcademicPeriodBulkLifecycleActionRequest'
+      responses:
+        '200':
+          description: Bulk academic period lifecycle action completed
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/SuccessEnvelope'
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/BulkLifecycleOutcome'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/AdministrationForbidden'
+        '409':
+          $ref: '#/components/responses/Conflict'
         '422':
           $ref: '#/components/responses/ValidationError'
   /api/v1/guardians:
     get:
-      tags: [Guardians]
+      tags:
+      - Guardians
       summary: List guardians for a school
       operationId: listGuardians
       parameters:
-        - $ref: '#/components/parameters/TenantContext'
-        - $ref: '#/components/parameters/Page'
-        - $ref: '#/components/parameters/PerPage'
-        - $ref: '#/components/parameters/StatusFilter'
+      - $ref: '#/components/parameters/TenantContext'
+      - $ref: '#/components/parameters/Page'
+      - $ref: '#/components/parameters/PerPage'
+      - $ref: '#/components/parameters/StatusFilter'
       responses:
         '200':
           description: Guardian collection
@@ -503,23 +1629,24 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '#/components/schemas/PaginatedEnvelope'
-                  - type: object
-                    properties:
-                      data:
-                        type: array
-                        items:
-                          $ref: '#/components/schemas/Guardian'
+                - $ref: '#/components/schemas/PaginatedEnvelope'
+                - type: object
+                  properties:
+                    data:
+                      type: array
+                      items:
+                        $ref: '#/components/schemas/Guardian'
         '401':
           $ref: '#/components/responses/Unauthorized'
         '403':
           $ref: '#/components/responses/TenantMismatch'
     post:
-      tags: [Guardians]
+      tags:
+      - Guardians
       summary: Create or maintain a guardian record
       operationId: createGuardian
       parameters:
-        - $ref: '#/components/parameters/TenantContext'
+      - $ref: '#/components/parameters/TenantContext'
       requestBody:
         required: true
         content:
@@ -533,25 +1660,270 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '#/components/schemas/SuccessEnvelope'
-                  - type: object
-                    properties:
-                      data:
-                        $ref: '#/components/schemas/Guardian'
+                - $ref: '#/components/schemas/SuccessEnvelope'
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/Guardian'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+  /api/v1/guardians/{guardianId}:
+    get:
+      tags:
+      - Guardians
+      summary: Retrieve a guardian
+      operationId: getGuardian
+      parameters:
+      - $ref: '#/components/parameters/TenantContext'
+      - $ref: '#/components/parameters/GuardianId'
+      responses:
+        '200':
+          description: Guardian detail
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/SuccessEnvelope'
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/Guardian'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/AdministrationForbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    patch:
+      tags:
+      - Guardians
+      summary: Update documented guardian fields
+      operationId: updateGuardian
+      parameters:
+      - $ref: '#/components/parameters/TenantContext'
+      - $ref: '#/components/parameters/GuardianId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GuardianUpdateRequest'
+      responses:
+        '200':
+          description: Guardian updated
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/SuccessEnvelope'
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/Guardian'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/AdministrationForbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+    delete:
+      tags:
+      - Guardians
+      summary: Soft delete a guardian
+      operationId: deleteGuardian
+      parameters:
+      - $ref: '#/components/parameters/TenantContext'
+      - $ref: '#/components/parameters/GuardianId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LifecycleActionRequest'
+      responses:
+        '200':
+          description: Guardian soft deleted
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/SuccessEnvelope'
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/LifecycleOutcome'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/AdministrationForbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+  /api/v1/guardians/{guardianId}/activate:
+    post:
+      tags:
+      - Guardians
+      summary: Activate a guardian
+      operationId: activateGuardian
+      parameters:
+      - $ref: '#/components/parameters/TenantContext'
+      - $ref: '#/components/parameters/GuardianId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LifecycleActionRequest'
+      responses:
+        '200':
+          description: Guardian activated
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/SuccessEnvelope'
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/LifecycleOutcome'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/AdministrationForbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+  /api/v1/guardians/{guardianId}/deactivate:
+    post:
+      tags:
+      - Guardians
+      summary: Deactivate a guardian
+      operationId: deactivateGuardian
+      parameters:
+      - $ref: '#/components/parameters/TenantContext'
+      - $ref: '#/components/parameters/GuardianId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LifecycleActionRequest'
+      responses:
+        '200':
+          description: Guardian deactivated
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/SuccessEnvelope'
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/LifecycleOutcome'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/AdministrationForbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+  /api/v1/guardians/{guardianId}/restore:
+    post:
+      tags:
+      - Guardians
+      summary: Restore a soft-deleted guardian
+      operationId: restoreGuardian
+      parameters:
+      - $ref: '#/components/parameters/TenantContext'
+      - $ref: '#/components/parameters/GuardianId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LifecycleActionRequest'
+      responses:
+        '200':
+          description: Guardian restored
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/SuccessEnvelope'
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/LifecycleOutcome'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/AdministrationForbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+  /api/v1/guardians/bulk-lifecycle:
+    post:
+      tags:
+      - Guardians
+      summary: Apply one lifecycle action to selected guardians
+      operationId: bulkLifecycleGuardians
+      parameters:
+      - $ref: '#/components/parameters/TenantContext'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GuardianBulkLifecycleActionRequest'
+      responses:
+        '200':
+          description: Bulk guardian lifecycle action completed
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/SuccessEnvelope'
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/BulkLifecycleOutcome'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/AdministrationForbidden'
+        '409':
+          $ref: '#/components/responses/Conflict'
         '422':
           $ref: '#/components/responses/ValidationError'
   /api/v1/student-profiles:
     get:
-      tags: [Student Profiles]
+      tags:
+      - Student Profiles
       summary: List student profiles in the resolved school context
       operationId: listStudentProfiles
       parameters:
-        - $ref: '#/components/parameters/TenantContext'
-        - $ref: '#/components/parameters/Page'
-        - $ref: '#/components/parameters/PerPage'
-        - $ref: '#/components/parameters/StudentProfileStatusFilter'
-        - $ref: '#/components/parameters/StudentProfileSearch'
-        - $ref: '#/components/parameters/StudentProfileSort'
+      - $ref: '#/components/parameters/TenantContext'
+      - $ref: '#/components/parameters/Page'
+      - $ref: '#/components/parameters/PerPage'
+      - $ref: '#/components/parameters/StudentProfileStatusFilter'
+      - $ref: '#/components/parameters/StudentProfileSearch'
+      - $ref: '#/components/parameters/StudentProfileSort'
       responses:
         '200':
           description: Student profile collection
@@ -559,13 +1931,13 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '#/components/schemas/PaginatedEnvelope'
-                  - type: object
-                    properties:
-                      data:
-                        type: array
-                        items:
-                          $ref: '#/components/schemas/StudentProfileSummary'
+                - $ref: '#/components/schemas/PaginatedEnvelope'
+                - type: object
+                  properties:
+                    data:
+                      type: array
+                      items:
+                        $ref: '#/components/schemas/StudentProfileSummary'
         '401':
           $ref: '#/components/responses/Unauthorized'
         '403':
@@ -573,11 +1945,12 @@ paths:
         '422':
           $ref: '#/components/responses/ValidationError'
     post:
-      tags: [Student Profiles]
+      tags:
+      - Student Profiles
       summary: Create a same-school student profile
       operationId: createStudentProfile
       parameters:
-        - $ref: '#/components/parameters/TenantContext'
+      - $ref: '#/components/parameters/TenantContext'
       requestBody:
         required: true
         content:
@@ -591,11 +1964,11 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '#/components/schemas/SuccessEnvelope'
-                  - type: object
-                    properties:
-                      data:
-                        $ref: '#/components/schemas/StudentProfile'
+                - $ref: '#/components/schemas/SuccessEnvelope'
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/StudentProfile'
         '401':
           $ref: '#/components/responses/Unauthorized'
         '403':
@@ -606,12 +1979,13 @@ paths:
           $ref: '#/components/responses/ValidationError'
   /api/v1/student-profiles/{studentProfileId}:
     get:
-      tags: [Student Profiles]
+      tags:
+      - Student Profiles
       summary: Retrieve a same-school student profile
       operationId: getStudentProfile
       parameters:
-        - $ref: '#/components/parameters/TenantContext'
-        - $ref: '#/components/parameters/StudentProfileId'
+      - $ref: '#/components/parameters/TenantContext'
+      - $ref: '#/components/parameters/StudentProfileId'
       responses:
         '200':
           description: Student profile detail
@@ -619,11 +1993,11 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '#/components/schemas/SuccessEnvelope'
-                  - type: object
-                    properties:
-                      data:
-                        $ref: '#/components/schemas/StudentProfile'
+                - $ref: '#/components/schemas/SuccessEnvelope'
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/StudentProfile'
         '401':
           $ref: '#/components/responses/Unauthorized'
         '403':
@@ -632,12 +2006,13 @@ paths:
           $ref: '#/components/responses/NotFound'
   /api/v1/student-profiles/{studentProfileId}/status:
     patch:
-      tags: [Student Profiles]
+      tags:
+      - Student Profiles
       summary: Update a non-transfer student profile lifecycle status
       operationId: updateStudentProfileStatus
       parameters:
-        - $ref: '#/components/parameters/TenantContext'
-        - $ref: '#/components/parameters/StudentProfileId'
+      - $ref: '#/components/parameters/TenantContext'
+      - $ref: '#/components/parameters/StudentProfileId'
       requestBody:
         required: true
         content:
@@ -651,11 +2026,11 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '#/components/schemas/SuccessEnvelope'
-                  - type: object
-                    properties:
-                      data:
-                        $ref: '#/components/schemas/StudentProfileLifecycleResult'
+                - $ref: '#/components/schemas/SuccessEnvelope'
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/StudentProfileLifecycleResult'
         '401':
           $ref: '#/components/responses/Unauthorized'
         '403':
@@ -668,12 +2043,13 @@ paths:
           $ref: '#/components/responses/ValidationError'
   /api/v1/student-profiles/{studentProfileId}/transfer:
     post:
-      tags: [Student Profiles]
+      tags:
+      - Student Profiles
       summary: Record a source-school student transfer
       operationId: transferStudentProfile
       parameters:
-        - $ref: '#/components/parameters/TenantContext'
-        - $ref: '#/components/parameters/StudentProfileId'
+      - $ref: '#/components/parameters/TenantContext'
+      - $ref: '#/components/parameters/StudentProfileId'
       requestBody:
         required: true
         content:
@@ -687,11 +2063,11 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '#/components/schemas/SuccessEnvelope'
-                  - type: object
-                    properties:
-                      data:
-                        $ref: '#/components/schemas/StudentTransferResult'
+                - $ref: '#/components/schemas/SuccessEnvelope'
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/StudentTransferResult'
         '401':
           $ref: '#/components/responses/Unauthorized'
         '403':
@@ -704,13 +2080,14 @@ paths:
           $ref: '#/components/responses/ValidationError'
   /api/v1/teacher-content:
     get:
-      tags: [Teacher Content]
+      tags:
+      - Teacher Content
       summary: List tenant-scoped teacher content items
       operationId: listTeacherContent
       parameters:
-        - $ref: '#/components/parameters/TenantContext'
-        - $ref: '#/components/parameters/Page'
-        - $ref: '#/components/parameters/PerPage'
+      - $ref: '#/components/parameters/TenantContext'
+      - $ref: '#/components/parameters/Page'
+      - $ref: '#/components/parameters/PerPage'
       responses:
         '200':
           description: Teacher content collection
@@ -718,13 +2095,13 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '#/components/schemas/PaginatedEnvelope'
-                  - type: object
-                    properties:
-                      data:
-                        type: array
-                        items:
-                          $ref: '#/components/schemas/TeacherContentItem'
+                - $ref: '#/components/schemas/PaginatedEnvelope'
+                - type: object
+                  properties:
+                    data:
+                      type: array
+                      items:
+                        $ref: '#/components/schemas/TeacherContentItem'
         '401':
           $ref: '#/components/responses/Unauthorized'
         '403':
@@ -732,11 +2109,12 @@ paths:
         '422':
           $ref: '#/components/responses/ValidationError'
     post:
-      tags: [Teacher Content]
+      tags:
+      - Teacher Content
       summary: Create a tenant-scoped teacher content item
       operationId: createTeacherContent
       parameters:
-        - $ref: '#/components/parameters/TenantContext'
+      - $ref: '#/components/parameters/TenantContext'
       requestBody:
         required: true
         content:
@@ -750,11 +2128,11 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '#/components/schemas/SuccessEnvelope'
-                  - type: object
-                    properties:
-                      data:
-                        $ref: '#/components/schemas/TeacherContentItem'
+                - $ref: '#/components/schemas/SuccessEnvelope'
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/TeacherContentItem'
         '401':
           $ref: '#/components/responses/Unauthorized'
         '403':
@@ -763,13 +2141,14 @@ paths:
           $ref: '#/components/responses/ValidationError'
   /api/v1/questionnaires:
     get:
-      tags: [Questionnaires]
+      tags:
+      - Questionnaires
       summary: List tenant-scoped questionnaires
       operationId: listQuestionnaires
       parameters:
-        - $ref: '#/components/parameters/TenantContext'
-        - $ref: '#/components/parameters/Page'
-        - $ref: '#/components/parameters/PerPage'
+      - $ref: '#/components/parameters/TenantContext'
+      - $ref: '#/components/parameters/Page'
+      - $ref: '#/components/parameters/PerPage'
       responses:
         '200':
           description: Questionnaire collection
@@ -777,13 +2156,13 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '#/components/schemas/PaginatedEnvelope'
-                  - type: object
-                    properties:
-                      data:
-                        type: array
-                        items:
-                          $ref: '#/components/schemas/Questionnaire'
+                - $ref: '#/components/schemas/PaginatedEnvelope'
+                - type: object
+                  properties:
+                    data:
+                      type: array
+                      items:
+                        $ref: '#/components/schemas/Questionnaire'
         '401':
           $ref: '#/components/responses/Unauthorized'
         '403':
@@ -791,11 +2170,12 @@ paths:
         '422':
           $ref: '#/components/responses/ValidationError'
     post:
-      tags: [Questionnaires]
+      tags:
+      - Questionnaires
       summary: Create a questionnaire with v1 supported question types
       operationId: createQuestionnaire
       parameters:
-        - $ref: '#/components/parameters/TenantContext'
+      - $ref: '#/components/parameters/TenantContext'
       requestBody:
         required: true
         content:
@@ -809,11 +2189,11 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '#/components/schemas/SuccessEnvelope'
-                  - type: object
-                    properties:
-                      data:
-                        $ref: '#/components/schemas/Questionnaire'
+                - $ref: '#/components/schemas/SuccessEnvelope'
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/Questionnaire'
         '401':
           $ref: '#/components/responses/Unauthorized'
         '403':
@@ -822,13 +2202,14 @@ paths:
           $ref: '#/components/responses/ValidationError'
   /api/v1/learning-sets:
     get:
-      tags: [Learning Sets]
+      tags:
+      - Learning Sets
       summary: List tenant-scoped learning sets
       operationId: listLearningSets
       parameters:
-        - $ref: '#/components/parameters/TenantContext'
-        - $ref: '#/components/parameters/Page'
-        - $ref: '#/components/parameters/PerPage'
+      - $ref: '#/components/parameters/TenantContext'
+      - $ref: '#/components/parameters/Page'
+      - $ref: '#/components/parameters/PerPage'
       responses:
         '200':
           description: Learning set collection
@@ -836,13 +2217,13 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '#/components/schemas/PaginatedEnvelope'
-                  - type: object
-                    properties:
-                      data:
-                        type: array
-                        items:
-                          $ref: '#/components/schemas/LearningSet'
+                - $ref: '#/components/schemas/PaginatedEnvelope'
+                - type: object
+                  properties:
+                    data:
+                      type: array
+                      items:
+                        $ref: '#/components/schemas/LearningSet'
         '401':
           $ref: '#/components/responses/Unauthorized'
         '403':
@@ -850,11 +2231,12 @@ paths:
         '422':
           $ref: '#/components/responses/ValidationError'
     post:
-      tags: [Learning Sets]
+      tags:
+      - Learning Sets
       summary: Create a learning set with ordered entries and direct student assignments
       operationId: createLearningSet
       parameters:
-        - $ref: '#/components/parameters/TenantContext'
+      - $ref: '#/components/parameters/TenantContext'
       requestBody:
         required: true
         content:
@@ -868,11 +2250,11 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '#/components/schemas/SuccessEnvelope'
-                  - type: object
-                    properties:
-                      data:
-                        $ref: '#/components/schemas/LearningSet'
+                - $ref: '#/components/schemas/SuccessEnvelope'
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/LearningSet'
         '401':
           $ref: '#/components/responses/Unauthorized'
         '403':
@@ -881,13 +2263,14 @@ paths:
           $ref: '#/components/responses/ValidationError'
   /api/v1/grades:
     get:
-      tags: [Grades]
+      tags:
+      - Grades
       summary: List grade records in permitted scope
       operationId: listGrades
       parameters:
-        - $ref: '#/components/parameters/TenantContext'
-        - $ref: '#/components/parameters/Page'
-        - $ref: '#/components/parameters/PerPage'
+      - $ref: '#/components/parameters/TenantContext'
+      - $ref: '#/components/parameters/Page'
+      - $ref: '#/components/parameters/PerPage'
       responses:
         '200':
           description: Grade record collection
@@ -895,13 +2278,13 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '#/components/schemas/PaginatedEnvelope'
-                  - type: object
-                    properties:
-                      data:
-                        type: array
-                        items:
-                          $ref: '#/components/schemas/GradeRecord'
+                - $ref: '#/components/schemas/PaginatedEnvelope'
+                - type: object
+                  properties:
+                    data:
+                      type: array
+                      items:
+                        $ref: '#/components/schemas/GradeRecord'
         '401':
           $ref: '#/components/responses/Unauthorized'
         '403':
@@ -909,11 +2292,12 @@ paths:
         '422':
           $ref: '#/components/responses/ValidationError'
     post:
-      tags: [Grades]
+      tags:
+      - Grades
       summary: Record a grade for a student in an academic period
       operationId: createGrade
       parameters:
-        - $ref: '#/components/parameters/TenantContext'
+      - $ref: '#/components/parameters/TenantContext'
       requestBody:
         required: true
         content:
@@ -927,11 +2311,11 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '#/components/schemas/SuccessEnvelope'
-                  - type: object
-                    properties:
-                      data:
-                        $ref: '#/components/schemas/GradeRecord'
+                - $ref: '#/components/schemas/SuccessEnvelope'
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/GradeRecord'
         '401':
           $ref: '#/components/responses/Unauthorized'
         '403':
@@ -940,13 +2324,14 @@ paths:
           $ref: '#/components/responses/ValidationError'
   /api/v1/attendance:
     get:
-      tags: [Attendance]
+      tags:
+      - Attendance
       summary: List attendance records in permitted scope
       operationId: listAttendance
       parameters:
-        - $ref: '#/components/parameters/TenantContext'
-        - $ref: '#/components/parameters/Page'
-        - $ref: '#/components/parameters/PerPage'
+      - $ref: '#/components/parameters/TenantContext'
+      - $ref: '#/components/parameters/Page'
+      - $ref: '#/components/parameters/PerPage'
       responses:
         '200':
           description: Attendance record collection
@@ -954,13 +2339,13 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '#/components/schemas/PaginatedEnvelope'
-                  - type: object
-                    properties:
-                      data:
-                        type: array
-                        items:
-                          $ref: '#/components/schemas/AttendanceRecord'
+                - $ref: '#/components/schemas/PaginatedEnvelope'
+                - type: object
+                  properties:
+                    data:
+                      type: array
+                      items:
+                        $ref: '#/components/schemas/AttendanceRecord'
         '401':
           $ref: '#/components/responses/Unauthorized'
         '403':
@@ -968,11 +2353,12 @@ paths:
         '422':
           $ref: '#/components/responses/ValidationError'
     post:
-      tags: [Attendance]
+      tags:
+      - Attendance
       summary: Record attendance for a student in an academic period
       operationId: createAttendance
       parameters:
-        - $ref: '#/components/parameters/TenantContext'
+      - $ref: '#/components/parameters/TenantContext'
       requestBody:
         required: true
         content:
@@ -986,11 +2372,11 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '#/components/schemas/SuccessEnvelope'
-                  - type: object
-                    properties:
-                      data:
-                        $ref: '#/components/schemas/AttendanceRecord'
+                - $ref: '#/components/schemas/SuccessEnvelope'
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/AttendanceRecord'
         '401':
           $ref: '#/components/responses/Unauthorized'
         '403':
@@ -999,14 +2385,15 @@ paths:
           $ref: '#/components/responses/ValidationError'
   /api/v1/student/learning-sets:
     get:
-      tags: [Learning Sets]
+      tags:
+      - Learning Sets
       summary: List learning sets assigned to the authenticated student
       operationId: listStudentLearningSets
       parameters:
-        - $ref: '#/components/parameters/TenantContext'
-        - $ref: '#/components/parameters/AcademicPeriodFilterRequired'
-        - $ref: '#/components/parameters/Page'
-        - $ref: '#/components/parameters/PerPage'
+      - $ref: '#/components/parameters/TenantContext'
+      - $ref: '#/components/parameters/AcademicPeriodFilterRequired'
+      - $ref: '#/components/parameters/Page'
+      - $ref: '#/components/parameters/PerPage'
       responses:
         '200':
           description: Student learning set timeline
@@ -1014,13 +2401,13 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '#/components/schemas/PaginatedEnvelope'
-                  - type: object
-                    properties:
-                      data:
-                        type: array
-                        items:
-                          $ref: '#/components/schemas/StudentLearningSetTimelineItem'
+                - $ref: '#/components/schemas/PaginatedEnvelope'
+                - type: object
+                  properties:
+                    data:
+                      type: array
+                      items:
+                        $ref: '#/components/schemas/StudentLearningSetTimelineItem'
         '401':
           $ref: '#/components/responses/Unauthorized'
         '403':
@@ -1029,12 +2416,13 @@ paths:
           $ref: '#/components/responses/ValidationError'
   /api/v1/student/teacher-content/{contentItemId}/download:
     get:
-      tags: [Teacher Content]
+      tags:
+      - Teacher Content
       summary: Download assigned teacher content for the authenticated student
       operationId: downloadStudentTeacherContent
       parameters:
-        - $ref: '#/components/parameters/TenantContext'
-        - $ref: '#/components/parameters/ContentItemId'
+      - $ref: '#/components/parameters/TenantContext'
+      - $ref: '#/components/parameters/ContentItemId'
       responses:
         '200':
           description: Authorized content file download
@@ -1053,14 +2441,15 @@ paths:
           $ref: '#/components/responses/ValidationError'
   /api/v1/student/grades:
     get:
-      tags: [Grades]
+      tags:
+      - Grades
       summary: List grade records for the authenticated student
       operationId: listStudentGrades
       parameters:
-        - $ref: '#/components/parameters/TenantContext'
-        - $ref: '#/components/parameters/AcademicPeriodFilter'
-        - $ref: '#/components/parameters/Page'
-        - $ref: '#/components/parameters/PerPage'
+      - $ref: '#/components/parameters/TenantContext'
+      - $ref: '#/components/parameters/AcademicPeriodFilter'
+      - $ref: '#/components/parameters/Page'
+      - $ref: '#/components/parameters/PerPage'
       responses:
         '200':
           description: Student grade collection
@@ -1068,13 +2457,13 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '#/components/schemas/PaginatedEnvelope'
-                  - type: object
-                    properties:
-                      data:
-                        type: array
-                        items:
-                          $ref: '#/components/schemas/GradeRecord'
+                - $ref: '#/components/schemas/PaginatedEnvelope'
+                - type: object
+                  properties:
+                    data:
+                      type: array
+                      items:
+                        $ref: '#/components/schemas/GradeRecord'
         '401':
           $ref: '#/components/responses/Unauthorized'
         '403':
@@ -1083,14 +2472,15 @@ paths:
           $ref: '#/components/responses/ValidationError'
   /api/v1/student/attendance:
     get:
-      tags: [Attendance]
+      tags:
+      - Attendance
       summary: List attendance records for the authenticated student
       operationId: listStudentAttendance
       parameters:
-        - $ref: '#/components/parameters/TenantContext'
-        - $ref: '#/components/parameters/AcademicPeriodFilter'
-        - $ref: '#/components/parameters/Page'
-        - $ref: '#/components/parameters/PerPage'
+      - $ref: '#/components/parameters/TenantContext'
+      - $ref: '#/components/parameters/AcademicPeriodFilter'
+      - $ref: '#/components/parameters/Page'
+      - $ref: '#/components/parameters/PerPage'
       responses:
         '200':
           description: Student attendance collection
@@ -1098,13 +2488,13 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '#/components/schemas/PaginatedEnvelope'
-                  - type: object
-                    properties:
-                      data:
-                        type: array
-                        items:
-                          $ref: '#/components/schemas/AttendanceRecord'
+                - $ref: '#/components/schemas/PaginatedEnvelope'
+                - type: object
+                  properties:
+                    data:
+                      type: array
+                      items:
+                        $ref: '#/components/schemas/AttendanceRecord'
         '401':
           $ref: '#/components/responses/Unauthorized'
         '403':
@@ -1113,17 +2503,18 @@ paths:
           $ref: '#/components/responses/ValidationError'
   /api/v1/reports:
     get:
-      tags: [Reports]
+      tags:
+      - Reports
       summary: List report requests for the resolved school
       operationId: listReports
       parameters:
-        - $ref: '#/components/parameters/TenantContext'
-        - $ref: '#/components/parameters/Page'
-        - $ref: '#/components/parameters/PerPage'
-        - name: report_type
-          in: query
-          schema:
-            $ref: '#/components/schemas/ReportType'
+      - $ref: '#/components/parameters/TenantContext'
+      - $ref: '#/components/parameters/Page'
+      - $ref: '#/components/parameters/PerPage'
+      - name: report_type
+        in: query
+        schema:
+          $ref: '#/components/schemas/ReportType'
       responses:
         '200':
           description: Report request collection
@@ -1131,13 +2522,13 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '#/components/schemas/PaginatedEnvelope'
-                  - type: object
-                    properties:
-                      data:
-                        type: array
-                        items:
-                          $ref: '#/components/schemas/ReportRun'
+                - $ref: '#/components/schemas/PaginatedEnvelope'
+                - type: object
+                  properties:
+                    data:
+                      type: array
+                      items:
+                        $ref: '#/components/schemas/ReportRun'
         '401':
           $ref: '#/components/responses/Unauthorized'
         '403':
@@ -1145,11 +2536,12 @@ paths:
         '422':
           $ref: '#/components/responses/ValidationError'
     post:
-      tags: [Reports]
+      tags:
+      - Reports
       summary: Request a tenant-scoped report
       operationId: requestReport
       parameters:
-        - $ref: '#/components/parameters/TenantContext'
+      - $ref: '#/components/parameters/TenantContext'
       requestBody:
         required: true
         content:
@@ -1163,11 +2555,11 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '#/components/schemas/SuccessEnvelope'
-                  - type: object
-                    properties:
-                      data:
-                        $ref: '#/components/schemas/ReportRun'
+                - $ref: '#/components/schemas/SuccessEnvelope'
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/ReportRun'
         '401':
           $ref: '#/components/responses/Unauthorized'
         '403':
@@ -1176,17 +2568,18 @@ paths:
           $ref: '#/components/responses/ValidationError'
   /api/v1/reports/{reportRunId}/download:
     get:
-      tags: [Reports]
+      tags:
+      - Reports
       summary: Download a generated report output
       operationId: downloadReport
       parameters:
-        - $ref: '#/components/parameters/TenantContext'
-        - $ref: '#/components/parameters/ReportRunId'
-        - name: format
-          in: query
-          required: true
-          schema:
-            $ref: '#/components/schemas/ReportFormat'
+      - $ref: '#/components/parameters/TenantContext'
+      - $ref: '#/components/parameters/ReportRunId'
+      - name: format
+        in: query
+        required: true
+        schema:
+          $ref: '#/components/schemas/ReportFormat'
       responses:
         '200':
           description: Generated report file download
@@ -1206,51 +2599,7 @@ paths:
         '422':
           $ref: '#/components/responses/ValidationError'
 components:
-  securitySchemes:
-    bearerAuth:
-      type: http
-      scheme: bearer
-      bearerFormat: token
   parameters:
-    TenantContext:
-      name: X-School-Id
-      in: header
-      required: false
-      description: >
-        Explicit school tenant context for school-scoped requests. Required
-        when the authenticated session is not already bound to exactly one
-        active school.
-      schema:
-        type: string
-        format: uuid
-    SchoolId:
-      name: schoolId
-      in: path
-      required: true
-      schema:
-        type: string
-        format: uuid
-    StudentProfileId:
-      name: studentProfileId
-      in: path
-      required: true
-      schema:
-        type: string
-        format: uuid
-    ContentItemId:
-      name: contentItemId
-      in: path
-      required: true
-      schema:
-        type: string
-        format: uuid
-    ReportRunId:
-      name: reportRunId
-      in: path
-      required: true
-      schema:
-        type: string
-        format: uuid
     AcademicPeriodFilter:
       name: academic_period_id
       in: query
@@ -1260,6 +2609,13 @@ components:
     AcademicPeriodFilterRequired:
       name: academic_period_id
       in: query
+      required: true
+      schema:
+        type: string
+        format: uuid
+    ContentItemId:
+      name: contentItemId
+      in: path
       required: true
       schema:
         type: string
@@ -1279,6 +2635,68 @@ components:
         minimum: 1
         maximum: 100
         default: 25
+    ReportRunId:
+      name: reportRunId
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+    SchoolId:
+      name: schoolId
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+    UserId:
+      name: userId
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+    RoleId:
+      name: roleId
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+    AcademicYearId:
+      name: academicYearId
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+    AcademicPeriodId:
+      name: academicPeriodId
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+    GuardianId:
+      name: guardianId
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+    StudentProfileId:
+      name: studentProfileId
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+    Sort:
+      name: sort
+      in: query
+      description: Comma-separated field names; prefix with '-' for descending.
+      schema:
+        type: string
     StatusFilter:
       name: status
       in: query
@@ -1302,39 +2720,40 @@ components:
       description: Comma-separated field names; allowed values are full_name, registration_number, enrolled_at, status, and created_at. Prefix with '-' for descending.
       schema:
         type: string
-    Sort:
-      name: sort
-      in: query
-      description: Comma-separated field names; prefix with '-' for descending.
+    TenantContext:
+      name: X-School-Id
+      in: header
+      required: false
+      description: 'Explicit school tenant context for school-scoped requests. Required
+        when the authenticated session is not already bound to exactly one active
+        school.
+
+        '
       schema:
         type: string
+        format: uuid
   responses:
-    Unauthorized:
-      description: Authentication is missing or invalid
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorEnvelope'
-    AuthLockout:
-      description: Login is locked after 5 failed attempts for either submitted email or source IP within 15 minutes
-      headers:
-        Retry-After:
-          description: Seconds until another login attempt may be accepted.
-          schema:
-            type: integer
-            minimum: 1
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorEnvelope'
-    TokenRejected:
-      description: Bearer token is expired, revoked, or tied to an inactive user or inactive school
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorEnvelope'
     Forbidden:
       description: The authenticated user lacks permission for this action
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorEnvelope'
+    NotFound:
+      description: Resource was not found in the permitted scope
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorEnvelope'
+    Conflict:
+      description: Request conflicts with an existing identifier or incompatible lifecycle state
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorEnvelope'
+    OutputExpired:
+      description: Generated report output file has expired; request a new ReportRun
+        with the same filters
       content:
         application/json:
           schema:
@@ -1345,6 +2764,25 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/ErrorEnvelope'
+    AdministrationForbidden:
+      description: Administration lifecycle access is forbidden because the tenant context is missing, inactive, or outside permitted scope, or because the authenticated user lacks the required platform or school administration permission.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorEnvelope'
+          examples:
+            tenantMismatch:
+              summary: Tenant context is invalid for this school-scoped operation
+              value:
+                error:
+                  code: tenant_mismatch
+                  message: Tenant context is missing, inactive, or outside permitted scope.
+            insufficientPermission:
+              summary: Scope is valid but the actor lacks administration lifecycle permission
+              value:
+                error:
+                  code: forbidden
+                  message: The authenticated user lacks permission for this action.
     StudentProfileForbidden:
       description: Student profile access is forbidden because the tenant context is missing, inactive, or outside permitted scope, or because the authenticated user lacks student profile administration permission in an otherwise valid school context.
       content:
@@ -1370,20 +2808,26 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/ErrorEnvelope'
-    NotFound:
-      description: Resource was not found in the permitted scope
+    AuthLockout:
+      description: Login is locked after 5 failed attempts for either submitted email or source IP within 15 minutes
+      headers:
+        Retry-After:
+          description: Seconds until another login attempt may be accepted.
+          schema:
+            type: integer
+            minimum: 1
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/ErrorEnvelope'
-    Conflict:
-      description: Request conflicts with an existing identifier or incompatible lifecycle state
+    TokenRejected:
+      description: Bearer token is expired, revoked, or tied to an inactive user or inactive school
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/ErrorEnvelope'
-    OutputExpired:
-      description: Generated report output file has expired; request a new ReportRun with the same filters
+    Unauthorized:
+      description: Authentication is missing or invalid
       content:
         application/json:
           schema:
@@ -1395,287 +2839,17 @@ components:
           schema:
             $ref: '#/components/schemas/ErrorEnvelope'
   schemas:
-    SuccessEnvelope:
-      type: object
-      required: [data, meta]
-      properties:
-        data: {}
-        meta:
-          type: object
-          additionalProperties: true
-    PaginatedEnvelope:
-      allOf:
-        - $ref: '#/components/schemas/SuccessEnvelope'
-        - type: object
-          required: [data, meta]
-          properties:
-            data:
-              type: array
-              items: {}
-            meta:
-              type: object
-              required: [page, per_page, total]
-              properties:
-                page:
-                  type: integer
-                per_page:
-                  type: integer
-                total:
-                  type: integer
-    ErrorEnvelope:
-      type: object
-      required: [error]
-      properties:
-        error:
-          type: object
-          required: [code, message]
-          properties:
-            code:
-              type: string
-              examples: [validation_failed, forbidden, tenant_mismatch, auth_locked, token_expired, token_revoked, inactive_user, inactive_school]
-            message:
-              type: string
-            details:
-              type: object
-              additionalProperties: true
-    LoginRequest:
-      type: object
-      required: [email, password]
-      properties:
-        email:
-          type: string
-          format: email
-        password:
-          type: string
-          minLength: 8
-        school_id:
-          type:
-            - string
-            - 'null'
-          format: uuid
-    LogoutResult:
-      type: object
-      required: [revoked]
-      properties:
-        revoked:
-          type: boolean
-          description: Indicates the current bearer token was revoked by logout.
-    AuthSession:
-      type: object
-      required: [token, token_expires_at, user, roles, permissions]
-      properties:
-        token:
-          type: string
-        token_expires_at:
-          type: string
-          format: date-time
-          description: Bearer token expiration timestamp, 8 hours after issuance.
-        user:
-          $ref: '#/components/schemas/User'
-        resolved_school:
-          oneOf:
-            - $ref: '#/components/schemas/School'
-            - type: 'null'
-        roles:
-          type: array
-          items:
-            $ref: '#/components/schemas/Role'
-        permissions:
-          type: array
-          items:
-            $ref: '#/components/schemas/Permission'
-    Scope:
-      type: string
-      enum: [platform, school]
-    Status:
-      type: string
-      enum: [active, inactive]
-    AcademicStatus:
-      type: string
-      enum: [planned, active, closed, inactive]
-    School:
-      type: object
-      required: [id, name, code, status]
-      properties:
-        id:
-          type: string
-          format: uuid
-        name:
-          type: string
-        code:
-          type: string
-        status:
-          $ref: '#/components/schemas/Status'
-        contact_email:
-          type:
-            - string
-            - 'null'
-          format: email
-        contact_phone:
-          type:
-            - string
-            - 'null'
-        address_summary:
-          type:
-            - string
-            - 'null'
-    SchoolCreateRequest:
-      type: object
-      required: [name, code]
-      properties:
-        name:
-          type: string
-        code:
-          type: string
-        contact_email:
-          type: string
-          format: email
-        contact_phone:
-          type: string
-        address_summary:
-          type: string
-    SchoolUpdateRequest:
-      type: object
-      properties:
-        name:
-          type: string
-        status:
-          $ref: '#/components/schemas/Status'
-        contact_email:
-          type: string
-          format: email
-        contact_phone:
-          type: string
-        address_summary:
-          type: string
-    User:
-      type: object
-      required: [id, full_name, email, status, roles]
-      properties:
-        id:
-          type: string
-          format: uuid
-        school_id:
-          type:
-            - string
-            - 'null'
-          format: uuid
-        full_name:
-          type: string
-        email:
-          type: string
-          format: email
-        status:
-          $ref: '#/components/schemas/Status'
-        roles:
-          type: array
-          items:
-            $ref: '#/components/schemas/Role'
-    UserCreateRequest:
-      type: object
-      required: [full_name, email, role_ids]
-      properties:
-        school_id:
-          type: string
-          format: uuid
-        full_name:
-          type: string
-        email:
-          type: string
-          format: email
-        role_ids:
-          type: array
-          items:
-            type: string
-            format: uuid
-    Role:
-      type: object
-      required: [id, scope, name, status, permissions]
-      properties:
-        id:
-          type: string
-          format: uuid
-        school_id:
-          type:
-            - string
-            - 'null'
-          format: uuid
-        scope:
-          $ref: '#/components/schemas/Scope'
-        name:
-          type: string
-        status:
-          $ref: '#/components/schemas/Status'
-        permissions:
-          type: array
-          items:
-            $ref: '#/components/schemas/Permission'
-    RoleCreateRequest:
-      type: object
-      required: [scope, name, permission_ids]
-      properties:
-        school_id:
-          type: string
-          format: uuid
-        scope:
-          $ref: '#/components/schemas/Scope'
-        name:
-          type: string
-        permission_ids:
-          type: array
-          items:
-            type: string
-            format: uuid
-    Permission:
-      type: object
-      required: [id, code, name, scope, status]
-      properties:
-        id:
-          type: string
-          format: uuid
-        code:
-          type: string
-        name:
-          type: string
-        scope:
-          $ref: '#/components/schemas/Scope'
-        status:
-          $ref: '#/components/schemas/Status'
-    AcademicYear:
-      type: object
-      required: [id, school_id, name, start_date, end_date, status]
-      properties:
-        id:
-          type: string
-          format: uuid
-        school_id:
-          type: string
-          format: uuid
-        name:
-          type: string
-        start_date:
-          type: string
-          format: date
-        end_date:
-          type: string
-          format: date
-        status:
-          $ref: '#/components/schemas/AcademicStatus'
-    AcademicYearCreateRequest:
-      type: object
-      required: [name, start_date, end_date]
-      properties:
-        name:
-          type: string
-        start_date:
-          type: string
-          format: date
-        end_date:
-          type: string
-          format: date
     AcademicPeriod:
       type: object
-      required: [id, school_id, academic_year_id, name, sequence, start_date, end_date, status]
+      required:
+      - id
+      - school_id
+      - academic_year_id
+      - name
+      - sequence
+      - start_date
+      - end_date
+      - status
       properties:
         id:
           type: string
@@ -1700,7 +2874,12 @@ components:
           $ref: '#/components/schemas/AcademicStatus'
     AcademicPeriodCreateRequest:
       type: object
-      required: [academic_year_id, name, sequence, start_date, end_date]
+      required:
+      - academic_year_id
+      - name
+      - sequence
+      - start_date
+      - end_date
       properties:
         academic_year_id:
           type: string
@@ -1715,9 +2894,196 @@ components:
         end_date:
           type: string
           format: date
+    AcademicYear:
+      type: object
+      required:
+      - id
+      - school_id
+      - name
+      - start_date
+      - end_date
+      - status
+      properties:
+        id:
+          type: string
+          format: uuid
+        school_id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        start_date:
+          type: string
+          format: date
+        end_date:
+          type: string
+          format: date
+        status:
+          $ref: '#/components/schemas/AcademicStatus'
+    AcademicYearCreateRequest:
+      type: object
+      required:
+      - name
+      - start_date
+      - end_date
+      properties:
+        name:
+          type: string
+        start_date:
+          type: string
+          format: date
+        end_date:
+          type: string
+          format: date
+    AttendanceCreateRequest:
+      type: object
+      required:
+      - student_profile_id
+      - academic_period_id
+      - attendance_date
+      - attendance_status
+      properties:
+        student_profile_id:
+          type: string
+          format: uuid
+        academic_period_id:
+          type: string
+          format: uuid
+        attendance_date:
+          type: string
+          format: date
+        attendance_status:
+          $ref: '#/components/schemas/AttendanceStatus'
+    AttendanceRecord:
+      type: object
+      required:
+      - id
+      - school_id
+      - student_profile_id
+      - academic_period_id
+      - recorded_by_user_id
+      - attendance_date
+      - attendance_status
+      - status
+      properties:
+        id:
+          type: string
+          format: uuid
+        school_id:
+          type: string
+          format: uuid
+        student_profile_id:
+          type: string
+          format: uuid
+        academic_period_id:
+          type: string
+          format: uuid
+        recorded_by_user_id:
+          type: string
+          format: uuid
+        attendance_date:
+          type: string
+          format: date
+        attendance_status:
+          $ref: '#/components/schemas/AttendanceStatus'
+        status:
+          $ref: '#/components/schemas/Status'
+    AuthSession:
+      type: object
+      required:
+      - token
+      - token_expires_at
+      - user
+      - roles
+      - permissions
+      properties:
+        token:
+          type: string
+        token_expires_at:
+          type: string
+          format: date-time
+          description: Bearer token expiration timestamp, 8 hours after issuance.
+        user:
+          $ref: '#/components/schemas/User'
+        resolved_school:
+          oneOf:
+          - $ref: '#/components/schemas/School'
+          - type: 'null'
+        roles:
+          type: array
+          items:
+            $ref: '#/components/schemas/Role'
+        permissions:
+          type: array
+          items:
+            $ref: '#/components/schemas/Permission'
+    GradeCreateRequest:
+      type: object
+      required:
+      - student_profile_id
+      - academic_period_id
+      - grade_value
+      properties:
+        student_profile_id:
+          type: string
+          format: uuid
+        academic_period_id:
+          type: string
+          format: uuid
+        grade_value:
+          type: number
+          minimum: 0
+          maximum: 100
+        grade_label:
+          type: string
+    GradeRecord:
+      type: object
+      required:
+      - id
+      - school_id
+      - student_profile_id
+      - academic_period_id
+      - recorded_by_user_id
+      - grade_value
+      - status
+      - recorded_at
+      properties:
+        id:
+          type: string
+          format: uuid
+        school_id:
+          type: string
+          format: uuid
+        student_profile_id:
+          type: string
+          format: uuid
+        academic_period_id:
+          type: string
+          format: uuid
+        recorded_by_user_id:
+          type: string
+          format: uuid
+        grade_value:
+          type: number
+          minimum: 0
+          maximum: 100
+        grade_label:
+          type:
+          - string
+          - 'null'
+        status:
+          $ref: '#/components/schemas/Status'
+        recorded_at:
+          type: string
+          format: date-time
     Guardian:
       type: object
-      required: [id, school_id, full_name, relationship_type, status]
+      required:
+      - id
+      - school_id
+      - full_name
+      - relationship_type
+      - status
       properties:
         id:
           type: string
@@ -1731,18 +3097,20 @@ components:
           type: string
         contact_email:
           type:
-            - string
-            - 'null'
+          - string
+          - 'null'
           format: email
         contact_phone:
           type:
-            - string
-            - 'null'
+          - string
+          - 'null'
         status:
           $ref: '#/components/schemas/Status'
     GuardianCreateRequest:
       type: object
-      required: [full_name, relationship_type]
+      required:
+      - full_name
+      - relationship_type
       properties:
         full_name:
           type: string
@@ -1760,10 +3128,15 @@ components:
             format: uuid
     StudentProfileStatus:
       type: string
-      enum: [active, inactive, transferred]
+      enum:
+      - active
+      - inactive
+      - transferred
     StudentProfileGuardianInput:
       type: object
-      required: [guardian_id, relationship_type]
+      required:
+      - guardian_id
+      - relationship_type
       additionalProperties: false
       properties:
         guardian_id:
@@ -1775,7 +3148,11 @@ components:
           maxLength: 80
     StudentProfileCreateRequest:
       type: object
-      required: [registration_number, first_name, last_name, enrolled_at]
+      required:
+      - registration_number
+      - first_name
+      - last_name
+      - enrolled_at
       additionalProperties: false
       properties:
         user_id:
@@ -1807,7 +3184,9 @@ components:
           format: uuid
         status:
           type: string
-          enum: [active, inactive]
+          enum:
+          - active
+          - inactive
           default: active
         enrolled_at:
           type: string
@@ -1820,12 +3199,17 @@ components:
           uniqueItems: true
     StudentProfileStatusUpdateRequest:
       type: object
-      required: [status, effective_at, reason]
+      required:
+      - status
+      - effective_at
+      - reason
       additionalProperties: false
       properties:
         status:
           type: string
-          enum: [active, inactive]
+          enum:
+          - active
+          - inactive
         effective_at:
           type: string
           format: date
@@ -1835,7 +3219,9 @@ components:
           maxLength: 500
     StudentProfileTransferRequest:
       type: object
-      required: [effective_at, reason]
+      required:
+      - effective_at
+      - reason
       additionalProperties: false
       properties:
         effective_at:
@@ -1853,7 +3239,16 @@ components:
           format: uuid
     EnrollmentHistory:
       type: object
-      required: [id, school_id, student_profile_id, event_type, to_status, effective_at, reason, actor_user_id, created_at]
+      required:
+      - id
+      - school_id
+      - student_profile_id
+      - event_type
+      - to_status
+      - effective_at
+      - reason
+      - actor_user_id
+      - created_at
       properties:
         id:
           type: string
@@ -1866,12 +3261,21 @@ components:
           format: uuid
         event_type:
           type: string
-          enum: [created, activated, inactivated, transferred_out, destination_profile_linked]
+          enum:
+          - created
+          - activated
+          - inactivated
+          - transferred_out
+          - destination_profile_linked
         from_status:
           type:
-            - string
-            - 'null'
-          enum: [active, inactive, transferred, null]
+          - string
+          - 'null'
+          enum:
+          - active
+          - inactive
+          - transferred
+          - null
         to_status:
           $ref: '#/components/schemas/StudentProfileStatus'
         effective_at:
@@ -1890,7 +3294,13 @@ components:
           format: date-time
     StudentProfileSummary:
       type: object
-      required: [id, school_id, registration_number, full_name, status, enrolled_at]
+      required:
+      - id
+      - school_id
+      - registration_number
+      - full_name
+      - status
+      - enrolled_at
       properties:
         id:
           type: string
@@ -1900,8 +3310,8 @@ components:
           format: uuid
         user_id:
           type:
-            - string
-            - 'null'
+          - string
+          - 'null'
           format: uuid
         registration_number:
           type: string
@@ -1918,45 +3328,49 @@ components:
           format: date
         status_effective_at:
           type:
-            - string
-            - 'null'
+          - string
+          - 'null'
           format: date
     StudentProfile:
       allOf:
-        - $ref: '#/components/schemas/StudentProfileSummary'
-        - type: object
-          required: [guardian_associations, enrollment_history]
-          properties:
-            date_of_birth:
-              type:
-                - string
-                - 'null'
-              format: date
-            contact_email:
-              type:
-                - string
-                - 'null'
-              format: email
-            contact_phone:
-              type:
-                - string
-                - 'null'
-            current_academic_year_id:
-              type:
-                - string
-                - 'null'
-              format: uuid
-            guardian_associations:
-              type: array
-              items:
-                $ref: '#/components/schemas/Guardian'
-            enrollment_history:
-              type: array
-              items:
-                $ref: '#/components/schemas/EnrollmentHistory'
+      - $ref: '#/components/schemas/StudentProfileSummary'
+      - type: object
+        required:
+        - guardian_associations
+        - enrollment_history
+        properties:
+          date_of_birth:
+            type:
+            - string
+            - 'null'
+            format: date
+          contact_email:
+            type:
+            - string
+            - 'null'
+            format: email
+          contact_phone:
+            type:
+            - string
+            - 'null'
+          current_academic_year_id:
+            type:
+            - string
+            - 'null'
+            format: uuid
+          guardian_associations:
+            type: array
+            items:
+              $ref: '#/components/schemas/Guardian'
+          enrollment_history:
+            type: array
+            items:
+              $ref: '#/components/schemas/EnrollmentHistory'
     StudentProfileLifecycleResult:
       type: object
-      required: [student_profile, enrollment_history]
+      required:
+      - student_profile
+      - enrollment_history
       properties:
         student_profile:
           $ref: '#/components/schemas/StudentProfile'
@@ -1964,13 +3378,22 @@ components:
           $ref: '#/components/schemas/EnrollmentHistory'
     StudentTransferResult:
       type: object
-      required: [student_profile, transfer, enrollment_history]
+      required:
+      - student_profile
+      - transfer
+      - enrollment_history
       properties:
         student_profile:
           $ref: '#/components/schemas/StudentProfile'
         transfer:
           type: object
-          required: [id, school_id, student_profile_id, effective_at, reason, actor_user_id]
+          required:
+          - id
+          - school_id
+          - student_profile_id
+          - effective_at
+          - reason
+          - actor_user_id
           properties:
             id:
               type: string
@@ -1983,13 +3406,13 @@ components:
               format: uuid
             destination_school_id:
               type:
-                - string
-                - 'null'
+              - string
+              - 'null'
               format: uuid
             destination_student_profile_id:
               type:
-                - string
-                - 'null'
+              - string
+              - 'null'
               format: uuid
             effective_at:
               type: string
@@ -2001,173 +3424,17 @@ components:
               format: uuid
         enrollment_history:
           $ref: '#/components/schemas/EnrollmentHistory'
-    TeacherContentType:
-      type: string
-      enum: [pdf, image, text, office_document]
-    TeacherContentScanStatus:
-      type: string
-      enum: [pending, clean, failed]
-    TeacherContentItem:
-      type: object
-      required: [id, school_id, owner_user_id, title, content_type, file_size_bytes, scan_status, status]
-      properties:
-        id:
-          type: string
-          format: uuid
-        school_id:
-          type: string
-          format: uuid
-        owner_user_id:
-          type: string
-          format: uuid
-        folder_id:
-          type:
-            - string
-            - 'null'
-          format: uuid
-        title:
-          type: string
-        content_type:
-          $ref: '#/components/schemas/TeacherContentType'
-        declared_content_type:
-          type: string
-        detected_content_type:
-          type: string
-        file_size_bytes:
-          type: integer
-          maximum: 26214400
-        scan_status:
-          $ref: '#/components/schemas/TeacherContentScanStatus'
-        status:
-          type: string
-          enum: [draft, active, inactive, archived]
-    TeacherContentCreateRequest:
-      type: object
-      required: [title, content_type, file]
-      properties:
-        folder_id:
-          type: string
-          format: uuid
-        title:
-          type: string
-        content_type:
-          $ref: '#/components/schemas/TeacherContentType'
-        file:
-          type: string
-          format: binary
-          description: PDF, image, text, or office document up to 25 MB.
-    QuestionType:
-      type: string
-      enum: [multiple_choice, true_false, short_text]
-    QuestionnaireQuestion:
-      type: object
-      required: [id, question_type, prompt, sequence]
-      properties:
-        id:
-          type: string
-          format: uuid
-        question_type:
-          $ref: '#/components/schemas/QuestionType'
-        prompt:
-          type: string
-        options:
-          type:
-            - array
-            - 'null'
-          items:
-            type: string
-        correct_answer:
-          type:
-            - string
-            - 'null'
-        sequence:
-          type: integer
-    Questionnaire:
-      type: object
-      required: [id, school_id, owner_user_id, title, status, questions]
-      properties:
-        id:
-          type: string
-          format: uuid
-        school_id:
-          type: string
-          format: uuid
-        owner_user_id:
-          type: string
-          format: uuid
-        title:
-          type: string
-        status:
-          type: string
-          enum: [draft, active, inactive, archived]
-        questions:
-          type: array
-          items:
-            $ref: '#/components/schemas/QuestionnaireQuestion'
-    QuestionnaireQuestionInput:
-      type: object
-      required: [question_type, prompt, sequence]
-      properties:
-        question_type:
-          $ref: '#/components/schemas/QuestionType'
-        prompt:
-          type: string
-        options:
-          type: array
-          items:
-            type: string
-          minItems: 2
-        correct_answer:
-          type: string
-        sequence:
-          type: integer
-    QuestionnaireCreateRequest:
-      type: object
-      required: [title, questions]
-      properties:
-        title:
-          type: string
-        questions:
-          type: array
-          minItems: 1
-          items:
-            $ref: '#/components/schemas/QuestionnaireQuestionInput'
-    LearningSetEntry:
-      type: object
-      required: [entry_type, entry_reference_id, sequence]
-      properties:
-        entry_type:
-          type: string
-          enum: [content_item, questionnaire]
-        entry_reference_id:
-          type: string
-          format: uuid
-        sequence:
-          type: integer
-    LearningSetAssignment:
-      type: object
-      required: [id, school_id, learning_set_id, student_profile_id, status, assigned_at]
-      properties:
-        id:
-          type: string
-          format: uuid
-        school_id:
-          type: string
-          format: uuid
-        learning_set_id:
-          type: string
-          format: uuid
-        student_profile_id:
-          type: string
-          format: uuid
-        status:
-          $ref: '#/components/schemas/Status'
-        assigned_at:
-          type: string
-          format: date-time
     LearningSet:
       type: object
-      required: [id, school_id, owner_user_id, academic_period_id, title, status, entries, assignments]
+      required:
+      - id
+      - school_id
+      - owner_user_id
+      - academic_period_id
+      - title
+      - status
+      - entries
+      - assignments
       properties:
         id:
           type: string
@@ -2185,12 +3452,16 @@ components:
           type: string
         published_at:
           type:
-            - string
-            - 'null'
+          - string
+          - 'null'
           format: date-time
         status:
           type: string
-          enum: [draft, published, inactive, archived]
+          enum:
+          - draft
+          - published
+          - inactive
+          - archived
         entries:
           type: array
           items:
@@ -2201,7 +3472,11 @@ components:
             $ref: '#/components/schemas/LearningSetAssignment'
     LearningSetCreateRequest:
       type: object
-      required: [academic_period_id, title, entries, student_profile_ids]
+      required:
+      - academic_period_id
+      - title
+      - entries
+      - student_profile_ids
       properties:
         academic_period_id:
           type: string
@@ -2219,60 +3494,84 @@ components:
           items:
             type: string
             format: uuid
-    GradeRecord:
+    LoginRequest:
       type: object
-      required: [id, school_id, student_profile_id, academic_period_id, recorded_by_user_id, grade_value, status, recorded_at]
+      required:
+      - email
+      - password
       properties:
-        id:
+        email:
           type: string
-          format: uuid
+          format: email
+        password:
+          type: string
+          minLength: 8
         school_id:
-          type: string
-          format: uuid
-        student_profile_id:
-          type: string
-          format: uuid
-        academic_period_id:
-          type: string
-          format: uuid
-        recorded_by_user_id:
-          type: string
-          format: uuid
-        grade_value:
-          type: number
-          minimum: 0
-          maximum: 100
-        grade_label:
           type:
-            - string
-            - 'null'
+          - string
+          - 'null'
+          format: uuid
+    LogoutResult:
+      type: object
+      required:
+      - revoked
+      properties:
+        revoked:
+          type: boolean
+          description: Indicates the current bearer token was revoked by logout.
+    PaginatedEnvelope:
+      allOf:
+      - $ref: '#/components/schemas/SuccessEnvelope'
+      - type: object
+        required:
+        - data
+        - meta
+        properties:
+          data:
+            type: array
+            items: {}
+          meta:
+            type: object
+            required:
+            - page
+            - per_page
+            - total
+            properties:
+              page:
+                type: integer
+              per_page:
+                type: integer
+              total:
+                type: integer
+    Permission:
+      type: object
+      required:
+      - id
+      - code
+      - name
+      - scope
+      - status
+      properties:
+        id:
+          type: string
+          format: uuid
+        code:
+          type: string
+        name:
+          type: string
+        scope:
+          $ref: '#/components/schemas/Scope'
         status:
           $ref: '#/components/schemas/Status'
-        recorded_at:
-          type: string
-          format: date-time
-    GradeCreateRequest:
+    Questionnaire:
       type: object
-      required: [student_profile_id, academic_period_id, grade_value]
-      properties:
-        student_profile_id:
-          type: string
-          format: uuid
-        academic_period_id:
-          type: string
-          format: uuid
-        grade_value:
-          type: number
-          minimum: 0
-          maximum: 100
-        grade_label:
-          type: string
-    AttendanceStatus:
-      type: string
-      enum: [present, absent, late, excused, remote, suspended]
-    AttendanceRecord:
-      type: object
-      required: [id, school_id, student_profile_id, academic_period_id, recorded_by_user_id, attendance_date, attendance_status, status]
+      required:
+      - id
+      - school_id
+      - owner_user_id
+      - title
+      - status
+      - questions
       properties:
         id:
           type: string
@@ -2280,68 +3579,45 @@ components:
         school_id:
           type: string
           format: uuid
-        student_profile_id:
+        owner_user_id:
           type: string
           format: uuid
-        academic_period_id:
+        title:
           type: string
-          format: uuid
-        recorded_by_user_id:
-          type: string
-          format: uuid
-        attendance_date:
-          type: string
-          format: date
-        attendance_status:
-          $ref: '#/components/schemas/AttendanceStatus'
         status:
-          $ref: '#/components/schemas/Status'
-    AttendanceCreateRequest:
+          type: string
+          enum:
+          - draft
+          - active
+          - inactive
+          - archived
+        questions:
+          type: array
+          items:
+            $ref: '#/components/schemas/QuestionnaireQuestion'
+    QuestionnaireCreateRequest:
       type: object
-      required: [student_profile_id, academic_period_id, attendance_date, attendance_status]
+      required:
+      - title
+      - questions
       properties:
-        student_profile_id:
+        title:
           type: string
-          format: uuid
-        academic_period_id:
-          type: string
-          format: uuid
-        attendance_date:
-          type: string
-          format: date
-        attendance_status:
-          $ref: '#/components/schemas/AttendanceStatus'
-    ReportType:
-      type: string
-      enum: [attendance, grades, academic_structure, school_activity]
+        questions:
+          type: array
+          minItems: 1
+          items:
+            $ref: '#/components/schemas/QuestionnaireQuestionInput'
     ReportFormat:
       type: string
-      enum: [pdf, csv]
-    ReportFilters:
-      type: object
-      required: [academic_period_id]
-      properties:
-        academic_period_id:
-          type: string
-          format: uuid
-        student_profile_id:
-          type: string
-          format: uuid
-        user_id:
-          type: string
-          format: uuid
-        status:
-          type: string
-        start_date:
-          type: string
-          format: date
-        end_date:
-          type: string
-          format: date
-      additionalProperties: false
+      enum:
+      - pdf
+      - csv
     ReportRequest:
       type: object
-      required: [report_type, filters]
+      required:
+      - report_type
+      - filters
       properties:
         report_type:
           $ref: '#/components/schemas/ReportType'
@@ -2349,7 +3625,15 @@ components:
           $ref: '#/components/schemas/ReportFilters'
     ReportRun:
       type: object
-      required: [id, school_id, requested_by_user_id, report_type, filter_summary, output_formats, status, outputs_available]
+      required:
+      - id
+      - school_id
+      - requested_by_user_id
+      - report_type
+      - filter_summary
+      - output_formats
+      - status
+      - outputs_available
       properties:
         id:
           type: string
@@ -2371,22 +3655,858 @@ components:
             $ref: '#/components/schemas/ReportFormat'
         status:
           type: string
-          enum: [requested, generated, failed, inactive]
+          enum:
+          - requested
+          - generated
+          - failed
+          - inactive
         generated_at:
           type:
-            - string
-            - 'null'
+          - string
+          - 'null'
           format: date-time
         output_expires_at:
           type:
-            - string
-            - 'null'
+          - string
+          - 'null'
           format: date-time
         outputs_available:
           type: boolean
+    ReportType:
+      type: string
+      enum:
+      - attendance
+      - grades
+      - academic_structure
+      - school_activity
+    Role:
+      type: object
+      required:
+      - id
+      - scope
+      - name
+      - status
+      - permissions
+      properties:
+        id:
+          type: string
+          format: uuid
+        school_id:
+          type:
+          - string
+          - 'null'
+          format: uuid
+        scope:
+          $ref: '#/components/schemas/Scope'
+        name:
+          type: string
+        status:
+          $ref: '#/components/schemas/Status'
+        permissions:
+          type: array
+          items:
+            $ref: '#/components/schemas/Permission'
+    RoleCreateRequest:
+      type: object
+      required:
+      - scope
+      - name
+      - permission_ids
+      properties:
+        school_id:
+          type: string
+          format: uuid
+        scope:
+          $ref: '#/components/schemas/Scope'
+        name:
+          type: string
+        permission_ids:
+          type: array
+          items:
+            type: string
+            format: uuid
+    School:
+      type: object
+      required:
+      - id
+      - name
+      - code
+      - status
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        code:
+          type: string
+        status:
+          $ref: '#/components/schemas/Status'
+        contact_email:
+          type:
+          - string
+          - 'null'
+          format: email
+        contact_phone:
+          type:
+          - string
+          - 'null'
+        address_summary:
+          type:
+          - string
+          - 'null'
+    SchoolCreateRequest:
+      type: object
+      required:
+      - name
+      - code
+      properties:
+        name:
+          type: string
+        code:
+          type: string
+        contact_email:
+          type: string
+          format: email
+        contact_phone:
+          type: string
+        address_summary:
+          type: string
+    SchoolUpdateRequest:
+      type: object
+      additionalProperties: false
+      properties:
+        name:
+          type: string
+        status:
+          $ref: '#/components/schemas/Status'
+        contact_email:
+          type: string
+          format: email
+        contact_phone:
+          type: string
+        address_summary:
+          type: string
+    UserUpdateRequest:
+      type: object
+      additionalProperties: false
+      properties:
+        full_name:
+          type: string
+        email:
+          type: string
+          format: email
+        status:
+          $ref: '#/components/schemas/Status'
+        role_ids:
+          type: array
+          items:
+            type: string
+            format: uuid
+    RoleUpdateRequest:
+      type: object
+      additionalProperties: false
+      properties:
+        name:
+          type: string
+        status:
+          $ref: '#/components/schemas/Status'
+        permission_ids:
+          type: array
+          items:
+            type: string
+            format: uuid
+    AcademicYearUpdateRequest:
+      type: object
+      additionalProperties: false
+      properties:
+        name:
+          type: string
+        start_date:
+          type: string
+          format: date
+        end_date:
+          type: string
+          format: date
+        status:
+          $ref: '#/components/schemas/AcademicStatus'
+    AcademicPeriodUpdateRequest:
+      type: object
+      additionalProperties: false
+      properties:
+        name:
+          type: string
+        sequence:
+          type: integer
+        start_date:
+          type: string
+          format: date
+        end_date:
+          type: string
+          format: date
+        status:
+          $ref: '#/components/schemas/AcademicStatus'
+    GuardianUpdateRequest:
+      type: object
+      additionalProperties: false
+      properties:
+        full_name:
+          type: string
+        relationship_type:
+          type: string
+        contact_email:
+          type: string
+          format: email
+        contact_phone:
+          type: string
+        status:
+          $ref: '#/components/schemas/Status'
+    LifecycleAction:
+      type: string
+      enum:
+      - activate
+      - deactivate
+      - delete
+      - restore
+    AdministrationResourceType:
+      type: string
+      enum:
+      - users
+      - roles
+      - academic_years
+      - academic_periods
+      - guardians
+    LifecycleActionRequest:
+      type: object
+      required:
+      - effective_at
+      - reason
+      additionalProperties: false
+      properties:
+        effective_at:
+          type: string
+          format: date
+        reason:
+          type: string
+          minLength: 1
+          maxLength: 500
+    UserBulkLifecycleActionRequest:
+      type: object
+      required:
+      - resource_type
+      - action
+      - record_ids
+      - effective_at
+      - reason
+      additionalProperties: false
+      properties:
+        resource_type:
+          type: string
+          enum:
+          - users
+        action:
+          $ref: '#/components/schemas/LifecycleAction'
+        record_ids:
+          type: array
+          minItems: 1
+          maxItems: 50
+          uniqueItems: true
+          items:
+            type: string
+            format: uuid
+        effective_at:
+          type: string
+          format: date
+        reason:
+          type: string
+          minLength: 1
+          maxLength: 500
+    RoleBulkLifecycleActionRequest:
+      type: object
+      required:
+      - resource_type
+      - action
+      - record_ids
+      - effective_at
+      - reason
+      additionalProperties: false
+      properties:
+        resource_type:
+          type: string
+          enum:
+          - roles
+        action:
+          $ref: '#/components/schemas/LifecycleAction'
+        record_ids:
+          type: array
+          minItems: 1
+          maxItems: 50
+          uniqueItems: true
+          items:
+            type: string
+            format: uuid
+        effective_at:
+          type: string
+          format: date
+        reason:
+          type: string
+          minLength: 1
+          maxLength: 500
+    AcademicYearBulkLifecycleActionRequest:
+      type: object
+      required:
+      - resource_type
+      - action
+      - record_ids
+      - effective_at
+      - reason
+      additionalProperties: false
+      properties:
+        resource_type:
+          type: string
+          enum:
+          - academic_years
+        action:
+          $ref: '#/components/schemas/LifecycleAction'
+        record_ids:
+          type: array
+          minItems: 1
+          maxItems: 50
+          uniqueItems: true
+          items:
+            type: string
+            format: uuid
+        effective_at:
+          type: string
+          format: date
+        reason:
+          type: string
+          minLength: 1
+          maxLength: 500
+    AcademicPeriodBulkLifecycleActionRequest:
+      type: object
+      required:
+      - resource_type
+      - action
+      - record_ids
+      - effective_at
+      - reason
+      additionalProperties: false
+      properties:
+        resource_type:
+          type: string
+          enum:
+          - academic_periods
+        action:
+          $ref: '#/components/schemas/LifecycleAction'
+        record_ids:
+          type: array
+          minItems: 1
+          maxItems: 50
+          uniqueItems: true
+          items:
+            type: string
+            format: uuid
+        effective_at:
+          type: string
+          format: date
+        reason:
+          type: string
+          minLength: 1
+          maxLength: 500
+    GuardianBulkLifecycleActionRequest:
+      type: object
+      required:
+      - resource_type
+      - action
+      - record_ids
+      - effective_at
+      - reason
+      additionalProperties: false
+      properties:
+        resource_type:
+          type: string
+          enum:
+          - guardians
+        action:
+          $ref: '#/components/schemas/LifecycleAction'
+        record_ids:
+          type: array
+          minItems: 1
+          maxItems: 50
+          uniqueItems: true
+          items:
+            type: string
+            format: uuid
+        effective_at:
+          type: string
+          format: date
+        reason:
+          type: string
+          minLength: 1
+          maxLength: 500
+    LifecycleHistory:
+      type: object
+      required:
+      - id
+      - resource_type
+      - resource_id
+      - operation
+      - effective_at
+      - reason
+      - actor_user_id
+      - created_at
+      properties:
+        id:
+          type: string
+          format: uuid
+        school_id:
+          type:
+          - string
+          - 'null'
+          format: uuid
+        resource_type:
+          type: string
+        resource_id:
+          type: string
+          format: uuid
+        operation:
+          type: string
+          enum:
+          - updated
+          - activated
+          - deactivated
+          - deleted
+          - restored
+          - bulk_lifecycle
+        from_status:
+          type:
+          - string
+          - 'null'
+        to_status:
+          type:
+          - string
+          - 'null'
+        effective_at:
+          type: string
+          format: date
+        reason:
+          type: string
+        actor_user_id:
+          type: string
+          format: uuid
+        metadata_summary:
+          type: object
+          additionalProperties: true
+        created_at:
+          type: string
+          format: date-time
+    LifecycleOutcome:
+      type: object
+      required:
+      - resource_type
+      - resource_id
+      - action
+      - status
+      - lifecycle_history
+      properties:
+        resource_type:
+          type: string
+        resource_id:
+          type: string
+          format: uuid
+        action:
+          $ref: '#/components/schemas/LifecycleAction'
+        status:
+          type: string
+        lifecycle_history:
+          $ref: '#/components/schemas/LifecycleHistory'
+    BulkLifecycleOutcome:
+      type: object
+      required:
+      - resource_type
+      - action
+      - affected_count
+      - results
+      properties:
+        resource_type:
+          $ref: '#/components/schemas/AdministrationResourceType'
+        action:
+          $ref: '#/components/schemas/LifecycleAction'
+        affected_count:
+          type: integer
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/LifecycleOutcome'
+    StudentLearningSetTimelineItem:
+      type: object
+      required:
+      - id
+      - academic_period_id
+      - title
+      - status
+      - published_at
+      - entries
+      properties:
+        id:
+          type: string
+          format: uuid
+        academic_period_id:
+          type: string
+          format: uuid
+        title:
+          type: string
+        status:
+          type: string
+          enum:
+          - published
+        published_at:
+          type: string
+          format: date-time
+        entries:
+          type: array
+          items:
+            $ref: '#/components/schemas/StudentLearningSetEntry'
+    SuccessEnvelope:
+      type: object
+      required:
+      - data
+      - meta
+      properties:
+        data: {}
+        meta:
+          type: object
+          additionalProperties: true
+    TeacherContentCreateRequest:
+      type: object
+      required:
+      - title
+      - content_type
+      - file
+      properties:
+        folder_id:
+          type: string
+          format: uuid
+        title:
+          type: string
+        content_type:
+          $ref: '#/components/schemas/TeacherContentType'
+        file:
+          type: string
+          format: binary
+          description: PDF, image, text, or office document up to 25 MB.
+    TeacherContentItem:
+      type: object
+      required:
+      - id
+      - school_id
+      - owner_user_id
+      - title
+      - content_type
+      - file_size_bytes
+      - scan_status
+      - status
+      properties:
+        id:
+          type: string
+          format: uuid
+        school_id:
+          type: string
+          format: uuid
+        owner_user_id:
+          type: string
+          format: uuid
+        folder_id:
+          type:
+          - string
+          - 'null'
+          format: uuid
+        title:
+          type: string
+        content_type:
+          $ref: '#/components/schemas/TeacherContentType'
+        declared_content_type:
+          type: string
+        detected_content_type:
+          type: string
+        file_size_bytes:
+          type: integer
+          maximum: 26214400
+        scan_status:
+          $ref: '#/components/schemas/TeacherContentScanStatus'
+        status:
+          type: string
+          enum:
+          - draft
+          - active
+          - inactive
+          - archived
+    User:
+      type: object
+      required:
+      - id
+      - full_name
+      - email
+      - status
+      - roles
+      properties:
+        id:
+          type: string
+          format: uuid
+        school_id:
+          type:
+          - string
+          - 'null'
+          format: uuid
+        full_name:
+          type: string
+        email:
+          type: string
+          format: email
+        status:
+          $ref: '#/components/schemas/Status'
+        roles:
+          type: array
+          items:
+            $ref: '#/components/schemas/Role'
+    UserCreateRequest:
+      type: object
+      required:
+      - full_name
+      - email
+      - role_ids
+      properties:
+        school_id:
+          type: string
+          format: uuid
+        full_name:
+          type: string
+        email:
+          type: string
+          format: email
+        role_ids:
+          type: array
+          items:
+            type: string
+            format: uuid
+    AcademicStatus:
+      type: string
+      enum:
+      - planned
+      - active
+      - closed
+      - inactive
+    AttendanceStatus:
+      type: string
+      enum:
+      - present
+      - absent
+      - late
+      - excused
+      - remote
+      - suspended
+    ErrorEnvelope:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: object
+          required:
+          - code
+          - message
+          properties:
+            code:
+              type: string
+              examples:
+              - validation_failed
+              - forbidden
+              - tenant_mismatch
+              - auth_locked
+              - token_expired
+              - token_revoked
+              - inactive_user
+              - inactive_school
+            message:
+              type: string
+            details:
+              type: object
+              additionalProperties: true
+    LearningSetAssignment:
+      type: object
+      required:
+      - id
+      - school_id
+      - learning_set_id
+      - student_profile_id
+      - status
+      - assigned_at
+      properties:
+        id:
+          type: string
+          format: uuid
+        school_id:
+          type: string
+          format: uuid
+        learning_set_id:
+          type: string
+          format: uuid
+        student_profile_id:
+          type: string
+          format: uuid
+        status:
+          $ref: '#/components/schemas/Status'
+        assigned_at:
+          type: string
+          format: date-time
+    LearningSetEntry:
+      type: object
+      required:
+      - entry_type
+      - entry_reference_id
+      - sequence
+      properties:
+        entry_type:
+          type: string
+          enum:
+          - content_item
+          - questionnaire
+        entry_reference_id:
+          type: string
+          format: uuid
+        sequence:
+          type: integer
+    QuestionnaireQuestion:
+      type: object
+      required:
+      - id
+      - question_type
+      - prompt
+      - sequence
+      properties:
+        id:
+          type: string
+          format: uuid
+        question_type:
+          $ref: '#/components/schemas/QuestionType'
+        prompt:
+          type: string
+        options:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+        correct_answer:
+          type:
+          - string
+          - 'null'
+        sequence:
+          type: integer
+    QuestionnaireQuestionInput:
+      type: object
+      required:
+      - question_type
+      - prompt
+      - sequence
+      properties:
+        question_type:
+          $ref: '#/components/schemas/QuestionType'
+        prompt:
+          type: string
+        options:
+          type: array
+          items:
+            type: string
+          minItems: 2
+        correct_answer:
+          type: string
+        sequence:
+          type: integer
+    ReportFilters:
+      type: object
+      required:
+      - academic_period_id
+      properties:
+        academic_period_id:
+          type: string
+          format: uuid
+        student_profile_id:
+          type: string
+          format: uuid
+        user_id:
+          type: string
+          format: uuid
+        status:
+          type: string
+        start_date:
+          type: string
+          format: date
+        end_date:
+          type: string
+          format: date
+      additionalProperties: false
+    Scope:
+      type: string
+      enum:
+      - platform
+      - school
+    Status:
+      type: string
+      enum:
+      - active
+      - inactive
+    StudentLearningSetEntry:
+      type: object
+      required:
+      - entry_type
+      - entry_reference_id
+      - sequence
+      - title
+      properties:
+        entry_type:
+          type: string
+          enum:
+          - content_item
+          - questionnaire
+        entry_reference_id:
+          type: string
+          format: uuid
+        sequence:
+          type: integer
+        title:
+          type: string
+        content_item:
+          $ref: '#/components/schemas/TeacherContentStudentMetadata'
+    TeacherContentScanStatus:
+      type: string
+      enum:
+      - pending
+      - clean
+      - failed
+    TeacherContentType:
+      type: string
+      enum:
+      - pdf
+      - image
+      - text
+      - office_document
+    QuestionType:
+      type: string
+      enum:
+      - multiple_choice
+      - true_false
+      - short_text
     TeacherContentStudentMetadata:
       type: object
-      required: [id, title, content_type, file_size_bytes, scan_status, download_available]
+      required:
+      - id
+      - title
+      - content_type
+      - file_size_bytes
+      - scan_status
+      - download_available
       properties:
         id:
           type: string
@@ -2402,41 +4522,71 @@ components:
           $ref: '#/components/schemas/TeacherContentScanStatus'
         download_available:
           type: boolean
-    StudentLearningSetEntry:
-      type: object
-      required: [entry_type, entry_reference_id, sequence, title]
-      properties:
-        entry_type:
-          type: string
-          enum: [content_item, questionnaire]
-        entry_reference_id:
-          type: string
-          format: uuid
-        sequence:
-          type: integer
-        title:
-          type: string
-        content_item:
-          $ref: '#/components/schemas/TeacherContentStudentMetadata'
-    StudentLearningSetTimelineItem:
-      type: object
-      required: [id, academic_period_id, title, status, published_at, entries]
-      properties:
-        id:
-          type: string
-          format: uuid
-        academic_period_id:
-          type: string
-          format: uuid
-        title:
-          type: string
-        status:
-          type: string
-          enum: [published]
-        published_at:
-          type: string
-          format: date-time
-        entries:
-          type: array
-          items:
-            $ref: '#/components/schemas/StudentLearningSetEntry'
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: token
+x-notes:
+  source_of_truth: schoolmaster-specs
+  backend_repository: schoolmaster-backend
+  frontend_repository: schoolmaster-frontend
+  status: P1 through P3 launch-scope operations promoted from the active feature contract.
+  active_feature_contract: specs/001-schoolmaster-platform/contracts/openapi.yaml
+security:
+- bearerAuth: []
+x-promoted-scope:
+  feature_id: 001-schoolmaster-platform
+  scope: P1 through P3 launch-scope operations
+  source_contract: specs/001-schoolmaster-platform/contracts/openapi.yaml
+  promoted_paths:
+  - /api/v1/auth/login
+  - /api/v1/auth/me
+  - /api/v1/auth/logout
+  - /api/v1/schools
+  - /api/v1/schools/{schoolId}
+  - /api/v1/schools/{schoolId}/activate
+  - /api/v1/schools/{schoolId}/deactivate
+  - /api/v1/schools/{schoolId}/restore
+  - /api/v1/users
+  - /api/v1/users/{userId}
+  - /api/v1/users/{userId}/activate
+  - /api/v1/users/{userId}/deactivate
+  - /api/v1/users/{userId}/restore
+  - /api/v1/users/bulk-lifecycle
+  - /api/v1/roles
+  - /api/v1/roles/{roleId}
+  - /api/v1/roles/{roleId}/activate
+  - /api/v1/roles/{roleId}/deactivate
+  - /api/v1/roles/{roleId}/restore
+  - /api/v1/roles/bulk-lifecycle
+  - /api/v1/permissions
+  - /api/v1/academic-years
+  - /api/v1/academic-years/{academicYearId}
+  - /api/v1/academic-years/{academicYearId}/activate
+  - /api/v1/academic-years/{academicYearId}/deactivate
+  - /api/v1/academic-years/{academicYearId}/restore
+  - /api/v1/academic-years/bulk-lifecycle
+  - /api/v1/academic-periods
+  - /api/v1/academic-periods/{academicPeriodId}
+  - /api/v1/academic-periods/{academicPeriodId}/activate
+  - /api/v1/academic-periods/{academicPeriodId}/deactivate
+  - /api/v1/academic-periods/{academicPeriodId}/restore
+  - /api/v1/academic-periods/bulk-lifecycle
+  - /api/v1/guardians
+  - /api/v1/guardians/{guardianId}
+  - /api/v1/guardians/{guardianId}/activate
+  - /api/v1/guardians/{guardianId}/deactivate
+  - /api/v1/guardians/{guardianId}/restore
+  - /api/v1/guardians/bulk-lifecycle
+  - /api/v1/teacher-content
+  - /api/v1/questionnaires
+  - /api/v1/learning-sets
+  - /api/v1/grades
+  - /api/v1/attendance
+  - /api/v1/student/learning-sets
+  - /api/v1/student/teacher-content/{contentItemId}/download
+  - /api/v1/student/grades
+  - /api/v1/student/attendance
+  - /api/v1/reports
+  - /api/v1/reports/{reportRunId}/download

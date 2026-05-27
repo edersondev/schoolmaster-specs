@@ -16,7 +16,7 @@ The clarified authentication foundation now requires bearer tokens that expire a
 **Language/Version**: PHP 8.3+ with Laravel 13.x as currently declared in `composer.json`  
 **Primary Dependencies**: Laravel framework, Laravel-native authentication mechanisms, Eloquent ORM, Form Requests, Policies, API Resources, PHPUnit, Redocly CLI for contract validation  
 **Storage**: MySQL for transactional tenant data; storage for audit records and token metadata must be durable enough to support token expiry, logout revocation, lockout checks, inactive-status rejection, and school lifecycle review  
-**Testing**: PHPUnit via `php artisan test`; contract validation via Redocly against `specs/api/openapi.yaml` and `specs/specs/001-schoolmaster-platform/contracts/openapi.yaml`  
+**Testing**: PHPUnit via `docker exec schoolmaster-backend-app-1 php artisan test`; contract validation via Redocly against `specs/api/openapi.yaml` and `specs/specs/001-schoolmaster-platform/contracts/openapi.yaml`  
 **Target Platform**: API backend service consumed by the SchoolMaster Vue SPA and governed by OpenAPI  
 **Project Type**: Single Laravel API backend repository consuming a specification submodule  
 **Performance Goals**: Backend readiness checks complete locally without private project knowledge; tenant context is resolved before school-owned data access for all protected school-scoped operations; authentication lockout decisions are deterministic for email and IP attempts within a 15-minute window  

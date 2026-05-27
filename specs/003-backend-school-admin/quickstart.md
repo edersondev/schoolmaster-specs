@@ -87,7 +87,7 @@ npx @redocly/cli lint aggregate@v1 schoolmaster-platform@v1
 Run backend tests from `schoolmaster-backend` after implementation:
 
 ```bash
-php artisan test
+docker exec schoolmaster-backend-app-1 php artisan test
 ```
 
 Implementation PRs should record the contract validation result, test result, feature id `003-backend-school-admin`, and the operation IDs implemented.
