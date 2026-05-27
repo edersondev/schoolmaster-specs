@@ -39,7 +39,7 @@ detail, status update, and transfer before backend implementation.
 
 ### 2. Administration Lifecycle Management
 
-**Status**: Not specified.
+**Status**: Spec started in `specs/007-administration-lifecycle/spec.md`.
 
 **Purpose**: Add detail, update, activate/deactivate, delete/restore, and
 selected bulk operations for users, roles, academic years, academic periods,
@@ -54,7 +54,7 @@ soft-delete behavior, and response envelopes for each affected resource.
 
 ### 3. Account Lifecycle Workflows
 
-**Status**: Not specified.
+**Status**: Spec started in `specs/008-account-lifecycle-workflows/spec.md`.
 
 **Purpose**: Define invitations, password setup, password reset, account
 reactivation, and account lock or recovery behavior.
