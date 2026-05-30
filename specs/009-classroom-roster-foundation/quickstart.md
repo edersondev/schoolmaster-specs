@@ -132,6 +132,31 @@ Run contract validation from `schoolmaster-specs` before backend implementation 
 npx @redocly/cli lint aggregate@v1 schoolmaster-platform@v1
 ```
 
+2026-05-30 setup validation result: `npx @redocly/cli lint aggregate@v1
+schoolmaster-platform@v1` passed for `api/openapi.yaml` and
+`specs/001-schoolmaster-platform/contracts/openapi.yaml` after promoting
+`listClassSections`, `createClassSection`, `getClassSection`,
+`updateClassSection`, `updateClassSectionStatus`,
+`listClassSectionMemberships`, `batchAddClassSectionMemberships`,
+`batchEndClassSectionMemberships`, `listTeacherAssignments`,
+`createTeacherAssignment`, `getTeacherAssignment`, and
+`updateTeacherAssignmentStatus`.
+
+## Route-to-Operation Traceability
+
+- `GET /api/v1/class-sections` -> `listClassSections`
+- `POST /api/v1/class-sections` -> `createClassSection`
+- `GET /api/v1/class-sections/{classSectionId}` -> `getClassSection`
+- `PATCH /api/v1/class-sections/{classSectionId}` -> `updateClassSection`
+- `PATCH /api/v1/class-sections/{classSectionId}/status` -> `updateClassSectionStatus`
+- `GET /api/v1/class-sections/{classSectionId}/memberships` -> `listClassSectionMemberships`
+- `POST /api/v1/class-sections/{classSectionId}/memberships` -> `batchAddClassSectionMemberships`
+- `PATCH /api/v1/class-sections/{classSectionId}/memberships` -> `batchEndClassSectionMemberships`
+- `GET /api/v1/teacher-assignments` -> `listTeacherAssignments`
+- `POST /api/v1/teacher-assignments` -> `createTeacherAssignment`
+- `GET /api/v1/teacher-assignments/{teacherAssignmentId}` -> `getTeacherAssignment`
+- `PATCH /api/v1/teacher-assignments/{teacherAssignmentId}/status` -> `updateTeacherAssignmentStatus`
+
 Run backend tests from `schoolmaster-backend` after implementation:
 
 ```bash
