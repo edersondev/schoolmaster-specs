@@ -42,6 +42,21 @@ module-specific business logic runs.
 - Use DTOs when request input or service input has multiple coordinated fields.
 - Use repositories or explicit query objects for complex tenant-scoped access.
 
+## Classroom Roster Foundation
+
+- `ClassSection/Roster` is the only v1 teaching-structure resource; do not add
+  separate Course, Classroom, Section, Group, or Roster lifecycle resources.
+- Store course, classroom, section, and group values as structured metadata
+  blocks on `ClassSection/Roster`; each block may contain only optional `code`
+  and `name` fields.
+- Roster membership and teacher assignment writes must go through classroom
+  roster services with transaction boundaries for duplicate, dependency, and
+  all-or-nothing batch conflicts.
+- Keep existing direct learning-set assignment behavior read-compatible; do not
+  add new direct assignment write behavior in this slice.
+- Expose only the operation IDs documented for feature
+  `009-classroom-roster-foundation`.
+
 ## Backend Test Command
 
 Run the Laravel test suite inside the backend application container:

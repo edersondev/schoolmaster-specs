@@ -34,6 +34,21 @@ This follows [ADR 004](../decisions/004-use-tenant-by-column.md).
 - Requests with missing, mismatched, inactive, or unauthorized tenant context
   are rejected before data access.
 
+## Classroom Roster Foundation
+
+- `ClassSection/Roster`, `RosterMembership`, and `TeacherAssignment` records are
+  school-owned and must carry `school_id`.
+- `X-School-Id` resolution must complete before class-section, membership,
+  assignment, student, teacher, academic-period, duplicate, lifecycle,
+  persistence, audit, or response lookup.
+- School administrators may manage class sections, roster memberships, and
+  teacher assignments only inside an active permitted school context.
+- Teachers may read only their own active teacher assignments where OpenAPI
+  documents that visibility; this does not grant roster membership, class
+  section, or other teacher assignment visibility.
+- Platform administration remains separate from school-owned roster access and
+  is not an implicit bypass.
+
 ## Platform Access
 
 - System administrators operate at platform scope for provisioning and

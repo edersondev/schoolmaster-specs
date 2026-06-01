@@ -47,6 +47,12 @@ tags:
   description: Tenant-scoped report requests and outputs.
 - name: Account Lifecycle
   description: Account invitation, password setup, password reset, lock, recovery, and reactivation workflows.
+- name: Class Sections
+  description: School-owned ClassSection/Roster structures for academic-period-scoped teaching organization.
+- name: Roster Memberships
+  description: School-owned roster membership administration with all-or-nothing batch changes.
+- name: Teacher Assignments
+  description: School-owned teacher assignment administration and teacher own-active-assignment reads.
 paths:
   /api/v1/auth/login:
     post:
@@ -2891,6 +2897,352 @@ paths:
           $ref: '#/components/responses/OutputExpired'
         '422':
           $ref: '#/components/responses/ValidationError'
+  /api/v1/class-sections:
+    get:
+      tags:
+      - Class Sections
+      summary: List school-owned class sections
+      description: Returns only ClassSection/Roster records in the resolved active school context. Supports pagination plus academicPeriodId and status filters only; include expansion, sort behavior, and other filters are rejected.
+      operationId: listClassSections
+      parameters:
+      - $ref: '#/components/parameters/TenantContext'
+      - $ref: '#/components/parameters/Page'
+      - $ref: '#/components/parameters/PerPage'
+      - $ref: '#/components/parameters/ClassroomRosterAcademicPeriodFilter'
+      - $ref: '#/components/parameters/ClassSectionStatusFilter'
+      responses:
+        '200':
+          description: Paginated class sections visible in the resolved school context
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClassSectionPaginatedEnvelope'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/ClassroomRosterForbidden'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+    post:
+      tags:
+      - Class Sections
+      summary: Create a school-owned class section
+      description: Creates an active ClassSection/Roster for the resolved school and active compatible academic period. Code is unique per school and academic period; names may repeat. Creation as inactive, unsupported metadata fields, cross-tenant references, and duplicate codes are rejected.
+      operationId: createClassSection
+      parameters:
+      - $ref: '#/components/parameters/TenantContext'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ClassSectionCreateRequest'
+      responses:
+        '201':
+          description: Class section created as active
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClassSectionEnvelope'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/ClassroomRosterForbidden'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+  /api/v1/class-sections/{classSectionId}:
+    get:
+      tags:
+      - Class Sections
+      summary: Get a school-owned class section
+      operationId: getClassSection
+      parameters:
+      - $ref: '#/components/parameters/TenantContext'
+      - $ref: '#/components/parameters/ClassSectionId'
+      responses:
+        '200':
+          description: Class section detail in the resolved school context
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClassSectionEnvelope'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/ClassroomRosterForbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    patch:
+      tags:
+      - Class Sections
+      summary: Update class-section metadata
+      description: Updates documented code, name, and structured course/classroom/section/group metadata only. Status changes use the status operation; inactive reactivation is not supported in v1.
+      operationId: updateClassSection
+      parameters:
+      - $ref: '#/components/parameters/TenantContext'
+      - $ref: '#/components/parameters/ClassSectionId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ClassSectionUpdateRequest'
+      responses:
+        '200':
+          description: Class section updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClassSectionEnvelope'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/ClassroomRosterForbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+  /api/v1/class-sections/{classSectionId}/status:
+    patch:
+      tags:
+      - Class Sections
+      summary: Inactivate a class section
+      description: Inactivates an active ClassSection/Roster only when no active roster memberships or active teacher assignments exist. A reason and today-or-past effective date inside the academic period are required. Reactivation is not supported in v1.
+      operationId: updateClassSectionStatus
+      parameters:
+      - $ref: '#/components/parameters/TenantContext'
+      - $ref: '#/components/parameters/ClassSectionId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ClassSectionStatusUpdateRequest'
+      responses:
+        '200':
+          description: Class section status updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClassSectionEnvelope'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/ClassroomRosterForbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+  /api/v1/class-sections/{classSectionId}/memberships:
+    get:
+      tags:
+      - Roster Memberships
+      summary: List roster memberships
+      description: Returns school-scoped membership history for the target class section. Supports pagination plus academicPeriodId and status filters only.
+      operationId: listClassSectionMemberships
+      parameters:
+      - $ref: '#/components/parameters/TenantContext'
+      - $ref: '#/components/parameters/ClassSectionId'
+      - $ref: '#/components/parameters/Page'
+      - $ref: '#/components/parameters/PerPage'
+      - $ref: '#/components/parameters/ClassroomRosterAcademicPeriodFilter'
+      - $ref: '#/components/parameters/RosterMembershipStatusFilter'
+      responses:
+        '200':
+          description: Paginated roster memberships
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RosterMembershipPaginatedEnvelope'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/ClassroomRosterForbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+    post:
+      tags:
+      - Roster Memberships
+      summary: Add roster memberships as an all-or-nothing batch
+      description: Adds up to 100 active same-school student profiles to the roster. Every student must be active, not deleted or transferred, and have active same-school enrollment covering the explicit effective start date. Any invalid member rejects the whole request without partial changes.
+      operationId: batchAddClassSectionMemberships
+      parameters:
+      - $ref: '#/components/parameters/TenantContext'
+      - $ref: '#/components/parameters/ClassSectionId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RosterMembershipBatchAddRequest'
+      responses:
+        '201':
+          description: Membership batch created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RosterMembershipBatchEnvelope'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/ClassroomRosterForbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+    patch:
+      tags:
+      - Roster Memberships
+      summary: End roster memberships as an all-or-nothing batch
+      description: Ends up to 100 active memberships. A reason and today-or-past effective end date inside the academic period are required; the end date must be on or after each membership effective start date. Any invalid membership rejects the whole request.
+      operationId: batchEndClassSectionMemberships
+      parameters:
+      - $ref: '#/components/parameters/TenantContext'
+      - $ref: '#/components/parameters/ClassSectionId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RosterMembershipBatchEndRequest'
+      responses:
+        '200':
+          description: Membership batch ended
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RosterMembershipBatchEnvelope'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/ClassroomRosterForbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+  /api/v1/teacher-assignments:
+    get:
+      tags:
+      - Teacher Assignments
+      summary: List teacher assignments
+      description: School administrators can list same-school teacher assignments. Teachers can list only their own active assignments. Supports pagination plus academicPeriodId and status filters only.
+      operationId: listTeacherAssignments
+      parameters:
+      - $ref: '#/components/parameters/TenantContext'
+      - $ref: '#/components/parameters/Page'
+      - $ref: '#/components/parameters/PerPage'
+      - $ref: '#/components/parameters/ClassroomRosterAcademicPeriodFilter'
+      - $ref: '#/components/parameters/TeacherAssignmentStatusFilter'
+      responses:
+        '200':
+          description: Paginated teacher assignments visible to the actor
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TeacherAssignmentPaginatedEnvelope'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/ClassroomRosterForbidden'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+    post:
+      tags:
+      - Teacher Assignments
+      summary: Create a teacher assignment
+      description: Assigns an active same-school teacher-compatible user to an active class section for an active compatible academic period. The teacher-compatible role must be active on the explicit effective start date. Duplicate active assignments are rejected.
+      operationId: createTeacherAssignment
+      parameters:
+      - $ref: '#/components/parameters/TenantContext'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TeacherAssignmentCreateRequest'
+      responses:
+        '201':
+          description: Teacher assignment created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TeacherAssignmentEnvelope'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/ClassroomRosterForbidden'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+  /api/v1/teacher-assignments/{teacherAssignmentId}:
+    get:
+      tags:
+      - Teacher Assignments
+      summary: Get a teacher assignment
+      description: School administrators can read same-school assignment details. Teachers can retrieve only their own active assignment detail.
+      operationId: getTeacherAssignment
+      parameters:
+      - $ref: '#/components/parameters/TenantContext'
+      - $ref: '#/components/parameters/TeacherAssignmentId'
+      responses:
+        '200':
+          description: Teacher assignment detail visible to the actor
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TeacherAssignmentEnvelope'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/ClassroomRosterForbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /api/v1/teacher-assignments/{teacherAssignmentId}/status:
+    patch:
+      tags:
+      - Teacher Assignments
+      summary: Deactivate a teacher assignment
+      description: Deactivates an active teacher assignment. A reason and today-or-past effective end date inside the academic period are required; the end date must be on or after the assignment effective start date.
+      operationId: updateTeacherAssignmentStatus
+      parameters:
+      - $ref: '#/components/parameters/TenantContext'
+      - $ref: '#/components/parameters/TeacherAssignmentId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TeacherAssignmentStatusUpdateRequest'
+      responses:
+        '200':
+          description: Teacher assignment deactivated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TeacherAssignmentEnvelope'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/ClassroomRosterForbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '422':
+          $ref: '#/components/responses/ValidationError'
 components:
   parameters:
     AcademicPeriodFilter:
@@ -2908,6 +3260,20 @@ components:
         format: uuid
     ContentItemId:
       name: contentItemId
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+    ClassSectionId:
+      name: classSectionId
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+    TeacherAssignmentId:
+      name: teacherAssignmentId
       in: path
       required: true
       schema:
@@ -2995,6 +3361,31 @@ components:
       in: query
       schema:
         type: string
+    ClassroomRosterAcademicPeriodFilter:
+      name: academicPeriodId
+      in: query
+      description: Optional academic-period filter. This is the only academic-period filter accepted by v1 classroom roster foundation list operations.
+      schema:
+        type: string
+        format: uuid
+    ClassSectionStatusFilter:
+      name: status
+      in: query
+      description: Optional class-section status filter. Unsupported status values are rejected.
+      schema:
+        $ref: '#/components/schemas/ClassSectionStatus'
+    RosterMembershipStatusFilter:
+      name: status
+      in: query
+      description: Optional roster membership status filter. Unsupported status values are rejected.
+      schema:
+        $ref: '#/components/schemas/RosterMembershipStatus'
+    TeacherAssignmentStatusFilter:
+      name: status
+      in: query
+      description: Optional teacher assignment status filter. Unsupported status values are rejected.
+      schema:
+        $ref: '#/components/schemas/TeacherAssignmentStatus'
     StudentProfileStatusFilter:
       name: status
       in: query
@@ -3129,6 +3520,31 @@ components:
                 error:
                   code: forbidden
                   message: The authenticated user lacks permission for this action.
+    ClassroomRosterForbidden:
+      description: Classroom roster access is forbidden because tenant context is missing, inactive, or outside permitted scope, or because the authenticated actor lacks school-administrator permission or teacher own-active-assignment read permission in an otherwise valid school context.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorEnvelope'
+          examples:
+            tenantMismatch:
+              summary: Tenant context is invalid for this school-scoped operation
+              value:
+                error:
+                  code: tenant_mismatch
+                  message: Tenant context is missing, inactive, or outside permitted scope.
+            insufficientPermission:
+              summary: Scope is valid but the actor lacks roster permission
+              value:
+                error:
+                  code: forbidden
+                  message: The authenticated user lacks permission for this action.
+            teacherAssignmentDenied:
+              summary: Teacher attempted to read another teacher's assignment
+              value:
+                error:
+                  code: forbidden
+                  message: Teachers may read only their own active assignments.
     AuthLockout:
       description: Login is locked after 5 failed attempts for either submitted email or source IP within 15 minutes
       headers:
@@ -3166,6 +3582,501 @@ components:
           schema:
             $ref: '#/components/schemas/ErrorEnvelope'
   schemas:
+    AuditSummary:
+      type: object
+      description: Tenant-safe audit summary metadata. Full request payloads, private student or teacher data, credentials, and unauthorized cross-tenant details are not stored or returned.
+      required:
+      - actor_user_id
+      - school_id
+      - target_type
+      - target_id
+      - action
+      - outcome
+      properties:
+        actor_user_id:
+          type: string
+          format: uuid
+        school_id:
+          type: string
+          format: uuid
+        target_type:
+          type: string
+          enum:
+          - class_section
+          - roster_membership
+          - teacher_assignment
+        target_id:
+          type: string
+          format: uuid
+        action:
+          type: string
+        outcome:
+          type: string
+          enum:
+          - succeeded
+          - rejected
+          - conflicted
+        lifecycle_reason:
+          type:
+          - string
+          - 'null'
+        metadata_summary:
+          type: object
+          additionalProperties: true
+    ClassSectionStatus:
+      type: string
+      enum:
+      - active
+      - inactive
+    RosterMembershipStatus:
+      type: string
+      enum:
+      - active
+      - ended
+    TeacherAssignmentStatus:
+      type: string
+      enum:
+      - active
+      - inactive
+    ClassSectionMetadataBlock:
+      type: object
+      additionalProperties: false
+      description: Structured v1 metadata block. No separate Course, Classroom, Section, or Group table or lifecycle resource is created in this slice.
+      properties:
+        code:
+          type: string
+          minLength: 1
+          maxLength: 80
+        name:
+          type: string
+          minLength: 1
+          maxLength: 255
+    ClassSection:
+      type: object
+      required:
+      - id
+      - school_id
+      - academic_period_id
+      - code
+      - name
+      - status
+      - created_by_user_id
+      - updated_by_user_id
+      - created_at
+      - updated_at
+      properties:
+        id:
+          type: string
+          format: uuid
+        school_id:
+          type: string
+          format: uuid
+        academic_period_id:
+          type: string
+          format: uuid
+        code:
+          type: string
+          minLength: 1
+          maxLength: 80
+          description: Required and unique per school and academic period.
+        name:
+          type: string
+          minLength: 1
+          maxLength: 255
+          description: Display names may repeat inside the same school and academic period.
+        course:
+          oneOf:
+          - $ref: '#/components/schemas/ClassSectionMetadataBlock'
+          - type: 'null'
+        classroom:
+          oneOf:
+          - $ref: '#/components/schemas/ClassSectionMetadataBlock'
+          - type: 'null'
+        section:
+          oneOf:
+          - $ref: '#/components/schemas/ClassSectionMetadataBlock'
+          - type: 'null'
+        group:
+          oneOf:
+          - $ref: '#/components/schemas/ClassSectionMetadataBlock'
+          - type: 'null'
+        status:
+          $ref: '#/components/schemas/ClassSectionStatus'
+        inactive_reason:
+          type:
+          - string
+          - 'null'
+        inactive_effective_at:
+          type:
+          - string
+          - 'null'
+          format: date
+        created_by_user_id:
+          type: string
+          format: uuid
+        updated_by_user_id:
+          type: string
+          format: uuid
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+    ClassSectionCreateRequest:
+      type: object
+      additionalProperties: false
+      required:
+      - academic_period_id
+      - code
+      - name
+      properties:
+        academic_period_id:
+          type: string
+          format: uuid
+        code:
+          type: string
+          minLength: 1
+          maxLength: 80
+        name:
+          type: string
+          minLength: 1
+          maxLength: 255
+        course:
+          $ref: '#/components/schemas/ClassSectionMetadataBlock'
+        classroom:
+          $ref: '#/components/schemas/ClassSectionMetadataBlock'
+        section:
+          $ref: '#/components/schemas/ClassSectionMetadataBlock'
+        group:
+          $ref: '#/components/schemas/ClassSectionMetadataBlock'
+    ClassSectionUpdateRequest:
+      type: object
+      additionalProperties: false
+      properties:
+        code:
+          type: string
+          minLength: 1
+          maxLength: 80
+        name:
+          type: string
+          minLength: 1
+          maxLength: 255
+        course:
+          oneOf:
+          - $ref: '#/components/schemas/ClassSectionMetadataBlock'
+          - type: 'null'
+        classroom:
+          oneOf:
+          - $ref: '#/components/schemas/ClassSectionMetadataBlock'
+          - type: 'null'
+        section:
+          oneOf:
+          - $ref: '#/components/schemas/ClassSectionMetadataBlock'
+          - type: 'null'
+        group:
+          oneOf:
+          - $ref: '#/components/schemas/ClassSectionMetadataBlock'
+          - type: 'null'
+    ClassSectionStatusUpdateRequest:
+      type: object
+      additionalProperties: false
+      required:
+      - status
+      - effective_at
+      - reason
+      properties:
+        status:
+          type: string
+          enum:
+          - inactive
+        effective_at:
+          type: string
+          format: date
+          description: Must be today or a past date in the resolved school's configured timezone, or the application default timezone when the school has no configured timezone, and must fall inside the class section academic period.
+        reason:
+          type: string
+          minLength: 1
+          maxLength: 500
+    ClassSectionEnvelope:
+      allOf:
+      - $ref: '#/components/schemas/SuccessEnvelope'
+      - type: object
+        required:
+        - data
+        properties:
+          data:
+            $ref: '#/components/schemas/ClassSection'
+    ClassSectionPaginatedEnvelope:
+      allOf:
+      - $ref: '#/components/schemas/PaginatedEnvelope'
+      - type: object
+        required:
+        - data
+        properties:
+          data:
+            type: array
+            items:
+              $ref: '#/components/schemas/ClassSection'
+    RosterMembership:
+      type: object
+      required:
+      - id
+      - school_id
+      - class_section_id
+      - student_profile_id
+      - academic_period_id
+      - status
+      - effective_start_date
+      - created_by_user_id
+      - created_at
+      - updated_at
+      properties:
+        id:
+          type: string
+          format: uuid
+        school_id:
+          type: string
+          format: uuid
+        class_section_id:
+          type: string
+          format: uuid
+        student_profile_id:
+          type: string
+          format: uuid
+        academic_period_id:
+          type: string
+          format: uuid
+        status:
+          $ref: '#/components/schemas/RosterMembershipStatus'
+        effective_start_date:
+          type: string
+          format: date
+        effective_end_date:
+          type:
+          - string
+          - 'null'
+          format: date
+        end_reason:
+          type:
+          - string
+          - 'null'
+        created_by_user_id:
+          type: string
+          format: uuid
+        ended_by_user_id:
+          type:
+          - string
+          - 'null'
+          format: uuid
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+    RosterMembershipBatchAddRequest:
+      type: object
+      additionalProperties: false
+      required:
+      - academic_period_id
+      - effective_start_date
+      - student_profile_ids
+      properties:
+        academic_period_id:
+          type: string
+          format: uuid
+        effective_start_date:
+          type: string
+          format: date
+          description: Required explicit start date. Must be today-or-past in the resolved school timezone and inside the academic period.
+        student_profile_ids:
+          type: array
+          minItems: 1
+          maxItems: 100
+          uniqueItems: true
+          items:
+            type: string
+            format: uuid
+    RosterMembershipBatchEndRequest:
+      type: object
+      additionalProperties: false
+      required:
+      - effective_end_date
+      - reason
+      - roster_membership_ids
+      properties:
+        effective_end_date:
+          type: string
+          format: date
+          description: Must be today-or-past in the resolved school timezone, inside the academic period, and on or after each membership effective start date.
+        reason:
+          type: string
+          minLength: 1
+          maxLength: 500
+        roster_membership_ids:
+          type: array
+          minItems: 1
+          maxItems: 100
+          uniqueItems: true
+          items:
+            type: string
+            format: uuid
+    RosterMembershipBatchResult:
+      type: object
+      required:
+      - affected_count
+      - memberships
+      properties:
+        affected_count:
+          type: integer
+          minimum: 0
+        memberships:
+          type: array
+          items:
+            $ref: '#/components/schemas/RosterMembership'
+        audit:
+          type: array
+          items:
+            $ref: '#/components/schemas/AuditSummary'
+    RosterMembershipBatchEnvelope:
+      allOf:
+      - $ref: '#/components/schemas/SuccessEnvelope'
+      - type: object
+        required:
+        - data
+        properties:
+          data:
+            $ref: '#/components/schemas/RosterMembershipBatchResult'
+    RosterMembershipPaginatedEnvelope:
+      allOf:
+      - $ref: '#/components/schemas/PaginatedEnvelope'
+      - type: object
+        required:
+        - data
+        properties:
+          data:
+            type: array
+            items:
+              $ref: '#/components/schemas/RosterMembership'
+    TeacherAssignment:
+      type: object
+      required:
+      - id
+      - school_id
+      - class_section_id
+      - teacher_user_id
+      - academic_period_id
+      - status
+      - effective_start_date
+      - created_by_user_id
+      - updated_by_user_id
+      - created_at
+      - updated_at
+      properties:
+        id:
+          type: string
+          format: uuid
+        school_id:
+          type: string
+          format: uuid
+        class_section_id:
+          type: string
+          format: uuid
+        teacher_user_id:
+          type: string
+          format: uuid
+        academic_period_id:
+          type: string
+          format: uuid
+        status:
+          $ref: '#/components/schemas/TeacherAssignmentStatus'
+        effective_start_date:
+          type: string
+          format: date
+        effective_end_date:
+          type:
+          - string
+          - 'null'
+          format: date
+        deactivation_reason:
+          type:
+          - string
+          - 'null'
+        created_by_user_id:
+          type: string
+          format: uuid
+        updated_by_user_id:
+          type: string
+          format: uuid
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+    TeacherAssignmentCreateRequest:
+      type: object
+      additionalProperties: false
+      required:
+      - class_section_id
+      - teacher_user_id
+      - academic_period_id
+      - effective_start_date
+      properties:
+        class_section_id:
+          type: string
+          format: uuid
+        teacher_user_id:
+          type: string
+          format: uuid
+        academic_period_id:
+          type: string
+          format: uuid
+        effective_start_date:
+          type: string
+          format: date
+          description: Required explicit start date. Must be today-or-past in the resolved school timezone and inside the academic period.
+    TeacherAssignmentStatusUpdateRequest:
+      type: object
+      additionalProperties: false
+      required:
+      - status
+      - effective_end_date
+      - reason
+      properties:
+        status:
+          type: string
+          enum:
+          - inactive
+        effective_end_date:
+          type: string
+          format: date
+          description: Must be today-or-past in the resolved school timezone, inside the academic period, and on or after the assignment effective start date.
+        reason:
+          type: string
+          minLength: 1
+          maxLength: 500
+    TeacherAssignmentEnvelope:
+      allOf:
+      - $ref: '#/components/schemas/SuccessEnvelope'
+      - type: object
+        required:
+        - data
+        properties:
+          data:
+            $ref: '#/components/schemas/TeacherAssignment'
+    TeacherAssignmentPaginatedEnvelope:
+      allOf:
+      - $ref: '#/components/schemas/PaginatedEnvelope'
+      - type: object
+        required:
+        - data
+        properties:
+          data:
+            type: array
+            items:
+              $ref: '#/components/schemas/TeacherAssignment'
     AccountInvitation:
       type: object
       required:
@@ -5154,3 +6065,10 @@ x-promoted-scope:
   - /api/v1/student/attendance
   - /api/v1/reports
   - /api/v1/reports/{reportRunId}/download
+  - /api/v1/class-sections
+  - /api/v1/class-sections/{classSectionId}
+  - /api/v1/class-sections/{classSectionId}/status
+  - /api/v1/class-sections/{classSectionId}/memberships
+  - /api/v1/teacher-assignments
+  - /api/v1/teacher-assignments/{teacherAssignmentId}
+  - /api/v1/teacher-assignments/{teacherAssignmentId}/status
