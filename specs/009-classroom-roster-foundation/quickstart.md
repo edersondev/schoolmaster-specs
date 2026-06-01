@@ -68,7 +68,7 @@ Do not implement separate top-level or internal Course, Classroom, Section, or G
 
 ### 3. ClassSection/Roster validation
 
-- Confirm creation accepts only documented code, name, academic period, lifecycle status, and optional structured course/classroom/section/group metadata blocks with optional `code` and `name` only.
+- Confirm creation accepts only documented code, name, academic period, and optional structured course/classroom/section/group metadata blocks with optional `code` and `name` only.
 - Confirm creation creates `active` ClassSection/Roster records only and rejects requests to create inactive records.
 - Confirm no separate internal Course/Classroom/Section/Group tables or top-level lifecycle resources are created in v1.
 - Confirm `code` is required and unique per school and academic period.
@@ -118,11 +118,11 @@ Do not implement separate top-level or internal Course, Classroom, Section, or G
 
 ### 7. Audit and response-shape validation
 
-- Confirm creation, update, roster inactivation, membership add/end, teacher assignment add/deactivate, required lifecycle reasons, duplicate conflict, oversized batch rejection, all-or-nothing batch rejection, concurrent conflict, blocked cross-tenant attempts, and lifecycle conflict outcomes are audited with actor user ID, school ID, target type and ID, action, outcome, lifecycle reason when present, and tenant-safe summary metadata.
+- Confirm creation, update, roster inactivation, membership add/end, teacher assignment add/deactivate, required lifecycle reasons, duplicate conflict, oversized batch rejection, all-or-nothing batch rejection, concurrent conflict, blocked cross-tenant attempts, and lifecycle conflict outcomes are audited with actor user ID when available, action, outcome, lifecycle reason when present, and tenant-safe summary metadata, plus canonical school and target identifiers whenever the request resolved them before rejection or completion.
 - Confirm audit events do not store private student, teacher, credential, full request payload, or unauthorized cross-tenant details.
 - Confirm successful JSON responses use documented success envelopes.
 - Confirm list operations use documented paginated envelopes with default page size 25 and maximum page size 100.
-- Confirm validation, unauthorized, forbidden, tenant-mismatch, inactive-record, conflict, unsupported filter/include/sort/page-size, oversized batch rejection, all-or-nothing batch rejection, and not-found cases use only the error envelopes or codes documented on each affected OpenAPI operation.
+- Confirm validation, unauthorized, forbidden, tenant-mismatch, conflict, unsupported filter/include/sort/page-size, oversized batch rejection, all-or-nothing batch rejection, and not-found cases use only the error envelopes or codes documented on each affected OpenAPI operation.
 
 ## Verification Commands
 

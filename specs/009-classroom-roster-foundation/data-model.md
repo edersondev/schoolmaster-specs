@@ -96,12 +96,13 @@
   - has many audit events
 - **Validation rules**:
   - creation and update require authorized school administrator permission under active school context
-  - creation must create `active` records only; requests to create inactive records are rejected
+  - creation validates the academic period reference and must create `active` records only; requests to create inactive records are rejected
+  - update is metadata-only and accepts documented code, name, and structured course/classroom/section/group metadata fields only
   - `code` must be unique within the same school and academic period
   - names may repeat
   - optional course/classroom/section/group metadata blocks must follow OpenAPI-documented shapes and may include only optional `code` and `name`
   - separate internal Course/Classroom/Section/Group tables are not created in v1
-  - lifecycle status is limited to `active` and `inactive`
+  - lifecycle status is limited to `active` and `inactive`, but lifecycle status changes use the dedicated status operation
   - inactive records cannot be reactivated in v1; administrators create a new roster if needed
   - unsupported lifecycle transitions, inactive-roster reactivation, future effective dates, effective dates outside the selected academic period, missing inactivation reason, and dependency conflicts are rejected
   - inactivation is rejected while any active roster membership or active teacher assignment exists
@@ -251,7 +252,7 @@
   - may reference class section/roster, roster membership, teacher assignment, student profile, or teacher user
 - **Validation rules**:
   - record creation, update, roster inactivation, membership add/end, teacher assignment add/deactivate, duplicate conflict, all-or-nothing batch rejection, blocked cross-tenant attempts, and lifecycle conflict outcomes
-  - must include actor user ID, school ID, target type and target ID, action, outcome, lifecycle reason when present, and tenant-safe summary metadata
+  - must include actor user ID when available, action, outcome, lifecycle reason when present, and tenant-safe summary metadata; canonical school ID and target identifiers are required whenever the request resolved them before rejection or completion
   - do not store private student, teacher, credential, full request payload, or unauthorized cross-tenant details beyond documented tenant-safe metadata
 
 ## Cross-Entity Rules

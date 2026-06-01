@@ -24,7 +24,7 @@ The exact operation IDs must be finalized in OpenAPI, but the backend slice shou
 | `RosterMembership` | list, batch add, batch end where approved | School-administrator-only writes; all-or-nothing batch behavior capped at 100 requested changes; explicit effective start date required on creation; active same-school student enrollment must cover the membership effective start date; no overlapping active membership for same student/roster/period; ending requires a reason and end effective date on or after the membership effective start date |
 | `TeacherAssignment` | list, detail, create, deactivate where approved | School-administrator-only writes; teachers may list and retrieve only their own active assignments; explicit effective start date required on creation; active same-school teacher-compatible role required on the assignment effective start date; no duplicate active assignment for same teacher/roster/period; deactivation requires a reason and deactivation effective date on or after the assignment effective start date |
 | `LegacyDirectAssignment` | read compatibility only where existing teacher workflow contracts already expose it | No new direct-assignment write behavior in this slice; migration/backfill/removal requires a future spec |
-| `AuditEvent` | side-effect recording for approved transitions | Required fields: actor user ID, school ID, target type and ID, action, outcome, lifecycle reason when present, and tenant-safe summary metadata only; no private student, teacher, credential, full request payload, or unauthorized cross-tenant details |
+| `AuditEvent` | side-effect recording for approved transitions | Required fields: actor user ID when available, action, outcome, lifecycle reason when present, and tenant-safe summary metadata, plus canonical school and target identifiers whenever the request resolved them; no private student, teacher, credential, full request payload, or unauthorized cross-tenant details |
 
 No backend implementation may expose these or adjacent routes until OpenAPI documents them.
 
@@ -54,7 +54,7 @@ OpenAPI may approve a different path or operation set, but backend implementatio
 OpenAPI must define, at minimum:
 
 - operation IDs and versioned `/api/v1` paths for every approved class-section, membership, and teacher-assignment operation
-- request schemas for creating and updating `ClassSection/Roster` records, including required `code`, repeatable `name`, active academic period, and optional structured course/classroom/section/group metadata blocks with optional `code` and `name` only
+- request schemas for creating and updating `ClassSection/Roster` records, including required `code`, repeatable `name`, active academic period on creation, metadata-only update behavior, and optional structured course/classroom/section/group metadata blocks with optional `code` and `name` only
 - response schemas for class-section detail/list, membership list, membership batch result, teacher assignment detail/list, lifecycle transition outcomes, and audit-safe metadata where exposed
 - `ClassSection/Roster.code` uniqueness per school and academic period, with names allowed to repeat
 - lifecycle states: `ClassSection/Roster.active`, `ClassSection/Roster.inactive`, `RosterMembership.active`, `RosterMembership.ended`, `TeacherAssignment.active`, `TeacherAssignment.inactive`
@@ -75,7 +75,7 @@ OpenAPI must define, at minimum:
 - tenant-context errors for missing, inactive, mismatched, or unauthorized school context
 - validation errors for unsupported metadata shapes, invalid lifecycle states, invalid lifecycle transitions, inactive creation, inactive-roster reactivation, lifecycle-ending dates before effective start dates, inactive references, duplicate references, cross-tenant references, students without active same-school enrollment covering the membership effective start date, and teachers without an active same-school teacher-compatible role on the assignment effective start date
 - compatibility behavior for existing direct learning-set student assignments as read-only legacy records
-- audit event required fields and tenant-safe fields safe for response or support review
+- audit event required fields and tenant-safe fields safe for response or support review, including allowance for pre-resolution blocked requests to omit canonical school or target identifiers that do not yet exist
 - not-found behavior that does not reveal cross-tenant records
 
 ## Required Response Shapes
@@ -88,7 +88,6 @@ Backend implementation must follow only the response statuses, content types, an
 - unauthorized response
 - forbidden response for valid scope but insufficient permission
 - tenant mismatch or inactive tenant response for school-scoped operations
-- inactive-record response where the contract distinguishes inactive school, academic period, class section, student, teacher, or user state
 - conflict response for duplicate class-section code, overlapping active membership, duplicate active teacher assignment, concurrent write conflict, dependency conflict, or unsupported current-state transition
 - conflict response for roster inactivation while active memberships or active teacher assignments exist
 - validation or conflict response for inactive class-section creation, inactive-roster reactivation attempts, and lifecycle-ending dates before effective start dates as OpenAPI documents
@@ -119,7 +118,7 @@ No backend-local product envelope, ad hoc error response, undocumented status co
 
 ## Validation Behavior
 
-- `ClassSection/Roster` creation and update accept only documented code, name, academic period, status, and optional structured course/classroom/section/group metadata blocks with optional `code` and `name` only.
+- `ClassSection/Roster` creation accepts documented academic period, code, name, and optional structured course/classroom/section/group metadata blocks with optional `code` and `name` only. Update accepts only documented code, name, and structured metadata fields. Lifecycle status changes use the dedicated status operation.
 - `ClassSection/Roster` creation creates `active` records only; requests to create inactive records are rejected.
 - `ClassSection/Roster.code` must be unique per school and academic period; names may repeat.
 - Course, classroom, section, and group values are structured metadata blocks with optional `code` and `name` only and must not create separate internal tables or top-level lifecycle resources in this slice.
@@ -181,4 +180,4 @@ Backend implementation PRs for this slice must link to every operation ID implem
 - duplicate active teacher assignment conflict checks
 - lifecycle history preservation checks
 - read-only legacy direct-assignment compatibility checks
-- audit event coverage for actor user ID, school ID, target type and ID, action, outcome, lifecycle reason when present, and tenant-safe summary metadata without private student, teacher, credential, full request payload, or unauthorized cross-tenant details
+- audit event coverage for actor user ID when available, action, outcome, lifecycle reason when present, tenant-safe summary metadata, and canonical school and target identifiers whenever the request resolved them, without private student, teacher, credential, full request payload, or unauthorized cross-tenant details
