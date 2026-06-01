@@ -3210,6 +3210,7 @@ paths:
           $ref: '#/components/responses/ClassroomRosterForbidden'
         '404':
           $ref: '#/components/responses/NotFound'
+  /api/v1/teacher-assignments/{teacherAssignmentId}/status:
     patch:
       tags:
       - Teacher Assignments
@@ -6070,3 +6071,4 @@ x-promoted-scope:
   - /api/v1/class-sections/{classSectionId}/memberships
   - /api/v1/teacher-assignments
   - /api/v1/teacher-assignments/{teacherAssignmentId}
+  - /api/v1/teacher-assignments/{teacherAssignmentId}/status

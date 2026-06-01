@@ -40,15 +40,15 @@
 
 **CRITICAL**: No user story route work begins until this phase is complete.
 
-- [X] T006 Create classroom roster route group placeholders protected by existing API auth and school-context middleware in `routes/api.php`
-- [X] T007 [P] Create classroom roster DTO namespace and shared effective-date DTOs in `app/DTOs/ClassroomRoster/EffectiveDateInput.php`
-- [X] T008 [P] Create shared classroom roster service namespace and timezone/effective-date validator in `app/Services/ClassroomRoster/EffectiveDateValidator.php`
-- [X] T009 [P] Create shared tenant-scoped lookup repository for class sections, academic periods, students, teachers, memberships, and assignments in `app/Repositories/ClassroomRoster/ClassroomRosterLookupRepository.php`
-- [X] T010 Create school-context guard helpers that fail before roster, membership, assignment, student, teacher, academic-period, duplicate, lifecycle, persistence, audit, or response lookup in `app/Services/ClassroomRoster/SchoolContextGuard.php`
-- [X] T011 [P] Create audit writer for roster foundation actions, conflicts, blocked tenant attempts, and lifecycle outcomes in `app/Services/ClassroomRoster/RosterAuditLogger.php`
-- [X] T012 [P] Add shared classroom roster authorization policy helpers for school-administrator writes and teacher own-active-assignment reads in `app/Policies/ClassroomRosterPolicy.php`
-- [X] T013 Add shared response-resource helpers for documented success, paginated, validation, forbidden, tenant-mismatch, inactive-record, conflict, unsupported-query, and not-found envelopes in `app/Http/Resources/ClassroomRoster/BaseRosterResource.php`
-- [X] T014 Add foundational PHPUnit unit coverage for school context guard ordering, effective-date timezone fallback, date-in-period validation, and audit-field minimization in `tests/Unit/ClassroomRoster/ClassroomRosterFoundationTest.php`
+- [ ] T006 Create classroom roster route group placeholders protected by existing API auth and school-context middleware in `routes/api.php`
+- [ ] T007 [P] Create classroom roster DTO namespace and shared effective-date DTOs in `app/DTOs/ClassroomRoster/EffectiveDateInput.php`
+- [ ] T008 [P] Create shared classroom roster service namespace and timezone/effective-date validator in `app/Services/ClassroomRoster/EffectiveDateValidator.php`
+- [ ] T009 [P] Create shared tenant-scoped lookup repository for class sections, academic periods, students, teachers, memberships, and assignments in `app/Repositories/ClassroomRoster/ClassroomRosterLookupRepository.php`
+- [ ] T010 Create school-context guard helpers that fail before roster, membership, assignment, student, teacher, academic-period, duplicate, lifecycle, persistence, audit, or response lookup in `app/Services/ClassroomRoster/SchoolContextGuard.php`
+- [ ] T011 [P] Create audit writer for roster foundation actions, conflicts, blocked tenant attempts, and lifecycle outcomes in `app/Services/ClassroomRoster/RosterAuditLogger.php`
+- [ ] T012 [P] Add shared classroom roster authorization policy helpers for school-administrator writes and teacher own-active-assignment reads in `app/Policies/ClassroomRosterPolicy.php`
+- [ ] T013 Add shared response-resource helpers for documented success, paginated, validation, forbidden, tenant-mismatch, conflict, unsupported-query, and not-found envelopes in `app/Http/Resources/ClassroomRoster/BaseRosterResource.php`
+- [ ] T014 Add foundational PHPUnit unit coverage for school context guard ordering, effective-date timezone fallback, date-in-period validation, and audit-field minimization in `tests/Unit/ClassroomRoster/ClassroomRosterFoundationTest.php`
 
 **Checkpoint**: Foundation ready. User story implementation can proceed.
 
@@ -62,22 +62,22 @@
 
 ### Tests for User Story 1
 
-- [X] T015 [P] [US1] Add OpenAPI contract assertions and documented success/error response-shape checks for `listClassSections`, `createClassSection`, `getClassSection`, `updateClassSection`, and `updateClassSectionStatus` in `tests/Feature/ClassroomRoster/ClassSectionContractTest.php`
-- [X] T016 [P] [US1] Add tenant isolation and school-administrator authorization feature tests for class-section list, create, detail, update, and inactivation in `tests/Feature/ClassroomRoster/ClassSectionAuthorizationTest.php`
-- [X] T017 [P] [US1] Add validation and conflict feature tests for metadata shape, extra fields, duplicate same-school-period code, missing/inactive/closed/cross-tenant/incompatible academic periods, inactive creation, reactivation denial, missing inactivation reason, unsupported filters, unsupported include/sort parameters, page size above 100, and concurrent duplicate-code writes in `tests/Feature/ClassroomRoster/ClassSectionValidationTest.php`
+- [ ] T015 [P] [US1] Add OpenAPI contract assertions and documented success/error response-shape checks for `listClassSections`, `createClassSection`, `getClassSection`, `updateClassSection`, and `updateClassSectionStatus` in `tests/Feature/ClassroomRoster/ClassSectionContractTest.php`
+- [ ] T016 [P] [US1] Add tenant isolation and school-administrator authorization feature tests for class-section list, create, detail, update, and inactivation in `tests/Feature/ClassroomRoster/ClassSectionAuthorizationTest.php`
+- [ ] T017 [P] [US1] Add validation and conflict feature tests for metadata shape, extra fields, duplicate same-school-period code, missing/inactive/closed/cross-tenant/incompatible academic periods, inactive creation, reactivation denial, missing inactivation reason, unsupported filters, unsupported include/sort parameters, page size above 100, and concurrent duplicate-code writes in `tests/Feature/ClassroomRoster/ClassSectionValidationTest.php`
 
 ### Implementation for User Story 1
 
-- [X] T018 [US1] Create class-section migration with UUID public identifiers, `school_id`, `academic_period_id`, required `code`, repeatable `name`, metadata JSON columns, `active/inactive` status, lifecycle reason, actor columns, timestamps, and unique same-school-period code index in `database/migrations/2026_05_30_000001_create_class_sections_table.php`
-- [X] T019 [P] [US1] Create ClassSection model with tenant, academic-period, membership, teacher-assignment, audit, status, UUID, and metadata casts in `app/Models/ClassSection.php`
-- [X] T020 [P] [US1] Create class-section factory covering active records, inactive records, metadata blocks, and same-school-period uniqueness setup in `database/factories/ClassSectionFactory.php`
-- [X] T021 [P] [US1] Create class-section Form Request classes as separate files in `app/Http/Requests/ClassroomRoster/ListClassSectionsRequest.php`, `app/Http/Requests/ClassroomRoster/StoreClassSectionRequest.php`, `app/Http/Requests/ClassroomRoster/UpdateClassSectionRequest.php`, and `app/Http/Requests/ClassroomRoster/UpdateClassSectionStatusRequest.php`
-- [X] T022 [P] [US1] Create class-section API resources for detail and paginated list envelopes in `app/Http/Resources/ClassroomRoster/ClassSectionResource.php`
-- [X] T023 [US1] Implement class-section policy rules for school-administrator management and tenant-scoped reads in `app/Policies/ClassSectionPolicy.php`
-- [X] T024 [US1] Implement class-section service for create, list, detail, update, inactivation, duplicate-code conflict handling, dependency checks, lifecycle reasons, inactive creation rejection, reactivation rejection, audit events, and transaction boundaries in `app/Services/ClassroomRoster/ClassSectionService.php`
-- [X] T025 [US1] Implement class-section controller actions mapped only to approved OpenAPI operation IDs in `app/Http/Controllers/Api/V1/ClassSectionController.php`
-- [X] T026 [US1] Register class-section routes for only OpenAPI-approved `/api/v1/class-sections` operations in `routes/api.php`
-- [X] T027 [US1] Run `docker exec schoolmaster-backend-app-1 php artisan test --filter=ClassSection` and fix failures in `app/Services/ClassroomRoster/ClassSectionService.php`, `app/Http/Controllers/Api/V1/ClassSectionController.php`, or `tests/Feature/ClassroomRoster/`
+- [ ] T018 [US1] Create class-section migration with UUID public identifiers, `school_id`, `academic_period_id`, required `code`, repeatable `name`, metadata JSON columns, `active/inactive` status, lifecycle reason, actor columns, timestamps, and unique same-school-period code index in `database/migrations/2026_05_30_000001_create_class_sections_table.php`
+- [ ] T019 [P] [US1] Create ClassSection model with tenant, academic-period, membership, teacher-assignment, audit, status, UUID, and metadata casts in `app/Models/ClassSection.php`
+- [ ] T020 [P] [US1] Create class-section factory covering active records, inactive records, metadata blocks, and same-school-period uniqueness setup in `database/factories/ClassSectionFactory.php`
+- [ ] T021 [P] [US1] Create class-section Form Request classes as separate files in `app/Http/Requests/ClassroomRoster/ListClassSectionsRequest.php`, `app/Http/Requests/ClassroomRoster/StoreClassSectionRequest.php`, `app/Http/Requests/ClassroomRoster/UpdateClassSectionRequest.php`, and `app/Http/Requests/ClassroomRoster/UpdateClassSectionStatusRequest.php`
+- [ ] T022 [P] [US1] Create class-section API resources for detail and paginated list envelopes in `app/Http/Resources/ClassroomRoster/ClassSectionResource.php`
+- [ ] T023 [US1] Implement class-section policy rules for school-administrator management and tenant-scoped reads in `app/Policies/ClassSectionPolicy.php`
+- [ ] T024 [US1] Implement class-section service for create, list, detail, update, inactivation, duplicate-code conflict handling, dependency checks, lifecycle reasons, inactive creation rejection, reactivation rejection, audit events, and transaction boundaries in `app/Services/ClassroomRoster/ClassSectionService.php`
+- [ ] T025 [US1] Implement class-section controller actions mapped only to approved OpenAPI operation IDs in `app/Http/Controllers/Api/V1/ClassSectionController.php`
+- [ ] T026 [US1] Register class-section routes for only OpenAPI-approved `/api/v1/class-sections` operations in `routes/api.php`
+- [ ] T027 [US1] Run `docker exec schoolmaster-backend-app-1 php artisan test --filter=ClassSection` and fix failures in `app/Services/ClassroomRoster/ClassSectionService.php`, `app/Http/Controllers/Api/V1/ClassSectionController.php`, or `tests/Feature/ClassroomRoster/`
 
 **Checkpoint**: User Story 1 is independently functional and testable as the MVP.
 
@@ -91,22 +91,22 @@
 
 ### Tests for User Story 2
 
-- [X] T028 [P] [US2] Add OpenAPI contract assertions and documented success/error response-shape checks for `listClassSectionMemberships`, `batchAddClassSectionMemberships`, and `batchEndClassSectionMemberships` in `tests/Feature/ClassroomRoster/RosterMembershipContractTest.php`
-- [X] T029 [P] [US2] Add membership authorization and tenant isolation feature tests for school-administrator-only add/end/list behavior in `tests/Feature/ClassroomRoster/RosterMembershipAuthorizationTest.php`
-- [X] T030 [P] [US2] Add membership validation and conflict feature tests for inactive, transferred, deleted, missing, cross-tenant, duplicate, overlapping, no covering enrollment, missing start date, future date, outside-period date, end-before-start date, missing end reason, oversized batch, invalid batch all-or-nothing, and concurrent membership conflict cases in `tests/Feature/ClassroomRoster/RosterMembershipValidationTest.php`
+- [ ] T028 [P] [US2] Add OpenAPI contract assertions and documented success/error response-shape checks for `listClassSectionMemberships`, `batchAddClassSectionMemberships`, and `batchEndClassSectionMemberships` in `tests/Feature/ClassroomRoster/RosterMembershipContractTest.php`
+- [ ] T029 [P] [US2] Add membership authorization and tenant isolation feature tests for school-administrator-only add/end/list behavior in `tests/Feature/ClassroomRoster/RosterMembershipAuthorizationTest.php`
+- [ ] T030 [P] [US2] Add membership validation and conflict feature tests for inactive, transferred, deleted, missing, cross-tenant, duplicate, overlapping, no covering enrollment, missing start date, future date, outside-period date, end-before-start date, missing end reason, oversized batch, invalid batch all-or-nothing, and concurrent membership conflict cases in `tests/Feature/ClassroomRoster/RosterMembershipValidationTest.php`
 
 ### Implementation for User Story 2
 
-- [X] T031 [US2] Create roster-membership migration with UUID public identifiers, `school_id`, `class_section_id`, `student_profile_id`, `academic_period_id`, `active/ended` status, effective start/end dates, end reason, actor columns, timestamps, and duplicate/overlap support indexes in `database/migrations/2026_05_30_000002_create_roster_memberships_table.php`
-- [X] T032 [P] [US2] Create RosterMembership model with tenant, class-section, student-profile, academic-period, audit, status, effective-date, and actor relationships in `app/Models/RosterMembership.php`
-- [X] T033 [P] [US2] Create roster-membership factory for active, ended, duplicate-conflict, and historical membership states in `database/factories/RosterMembershipFactory.php`
-- [X] T034 [P] [US2] Create membership batch DTOs for add and end requests with maximum 100 changes in `app/DTOs/ClassroomRoster/RosterMembershipBatchInput.php`
-- [X] T035 [P] [US2] Create roster-membership Form Request classes as separate files in `app/Http/Requests/ClassroomRoster/ListRosterMembershipsRequest.php`, `app/Http/Requests/ClassroomRoster/BatchAddRosterMembershipsRequest.php`, and `app/Http/Requests/ClassroomRoster/BatchEndRosterMembershipsRequest.php`
-- [X] T036 [P] [US2] Create roster-membership API resources for list and batch result envelopes in `app/Http/Resources/ClassroomRoster/RosterMembershipResource.php`
-- [X] T037 [US2] Implement roster-membership service for all-or-nothing add/end batches, enrollment-on-effective-start eligibility, overlap checks, date-order checks, lifecycle reasons, history preservation, audit events, and transactional conflict handling in `app/Services/ClassroomRoster/RosterMembershipService.php`
-- [X] T038 [US2] Implement roster-membership controller actions mapped only to approved OpenAPI operation IDs in `app/Http/Controllers/Api/V1/RosterMembershipController.php`
-- [X] T039 [US2] Register roster-membership routes under approved `/api/v1/class-sections/{classSectionId}/memberships` operations in `routes/api.php`
-- [X] T040 [US2] Run `docker exec schoolmaster-backend-app-1 php artisan test --filter=RosterMembership` and fix failures in `app/Services/ClassroomRoster/RosterMembershipService.php`, `app/Http/Controllers/Api/V1/RosterMembershipController.php`, or `tests/Feature/ClassroomRoster/`
+- [ ] T031 [US2] Create roster-membership migration with UUID public identifiers, `school_id`, `class_section_id`, `student_profile_id`, `academic_period_id`, `active/ended` status, effective start/end dates, end reason, actor columns, timestamps, and duplicate/overlap support indexes in `database/migrations/2026_05_30_000002_create_roster_memberships_table.php`
+- [ ] T032 [P] [US2] Create RosterMembership model with tenant, class-section, student-profile, academic-period, audit, status, effective-date, and actor relationships in `app/Models/RosterMembership.php`
+- [ ] T033 [P] [US2] Create roster-membership factory for active, ended, duplicate-conflict, and historical membership states in `database/factories/RosterMembershipFactory.php`
+- [ ] T034 [P] [US2] Create membership batch DTOs for add and end requests with maximum 100 changes in `app/DTOs/ClassroomRoster/RosterMembershipBatchInput.php`
+- [ ] T035 [P] [US2] Create roster-membership Form Request classes as separate files in `app/Http/Requests/ClassroomRoster/ListRosterMembershipsRequest.php`, `app/Http/Requests/ClassroomRoster/BatchAddRosterMembershipsRequest.php`, and `app/Http/Requests/ClassroomRoster/BatchEndRosterMembershipsRequest.php`
+- [ ] T036 [P] [US2] Create roster-membership API resources for list and batch result envelopes in `app/Http/Resources/ClassroomRoster/RosterMembershipResource.php`
+- [ ] T037 [US2] Implement roster-membership service for all-or-nothing add/end batches, enrollment-on-effective-start eligibility, overlap checks, date-order checks, lifecycle reasons, history preservation, audit events, and transactional conflict handling in `app/Services/ClassroomRoster/RosterMembershipService.php`
+- [ ] T038 [US2] Implement roster-membership controller actions mapped only to approved OpenAPI operation IDs in `app/Http/Controllers/Api/V1/RosterMembershipController.php`
+- [ ] T039 [US2] Register roster-membership routes under approved `/api/v1/class-sections/{classSectionId}/memberships` operations in `routes/api.php`
+- [ ] T040 [US2] Run `docker exec schoolmaster-backend-app-1 php artisan test --filter=RosterMembership` and fix failures in `app/Services/ClassroomRoster/RosterMembershipService.php`, `app/Http/Controllers/Api/V1/RosterMembershipController.php`, or `tests/Feature/ClassroomRoster/`
 
 **Checkpoint**: User Story 2 is independently functional with an existing US1 roster.
 
@@ -120,23 +120,23 @@
 
 ### Tests for User Story 3
 
-- [X] T041 [P] [US3] Add OpenAPI contract assertions and documented success/error response-shape checks for `listTeacherAssignments`, `createTeacherAssignment`, `getTeacherAssignment`, and `updateTeacherAssignmentStatus` in `tests/Feature/ClassroomRoster/TeacherAssignmentContractTest.php`
-- [X] T042 [P] [US3] Add teacher-assignment authorization tests for school-administrator-only writes, teacher own-active-assignment reads, other-teacher denial, and platform-admin-without-school-context denial in `tests/Feature/ClassroomRoster/TeacherAssignmentAuthorizationTest.php`
-- [X] T043 [P] [US3] Add teacher-assignment validation and conflict tests for inactive/deleted/cross-tenant teachers, missing active teacher-compatible role from the existing school role/permission authority on effective start date, inactive roster, missing/inactive/closed/cross-tenant/incompatible academic periods, duplicate active assignment, missing start date, future date, outside-period date, deactivation-before-start date, missing deactivation reason, unsupported filters, unsupported include/sort parameters, page size above 100, and concurrent assignment conflict in `tests/Feature/ClassroomRoster/TeacherAssignmentValidationTest.php`
+- [ ] T041 [P] [US3] Add OpenAPI contract assertions and documented success/error response-shape checks for `listTeacherAssignments`, `createTeacherAssignment`, `getTeacherAssignment`, and `updateTeacherAssignmentStatus` in `tests/Feature/ClassroomRoster/TeacherAssignmentContractTest.php`
+- [ ] T042 [P] [US3] Add teacher-assignment authorization tests for school-administrator-only writes, teacher own-active-assignment reads, other-teacher denial, and platform-admin-without-school-context denial in `tests/Feature/ClassroomRoster/TeacherAssignmentAuthorizationTest.php`
+- [ ] T043 [P] [US3] Add teacher-assignment validation and conflict tests for inactive/deleted/cross-tenant teachers, missing active teacher-compatible role from the existing school role/permission authority on effective start date, inactive roster, missing/inactive/closed/cross-tenant/incompatible academic periods, duplicate active assignment, missing start date, future date, outside-period date, deactivation-before-start date, missing deactivation reason, unsupported filters, unsupported include/sort parameters, page size above 100, and concurrent assignment conflict in `tests/Feature/ClassroomRoster/TeacherAssignmentValidationTest.php`
 
 ### Implementation for User Story 3
 
-- [X] T044 [US3] Create teacher-assignment migration with UUID public identifiers, `school_id`, `class_section_id`, `teacher_user_id`, `academic_period_id`, `active/inactive` status, effective start/end dates, deactivation reason, actor columns, timestamps, and duplicate active assignment support indexes in `database/migrations/2026_05_30_000003_create_teacher_assignments_table.php`
-- [X] T045 [P] [US3] Create TeacherAssignment model with tenant, class-section, teacher-user, academic-period, audit, status, effective-date, and actor relationships in `app/Models/TeacherAssignment.php`
-- [X] T046 [P] [US3] Create teacher-assignment factory for active, inactive, duplicate-conflict, and teacher-read-visibility states in `database/factories/TeacherAssignmentFactory.php`
-- [X] T047 [P] [US3] Create teacher-assignment DTO for create and deactivate inputs in `app/DTOs/ClassroomRoster/TeacherAssignmentInput.php`
-- [X] T048 [P] [US3] Create teacher-assignment Form Request classes as separate files in `app/Http/Requests/ClassroomRoster/ListTeacherAssignmentsRequest.php`, `app/Http/Requests/ClassroomRoster/StoreTeacherAssignmentRequest.php`, `app/Http/Requests/ClassroomRoster/ShowTeacherAssignmentRequest.php`, and `app/Http/Requests/ClassroomRoster/UpdateTeacherAssignmentStatusRequest.php`
-- [X] T049 [P] [US3] Create teacher-assignment API resources for detail and paginated list envelopes in `app/Http/Resources/ClassroomRoster/TeacherAssignmentResource.php`
-- [X] T050 [US3] Implement teacher-assignment policy rules for school-administrator management and teacher own-active-assignment detail/list reads in `app/Policies/TeacherAssignmentPolicy.php`
-- [X] T051 [US3] Implement teacher-assignment service for create, list, detail, deactivate, teacher-role-on-effective-start eligibility, duplicate active assignment conflicts, date-order checks, lifecycle reasons, audit events, and transactional conflict handling in `app/Services/ClassroomRoster/TeacherAssignmentService.php`
-- [X] T052 [US3] Implement teacher-assignment controller actions mapped only to approved OpenAPI operation IDs in `app/Http/Controllers/Api/V1/TeacherAssignmentController.php`
-- [X] T053 [US3] Register teacher-assignment routes for only approved `/api/v1/teacher-assignments` operations in `routes/api.php`
-- [X] T054 [US3] Run `docker exec schoolmaster-backend-app-1 php artisan test --filter=TeacherAssignment` and fix failures in `app/Services/ClassroomRoster/TeacherAssignmentService.php`, `app/Http/Controllers/Api/V1/TeacherAssignmentController.php`, or `tests/Feature/ClassroomRoster/`
+- [ ] T044 [US3] Create teacher-assignment migration with UUID public identifiers, `school_id`, `class_section_id`, `teacher_user_id`, `academic_period_id`, `active/inactive` status, effective start/end dates, deactivation reason, actor columns, timestamps, and duplicate active assignment support indexes in `database/migrations/2026_05_30_000003_create_teacher_assignments_table.php`
+- [ ] T045 [P] [US3] Create TeacherAssignment model with tenant, class-section, teacher-user, academic-period, audit, status, effective-date, and actor relationships in `app/Models/TeacherAssignment.php`
+- [ ] T046 [P] [US3] Create teacher-assignment factory for active, inactive, duplicate-conflict, and teacher-read-visibility states in `database/factories/TeacherAssignmentFactory.php`
+- [ ] T047 [P] [US3] Create teacher-assignment DTO for create and deactivate inputs in `app/DTOs/ClassroomRoster/TeacherAssignmentInput.php`
+- [ ] T048 [P] [US3] Create teacher-assignment Form Request classes as separate files in `app/Http/Requests/ClassroomRoster/ListTeacherAssignmentsRequest.php`, `app/Http/Requests/ClassroomRoster/StoreTeacherAssignmentRequest.php`, `app/Http/Requests/ClassroomRoster/ShowTeacherAssignmentRequest.php`, and `app/Http/Requests/ClassroomRoster/UpdateTeacherAssignmentStatusRequest.php`
+- [ ] T049 [P] [US3] Create teacher-assignment API resources for detail and paginated list envelopes in `app/Http/Resources/ClassroomRoster/TeacherAssignmentResource.php`
+- [ ] T050 [US3] Implement teacher-assignment policy rules for school-administrator management and teacher own-active-assignment detail/list reads in `app/Policies/TeacherAssignmentPolicy.php`
+- [ ] T051 [US3] Implement teacher-assignment service for create, list, detail, deactivate, teacher-role-on-effective-start eligibility, duplicate active assignment conflicts, date-order checks, lifecycle reasons, audit events, and transactional conflict handling in `app/Services/ClassroomRoster/TeacherAssignmentService.php`
+- [ ] T052 [US3] Implement teacher-assignment controller actions mapped only to approved OpenAPI operation IDs in `app/Http/Controllers/Api/V1/TeacherAssignmentController.php`
+- [ ] T053 [US3] Register teacher-assignment routes for only approved `/api/v1/teacher-assignments` operations in `routes/api.php`
+- [ ] T054 [US3] Run `docker exec schoolmaster-backend-app-1 php artisan test --filter=TeacherAssignment` and fix failures in `app/Services/ClassroomRoster/TeacherAssignmentService.php`, `app/Http/Controllers/Api/V1/TeacherAssignmentController.php`, or `tests/Feature/ClassroomRoster/`
 
 **Checkpoint**: User Story 3 is independently functional with an existing US1 roster.
 
@@ -146,13 +146,13 @@
 
 **Purpose**: Verify cross-story behavior, compatibility, and contract alignment before merge.
 
-- [X] T055 [P] Add read-only legacy direct learning-set assignment compatibility regression coverage and unchanged grades, attendance, student self-view, and report behavior checks in `tests/Feature/ClassroomRoster/LegacyDirectAssignmentCompatibilityTest.php`
-- [X] T056 [P] Add end-to-end happy-path feature coverage for create roster, add memberships, assign teacher, and prevent cross-school visibility in `tests/Feature/ClassroomRoster/ClassroomRosterEndToEndTest.php`
-- [X] T057 [P] Add audit verification coverage for create, update, roster inactivation, membership add/end, teacher assignment add/deactivate, conflict outcomes, blocked cross-tenant attempts, lifecycle reasons, and tenant-safe metadata in `tests/Feature/ClassroomRoster/ClassroomRosterAuditTest.php`
+- [ ] T055 [P] Add read-only legacy direct learning-set assignment compatibility regression coverage and unchanged grades, attendance, student self-view, and report behavior checks in `tests/Feature/ClassroomRoster/LegacyDirectAssignmentCompatibilityTest.php`
+- [ ] T056 [P] Add end-to-end happy-path feature coverage for create roster, add memberships, assign teacher, and prevent cross-school visibility in `tests/Feature/ClassroomRoster/ClassroomRosterEndToEndTest.php`
+- [ ] T057 [P] Add audit verification coverage for create, update, roster inactivation, membership add/end, teacher assignment add/deactivate, conflict outcomes, blocked cross-tenant attempts, lifecycle reasons, and tenant-safe metadata in `tests/Feature/ClassroomRoster/ClassroomRosterAuditTest.php`
 - [X] T058 Add route-to-OpenAPI operation ID traceability notes for every implemented route in `specs/specs/009-classroom-roster-foundation/quickstart.md`
 - [X] T059 Run `npx @redocly/cli lint aggregate@v1 schoolmaster-platform@v1` from `specs/` and fix contract lint failures in `specs/api/openapi.yaml` and `specs/specs/001-schoolmaster-platform/contracts/openapi.yaml`
-- [X] T060 Run `docker exec schoolmaster-backend-app-1 php artisan test` and fix failures in `app/Services/ClassroomRoster/`, `app/Http/Controllers/Api/V1/`, or `tests/Feature/ClassroomRoster/`
-- [X] T061 Review excluded behavior and confirm no frontend routes, teacher correction workflows, guardian self-service, report lifecycle expansion, billing, messaging, platform support access, separate Course/Classroom/Section/Group resources, permanent purge, or undocumented APIs were added in `routes/api.php`
+- [ ] T060 Run `docker exec schoolmaster-backend-app-1 php artisan test` and fix failures in `app/Services/ClassroomRoster/`, `app/Http/Controllers/Api/V1/`, or `tests/Feature/ClassroomRoster/`
+- [ ] T061 Review excluded behavior and confirm no frontend routes, teacher correction workflows, guardian self-service, report lifecycle expansion, billing, messaging, platform support access, separate Course/Classroom/Section/Group resources, permanent purge, or undocumented APIs were added in `routes/api.php`
 
 ---
 
