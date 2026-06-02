@@ -88,7 +88,7 @@ direct student assignments.
 ### 5. Teacher Workflow Lifecycle and Corrections
 
 **Status**: Spec started in
-`specs/010-teacher-workflow-lifecycle/spec.md`.
+`specs/specs/010-teacher-workflow-lifecycle/spec.md`.
 
 **Purpose**: Add detail, update, deactivate/activate, delete/restore, download,
 bulk import, and correction workflows for teacher content, questionnaires,

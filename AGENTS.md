@@ -63,5 +63,5 @@ When implementing or modifying features:
 - only then implementation repositories should change
 
 <!-- SPECKIT START -->
-Active implementation plan: `specs/010-teacher-workflow-lifecycle/plan.md`
+Active implementation plan: `specs/specs/010-teacher-workflow-lifecycle/plan.md`
 <!-- SPECKIT END -->

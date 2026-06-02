@@ -1,7 +1,7 @@
 # Implementation Plan: Backend Teacher Workflow Lifecycle and Corrections
 
 **Branch**: `010-teacher-workflow-lifecycle` | **Date**: 2026-06-01 | **Spec**: [spec.md](./spec.md)
-**Input**: Feature specification from `specs/010-teacher-workflow-lifecycle/spec.md`
+**Input**: Feature specification from `specs/specs/010-teacher-workflow-lifecycle/spec.md`
 
 **Note**: This plan defines the backend implementation boundary after `009-classroom-roster-foundation`. It does not decompose tasks and does not authorize product behavior outside the specification and OpenAPI contract.
 
@@ -39,7 +39,7 @@ Implement the backend teacher workflow lifecycle slice for school-owned teacher 
 ### Documentation (this feature)
 
 ```text
-specs/010-teacher-workflow-lifecycle/
+specs/specs/010-teacher-workflow-lifecycle/
 ├── plan.md
 ├── research.md
 ├── data-model.md
@@ -85,7 +85,7 @@ schoolmaster-frontend/
 schoolmaster-specs/
 ├── api/openapi.yaml
 ├── specs/001-schoolmaster-platform/contracts/openapi.yaml
-└── specs/010-teacher-workflow-lifecycle/
+└── specs/specs/010-teacher-workflow-lifecycle/
 ```
 
 **Structure Decision**: Keep this as a backend-only lifecycle and correction slice with specification artifacts in `schoolmaster-specs`. Backend implementation should follow the existing Laravel API structure used by prior slices, with domain rules in services, request validation in Form Requests, authorization in Policies, API Resources for response shaping, DTOs for lifecycle/correction/import inputs, and repositories/query objects only for complex tenant-scoped lookup, ownership, roster, dependency, correction-history, import-validation, conflict, and audit-summary reads. Frontend work is explicitly deferred until contract-compliant backend behavior exists.
