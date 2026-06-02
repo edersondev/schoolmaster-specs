@@ -33,6 +33,55 @@ Implement only OpenAPI-approved operations for:
 
 Do not implement frontend screens, guardian self-service, report lifecycle expansion, platform support access, advanced assessment types, content/questionnaire versioning, permanent purge, legal hold, anonymization, messaging, billing, imports for content/questionnaires/learning sets, approval queues for closed-period corrections, new direct selected-student assignment writes, or undocumented APIs.
 
+## Route Traceability
+
+Every backend route added or expanded for this feature must map to an OpenAPI operation ID:
+
+| Route | Method | Operation ID |
+| --- | --- | --- |
+| `/api/v1/teacher-content` | GET | `listTeacherContent` |
+| `/api/v1/teacher-content` | POST | `createTeacherContent` |
+| `/api/v1/teacher-content/{contentItemId}` | GET | `getTeacherContent` |
+| `/api/v1/teacher-content/{contentItemId}` | PATCH | `updateTeacherContent` |
+| `/api/v1/teacher-content/{contentItemId}/status` | PATCH | `updateTeacherContentStatus` |
+| `/api/v1/teacher-content/{contentItemId}` | DELETE | `deleteTeacherContent` |
+| `/api/v1/teacher-content/{contentItemId}/restore` | POST | `restoreTeacherContent` |
+| `/api/v1/teacher-content/{contentItemId}/download` | GET | `downloadTeacherContent` |
+| `/api/v1/questionnaires` | GET | `listQuestionnaires` |
+| `/api/v1/questionnaires` | POST | `createQuestionnaire` |
+| `/api/v1/questionnaires/{questionnaireId}` | GET | `getQuestionnaire` |
+| `/api/v1/questionnaires/{questionnaireId}` | PATCH | `updateQuestionnaire` |
+| `/api/v1/questionnaires/{questionnaireId}/status` | PATCH | `updateQuestionnaireStatus` |
+| `/api/v1/questionnaires/{questionnaireId}` | DELETE | `deleteQuestionnaire` |
+| `/api/v1/questionnaires/{questionnaireId}/restore` | POST | `restoreQuestionnaire` |
+| `/api/v1/learning-sets` | GET | `listLearningSets` |
+| `/api/v1/learning-sets` | POST | `createLearningSet` |
+| `/api/v1/learning-sets/{learningSetId}` | GET | `getLearningSet` |
+| `/api/v1/learning-sets/{learningSetId}` | PATCH | `updateLearningSet` |
+| `/api/v1/learning-sets/{learningSetId}/status` | PATCH | `updateLearningSetStatus` |
+| `/api/v1/learning-sets/{learningSetId}` | DELETE | `deleteLearningSet` |
+| `/api/v1/learning-sets/{learningSetId}/restore` | POST | `restoreLearningSet` |
+| `/api/v1/grades` | GET | `listGrades` |
+| `/api/v1/grades` | POST | `createGrade` |
+| `/api/v1/grades/{gradeId}` | GET | `getGrade` |
+| `/api/v1/grades/{gradeId}` | DELETE | `deleteGrade` |
+| `/api/v1/grades/{gradeId}/correction` | PATCH | `correctGrade` |
+| `/api/v1/grades/{gradeId}/status` | PATCH | `updateGradeStatus` |
+| `/api/v1/grades/{gradeId}/restore` | POST | `restoreGrade` |
+| `/api/v1/grades/imports` | POST | `importGrades` |
+| `/api/v1/attendance` | GET | `listAttendance` |
+| `/api/v1/attendance` | POST | `createAttendance` |
+| `/api/v1/attendance/{attendanceId}` | GET | `getAttendance` |
+| `/api/v1/attendance/{attendanceId}` | DELETE | `deleteAttendance` |
+| `/api/v1/attendance/{attendanceId}/correction` | PATCH | `correctAttendance` |
+| `/api/v1/attendance/{attendanceId}/status` | PATCH | `updateAttendanceStatus` |
+| `/api/v1/attendance/{attendanceId}/restore` | POST | `restoreAttendance` |
+| `/api/v1/attendance/imports` | POST | `importAttendance` |
+| `/api/v1/student/learning-sets` | GET | `listStudentLearningSets` |
+| `/api/v1/student/grades` | GET | `listStudentGrades` |
+| `/api/v1/student/attendance` | GET | `listStudentAttendance` |
+| `/api/v1/student/teacher-content/{contentItemId}/download` | GET | `downloadStudentTeacherContent` |
+
 ## Validation Walkthrough
 
 ### 1. Contract readiness
@@ -130,6 +179,12 @@ Run backend tests from `schoolmaster-backend` after implementation:
 ```bash
 docker exec schoolmaster-backend-app-1 php artisan test
 ```
+
+## Validation Record
+
+- 2026-06-02: `npx @redocly/cli lint aggregate@v1 schoolmaster-platform@v1`
+  passed for both `api/openapi.yaml` and
+  `specs/001-schoolmaster-platform/contracts/openapi.yaml`.
 
 Implementation PRs should record the contract validation result, test result, feature id `010-teacher-workflow-lifecycle`, and operation IDs implemented.
 

@@ -57,6 +57,56 @@ module-specific business logic runs.
 - Expose only the operation IDs documented for feature
   `009-classroom-roster-foundation`.
 
+## Teacher Workflow Lifecycle
+
+- Expose teacher workflow lifecycle behavior only through the approved
+  `/api/v1` OpenAPI operations for detail, update, status, delete, restore,
+  download, correction, and import flows.
+- Keep teacher workflow controllers thin and route lifecycle, correction,
+  download, and import logic through dedicated services under
+  `App\Services\TeacherWorkflow`.
+- Use Form Requests to reject undocumented fields, unsupported lifecycle
+  transitions, unsupported filters or sorts, immutable-field edits, and
+  cross-tenant references before service logic mutates state.
+- Use API Resources to shape teacher content, questionnaire, learning-set,
+  grade, attendance, correction-history, and import-run responses exactly as
+  defined in OpenAPI.
+- Use DTOs for status transitions, restores, corrections, and import payloads
+  when request fields must be validated and consumed together.
+- Do not expose backend-only lifecycle shortcuts, direct file paths, private
+  audit payloads, or undocumented route aliases.
+
+## Teacher Workflow Business Rules
+
+- Creating or owning teachers may manage only their own same-school teacher
+  workflow records unless OpenAPI documents an explicit exception.
+- School administrators may manage same-school teacher workflow records within
+  an active permitted school context.
+- Same-school non-owner teachers, students, guardians, and platform users
+  without documented school-scoped authority must be denied teacher workflow
+  management access.
+- Teacher content downloads require clean scan status, an allowed active
+  lifecycle state, same-school authority, and tenant-safe private delivery.
+- Used content and questionnaires must reject edits that would change
+  historical student-facing meaning in v1.
+- New learning-set assignment writes must use roster-aware assignment scope;
+  legacy direct selected-student assignments remain readable only where
+  existing contracts already expose them.
+- Grade and attendance corrections require a 10-500 character free-text reason,
+  preserve original values and history, and allow closed-period corrections
+  only for school administrators.
+- Grade and attendance imports are school-administrator-only, JSON-only,
+  create-only, capped at 500 rows, and must be all-or-nothing.
+
+## Teacher Workflow Auditing
+
+- Audit successful and denied teacher content downloads, lifecycle transitions,
+  restores, corrections, imports, validation rejections, conflict outcomes,
+  and blocked cross-tenant attempts.
+- Audit records must store tenant-safe metadata only. Do not store private file
+  contents, private storage paths, credentials, full request payloads, or
+  unauthorized cross-tenant details.
+
 ## Backend Test Command
 
 Run the Laravel test suite inside the backend application container:
