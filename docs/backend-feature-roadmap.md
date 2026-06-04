@@ -103,7 +103,7 @@ impact.
 
 ### 6. Guardian Self-Service
 
-**Status**: Spec started in
+**Status**: Ready for implementation from
 `specs/011-guardian-self-service/spec.md`.
 
 **Purpose**: Allow guardians to view permitted student profile, academic, and

@@ -6,9 +6,9 @@
 
 ## Content Quality
 
-- [x] No implementation details (languages, frameworks, APIs)
-- [x] Focused on user value and business needs
-- [x] Written for non-technical stakeholders
+- [x] No backend-local implementation details beyond approved contract and repository coordination needs
+- [x] Focused on user value, business needs, and product boundaries
+- [x] Written for specification reviewers with contract-first delivery context
 - [x] All mandatory sections completed
 
 ## Requirement Completeness
@@ -27,9 +27,9 @@
 - [x] All functional requirements have clear acceptance criteria
 - [x] User scenarios cover primary flows
 - [x] Feature meets measurable outcomes defined in Success Criteria
-- [x] No implementation details leak into specification
+- [x] Contract-first repository and API coordination details stay within repository policy
 
 ## Notes
 
 - Validation pass 1 completed on 2026-06-04. No clarification markers remain.
-- The Architecture & Contract Impact section intentionally names contract surface and repository impact because this repository requires contract-first coordination for backend roadmap items.
+- This repository allows contract surface, route boundary, and cross-repository delivery detail inside the specification when required for API-first governance.
