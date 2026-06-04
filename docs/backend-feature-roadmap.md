@@ -87,8 +87,8 @@ direct student assignments.
 
 ### 5. Teacher Workflow Lifecycle and Corrections
 
-**Status**: Spec started in
-`specs/specs/010-teacher-workflow-lifecycle/spec.md`.
+**Status**: Completed and implemented from
+`specs/010-teacher-workflow-lifecycle/spec.md`.
 
 **Purpose**: Add detail, update, deactivate/activate, delete/restore, download,
 bulk import, and correction workflows for teacher content, questionnaires,
@@ -103,7 +103,8 @@ impact.
 
 ### 6. Guardian Self-Service
 
-**Status**: Not specified.
+**Status**: Spec started in
+`specs/011-guardian-self-service/spec.md`.
 
 **Purpose**: Allow guardians to view permitted student profile, academic, and
 contact information without gaining school-admin or student self-view powers.
