@@ -3107,7 +3107,7 @@ paths:
                     data:
                       type: array
                       items:
-                        $ref: '#/components/schemas/GradeRecord'
+                        $ref: '#/components/schemas/StudentGradeRecord'
         '401':
           $ref: '#/components/responses/Unauthorized'
         '403':
@@ -3368,7 +3368,7 @@ paths:
                     data:
                       type: array
                       items:
-                        $ref: '#/components/schemas/AttendanceRecord'
+                        $ref: '#/components/schemas/StudentAttendanceRecord'
         '401':
           $ref: '#/components/responses/Unauthorized'
         '403':
@@ -5475,6 +5475,42 @@ components:
             $ref: '#/components/schemas/CorrectionRecord'
         status:
           $ref: '#/components/schemas/TeacherWorkflowLifecycleState'
+    StudentAttendanceRecord:
+      type: object
+      required:
+      - id
+      - school_id
+      - student_profile_id
+      - academic_period_id
+      - recorded_by_user_id
+      - attendance_date
+      - attendance_status
+      - status
+      properties:
+        id:
+          type: string
+          format: uuid
+        school_id:
+          type: string
+          format: uuid
+        student_profile_id:
+          type: string
+          format: uuid
+        academic_period_id:
+          type: string
+          format: uuid
+        recorded_by_user_id:
+          type: string
+          format: uuid
+        attendance_date:
+          type: string
+          format: date
+        attendance_status:
+          allOf:
+          - $ref: '#/components/schemas/AttendanceStatus'
+          description: Current student-visible attendance status after any accepted corrections.
+        status:
+          $ref: '#/components/schemas/TeacherWorkflowLifecycleState'
     AuthSession:
       type: object
       required:
@@ -5628,6 +5664,47 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/CorrectionRecord'
+        status:
+          $ref: '#/components/schemas/TeacherWorkflowLifecycleState'
+        recorded_at:
+          type: string
+          format: date-time
+    StudentGradeRecord:
+      type: object
+      required:
+      - id
+      - school_id
+      - student_profile_id
+      - academic_period_id
+      - recorded_by_user_id
+      - grade_value
+      - status
+      - recorded_at
+      properties:
+        id:
+          type: string
+          format: uuid
+        school_id:
+          type: string
+          format: uuid
+        student_profile_id:
+          type: string
+          format: uuid
+        academic_period_id:
+          type: string
+          format: uuid
+        recorded_by_user_id:
+          type: string
+          format: uuid
+        grade_value:
+          type: number
+          minimum: 0
+          maximum: 100
+          description: Current student-visible grade value after any accepted corrections.
+        grade_label:
+          type:
+          - string
+          - 'null'
         status:
           $ref: '#/components/schemas/TeacherWorkflowLifecycleState'
         recorded_at:

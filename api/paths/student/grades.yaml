@@ -21,7 +21,7 @@ get:
                   data:
                     type: array
                     items:
-                      $ref: ../../components/schemas/grades/GradeRecord.yaml
+                      $ref: ../../components/schemas/grades/StudentGradeRecord.yaml
     '401':
       $ref: ../../components/responses/auth/Unauthorized.yaml
     '403':
