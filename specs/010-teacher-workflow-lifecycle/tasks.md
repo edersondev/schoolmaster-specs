@@ -1,6 +1,6 @@
 # Tasks: Backend Teacher Workflow Lifecycle and Corrections
 
-**Input**: Design documents from `/specs/specs/010-teacher-workflow-lifecycle/`
+**Input**: Design documents from `specs/specs/010-teacher-workflow-lifecycle/`
 **Prerequisites**: plan.md, spec.md, research.md, data-model.md, contracts/backend-teacher-workflow-lifecycle.md, quickstart.md
 
 **Tests**: REQUIRED by FR-019 and quickstart.md. Use OpenAPI linting plus Laravel PHPUnit feature/unit coverage. No frontend tasks are included because this feature is backend-only.

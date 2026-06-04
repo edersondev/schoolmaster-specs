@@ -5,7 +5,7 @@ description: "Task list template for feature implementation"
 
 # Tasks: [FEATURE NAME]
 
-**Input**: Design documents from `/specs/[###-feature-name]/`
+**Input**: Design documents from `specs/specs/[###-feature-name]/`
 **Prerequisites**: plan.md (required), spec.md (required for user stories), research.md, data-model.md, contracts/
 
 **Tests**: Critical business flow tests are REQUIRED. Include PHPUnit, Vitest,
@@ -23,6 +23,11 @@ specification explicitly requests broader coverage.
 
 ## Path Conventions
 
+- Run implementation from the `schoolmaster-backend` repository root.
+- Specification and OpenAPI paths assume the backend repo mounts this
+  repository at `specs -> ../schoolmaster-specs`.
+- Feature docs are therefore accessed from the backend repo as
+  `specs/specs/[###-feature-name]/`.
 - **Backend repository**: `app/`, `routes/`, `tests/Feature/`, `tests/Unit/`
 - **Frontend repository**: `src/modules/`, `src/router/`, `src/services/`,
   `src/stores/`, `tests/`
