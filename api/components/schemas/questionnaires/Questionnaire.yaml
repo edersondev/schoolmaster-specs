@@ -1,0 +1,30 @@
+type: object
+required:
+  - id
+  - school_id
+  - owner_user_id
+  - title
+  - status
+  - questions
+properties:
+  id:
+    type: string
+    format: uuid
+  school_id:
+    type: string
+    format: uuid
+  owner_user_id:
+    type: string
+    format: uuid
+  title:
+    type: string
+  description:
+    type:
+      - string
+      - 'null'
+  status:
+    $ref: ../teacher-content/TeacherWorkflowLifecycleState.yaml
+  questions:
+    type: array
+    items:
+      $ref: QuestionnaireQuestion.yaml

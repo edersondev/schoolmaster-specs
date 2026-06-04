@@ -1,0 +1,50 @@
+type: object
+description: >-
+  Tenant-safe audit summary metadata. Full request payloads, private student or
+  teacher data, credentials, and unauthorized cross-tenant details are not
+  stored or returned.
+required:
+  - actor_user_id
+  - school_id
+  - target_type
+  - target_id
+  - action
+  - outcome
+properties:
+  actor_user_id:
+    type: string
+    format: uuid
+  school_id:
+    type: string
+    format: uuid
+  target_type:
+    type: string
+    enum:
+      - class_section
+      - roster_membership
+      - teacher_assignment
+      - teacher_content_item
+      - questionnaire
+      - learning_set
+      - grade_record
+      - attendance_record
+      - correction_record
+      - import_run
+  target_id:
+    type: string
+    format: uuid
+  action:
+    type: string
+  outcome:
+    type: string
+    enum:
+      - succeeded
+      - rejected
+      - conflicted
+  lifecycle_reason:
+    type:
+      - string
+      - 'null'
+  metadata_summary:
+    type: object
+    additionalProperties: true

@@ -1,0 +1,29 @@
+type: object
+required:
+  - id
+  - name
+  - code
+  - status
+properties:
+  id:
+    type: string
+    format: uuid
+  name:
+    type: string
+  code:
+    type: string
+  status:
+    $ref: ../common/Status.yaml
+  contact_email:
+    type:
+      - string
+      - 'null'
+    format: email
+  contact_phone:
+    type:
+      - string
+      - 'null'
+  address_summary:
+    type:
+      - string
+      - 'null'

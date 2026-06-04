@@ -1,0 +1,5 @@
+description: The authenticated user lacks permission for this action
+content:
+  application/json:
+    schema:
+      $ref: ../../schemas/common/ErrorEnvelope.yaml

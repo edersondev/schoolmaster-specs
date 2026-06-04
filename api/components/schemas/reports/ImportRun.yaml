@@ -1,0 +1,47 @@
+type: object
+required:
+  - id
+  - school_id
+  - actor_user_id
+  - import_type
+  - row_count
+  - accepted_row_count
+  - rejected_row_count
+  - status
+  - error_summary
+properties:
+  id:
+    type: string
+    format: uuid
+  school_id:
+    type: string
+    format: uuid
+  actor_user_id:
+    type: string
+    format: uuid
+  import_type:
+    type: string
+    enum:
+      - grade
+      - attendance
+  row_count:
+    type: integer
+    minimum: 0
+    maximum: 500
+  accepted_row_count:
+    type: integer
+    minimum: 0
+    maximum: 500
+  rejected_row_count:
+    type: integer
+    minimum: 0
+    maximum: 500
+  status:
+    type: string
+    enum:
+      - accepted
+      - rejected
+  error_summary:
+    type: array
+    items:
+      $ref: ImportErrorSummaryItem.yaml

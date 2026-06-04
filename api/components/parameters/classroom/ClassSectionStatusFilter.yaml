@@ -1,0 +1,5 @@
+name: status
+in: query
+description: Optional class-section status filter. Unsupported status values are rejected.
+schema:
+  $ref: ../../schemas/classroom/ClassSectionStatus.yaml

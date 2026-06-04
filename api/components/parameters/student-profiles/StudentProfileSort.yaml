@@ -1,0 +1,8 @@
+name: sort
+in: query
+description: >-
+  Comma-separated field names; allowed values are full_name,
+  registration_number, enrolled_at, status, and created_at. Prefix with '-' for
+  descending.
+schema:
+  type: string

@@ -1,0 +1,5 @@
+name: academic_period_id
+in: query
+schema:
+  type: string
+  format: uuid

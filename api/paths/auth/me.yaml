@@ -1,0 +1,23 @@
+get:
+  tags:
+    - Auth
+  summary: Return the authenticated user, resolved tenant, roles, and permissions
+  operationId: getCurrentUser
+  parameters:
+    - $ref: ../../components/parameters/schools/TenantContext.yaml
+  responses:
+    '200':
+      description: Current authenticated session
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: ../../components/schemas/common/SuccessEnvelope.yaml
+              - type: object
+                properties:
+                  data:
+                    $ref: ../../components/schemas/auth/AuthSession.yaml
+    '401':
+      $ref: ../../components/responses/auth/TokenRejected.yaml
+    '403':
+      $ref: ../../components/responses/schools/TenantMismatch.yaml

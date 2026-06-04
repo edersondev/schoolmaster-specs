@@ -1,0 +1,21 @@
+type: object
+required:
+  - entry_type
+  - entry_reference_id
+  - sequence
+  - title
+properties:
+  entry_type:
+    type: string
+    enum:
+      - content_item
+      - questionnaire
+  entry_reference_id:
+    type: string
+    format: uuid
+  sequence:
+    type: integer
+  title:
+    type: string
+  content_item:
+    $ref: ../teacher-content/TeacherContentStudentMetadata.yaml

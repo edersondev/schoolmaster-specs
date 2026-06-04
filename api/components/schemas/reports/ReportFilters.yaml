@@ -1,0 +1,22 @@
+type: object
+required:
+  - academic_period_id
+properties:
+  academic_period_id:
+    type: string
+    format: uuid
+  student_profile_id:
+    type: string
+    format: uuid
+  user_id:
+    type: string
+    format: uuid
+  status:
+    type: string
+  start_date:
+    type: string
+    format: date
+  end_date:
+    type: string
+    format: date
+additionalProperties: false

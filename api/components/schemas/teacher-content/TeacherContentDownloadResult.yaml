@@ -1,0 +1,21 @@
+type: object
+required:
+  - content_item_id
+  - file_name
+  - content_type
+  - expires_at
+  - download_url
+properties:
+  content_item_id:
+    type: string
+    format: uuid
+  file_name:
+    type: string
+  content_type:
+    type: string
+  expires_at:
+    type: string
+    format: date-time
+  download_url:
+    type: string
+    format: uri

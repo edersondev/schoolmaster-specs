@@ -1,0 +1,21 @@
+type: object
+additionalProperties: false
+properties:
+  title:
+    type: string
+  description:
+    type:
+      - string
+      - 'null'
+  entries:
+    type: array
+    minItems: 1
+    items:
+      $ref: LearningSetEntry.yaml
+  roster_assignment:
+    $ref: LearningSetRosterAssignmentInput.yaml
+  due_at:
+    type:
+      - string
+      - 'null'
+    format: date-time

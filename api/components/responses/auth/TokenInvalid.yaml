@@ -1,0 +1,7 @@
+description: >-
+  Lifecycle token is expired, reused, superseded, revoked, malformed, missing,
+  mismatched, or scope-incompatible
+content:
+  application/json:
+    schema:
+      $ref: ../../schemas/common/ErrorEnvelope.yaml

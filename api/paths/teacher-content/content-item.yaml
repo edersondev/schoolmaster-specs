@@ -1,0 +1,94 @@
+get:
+  tags:
+    - Teacher Content
+  summary: Retrieve a tenant-scoped teacher content item
+  operationId: getTeacherContent
+  parameters:
+    - $ref: ../../components/parameters/schools/TenantContext.yaml
+    - $ref: ../../components/parameters/teacher-content/ContentItemId.yaml
+  responses:
+    '200':
+      description: Teacher content item detail
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: ../../components/schemas/common/SuccessEnvelope.yaml
+              - type: object
+                properties:
+                  data:
+                    $ref: ../../components/schemas/teacher-content/TeacherContentItem.yaml
+    '401':
+      $ref: ../../components/responses/auth/Unauthorized.yaml
+    '403':
+      $ref: ../../components/responses/teacher-content/TeacherWorkflowForbidden.yaml
+    '404':
+      $ref: ../../components/responses/common/NotFound.yaml
+patch:
+  tags:
+    - Teacher Content
+  summary: Update editable metadata for a teacher content item
+  description: >-
+    Only documented editable fields may change. Historical student-facing
+    meaning changes are rejected after use by a published or assigned learning
+    set.
+  operationId: updateTeacherContent
+  parameters:
+    - $ref: ../../components/parameters/schools/TenantContext.yaml
+    - $ref: ../../components/parameters/teacher-content/ContentItemId.yaml
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: ../../components/schemas/teacher-content/TeacherContentUpdateRequest.yaml
+  responses:
+    '200':
+      description: Teacher content item updated
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: ../../components/schemas/common/SuccessEnvelope.yaml
+              - type: object
+                properties:
+                  data:
+                    $ref: ../../components/schemas/teacher-content/TeacherContentItem.yaml
+    '401':
+      $ref: ../../components/responses/auth/Unauthorized.yaml
+    '403':
+      $ref: ../../components/responses/teacher-content/TeacherWorkflowForbidden.yaml
+    '404':
+      $ref: ../../components/responses/common/NotFound.yaml
+    '409':
+      $ref: ../../components/responses/common/Conflict.yaml
+    '422':
+      $ref: ../../components/responses/common/ValidationError.yaml
+delete:
+  tags:
+    - Teacher Content
+  summary: Soft-delete a teacher content item
+  operationId: deleteTeacherContent
+  parameters:
+    - $ref: ../../components/parameters/schools/TenantContext.yaml
+    - $ref: ../../components/parameters/teacher-content/ContentItemId.yaml
+  responses:
+    '200':
+      description: Teacher content item moved to deleted state
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: ../../components/schemas/common/SuccessEnvelope.yaml
+              - type: object
+                properties:
+                  data:
+                    $ref: ../../components/schemas/teacher-content/TeacherContentItem.yaml
+    '401':
+      $ref: ../../components/responses/auth/Unauthorized.yaml
+    '403':
+      $ref: ../../components/responses/teacher-content/TeacherWorkflowForbidden.yaml
+    '404':
+      $ref: ../../components/responses/common/NotFound.yaml
+    '409':
+      $ref: ../../components/responses/common/Conflict.yaml

@@ -1,0 +1,21 @@
+type: object
+additionalProperties: false
+required:
+  - status
+  - effective_end_date
+  - reason
+properties:
+  status:
+    type: string
+    enum:
+      - inactive
+  effective_end_date:
+    type: string
+    format: date
+    description: >-
+      Must be today-or-past in the resolved school timezone, inside the academic
+      period, and on or after the assignment effective start date.
+  reason:
+    type: string
+    minLength: 1
+    maxLength: 500

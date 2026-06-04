@@ -1,0 +1,36 @@
+patch:
+  tags:
+    - Student Profiles
+  summary: Update a non-transfer student profile lifecycle status
+  operationId: updateStudentProfileStatus
+  parameters:
+    - $ref: ../../components/parameters/schools/TenantContext.yaml
+    - $ref: ../../components/parameters/student-profiles/StudentProfileId.yaml
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: ../../components/schemas/student-profiles/StudentProfileStatusUpdateRequest.yaml
+  responses:
+    '200':
+      description: Student profile lifecycle status updated
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: ../../components/schemas/common/SuccessEnvelope.yaml
+              - type: object
+                properties:
+                  data:
+                    $ref: ../../components/schemas/student-profiles/StudentProfileLifecycleResult.yaml
+    '401':
+      $ref: ../../components/responses/auth/Unauthorized.yaml
+    '403':
+      $ref: ../../components/responses/student-profiles/StudentProfileForbidden.yaml
+    '404':
+      $ref: ../../components/responses/common/NotFound.yaml
+    '409':
+      $ref: ../../components/responses/common/Conflict.yaml
+    '422':
+      $ref: ../../components/responses/common/ValidationError.yaml

@@ -1,0 +1,19 @@
+type: object
+required:
+  - effective_at
+  - reason
+additionalProperties: false
+properties:
+  effective_at:
+    type: string
+    format: date
+  reason:
+    type: string
+    minLength: 1
+    maxLength: 500
+  destination_school_id:
+    type: string
+    format: uuid
+  destination_student_profile_id:
+    type: string
+    format: uuid

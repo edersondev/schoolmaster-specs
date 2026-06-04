@@ -1,0 +1,9 @@
+name: X-School-Id
+in: header
+required: false
+description: >
+  Explicit school tenant context for school-scoped requests. Required when the
+  authenticated session is not already bound to exactly one active school.
+schema:
+  type: string
+  format: uuid

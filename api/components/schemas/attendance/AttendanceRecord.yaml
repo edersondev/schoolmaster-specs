@@ -1,0 +1,48 @@
+type: object
+required:
+  - id
+  - school_id
+  - student_profile_id
+  - academic_period_id
+  - recorded_by_user_id
+  - attendance_date
+  - attendance_status
+  - status
+  - current_value
+  - correction_history
+properties:
+  id:
+    type: string
+    format: uuid
+  school_id:
+    type: string
+    format: uuid
+  student_profile_id:
+    type: string
+    format: uuid
+  academic_period_id:
+    type: string
+    format: uuid
+  recorded_by_user_id:
+    type: string
+    format: uuid
+  original_recorded_by_user_id:
+    type: string
+    format: uuid
+  attendance_date:
+    type: string
+    format: date
+  attendance_status:
+    $ref: AttendanceStatus.yaml
+  current_value:
+    $ref: AttendanceStatus.yaml
+  original_value:
+    oneOf:
+      - $ref: AttendanceStatus.yaml
+      - type: 'null'
+  correction_history:
+    type: array
+    items:
+      $ref: ../common/CorrectionRecord.yaml
+  status:
+    $ref: ../teacher-content/TeacherWorkflowLifecycleState.yaml

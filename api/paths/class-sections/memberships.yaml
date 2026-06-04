@@ -1,0 +1,102 @@
+get:
+  tags:
+    - Roster Memberships
+  summary: List roster memberships
+  description: >-
+    Returns school-scoped membership history for the target class section.
+    Supports pagination plus academicPeriodId and status filters only.
+  operationId: listClassSectionMemberships
+  parameters:
+    - $ref: ../../components/parameters/schools/TenantContext.yaml
+    - $ref: ../../components/parameters/classroom/ClassSectionId.yaml
+    - $ref: ../../components/parameters/common/Page.yaml
+    - $ref: ../../components/parameters/common/PerPage.yaml
+    - $ref: ../../components/parameters/classroom/ClassroomRosterAcademicPeriodFilter.yaml
+    - $ref: ../../components/parameters/classroom/RosterMembershipStatusFilter.yaml
+  responses:
+    '200':
+      description: Paginated roster memberships
+      content:
+        application/json:
+          schema:
+            $ref: ../../components/schemas/classroom/RosterMembershipPaginatedEnvelope.yaml
+    '401':
+      $ref: ../../components/responses/auth/Unauthorized.yaml
+    '403':
+      $ref: ../../components/responses/classroom/ClassroomRosterForbidden.yaml
+    '404':
+      $ref: ../../components/responses/common/NotFound.yaml
+    '422':
+      $ref: ../../components/responses/common/ValidationError.yaml
+post:
+  tags:
+    - Roster Memberships
+  summary: Add roster memberships as an all-or-nothing batch
+  description: >-
+    Adds up to 100 active same-school student profiles to the roster. Every
+    student must be active, not deleted or transferred, and have active
+    same-school enrollment covering the explicit effective start date. Any
+    invalid member rejects the whole request without partial changes.
+  operationId: batchAddClassSectionMemberships
+  parameters:
+    - $ref: ../../components/parameters/schools/TenantContext.yaml
+    - $ref: ../../components/parameters/classroom/ClassSectionId.yaml
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: ../../components/schemas/classroom/RosterMembershipBatchAddRequest.yaml
+  responses:
+    '201':
+      description: Membership batch created
+      content:
+        application/json:
+          schema:
+            $ref: ../../components/schemas/classroom/RosterMembershipBatchEnvelope.yaml
+    '401':
+      $ref: ../../components/responses/auth/Unauthorized.yaml
+    '403':
+      $ref: ../../components/responses/classroom/ClassroomRosterForbidden.yaml
+    '404':
+      $ref: ../../components/responses/common/NotFound.yaml
+    '409':
+      $ref: ../../components/responses/common/Conflict.yaml
+    '422':
+      $ref: ../../components/responses/common/ValidationError.yaml
+patch:
+  tags:
+    - Roster Memberships
+  summary: End roster memberships as an all-or-nothing batch
+  description: >-
+    Ends up to 100 active memberships. A reason and today-or-past effective end
+    date inside the academic period are required; the end date must be on or
+    after each membership effective start date. Any invalid membership rejects
+    the whole request.
+  operationId: batchEndClassSectionMemberships
+  parameters:
+    - $ref: ../../components/parameters/schools/TenantContext.yaml
+    - $ref: ../../components/parameters/classroom/ClassSectionId.yaml
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: ../../components/schemas/classroom/RosterMembershipBatchEndRequest.yaml
+  responses:
+    '200':
+      description: Membership batch ended
+      content:
+        application/json:
+          schema:
+            $ref: ../../components/schemas/classroom/RosterMembershipBatchEnvelope.yaml
+    '401':
+      $ref: ../../components/responses/auth/Unauthorized.yaml
+    '403':
+      $ref: ../../components/responses/classroom/ClassroomRosterForbidden.yaml
+    '404':
+      $ref: ../../components/responses/common/NotFound.yaml
+    '409':
+      $ref: ../../components/responses/common/Conflict.yaml
+    '422':
+      $ref: ../../components/responses/common/ValidationError.yaml

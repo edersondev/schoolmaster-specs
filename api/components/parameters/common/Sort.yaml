@@ -1,0 +1,5 @@
+name: sort
+in: query
+description: Comma-separated field names; prefix with '-' for descending.
+schema:
+  type: string

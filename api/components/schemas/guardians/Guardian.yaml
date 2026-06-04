@@ -1,0 +1,29 @@
+type: object
+required:
+  - id
+  - school_id
+  - full_name
+  - relationship_type
+  - status
+properties:
+  id:
+    type: string
+    format: uuid
+  school_id:
+    type: string
+    format: uuid
+  full_name:
+    type: string
+  relationship_type:
+    type: string
+  contact_email:
+    type:
+      - string
+      - 'null'
+    format: email
+  contact_phone:
+    type:
+      - string
+      - 'null'
+  status:
+    $ref: ../common/Status.yaml

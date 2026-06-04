@@ -1,0 +1,54 @@
+type: object
+required:
+  - registration_number
+  - first_name
+  - last_name
+  - enrolled_at
+additionalProperties: false
+properties:
+  user_id:
+    type: string
+    format: uuid
+  registration_number:
+    type: string
+    minLength: 1
+    maxLength: 80
+  first_name:
+    type: string
+    minLength: 1
+    maxLength: 120
+  last_name:
+    type: string
+    minLength: 1
+    maxLength: 120
+  date_of_birth:
+    type: string
+    format: date
+  contact_email:
+    type: string
+    format: email
+  contact_phone:
+    type: string
+    maxLength: 40
+  current_academic_year_id:
+    type: string
+    format: uuid
+  status:
+    type: string
+    enum:
+      - active
+      - inactive
+    default: active
+  enrolled_at:
+    type: string
+    format: date
+  guardian_associations:
+    type: array
+    description: >-
+      Optional same-school guardian links to create with the student profile.
+      Each `guardian_id` may appear at most once in a request, even if
+      `relationship_type` differs. Duplicate guardian references are rejected
+      with a validation error.
+    items:
+      $ref: StudentProfileGuardianInput.yaml
+    uniqueItems: true

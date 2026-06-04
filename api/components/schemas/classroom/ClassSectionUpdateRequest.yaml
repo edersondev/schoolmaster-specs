@@ -1,0 +1,27 @@
+type: object
+additionalProperties: false
+properties:
+  code:
+    type: string
+    minLength: 1
+    maxLength: 80
+  name:
+    type: string
+    minLength: 1
+    maxLength: 255
+  course:
+    oneOf:
+      - $ref: ClassSectionMetadataBlock.yaml
+      - type: 'null'
+  classroom:
+    oneOf:
+      - $ref: ClassSectionMetadataBlock.yaml
+      - type: 'null'
+  section:
+    oneOf:
+      - $ref: ClassSectionMetadataBlock.yaml
+      - type: 'null'
+  group:
+    oneOf:
+      - $ref: ClassSectionMetadataBlock.yaml
+      - type: 'null'

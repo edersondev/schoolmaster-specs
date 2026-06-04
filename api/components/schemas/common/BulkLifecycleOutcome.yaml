@@ -1,0 +1,17 @@
+type: object
+required:
+  - resource_type
+  - action
+  - affected_count
+  - results
+properties:
+  resource_type:
+    $ref: AdministrationResourceType.yaml
+  action:
+    $ref: LifecycleAction.yaml
+  affected_count:
+    type: integer
+  results:
+    type: array
+    items:
+      $ref: LifecycleOutcome.yaml

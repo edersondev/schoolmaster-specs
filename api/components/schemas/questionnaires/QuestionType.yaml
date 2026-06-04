@@ -1,0 +1,5 @@
+type: string
+enum:
+  - multiple_choice
+  - true_false
+  - short_text

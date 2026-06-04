@@ -1,0 +1,8 @@
+allOf:
+  - $ref: ../common/SuccessEnvelope.yaml
+  - type: object
+    required:
+      - data
+    properties:
+      data:
+        $ref: RosterMembershipBatchResult.yaml

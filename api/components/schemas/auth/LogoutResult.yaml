@@ -1,0 +1,7 @@
+type: object
+required:
+  - revoked
+properties:
+  revoked:
+    type: boolean
+    description: Indicates the current bearer token was revoked by logout.

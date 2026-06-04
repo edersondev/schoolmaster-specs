@@ -1,0 +1,7 @@
+name: status
+in: query
+description: >-
+  Optional roster membership status filter. Unsupported status values are
+  rejected.
+schema:
+  $ref: ../../schemas/classroom/RosterMembershipStatus.yaml

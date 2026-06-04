@@ -1,0 +1,24 @@
+description: >-
+  Student profile access is forbidden because the tenant context is missing,
+  inactive, or outside permitted scope, or because the authenticated user lacks
+  student profile administration permission in an otherwise valid school
+  context.
+content:
+  application/json:
+    schema:
+      $ref: ../../schemas/common/ErrorEnvelope.yaml
+    examples:
+      tenantMismatch:
+        summary: Tenant context is invalid for this school-scoped operation
+        value:
+          error:
+            code: tenant_mismatch
+            message: Tenant context is missing, inactive, or outside permitted scope.
+      insufficientPermission:
+        summary: >-
+          Tenant context is valid but the actor lacks student profile
+          administration permission
+        value:
+          error:
+            code: forbidden
+            message: The authenticated user lacks permission for this action.

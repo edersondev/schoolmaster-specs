@@ -1,0 +1,7 @@
+description: >-
+  Bearer token is expired, revoked, or tied to an inactive user or inactive
+  school
+content:
+  application/json:
+    schema:
+      $ref: ../../schemas/common/ErrorEnvelope.yaml

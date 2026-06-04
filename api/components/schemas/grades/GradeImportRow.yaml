@@ -1,0 +1,21 @@
+type: object
+additionalProperties: false
+required:
+  - student_profile_id
+  - academic_period_id
+  - grade_value
+properties:
+  student_profile_id:
+    type: string
+    format: uuid
+  academic_period_id:
+    type: string
+    format: uuid
+  grade_value:
+    type: number
+    minimum: 0
+    maximum: 100
+  grade_label:
+    type:
+      - string
+      - 'null'

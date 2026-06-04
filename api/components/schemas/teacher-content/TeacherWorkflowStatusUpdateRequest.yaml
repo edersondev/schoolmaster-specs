@@ -1,0 +1,10 @@
+type: object
+additionalProperties: false
+required:
+  - status
+properties:
+  status:
+    type: string
+    enum:
+      - active
+      - inactive

@@ -1,0 +1,7 @@
+type: string
+enum:
+  - users
+  - roles
+  - academic_years
+  - academic_periods
+  - guardians

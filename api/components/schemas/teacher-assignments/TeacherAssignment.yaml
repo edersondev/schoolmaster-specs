@@ -1,0 +1,55 @@
+type: object
+required:
+  - id
+  - school_id
+  - class_section_id
+  - teacher_user_id
+  - academic_period_id
+  - status
+  - effective_start_date
+  - created_by_user_id
+  - updated_by_user_id
+  - created_at
+  - updated_at
+properties:
+  id:
+    type: string
+    format: uuid
+  school_id:
+    type: string
+    format: uuid
+  class_section_id:
+    type: string
+    format: uuid
+  teacher_user_id:
+    type: string
+    format: uuid
+  academic_period_id:
+    type: string
+    format: uuid
+  status:
+    $ref: TeacherAssignmentStatus.yaml
+  effective_start_date:
+    type: string
+    format: date
+  effective_end_date:
+    type:
+      - string
+      - 'null'
+    format: date
+  deactivation_reason:
+    type:
+      - string
+      - 'null'
+  created_by_user_id:
+    type: string
+    format: uuid
+  updated_by_user_id:
+    type: string
+    format: uuid
+  created_at:
+    type: string
+    format: date-time
+  updated_at:
+    type: string
+    format: date-time

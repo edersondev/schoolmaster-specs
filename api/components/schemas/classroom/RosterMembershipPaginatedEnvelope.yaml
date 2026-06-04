@@ -1,0 +1,10 @@
+allOf:
+  - $ref: ../common/PaginatedEnvelope.yaml
+  - type: object
+    required:
+      - data
+    properties:
+      data:
+        type: array
+        items:
+          $ref: RosterMembership.yaml

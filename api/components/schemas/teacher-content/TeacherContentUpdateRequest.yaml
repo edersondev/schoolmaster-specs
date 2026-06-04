@@ -1,0 +1,14 @@
+type: object
+additionalProperties: false
+properties:
+  folder_id:
+    type:
+      - string
+      - 'null'
+    format: uuid
+  title:
+    type: string
+  description:
+    type:
+      - string
+      - 'null'

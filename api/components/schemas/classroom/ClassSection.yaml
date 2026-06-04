@@ -1,0 +1,71 @@
+type: object
+required:
+  - id
+  - school_id
+  - academic_period_id
+  - code
+  - name
+  - status
+  - created_by_user_id
+  - updated_by_user_id
+  - created_at
+  - updated_at
+properties:
+  id:
+    type: string
+    format: uuid
+  school_id:
+    type: string
+    format: uuid
+  academic_period_id:
+    type: string
+    format: uuid
+  code:
+    type: string
+    minLength: 1
+    maxLength: 80
+    description: Required and unique per school and academic period.
+  name:
+    type: string
+    minLength: 1
+    maxLength: 255
+    description: Display names may repeat inside the same school and academic period.
+  course:
+    oneOf:
+      - $ref: ClassSectionMetadataBlock.yaml
+      - type: 'null'
+  classroom:
+    oneOf:
+      - $ref: ClassSectionMetadataBlock.yaml
+      - type: 'null'
+  section:
+    oneOf:
+      - $ref: ClassSectionMetadataBlock.yaml
+      - type: 'null'
+  group:
+    oneOf:
+      - $ref: ClassSectionMetadataBlock.yaml
+      - type: 'null'
+  status:
+    $ref: ClassSectionStatus.yaml
+  inactive_reason:
+    type:
+      - string
+      - 'null'
+  inactive_effective_at:
+    type:
+      - string
+      - 'null'
+    format: date
+  created_by_user_id:
+    type: string
+    format: uuid
+  updated_by_user_id:
+    type: string
+    format: uuid
+  created_at:
+    type: string
+    format: date-time
+  updated_at:
+    type: string
+    format: date-time

@@ -1,0 +1,34 @@
+post:
+  tags:
+    - Account Lifecycle
+  summary: Resend or replace an invitation
+  description: >-
+    Requests new email delivery metadata for an existing pending invitation and
+    rotates the single-use token. Resends are limited to 3 sends or resends per
+    user and scope within 24 hours.
+  operationId: resendAccountInvitation
+  parameters:
+    - $ref: ../../components/parameters/schools/TenantContext.yaml
+    - $ref: ../../components/parameters/account-lifecycle/InvitationToken.yaml
+  responses:
+    '200':
+      description: Invitation was replaced and delivery metadata was recorded
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: ../../components/schemas/common/SuccessEnvelope.yaml
+              - type: object
+                properties:
+                  data:
+                    $ref: ../../components/schemas/account-lifecycle/AccountInvitation.yaml
+    '401':
+      $ref: ../../components/responses/auth/Unauthorized.yaml
+    '403':
+      $ref: ../../components/responses/account-lifecycle/AccountLifecycleForbidden.yaml
+    '404':
+      $ref: ../../components/responses/common/NotFound.yaml
+    '409':
+      $ref: ../../components/responses/common/Conflict.yaml
+    '422':
+      $ref: ../../components/responses/common/ValidationError.yaml

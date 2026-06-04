@@ -1,0 +1,48 @@
+type: object
+required:
+  - id
+  - school_id
+  - requested_by_user_id
+  - report_type
+  - filter_summary
+  - output_formats
+  - status
+  - outputs_available
+properties:
+  id:
+    type: string
+    format: uuid
+  school_id:
+    type: string
+    format: uuid
+  requested_by_user_id:
+    type: string
+    format: uuid
+  report_type:
+    $ref: ReportType.yaml
+  filter_summary:
+    $ref: ReportFilters.yaml
+  output_formats:
+    type: array
+    minItems: 2
+    items:
+      $ref: ReportFormat.yaml
+  status:
+    type: string
+    enum:
+      - requested
+      - generated
+      - failed
+      - inactive
+  generated_at:
+    type:
+      - string
+      - 'null'
+    format: date-time
+  output_expires_at:
+    type:
+      - string
+      - 'null'
+    format: date-time
+  outputs_available:
+    type: boolean

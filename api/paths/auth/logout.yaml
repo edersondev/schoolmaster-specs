@@ -1,0 +1,23 @@
+post:
+  tags:
+    - Auth
+  summary: Revoke the current bearer token
+  description: >-
+    Revokes continued access for the bearer token used on the request. Already
+    expired, revoked, inactive-user, or inactive-school tokens return the token
+    rejection envelope.
+  operationId: logout
+  responses:
+    '200':
+      description: Logout succeeded and the current bearer token was revoked
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: ../../components/schemas/common/SuccessEnvelope.yaml
+              - type: object
+                properties:
+                  data:
+                    $ref: ../../components/schemas/auth/LogoutResult.yaml
+    '401':
+      $ref: ../../components/responses/auth/TokenRejected.yaml

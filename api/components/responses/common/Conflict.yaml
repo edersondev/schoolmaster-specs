@@ -1,0 +1,5 @@
+description: Request conflicts with an existing identifier or incompatible lifecycle state
+content:
+  application/json:
+    schema:
+      $ref: ../../schemas/common/ErrorEnvelope.yaml

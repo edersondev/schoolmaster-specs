@@ -1,0 +1,8 @@
+name: academicPeriodId
+in: query
+description: >-
+  Optional academic-period filter. This is the only academic-period filter
+  accepted by v1 classroom roster foundation list operations.
+schema:
+  type: string
+  format: uuid

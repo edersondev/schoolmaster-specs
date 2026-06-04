@@ -1,0 +1,36 @@
+post:
+  tags:
+    - Account Lifecycle
+  summary: Complete invitation and initial password setup
+  description: >-
+    Completes first password setup with a valid unexpired single-use invitation
+    token. Failed completion attempts revoke the invitation after 5 failures per
+    invitation, account, or IP within 15 minutes.
+  operationId: completeAccountInvitation
+  security: []
+  parameters:
+    - $ref: ../../components/parameters/account-lifecycle/InvitationToken.yaml
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: ../../components/schemas/account-lifecycle/PasswordSetupRequest.yaml
+  responses:
+    '200':
+      description: Invitation completed and password setup was accepted
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: ../../components/schemas/common/SuccessEnvelope.yaml
+              - type: object
+                properties:
+                  data:
+                    $ref: ../../components/schemas/account-lifecycle/AccountLifecycleResult.yaml
+    '401':
+      $ref: ../../components/responses/auth/TokenInvalid.yaml
+    '409':
+      $ref: ../../components/responses/common/Conflict.yaml
+    '422':
+      $ref: ../../components/responses/common/ValidationError.yaml

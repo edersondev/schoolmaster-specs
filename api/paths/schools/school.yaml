@@ -1,0 +1,87 @@
+get:
+  tags:
+    - Schools
+  summary: Review one school tenant
+  operationId: getSchool
+  parameters:
+    - $ref: ../../components/parameters/schools/SchoolId.yaml
+  responses:
+    '200':
+      description: School detail
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: ../../components/schemas/common/SuccessEnvelope.yaml
+              - type: object
+                properties:
+                  data:
+                    $ref: ../../components/schemas/schools/School.yaml
+    '404':
+      $ref: ../../components/responses/common/NotFound.yaml
+patch:
+  tags:
+    - Schools
+  summary: Update school profile or operational status
+  operationId: updateSchool
+  parameters:
+    - $ref: ../../components/parameters/schools/SchoolId.yaml
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: ../../components/schemas/schools/SchoolUpdateRequest.yaml
+  responses:
+    '200':
+      description: School updated
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: ../../components/schemas/common/SuccessEnvelope.yaml
+              - type: object
+                properties:
+                  data:
+                    $ref: ../../components/schemas/schools/School.yaml
+    '403':
+      $ref: ../../components/responses/common/Forbidden.yaml
+    '404':
+      $ref: ../../components/responses/common/NotFound.yaml
+    '422':
+      $ref: ../../components/responses/common/ValidationError.yaml
+delete:
+  tags:
+    - Schools
+  summary: Soft delete a school tenant
+  operationId: deleteSchool
+  parameters:
+    - $ref: ../../components/parameters/schools/SchoolId.yaml
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: ../../components/schemas/common/LifecycleActionRequest.yaml
+  responses:
+    '200':
+      description: School soft deleted
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: ../../components/schemas/common/SuccessEnvelope.yaml
+              - type: object
+                properties:
+                  data:
+                    $ref: ../../components/schemas/common/LifecycleOutcome.yaml
+    '401':
+      $ref: ../../components/responses/auth/Unauthorized.yaml
+    '403':
+      $ref: ../../components/responses/common/Forbidden.yaml
+    '404':
+      $ref: ../../components/responses/common/NotFound.yaml
+    '409':
+      $ref: ../../components/responses/common/Conflict.yaml
+    '422':
+      $ref: ../../components/responses/common/ValidationError.yaml

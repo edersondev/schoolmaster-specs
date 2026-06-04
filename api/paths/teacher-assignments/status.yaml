@@ -1,0 +1,35 @@
+patch:
+  tags:
+    - Teacher Assignments
+  summary: Deactivate a teacher assignment
+  description: >-
+    Deactivates an active teacher assignment. A reason and today-or-past
+    effective end date inside the academic period are required; the end date
+    must be on or after the assignment effective start date.
+  operationId: updateTeacherAssignmentStatus
+  parameters:
+    - $ref: ../../components/parameters/schools/TenantContext.yaml
+    - $ref: ../../components/parameters/teacher-assignments/TeacherAssignmentId.yaml
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: ../../components/schemas/teacher-assignments/TeacherAssignmentStatusUpdateRequest.yaml
+  responses:
+    '200':
+      description: Teacher assignment deactivated
+      content:
+        application/json:
+          schema:
+            $ref: ../../components/schemas/teacher-assignments/TeacherAssignmentEnvelope.yaml
+    '401':
+      $ref: ../../components/responses/auth/Unauthorized.yaml
+    '403':
+      $ref: ../../components/responses/classroom/ClassroomRosterForbidden.yaml
+    '404':
+      $ref: ../../components/responses/common/NotFound.yaml
+    '409':
+      $ref: ../../components/responses/common/Conflict.yaml
+    '422':
+      $ref: ../../components/responses/common/ValidationError.yaml

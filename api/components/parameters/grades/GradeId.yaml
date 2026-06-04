@@ -1,0 +1,6 @@
+name: gradeId
+in: path
+required: true
+schema:
+  type: string
+  format: uuid
