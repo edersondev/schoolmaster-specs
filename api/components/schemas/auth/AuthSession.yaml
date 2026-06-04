@@ -1,0 +1,28 @@
+type: object
+required:
+  - token
+  - token_expires_at
+  - user
+  - roles
+  - permissions
+properties:
+  token:
+    type: string
+  token_expires_at:
+    type: string
+    format: date-time
+    description: Bearer token expiration timestamp, 8 hours after issuance.
+  user:
+    $ref: ../users/User.yaml
+  resolved_school:
+    oneOf:
+      - $ref: ../schools/School.yaml
+      - type: 'null'
+  roles:
+    type: array
+    items:
+      $ref: ../access/Role.yaml
+  permissions:
+    type: array
+    items:
+      $ref: ../access/Permission.yaml

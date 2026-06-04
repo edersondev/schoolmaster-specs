@@ -1,0 +1,34 @@
+post:
+  tags:
+    - Auth
+  summary: Authenticate a user in platform or school context
+  description: >-
+    Successful bearer tokens expire 8 hours after issuance. Inactive users and
+    inactive school contexts cannot authenticate or continue protected
+    workflows.
+  operationId: login
+  security: []
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: ../../components/schemas/auth/LoginRequest.yaml
+  responses:
+    '200':
+      description: Authentication succeeded
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: ../../components/schemas/common/SuccessEnvelope.yaml
+              - type: object
+                properties:
+                  data:
+                    $ref: ../../components/schemas/auth/AuthSession.yaml
+    '401':
+      $ref: ../../components/responses/auth/Unauthorized.yaml
+    '422':
+      $ref: ../../components/responses/common/ValidationError.yaml
+    '429':
+      $ref: ../../components/responses/auth/AuthLockout.yaml

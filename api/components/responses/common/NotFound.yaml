@@ -1,0 +1,5 @@
+description: Resource was not found in the permitted scope
+content:
+  application/json:
+    schema:
+      $ref: ../../schemas/common/ErrorEnvelope.yaml

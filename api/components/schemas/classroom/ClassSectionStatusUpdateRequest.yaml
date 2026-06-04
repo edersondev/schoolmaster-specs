@@ -1,0 +1,22 @@
+type: object
+additionalProperties: false
+required:
+  - status
+  - effective_at
+  - reason
+properties:
+  status:
+    type: string
+    enum:
+      - inactive
+  effective_at:
+    type: string
+    format: date
+    description: >-
+      Must be today or a past date in the resolved school's configured timezone,
+      or the application default timezone when the school has no configured
+      timezone, and must fall inside the class section academic period.
+  reason:
+    type: string
+    minLength: 1
+    maxLength: 500

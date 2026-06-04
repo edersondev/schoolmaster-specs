@@ -1,0 +1,56 @@
+get:
+  tags:
+    - Users
+  summary: List users in permitted scope
+  operationId: listUsers
+  parameters:
+    - $ref: ../../components/parameters/schools/TenantContext.yaml
+    - $ref: ../../components/parameters/common/Page.yaml
+    - $ref: ../../components/parameters/common/PerPage.yaml
+    - $ref: ../../components/parameters/common/StatusFilter.yaml
+    - $ref: ../../components/parameters/common/Sort.yaml
+  responses:
+    '200':
+      description: User collection
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: ../../components/schemas/common/PaginatedEnvelope.yaml
+              - type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: ../../components/schemas/users/User.yaml
+    '403':
+      $ref: ../../components/responses/schools/TenantMismatch.yaml
+post:
+  tags:
+    - Users
+  summary: Create a user inside the permitted scope
+  operationId: createUser
+  parameters:
+    - $ref: ../../components/parameters/schools/TenantContext.yaml
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: ../../components/schemas/users/UserCreateRequest.yaml
+  responses:
+    '201':
+      description: User created
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: ../../components/schemas/common/SuccessEnvelope.yaml
+              - type: object
+                properties:
+                  data:
+                    $ref: ../../components/schemas/users/User.yaml
+    '403':
+      $ref: ../../components/responses/schools/TenantMismatch.yaml
+    '422':
+      $ref: ../../components/responses/common/ValidationError.yaml

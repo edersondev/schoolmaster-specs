@@ -1,0 +1,44 @@
+type: object
+required:
+  - id
+  - school_id
+  - owner_user_id
+  - title
+  - content_type
+  - file_size_bytes
+  - scan_status
+  - status
+properties:
+  id:
+    type: string
+    format: uuid
+  school_id:
+    type: string
+    format: uuid
+  owner_user_id:
+    type: string
+    format: uuid
+  folder_id:
+    type:
+      - string
+      - 'null'
+    format: uuid
+  title:
+    type: string
+  description:
+    type:
+      - string
+      - 'null'
+  content_type:
+    $ref: TeacherContentType.yaml
+  declared_content_type:
+    type: string
+  detected_content_type:
+    type: string
+  file_size_bytes:
+    type: integer
+    maximum: 26214400
+  scan_status:
+    $ref: TeacherContentScanStatus.yaml
+  status:
+    $ref: TeacherWorkflowLifecycleState.yaml

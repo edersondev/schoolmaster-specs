@@ -1,0 +1,21 @@
+type: object
+required:
+  - title
+  - content_type
+  - file
+properties:
+  folder_id:
+    type: string
+    format: uuid
+  title:
+    type: string
+  description:
+    type:
+      - string
+      - 'null'
+  content_type:
+    $ref: TeacherContentType.yaml
+  file:
+    type: string
+    format: binary
+    description: PDF, image, text, or office document up to 25 MB.

@@ -1,0 +1,21 @@
+description: >-
+  Administration lifecycle access is forbidden because the tenant context is
+  missing, inactive, or outside permitted scope, or because the authenticated
+  user lacks the required platform or school administration permission.
+content:
+  application/json:
+    schema:
+      $ref: ../../schemas/common/ErrorEnvelope.yaml
+    examples:
+      tenantMismatch:
+        summary: Tenant context is invalid for this school-scoped operation
+        value:
+          error:
+            code: tenant_mismatch
+            message: Tenant context is missing, inactive, or outside permitted scope.
+      insufficientPermission:
+        summary: Scope is valid but the actor lacks administration lifecycle permission
+        value:
+          error:
+            code: forbidden
+            message: The authenticated user lacks permission for this action.

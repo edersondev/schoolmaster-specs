@@ -1,0 +1,19 @@
+type: object
+required:
+  - question_type
+  - prompt
+  - sequence
+properties:
+  question_type:
+    $ref: QuestionType.yaml
+  prompt:
+    type: string
+  options:
+    type: array
+    items:
+      type: string
+    minItems: 2
+  correct_answer:
+    type: string
+  sequence:
+    type: integer

@@ -1,0 +1,93 @@
+get:
+  tags:
+    - Questionnaires
+  summary: Retrieve a tenant-scoped questionnaire
+  operationId: getQuestionnaire
+  parameters:
+    - $ref: ../../components/parameters/schools/TenantContext.yaml
+    - $ref: ../../components/parameters/questionnaires/QuestionnaireId.yaml
+  responses:
+    '200':
+      description: Questionnaire detail
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: ../../components/schemas/common/SuccessEnvelope.yaml
+              - type: object
+                properties:
+                  data:
+                    $ref: ../../components/schemas/questionnaires/Questionnaire.yaml
+    '401':
+      $ref: ../../components/responses/auth/Unauthorized.yaml
+    '403':
+      $ref: ../../components/responses/teacher-content/TeacherWorkflowForbidden.yaml
+    '404':
+      $ref: ../../components/responses/common/NotFound.yaml
+patch:
+  tags:
+    - Questionnaires
+  summary: Update editable questionnaire fields
+  description: >-
+    Edits that change historical student-facing meaning after use by a published
+    or assigned learning set are rejected in v1.
+  operationId: updateQuestionnaire
+  parameters:
+    - $ref: ../../components/parameters/schools/TenantContext.yaml
+    - $ref: ../../components/parameters/questionnaires/QuestionnaireId.yaml
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: ../../components/schemas/questionnaires/QuestionnaireUpdateRequest.yaml
+  responses:
+    '200':
+      description: Questionnaire updated
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: ../../components/schemas/common/SuccessEnvelope.yaml
+              - type: object
+                properties:
+                  data:
+                    $ref: ../../components/schemas/questionnaires/Questionnaire.yaml
+    '401':
+      $ref: ../../components/responses/auth/Unauthorized.yaml
+    '403':
+      $ref: ../../components/responses/teacher-content/TeacherWorkflowForbidden.yaml
+    '404':
+      $ref: ../../components/responses/common/NotFound.yaml
+    '409':
+      $ref: ../../components/responses/common/Conflict.yaml
+    '422':
+      $ref: ../../components/responses/common/ValidationError.yaml
+delete:
+  tags:
+    - Questionnaires
+  summary: Soft-delete a questionnaire
+  operationId: deleteQuestionnaire
+  parameters:
+    - $ref: ../../components/parameters/schools/TenantContext.yaml
+    - $ref: ../../components/parameters/questionnaires/QuestionnaireId.yaml
+  responses:
+    '200':
+      description: Questionnaire moved to deleted state
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: ../../components/schemas/common/SuccessEnvelope.yaml
+              - type: object
+                properties:
+                  data:
+                    $ref: ../../components/schemas/questionnaires/Questionnaire.yaml
+    '401':
+      $ref: ../../components/responses/auth/Unauthorized.yaml
+    '403':
+      $ref: ../../components/responses/teacher-content/TeacherWorkflowForbidden.yaml
+    '404':
+      $ref: ../../components/responses/common/NotFound.yaml
+    '409':
+      $ref: ../../components/responses/common/Conflict.yaml

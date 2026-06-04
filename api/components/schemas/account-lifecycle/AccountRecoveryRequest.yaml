@@ -1,0 +1,13 @@
+type: object
+additionalProperties: false
+required:
+  - action
+properties:
+  action:
+    type: string
+    enum:
+      - unlock
+      - reactivate
+  reason:
+    type: string
+    maxLength: 500

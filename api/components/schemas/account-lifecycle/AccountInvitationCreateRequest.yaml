@@ -1,0 +1,35 @@
+type: object
+additionalProperties: false
+required:
+  - scope
+  - full_name
+  - email
+  - role_ids
+properties:
+  scope:
+    type: string
+    enum:
+      - platform
+      - school
+  school_id:
+    type:
+      - string
+      - 'null'
+    format: uuid
+  full_name:
+    type: string
+    minLength: 1
+    maxLength: 255
+  email:
+    type: string
+    format: email
+    maxLength: 255
+  role_ids:
+    type: array
+    minItems: 1
+    items:
+      type: string
+      format: uuid
+  delivery_metadata:
+    type: object
+    additionalProperties: true

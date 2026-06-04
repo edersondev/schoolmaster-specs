@@ -1,0 +1,26 @@
+type: object
+required:
+  - error
+properties:
+  error:
+    type: object
+    required:
+      - code
+      - message
+    properties:
+      code:
+        type: string
+        examples:
+          - validation_failed
+          - forbidden
+          - tenant_mismatch
+          - auth_locked
+          - token_expired
+          - token_revoked
+          - inactive_user
+          - inactive_school
+      message:
+        type: string
+      details:
+        type: object
+        additionalProperties: true

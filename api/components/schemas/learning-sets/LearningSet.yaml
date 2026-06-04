@@ -1,0 +1,44 @@
+type: object
+required:
+  - id
+  - school_id
+  - owner_user_id
+  - academic_period_id
+  - title
+  - status
+  - entries
+  - assignments
+properties:
+  id:
+    type: string
+    format: uuid
+  school_id:
+    type: string
+    format: uuid
+  owner_user_id:
+    type: string
+    format: uuid
+  academic_period_id:
+    type: string
+    format: uuid
+  title:
+    type: string
+  description:
+    type:
+      - string
+      - 'null'
+  published_at:
+    type:
+      - string
+      - 'null'
+    format: date-time
+  status:
+    $ref: ../teacher-content/TeacherWorkflowLifecycleState.yaml
+  entries:
+    type: array
+    items:
+      $ref: LearningSetEntry.yaml
+  assignments:
+    type: array
+    items:
+      $ref: LearningSetAssignment.yaml

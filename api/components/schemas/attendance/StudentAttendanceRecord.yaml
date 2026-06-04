@@ -1,0 +1,35 @@
+type: object
+required:
+  - id
+  - school_id
+  - student_profile_id
+  - academic_period_id
+  - recorded_by_user_id
+  - attendance_date
+  - attendance_status
+  - status
+properties:
+  id:
+    type: string
+    format: uuid
+  school_id:
+    type: string
+    format: uuid
+  student_profile_id:
+    type: string
+    format: uuid
+  academic_period_id:
+    type: string
+    format: uuid
+  recorded_by_user_id:
+    type: string
+    format: uuid
+  attendance_date:
+    type: string
+    format: date
+  attendance_status:
+    allOf:
+      - $ref: AttendanceStatus.yaml
+    description: Current student-visible attendance status after any accepted corrections.
+  status:
+    $ref: ../teacher-content/TeacherWorkflowLifecycleState.yaml

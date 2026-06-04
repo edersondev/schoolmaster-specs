@@ -1,0 +1,23 @@
+allOf:
+  - $ref: SuccessEnvelope.yaml
+  - type: object
+    required:
+      - data
+      - meta
+    properties:
+      data:
+        type: array
+        items: {}
+      meta:
+        type: object
+        required:
+          - page
+          - per_page
+          - total
+        properties:
+          page:
+            type: integer
+          per_page:
+            type: integer
+          total:
+            type: integer

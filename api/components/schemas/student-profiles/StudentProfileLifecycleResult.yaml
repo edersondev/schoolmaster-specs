@@ -1,0 +1,9 @@
+type: object
+required:
+  - student_profile
+  - enrollment_history
+properties:
+  student_profile:
+    $ref: StudentProfile.yaml
+  enrollment_history:
+    $ref: EnrollmentHistory.yaml

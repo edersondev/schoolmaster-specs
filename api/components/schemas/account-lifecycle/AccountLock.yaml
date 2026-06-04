@@ -1,0 +1,47 @@
+type: object
+required:
+  - user_id
+  - status
+properties:
+  id:
+    type:
+      - string
+      - 'null'
+    format: uuid
+  user_id:
+    type: string
+    format: uuid
+  school_id:
+    type:
+      - string
+      - 'null'
+    format: uuid
+  lock_type:
+    type:
+      - string
+      - 'null'
+    enum:
+      - administrative
+      - failed_login
+      - recovery_hold
+      - null
+  status:
+    type: string
+    enum:
+      - active
+      - cleared
+      - none
+  reason:
+    type:
+      - string
+      - 'null'
+  locked_at:
+    type:
+      - string
+      - 'null'
+    format: date-time
+  cleared_at:
+    type:
+      - string
+      - 'null'
+    format: date-time

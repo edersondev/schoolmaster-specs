@@ -1,0 +1,27 @@
+type: object
+required:
+  - id
+  - full_name
+  - email
+  - status
+  - roles
+properties:
+  id:
+    type: string
+    format: uuid
+  school_id:
+    type:
+      - string
+      - 'null'
+    format: uuid
+  full_name:
+    type: string
+  email:
+    type: string
+    format: email
+  status:
+    $ref: ../common/Status.yaml
+  roles:
+    type: array
+    items:
+      $ref: ../access/Role.yaml

@@ -1,0 +1,28 @@
+type: object
+required:
+  - id
+  - academic_period_id
+  - title
+  - status
+  - published_at
+  - entries
+properties:
+  id:
+    type: string
+    format: uuid
+  academic_period_id:
+    type: string
+    format: uuid
+  title:
+    type: string
+  status:
+    type: string
+    enum:
+      - published
+  published_at:
+    type: string
+    format: date-time
+  entries:
+    type: array
+    items:
+      $ref: StudentLearningSetEntry.yaml

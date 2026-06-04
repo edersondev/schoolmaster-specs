@@ -1,0 +1,60 @@
+get:
+  tags:
+    - Grades
+  summary: List grade records in permitted scope
+  operationId: listGrades
+  parameters:
+    - $ref: ../../components/parameters/schools/TenantContext.yaml
+    - $ref: ../../components/parameters/common/Page.yaml
+    - $ref: ../../components/parameters/common/PerPage.yaml
+  responses:
+    '200':
+      description: Grade record collection
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: ../../components/schemas/common/PaginatedEnvelope.yaml
+              - type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: ../../components/schemas/grades/GradeRecord.yaml
+    '401':
+      $ref: ../../components/responses/auth/Unauthorized.yaml
+    '403':
+      $ref: ../../components/responses/teacher-content/TeacherWorkflowForbidden.yaml
+    '422':
+      $ref: ../../components/responses/common/ValidationError.yaml
+post:
+  tags:
+    - Grades
+  summary: Record a grade for a student in an academic period
+  operationId: createGrade
+  parameters:
+    - $ref: ../../components/parameters/schools/TenantContext.yaml
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: ../../components/schemas/grades/GradeCreateRequest.yaml
+  responses:
+    '201':
+      description: Grade record created
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: ../../components/schemas/common/SuccessEnvelope.yaml
+              - type: object
+                properties:
+                  data:
+                    $ref: ../../components/schemas/grades/GradeRecord.yaml
+    '401':
+      $ref: ../../components/responses/auth/Unauthorized.yaml
+    '403':
+      $ref: ../../components/responses/teacher-content/TeacherWorkflowForbidden.yaml
+    '422':
+      $ref: ../../components/responses/common/ValidationError.yaml

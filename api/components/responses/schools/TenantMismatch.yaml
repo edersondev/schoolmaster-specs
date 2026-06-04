@@ -1,0 +1,5 @@
+description: Tenant context is missing, inactive, or outside permitted scope
+content:
+  application/json:
+    schema:
+      $ref: ../../schemas/common/ErrorEnvelope.yaml

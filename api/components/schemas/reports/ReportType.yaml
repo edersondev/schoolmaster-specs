@@ -1,0 +1,6 @@
+type: string
+enum:
+  - attendance
+  - grades
+  - academic_structure
+  - school_activity

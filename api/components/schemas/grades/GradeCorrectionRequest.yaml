@@ -1,0 +1,18 @@
+type: object
+additionalProperties: false
+required:
+  - grade_value
+  - correction_reason
+properties:
+  grade_value:
+    type: number
+    minimum: 0
+    maximum: 100
+  grade_label:
+    type:
+      - string
+      - 'null'
+  correction_reason:
+    type: string
+    minLength: 10
+    maxLength: 500

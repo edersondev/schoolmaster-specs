@@ -1,0 +1,50 @@
+type: object
+required:
+  - id
+  - user_id
+  - scope
+  - status
+  - expires_at
+  - delivery_channel
+properties:
+  id:
+    type: string
+    format: uuid
+  user_id:
+    type: string
+    format: uuid
+  school_id:
+    type:
+      - string
+      - 'null'
+    format: uuid
+  scope:
+    type: string
+    enum:
+      - platform
+      - school
+  status:
+    type: string
+    enum:
+      - pending
+      - completed
+      - expired
+      - superseded
+      - revoked
+  expires_at:
+    type: string
+    format: date-time
+  completed_at:
+    type:
+      - string
+      - 'null'
+    format: date-time
+  delivery_channel:
+    type: string
+    enum:
+      - email
+  delivery_requested_at:
+    type:
+      - string
+      - 'null'
+    format: date-time

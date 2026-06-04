@@ -66,3 +66,23 @@ This follows [ADR 004](../decisions/004-use-tenant-by-column.md).
   tenant-owned.
 - Tenant-owned records use status fields and soft-delete support where recovery
   or audit history is relevant.
+
+## Teacher Workflow Tenant Rules
+
+- Teacher content, questionnaires, learning sets, learning-set assignments,
+  grades, attendance, correction records, import runs, and teacher workflow
+  audit events are school-owned through `school_id`.
+- `X-School-Id` resolution must complete before teacher workflow lookup, file
+  access, roster lookup, student lookup, teacher lookup, academic-period
+  lookup, duplicate checks, dependency checks, authorization, persistence,
+  audit writes, import validation, or response shaping.
+- Same-school ownership checks are mandatory for teacher actors on teacher
+  content, questionnaires, learning sets, grades, and attendance. Teacher
+  scope is owner or creator bound, not school-wide.
+- School administrators may manage same-school teacher workflow records only
+  inside an active permitted school context.
+- Platform administration is not an implicit bypass for teacher workflow
+  downloads, corrections, imports, deletes, restores, or lifecycle changes.
+- Cross-tenant not-found and tenant-mismatch behavior must avoid revealing
+  another school's record existence through validation, authorization, download,
+  import, or correction responses.

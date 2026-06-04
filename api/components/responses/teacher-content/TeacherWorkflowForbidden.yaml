@@ -1,0 +1,7 @@
+description: >-
+  Tenant context is missing, inactive, or outside permitted scope, or the
+  authenticated user lacks the required teacher workflow permission.
+content:
+  application/json:
+    schema:
+      $ref: ../../schemas/common/ErrorEnvelope.yaml

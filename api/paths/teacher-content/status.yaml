@@ -1,0 +1,40 @@
+patch:
+  tags:
+    - Teacher Content
+  summary: Activate or deactivate a teacher content item
+  description: >-
+    Only `active` and `inactive` are accepted in this transition endpoint.
+    Delete and restore use dedicated operations. Activation validates current
+    tenant, dependency, scan, and student-visibility rules.
+  operationId: updateTeacherContentStatus
+  parameters:
+    - $ref: ../../components/parameters/schools/TenantContext.yaml
+    - $ref: ../../components/parameters/teacher-content/ContentItemId.yaml
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: ../../components/schemas/teacher-content/TeacherWorkflowStatusUpdateRequest.yaml
+  responses:
+    '200':
+      description: Teacher content status updated
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: ../../components/schemas/common/SuccessEnvelope.yaml
+              - type: object
+                properties:
+                  data:
+                    $ref: ../../components/schemas/teacher-content/TeacherContentItem.yaml
+    '401':
+      $ref: ../../components/responses/auth/Unauthorized.yaml
+    '403':
+      $ref: ../../components/responses/teacher-content/TeacherWorkflowForbidden.yaml
+    '404':
+      $ref: ../../components/responses/common/NotFound.yaml
+    '409':
+      $ref: ../../components/responses/common/Conflict.yaml
+    '422':
+      $ref: ../../components/responses/common/ValidationError.yaml

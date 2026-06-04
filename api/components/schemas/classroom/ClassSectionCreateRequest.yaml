@@ -1,0 +1,26 @@
+type: object
+additionalProperties: false
+required:
+  - academic_period_id
+  - code
+  - name
+properties:
+  academic_period_id:
+    type: string
+    format: uuid
+  code:
+    type: string
+    minLength: 1
+    maxLength: 80
+  name:
+    type: string
+    minLength: 1
+    maxLength: 255
+  course:
+    $ref: ClassSectionMetadataBlock.yaml
+  classroom:
+    $ref: ClassSectionMetadataBlock.yaml
+  section:
+    $ref: ClassSectionMetadataBlock.yaml
+  group:
+    $ref: ClassSectionMetadataBlock.yaml

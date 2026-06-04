@@ -1,0 +1,47 @@
+type: object
+required:
+  - student_profile
+  - transfer
+  - enrollment_history
+properties:
+  student_profile:
+    $ref: StudentProfile.yaml
+  transfer:
+    type: object
+    required:
+      - id
+      - school_id
+      - student_profile_id
+      - effective_at
+      - reason
+      - actor_user_id
+    properties:
+      id:
+        type: string
+        format: uuid
+      school_id:
+        type: string
+        format: uuid
+      student_profile_id:
+        type: string
+        format: uuid
+      destination_school_id:
+        type:
+          - string
+          - 'null'
+        format: uuid
+      destination_student_profile_id:
+        type:
+          - string
+          - 'null'
+        format: uuid
+      effective_at:
+        type: string
+        format: date
+      reason:
+        type: string
+      actor_user_id:
+        type: string
+        format: uuid
+  enrollment_history:
+    $ref: EnrollmentHistory.yaml

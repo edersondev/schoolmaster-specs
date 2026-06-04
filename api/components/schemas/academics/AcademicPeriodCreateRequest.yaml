@@ -1,0 +1,21 @@
+type: object
+required:
+  - academic_year_id
+  - name
+  - sequence
+  - start_date
+  - end_date
+properties:
+  academic_year_id:
+    type: string
+    format: uuid
+  name:
+    type: string
+  sequence:
+    type: integer
+  start_date:
+    type: string
+    format: date
+  end_date:
+    type: string
+    format: date

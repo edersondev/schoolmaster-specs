@@ -1,0 +1,8 @@
+type: object
+additionalProperties: false
+required:
+  - class_section_id
+properties:
+  class_section_id:
+    type: string
+    format: uuid

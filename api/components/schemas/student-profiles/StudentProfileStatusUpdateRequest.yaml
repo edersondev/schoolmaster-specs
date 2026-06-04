@@ -1,0 +1,19 @@
+type: object
+required:
+  - status
+  - effective_at
+  - reason
+additionalProperties: false
+properties:
+  status:
+    type: string
+    enum:
+      - active
+      - inactive
+  effective_at:
+    type: string
+    format: date
+  reason:
+    type: string
+    minLength: 1
+    maxLength: 500

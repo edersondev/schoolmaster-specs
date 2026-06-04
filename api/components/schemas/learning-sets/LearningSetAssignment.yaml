@@ -1,0 +1,38 @@
+type: object
+required:
+  - id
+  - school_id
+  - learning_set_id
+  - assignment_mode
+  - status
+  - assigned_at
+properties:
+  id:
+    type: string
+    format: uuid
+  school_id:
+    type: string
+    format: uuid
+  learning_set_id:
+    type: string
+    format: uuid
+  assignment_mode:
+    type: string
+    enum:
+      - roster
+      - legacy_direct
+  class_section_id:
+    type:
+      - string
+      - 'null'
+    format: uuid
+  student_profile_id:
+    type:
+      - string
+      - 'null'
+    format: uuid
+  status:
+    $ref: ../teacher-content/TeacherWorkflowLifecycleState.yaml
+  assigned_at:
+    type: string
+    format: date-time

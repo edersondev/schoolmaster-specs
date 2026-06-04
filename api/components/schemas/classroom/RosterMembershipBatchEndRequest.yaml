@@ -1,0 +1,25 @@
+type: object
+additionalProperties: false
+required:
+  - effective_end_date
+  - reason
+  - roster_membership_ids
+properties:
+  effective_end_date:
+    type: string
+    format: date
+    description: >-
+      Must be today-or-past in the resolved school timezone, inside the academic
+      period, and on or after each membership effective start date.
+  reason:
+    type: string
+    minLength: 1
+    maxLength: 500
+  roster_membership_ids:
+    type: array
+    minItems: 1
+    maxItems: 100
+    uniqueItems: true
+    items:
+      type: string
+      format: uuid

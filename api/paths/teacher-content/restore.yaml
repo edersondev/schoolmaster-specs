@@ -1,0 +1,37 @@
+post:
+  tags:
+    - Teacher Content
+  summary: Restore a deleted teacher content item
+  description: >-
+    Restores the record to `inactive`. A separate status transition is required
+    before active or student-facing use.
+  operationId: restoreTeacherContent
+  parameters:
+    - $ref: ../../components/parameters/schools/TenantContext.yaml
+    - $ref: ../../components/parameters/teacher-content/ContentItemId.yaml
+  requestBody:
+    required: false
+    content:
+      application/json:
+        schema:
+          $ref: ../../components/schemas/teacher-content/TeacherWorkflowRestoreRequest.yaml
+  responses:
+    '200':
+      description: Teacher content item restored to inactive
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: ../../components/schemas/common/SuccessEnvelope.yaml
+              - type: object
+                properties:
+                  data:
+                    $ref: ../../components/schemas/teacher-content/TeacherContentItem.yaml
+    '401':
+      $ref: ../../components/responses/auth/Unauthorized.yaml
+    '403':
+      $ref: ../../components/responses/teacher-content/TeacherWorkflowForbidden.yaml
+    '404':
+      $ref: ../../components/responses/common/NotFound.yaml
+    '409':
+      $ref: ../../components/responses/common/Conflict.yaml

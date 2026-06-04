@@ -1,0 +1,12 @@
+type: object
+additionalProperties: false
+properties:
+  name:
+    type: string
+  status:
+    $ref: ../common/Status.yaml
+  permission_ids:
+    type: array
+    items:
+      type: string
+      format: uuid

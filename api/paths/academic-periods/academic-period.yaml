@@ -1,0 +1,98 @@
+get:
+  tags:
+    - Academic Periods
+  summary: Retrieve an academic period
+  operationId: getAcademicPeriod
+  parameters:
+    - $ref: ../../components/parameters/schools/TenantContext.yaml
+    - $ref: ../../components/parameters/academics/AcademicPeriodId.yaml
+  responses:
+    '200':
+      description: Academic period detail
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: ../../components/schemas/common/SuccessEnvelope.yaml
+              - type: object
+                properties:
+                  data:
+                    $ref: ../../components/schemas/academics/AcademicPeriod.yaml
+    '401':
+      $ref: ../../components/responses/auth/Unauthorized.yaml
+    '403':
+      $ref: ../../components/responses/common/AdministrationForbidden.yaml
+    '404':
+      $ref: ../../components/responses/common/NotFound.yaml
+patch:
+  tags:
+    - Academic Periods
+  summary: Update documented academic period fields
+  operationId: updateAcademicPeriod
+  parameters:
+    - $ref: ../../components/parameters/schools/TenantContext.yaml
+    - $ref: ../../components/parameters/academics/AcademicPeriodId.yaml
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: ../../components/schemas/academics/AcademicPeriodUpdateRequest.yaml
+  responses:
+    '200':
+      description: Academic period updated
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: ../../components/schemas/common/SuccessEnvelope.yaml
+              - type: object
+                properties:
+                  data:
+                    $ref: ../../components/schemas/academics/AcademicPeriod.yaml
+    '401':
+      $ref: ../../components/responses/auth/Unauthorized.yaml
+    '403':
+      $ref: ../../components/responses/common/AdministrationForbidden.yaml
+    '404':
+      $ref: ../../components/responses/common/NotFound.yaml
+    '409':
+      $ref: ../../components/responses/common/Conflict.yaml
+    '422':
+      $ref: ../../components/responses/common/ValidationError.yaml
+delete:
+  tags:
+    - Academic Periods
+  summary: Soft delete an academic period
+  operationId: deleteAcademicPeriod
+  parameters:
+    - $ref: ../../components/parameters/schools/TenantContext.yaml
+    - $ref: ../../components/parameters/academics/AcademicPeriodId.yaml
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: ../../components/schemas/common/LifecycleActionRequest.yaml
+  responses:
+    '200':
+      description: Academic period soft deleted
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: ../../components/schemas/common/SuccessEnvelope.yaml
+              - type: object
+                properties:
+                  data:
+                    $ref: ../../components/schemas/common/LifecycleOutcome.yaml
+    '401':
+      $ref: ../../components/responses/auth/Unauthorized.yaml
+    '403':
+      $ref: ../../components/responses/common/AdministrationForbidden.yaml
+    '404':
+      $ref: ../../components/responses/common/NotFound.yaml
+    '409':
+      $ref: ../../components/responses/common/Conflict.yaml
+    '422':
+      $ref: ../../components/responses/common/ValidationError.yaml

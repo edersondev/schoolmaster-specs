@@ -1,0 +1,14 @@
+type: object
+additionalProperties: false
+description: >-
+  Structured v1 metadata block. No separate Course, Classroom, Section, or Group
+  table or lifecycle resource is created in this slice.
+properties:
+  code:
+    type: string
+    minLength: 1
+    maxLength: 80
+  name:
+    type: string
+    minLength: 1
+    maxLength: 255

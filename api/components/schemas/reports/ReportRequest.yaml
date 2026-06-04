@@ -1,0 +1,9 @@
+type: object
+required:
+  - report_type
+  - filters
+properties:
+  report_type:
+    $ref: ReportType.yaml
+  filters:
+    $ref: ReportFilters.yaml

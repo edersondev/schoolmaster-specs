@@ -1,0 +1,56 @@
+type: object
+required:
+  - id
+  - school_id
+  - student_profile_id
+  - academic_period_id
+  - recorded_by_user_id
+  - grade_value
+  - status
+  - recorded_at
+  - current_value
+  - correction_history
+properties:
+  id:
+    type: string
+    format: uuid
+  school_id:
+    type: string
+    format: uuid
+  student_profile_id:
+    type: string
+    format: uuid
+  academic_period_id:
+    type: string
+    format: uuid
+  recorded_by_user_id:
+    type: string
+    format: uuid
+  original_recorded_by_user_id:
+    type: string
+    format: uuid
+  grade_value:
+    type: number
+    minimum: 0
+    maximum: 100
+  current_value:
+    type: number
+    minimum: 0
+    maximum: 100
+  original_value:
+    type:
+      - number
+      - 'null'
+  grade_label:
+    type:
+      - string
+      - 'null'
+  correction_history:
+    type: array
+    items:
+      $ref: ../common/CorrectionRecord.yaml
+  status:
+    $ref: ../teacher-content/TeacherWorkflowLifecycleState.yaml
+  recorded_at:
+    type: string
+    format: date-time

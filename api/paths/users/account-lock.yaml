@@ -1,0 +1,94 @@
+get:
+  tags:
+    - Account Lifecycle
+  summary: Review account lock state
+  operationId: getAccountLock
+  parameters:
+    - $ref: ../../components/parameters/schools/TenantContext.yaml
+    - $ref: ../../components/parameters/users/UserId.yaml
+  responses:
+    '200':
+      description: Account lock state
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: ../../components/schemas/common/SuccessEnvelope.yaml
+              - type: object
+                properties:
+                  data:
+                    $ref: ../../components/schemas/account-lifecycle/AccountLock.yaml
+    '401':
+      $ref: ../../components/responses/auth/Unauthorized.yaml
+    '403':
+      $ref: ../../components/responses/account-lifecycle/AccountLifecycleForbidden.yaml
+    '404':
+      $ref: ../../components/responses/common/NotFound.yaml
+post:
+  tags:
+    - Account Lifecycle
+  summary: Administratively lock an account
+  description: >-
+    Administrative locks remain active until an authorized unlock or recovery
+    action clears them and revoke all active bearer tokens for the affected
+    user.
+  operationId: lockAccount
+  parameters:
+    - $ref: ../../components/parameters/schools/TenantContext.yaml
+    - $ref: ../../components/parameters/users/UserId.yaml
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: ../../components/schemas/account-lifecycle/AccountLockRequest.yaml
+  responses:
+    '200':
+      description: Account locked
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: ../../components/schemas/common/SuccessEnvelope.yaml
+              - type: object
+                properties:
+                  data:
+                    $ref: ../../components/schemas/account-lifecycle/AccountLock.yaml
+    '401':
+      $ref: ../../components/responses/auth/Unauthorized.yaml
+    '403':
+      $ref: ../../components/responses/account-lifecycle/AccountLifecycleForbidden.yaml
+    '404':
+      $ref: ../../components/responses/common/NotFound.yaml
+    '409':
+      $ref: ../../components/responses/common/Conflict.yaml
+    '422':
+      $ref: ../../components/responses/common/ValidationError.yaml
+delete:
+  tags:
+    - Account Lifecycle
+  summary: Unlock or clear administrative account lock
+  operationId: unlockAccount
+  parameters:
+    - $ref: ../../components/parameters/schools/TenantContext.yaml
+    - $ref: ../../components/parameters/users/UserId.yaml
+  responses:
+    '200':
+      description: Account lock cleared
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: ../../components/schemas/common/SuccessEnvelope.yaml
+              - type: object
+                properties:
+                  data:
+                    $ref: ../../components/schemas/account-lifecycle/AccountLifecycleResult.yaml
+    '401':
+      $ref: ../../components/responses/auth/Unauthorized.yaml
+    '403':
+      $ref: ../../components/responses/account-lifecycle/AccountLifecycleForbidden.yaml
+    '404':
+      $ref: ../../components/responses/common/NotFound.yaml
+    '409':
+      $ref: ../../components/responses/common/Conflict.yaml

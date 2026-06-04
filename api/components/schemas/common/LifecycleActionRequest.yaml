@@ -1,0 +1,13 @@
+type: object
+required:
+  - effective_at
+  - reason
+additionalProperties: false
+properties:
+  effective_at:
+    type: string
+    format: date
+  reason:
+    type: string
+    minLength: 1
+    maxLength: 500

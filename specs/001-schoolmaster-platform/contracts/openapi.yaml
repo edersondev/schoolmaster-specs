@@ -2438,6 +2438,202 @@ paths:
           $ref: '#/components/responses/TeacherWorkflowForbidden'
         '422':
           $ref: '#/components/responses/ValidationError'
+  /api/v1/teacher-content/{contentItemId}:
+    get:
+      tags:
+      - Teacher Content
+      summary: Retrieve a tenant-scoped teacher content item
+      operationId: getTeacherContent
+      parameters:
+      - $ref: '#/components/parameters/TenantContext'
+      - $ref: '#/components/parameters/ContentItemId'
+      responses:
+        '200':
+          description: Teacher content item detail
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/SuccessEnvelope'
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/TeacherContentItem'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/TeacherWorkflowForbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    patch:
+      tags:
+      - Teacher Content
+      summary: Update editable metadata for a teacher content item
+      description: Only documented editable fields may change. Historical student-facing meaning changes are rejected after use by a published or assigned learning set.
+      operationId: updateTeacherContent
+      parameters:
+      - $ref: '#/components/parameters/TenantContext'
+      - $ref: '#/components/parameters/ContentItemId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TeacherContentUpdateRequest'
+      responses:
+        '200':
+          description: Teacher content item updated
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/SuccessEnvelope'
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/TeacherContentItem'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/TeacherWorkflowForbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+    delete:
+      tags:
+      - Teacher Content
+      summary: Soft-delete a teacher content item
+      operationId: deleteTeacherContent
+      parameters:
+      - $ref: '#/components/parameters/TenantContext'
+      - $ref: '#/components/parameters/ContentItemId'
+      responses:
+        '200':
+          description: Teacher content item moved to deleted state
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/SuccessEnvelope'
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/TeacherContentItem'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/TeacherWorkflowForbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+  /api/v1/teacher-content/{contentItemId}/status:
+    patch:
+      tags:
+      - Teacher Content
+      summary: Activate or deactivate a teacher content item
+      description: Only `active` and `inactive` are accepted in this transition endpoint. Delete and restore use dedicated operations. Activation validates current tenant, dependency, scan, and student-visibility rules.
+      operationId: updateTeacherContentStatus
+      parameters:
+      - $ref: '#/components/parameters/TenantContext'
+      - $ref: '#/components/parameters/ContentItemId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TeacherWorkflowStatusUpdateRequest'
+      responses:
+        '200':
+          description: Teacher content status updated
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/SuccessEnvelope'
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/TeacherContentItem'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/TeacherWorkflowForbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+  /api/v1/teacher-content/{contentItemId}/restore:
+    post:
+      tags:
+      - Teacher Content
+      summary: Restore a deleted teacher content item
+      description: Restores the record to `inactive`. A separate status transition is required before active or student-facing use.
+      operationId: restoreTeacherContent
+      parameters:
+      - $ref: '#/components/parameters/TenantContext'
+      - $ref: '#/components/parameters/ContentItemId'
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TeacherWorkflowRestoreRequest'
+      responses:
+        '200':
+          description: Teacher content item restored to inactive
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/SuccessEnvelope'
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/TeacherContentItem'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/TeacherWorkflowForbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+  /api/v1/teacher-content/{contentItemId}/download:
+    get:
+      tags:
+      - Teacher Content
+      summary: Request authorized download metadata for a teacher content item
+      description: Download access requires clean scan status, same-school authority, and an allowed active lifecycle state. Successful and denied attempts are audited with tenant-safe metadata only.
+      operationId: downloadTeacherContent
+      parameters:
+      - $ref: '#/components/parameters/TenantContext'
+      - $ref: '#/components/parameters/ContentItemId'
+      responses:
+        '200':
+          description: Download metadata returned for authorized clean content
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/SuccessEnvelope'
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/TeacherContentDownloadResult'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/TeacherWorkflowForbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
   /api/v1/questionnaires:
     get:
       tags:
@@ -2499,6 +2695,170 @@ paths:
           $ref: '#/components/responses/TeacherWorkflowForbidden'
         '422':
           $ref: '#/components/responses/ValidationError'
+  /api/v1/questionnaires/{questionnaireId}:
+    get:
+      tags:
+      - Questionnaires
+      summary: Retrieve a tenant-scoped questionnaire
+      operationId: getQuestionnaire
+      parameters:
+      - $ref: '#/components/parameters/TenantContext'
+      - $ref: '#/components/parameters/QuestionnaireId'
+      responses:
+        '200':
+          description: Questionnaire detail
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/SuccessEnvelope'
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/Questionnaire'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/TeacherWorkflowForbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    patch:
+      tags:
+      - Questionnaires
+      summary: Update editable questionnaire fields
+      description: Edits that change historical student-facing meaning after use by a published or assigned learning set are rejected in v1.
+      operationId: updateQuestionnaire
+      parameters:
+      - $ref: '#/components/parameters/TenantContext'
+      - $ref: '#/components/parameters/QuestionnaireId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/QuestionnaireUpdateRequest'
+      responses:
+        '200':
+          description: Questionnaire updated
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/SuccessEnvelope'
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/Questionnaire'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/TeacherWorkflowForbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+    delete:
+      tags:
+      - Questionnaires
+      summary: Soft-delete a questionnaire
+      operationId: deleteQuestionnaire
+      parameters:
+      - $ref: '#/components/parameters/TenantContext'
+      - $ref: '#/components/parameters/QuestionnaireId'
+      responses:
+        '200':
+          description: Questionnaire moved to deleted state
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/SuccessEnvelope'
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/Questionnaire'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/TeacherWorkflowForbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+  /api/v1/questionnaires/{questionnaireId}/status:
+    patch:
+      tags:
+      - Questionnaires
+      summary: Activate or deactivate a questionnaire
+      operationId: updateQuestionnaireStatus
+      parameters:
+      - $ref: '#/components/parameters/TenantContext'
+      - $ref: '#/components/parameters/QuestionnaireId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TeacherWorkflowStatusUpdateRequest'
+      responses:
+        '200':
+          description: Questionnaire status updated
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/SuccessEnvelope'
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/Questionnaire'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/TeacherWorkflowForbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+  /api/v1/questionnaires/{questionnaireId}/restore:
+    post:
+      tags:
+      - Questionnaires
+      summary: Restore a deleted questionnaire
+      operationId: restoreQuestionnaire
+      parameters:
+      - $ref: '#/components/parameters/TenantContext'
+      - $ref: '#/components/parameters/QuestionnaireId'
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TeacherWorkflowRestoreRequest'
+      responses:
+        '200':
+          description: Questionnaire restored to inactive
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/SuccessEnvelope'
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/Questionnaire'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/TeacherWorkflowForbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
   /api/v1/learning-sets:
     get:
       tags:
@@ -2560,6 +2920,170 @@ paths:
           $ref: '#/components/responses/TeacherWorkflowForbidden'
         '422':
           $ref: '#/components/responses/ValidationError'
+  /api/v1/learning-sets/{learningSetId}:
+    get:
+      tags:
+      - Learning Sets
+      summary: Retrieve a tenant-scoped learning set
+      operationId: getLearningSet
+      parameters:
+      - $ref: '#/components/parameters/TenantContext'
+      - $ref: '#/components/parameters/LearningSetId'
+      responses:
+        '200':
+          description: Learning set detail
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/SuccessEnvelope'
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/LearningSet'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/TeacherWorkflowForbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    patch:
+      tags:
+      - Learning Sets
+      summary: Update editable learning-set fields
+      description: New writes use roster-aware assignment scope. Legacy direct selected-student assignments remain readable only where already present.
+      operationId: updateLearningSet
+      parameters:
+      - $ref: '#/components/parameters/TenantContext'
+      - $ref: '#/components/parameters/LearningSetId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LearningSetUpdateRequest'
+      responses:
+        '200':
+          description: Learning set updated
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/SuccessEnvelope'
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/LearningSet'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/TeacherWorkflowForbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+    delete:
+      tags:
+      - Learning Sets
+      summary: Soft-delete a learning set
+      operationId: deleteLearningSet
+      parameters:
+      - $ref: '#/components/parameters/TenantContext'
+      - $ref: '#/components/parameters/LearningSetId'
+      responses:
+        '200':
+          description: Learning set moved to deleted state
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/SuccessEnvelope'
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/LearningSet'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/TeacherWorkflowForbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+  /api/v1/learning-sets/{learningSetId}/status:
+    patch:
+      tags:
+      - Learning Sets
+      summary: Activate or deactivate a learning set
+      operationId: updateLearningSetStatus
+      parameters:
+      - $ref: '#/components/parameters/TenantContext'
+      - $ref: '#/components/parameters/LearningSetId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TeacherWorkflowStatusUpdateRequest'
+      responses:
+        '200':
+          description: Learning set status updated
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/SuccessEnvelope'
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/LearningSet'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/TeacherWorkflowForbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+  /api/v1/learning-sets/{learningSetId}/restore:
+    post:
+      tags:
+      - Learning Sets
+      summary: Restore a deleted learning set
+      operationId: restoreLearningSet
+      parameters:
+      - $ref: '#/components/parameters/TenantContext'
+      - $ref: '#/components/parameters/LearningSetId'
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TeacherWorkflowRestoreRequest'
+      responses:
+        '200':
+          description: Learning set restored to inactive
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/SuccessEnvelope'
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/LearningSet'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/TeacherWorkflowForbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
   /api/v1/grades:
     get:
       tags:
@@ -2583,7 +3107,7 @@ paths:
                     data:
                       type: array
                       items:
-                        $ref: '#/components/schemas/GradeRecord'
+                        $ref: '#/components/schemas/StudentGradeRecord'
         '401':
           $ref: '#/components/responses/Unauthorized'
         '403':
@@ -2621,6 +3145,206 @@ paths:
           $ref: '#/components/responses/TeacherWorkflowForbidden'
         '422':
           $ref: '#/components/responses/ValidationError'
+  /api/v1/grades/{gradeId}:
+    get:
+      tags:
+      - Grades
+      summary: Retrieve a grade record in permitted scope
+      operationId: getGrade
+      parameters:
+      - $ref: '#/components/parameters/TenantContext'
+      - $ref: '#/components/parameters/GradeId'
+      responses:
+        '200':
+          description: Grade record detail
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/SuccessEnvelope'
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/GradeRecord'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/TeacherWorkflowForbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    delete:
+      tags:
+      - Grades
+      summary: Soft-delete a grade record
+      operationId: deleteGrade
+      parameters:
+      - $ref: '#/components/parameters/TenantContext'
+      - $ref: '#/components/parameters/GradeId'
+      responses:
+        '200':
+          description: Grade record moved to deleted state
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/SuccessEnvelope'
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/GradeRecord'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/TeacherWorkflowForbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+  /api/v1/grades/{gradeId}/correction:
+    patch:
+      tags:
+      - Grades
+      summary: Correct a grade record with a required reason
+      description: Preserves original values, current values, actor, timestamp, and correction history. Closed-period corrections are school-administrator-only.
+      operationId: correctGrade
+      parameters:
+      - $ref: '#/components/parameters/TenantContext'
+      - $ref: '#/components/parameters/GradeId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GradeCorrectionRequest'
+      responses:
+        '200':
+          description: Grade correction accepted
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/SuccessEnvelope'
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/GradeRecord'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/TeacherWorkflowForbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+  /api/v1/grades/{gradeId}/status:
+    patch:
+      tags:
+      - Grades
+      summary: Activate or deactivate a grade record
+      operationId: updateGradeStatus
+      parameters:
+      - $ref: '#/components/parameters/TenantContext'
+      - $ref: '#/components/parameters/GradeId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TeacherWorkflowStatusUpdateRequest'
+      responses:
+        '200':
+          description: Grade status updated
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/SuccessEnvelope'
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/GradeRecord'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/TeacherWorkflowForbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+  /api/v1/grades/{gradeId}/restore:
+    post:
+      tags:
+      - Grades
+      summary: Restore a deleted grade record
+      operationId: restoreGrade
+      parameters:
+      - $ref: '#/components/parameters/TenantContext'
+      - $ref: '#/components/parameters/GradeId'
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TeacherWorkflowRestoreRequest'
+      responses:
+        '200':
+          description: Grade record restored to inactive
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/SuccessEnvelope'
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/GradeRecord'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/TeacherWorkflowForbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+  /api/v1/grades/imports:
+    post:
+      tags:
+      - Grades
+      summary: Submit a create-only JSON grade import
+      description: Only school administrators may import grades. Imports are limited to JSON payloads, a maximum of 500 rows, and all-or-nothing validation.
+      operationId: importGrades
+      parameters:
+      - $ref: '#/components/parameters/TenantContext'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GradeImportRequest'
+      responses:
+        '201':
+          description: Grade import run created with accepted outcome metadata
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/SuccessEnvelope'
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/ImportRun'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/TeacherWorkflowForbidden'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '422':
+          $ref: '#/components/responses/ValidationError'
   /api/v1/attendance:
     get:
       tags:
@@ -2644,7 +3368,7 @@ paths:
                     data:
                       type: array
                       items:
-                        $ref: '#/components/schemas/AttendanceRecord'
+                        $ref: '#/components/schemas/StudentAttendanceRecord'
         '401':
           $ref: '#/components/responses/Unauthorized'
         '403':
@@ -2680,6 +3404,206 @@ paths:
           $ref: '#/components/responses/Unauthorized'
         '403':
           $ref: '#/components/responses/TeacherWorkflowForbidden'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+  /api/v1/attendance/{attendanceId}:
+    get:
+      tags:
+      - Attendance
+      summary: Retrieve an attendance record in permitted scope
+      operationId: getAttendance
+      parameters:
+      - $ref: '#/components/parameters/TenantContext'
+      - $ref: '#/components/parameters/AttendanceId'
+      responses:
+        '200':
+          description: Attendance record detail
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/SuccessEnvelope'
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/AttendanceRecord'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/TeacherWorkflowForbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    delete:
+      tags:
+      - Attendance
+      summary: Soft-delete an attendance record
+      operationId: deleteAttendance
+      parameters:
+      - $ref: '#/components/parameters/TenantContext'
+      - $ref: '#/components/parameters/AttendanceId'
+      responses:
+        '200':
+          description: Attendance record moved to deleted state
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/SuccessEnvelope'
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/AttendanceRecord'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/TeacherWorkflowForbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+  /api/v1/attendance/{attendanceId}/correction:
+    patch:
+      tags:
+      - Attendance
+      summary: Correct an attendance record with a required reason
+      description: Preserves original values, current values, actor, timestamp, and correction history. Closed-period corrections are school-administrator-only.
+      operationId: correctAttendance
+      parameters:
+      - $ref: '#/components/parameters/TenantContext'
+      - $ref: '#/components/parameters/AttendanceId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AttendanceCorrectionRequest'
+      responses:
+        '200':
+          description: Attendance correction accepted
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/SuccessEnvelope'
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/AttendanceRecord'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/TeacherWorkflowForbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+  /api/v1/attendance/{attendanceId}/status:
+    patch:
+      tags:
+      - Attendance
+      summary: Activate or deactivate an attendance record
+      operationId: updateAttendanceStatus
+      parameters:
+      - $ref: '#/components/parameters/TenantContext'
+      - $ref: '#/components/parameters/AttendanceId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TeacherWorkflowStatusUpdateRequest'
+      responses:
+        '200':
+          description: Attendance status updated
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/SuccessEnvelope'
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/AttendanceRecord'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/TeacherWorkflowForbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+  /api/v1/attendance/{attendanceId}/restore:
+    post:
+      tags:
+      - Attendance
+      summary: Restore a deleted attendance record
+      operationId: restoreAttendance
+      parameters:
+      - $ref: '#/components/parameters/TenantContext'
+      - $ref: '#/components/parameters/AttendanceId'
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TeacherWorkflowRestoreRequest'
+      responses:
+        '200':
+          description: Attendance record restored to inactive
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/SuccessEnvelope'
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/AttendanceRecord'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/TeacherWorkflowForbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+  /api/v1/attendance/imports:
+    post:
+      tags:
+      - Attendance
+      summary: Submit a create-only JSON attendance import
+      description: Only school administrators may import attendance. Imports are limited to JSON payloads, a maximum of 500 rows, and all-or-nothing validation.
+      operationId: importAttendance
+      parameters:
+      - $ref: '#/components/parameters/TenantContext'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AttendanceImportRequest'
+      responses:
+        '201':
+          description: Attendance import run created with accepted outcome metadata
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/SuccessEnvelope'
+                - type: object
+                  properties:
+                    data:
+                      $ref: '#/components/schemas/ImportRun'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/TeacherWorkflowForbidden'
+        '409':
+          $ref: '#/components/responses/Conflict'
         '422':
           $ref: '#/components/responses/ValidationError'
   /api/v1/student/learning-sets:
@@ -3265,6 +4189,34 @@ components:
       schema:
         type: string
         format: uuid
+    QuestionnaireId:
+      name: questionnaireId
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+    LearningSetId:
+      name: learningSetId
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+    GradeId:
+      name: gradeId
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+    AttendanceId:
+      name: attendanceId
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
     ClassSectionId:
       name: classSectionId
       in: path
@@ -3605,6 +4557,13 @@ components:
           - class_section
           - roster_membership
           - teacher_assignment
+          - teacher_content_item
+          - questionnaire
+          - learning_set
+          - grade_record
+          - attendance_record
+          - correction_record
+          - import_run
         target_id:
           type: string
           format: uuid
@@ -4422,7 +5381,101 @@ components:
           format: date
         attendance_status:
           $ref: '#/components/schemas/AttendanceStatus'
+    AttendanceCorrectionRequest:
+      type: object
+      additionalProperties: false
+      required:
+      - attendance_status
+      - correction_reason
+      properties:
+        attendance_status:
+          $ref: '#/components/schemas/AttendanceStatus'
+        correction_reason:
+          type: string
+          minLength: 10
+          maxLength: 500
+    AttendanceImportRequest:
+      type: object
+      additionalProperties: false
+      required:
+      - rows
+      properties:
+        rows:
+          type: array
+          minItems: 1
+          maxItems: 500
+          items:
+            $ref: '#/components/schemas/AttendanceImportRow'
+    AttendanceImportRow:
+      type: object
+      additionalProperties: false
+      required:
+      - student_profile_id
+      - academic_period_id
+      - attendance_date
+      - attendance_status
+      properties:
+        student_profile_id:
+          type: string
+          format: uuid
+        academic_period_id:
+          type: string
+          format: uuid
+        attendance_date:
+          type: string
+          format: date
+        attendance_status:
+          $ref: '#/components/schemas/AttendanceStatus'
     AttendanceRecord:
+      type: object
+      required:
+      - id
+      - school_id
+      - student_profile_id
+      - academic_period_id
+      - recorded_by_user_id
+      - attendance_date
+      - attendance_status
+      - status
+      - current_value
+      - correction_history
+      properties:
+        id:
+          type: string
+          format: uuid
+        school_id:
+          type: string
+          format: uuid
+        student_profile_id:
+          type: string
+          format: uuid
+        academic_period_id:
+          type: string
+          format: uuid
+        recorded_by_user_id:
+          type: string
+          format: uuid
+        original_recorded_by_user_id:
+          type: string
+          format: uuid
+        attendance_date:
+          type: string
+          format: date
+        attendance_status:
+          $ref: '#/components/schemas/AttendanceStatus'
+        current_value:
+          $ref: '#/components/schemas/AttendanceStatus'
+        original_value:
+          oneOf:
+          - $ref: '#/components/schemas/AttendanceStatus'
+          - type: 'null'
+        correction_history:
+          type: array
+          items:
+            $ref: '#/components/schemas/CorrectionRecord'
+        status:
+          $ref: '#/components/schemas/TeacherWorkflowLifecycleState'
+    StudentAttendanceRecord:
       type: object
       required:
       - id
@@ -4453,9 +5506,11 @@ components:
           type: string
           format: date
         attendance_status:
-          $ref: '#/components/schemas/AttendanceStatus'
+          allOf:
+          - $ref: '#/components/schemas/AttendanceStatus'
+          description: Current student-visible attendance status after any accepted corrections.
         status:
-          $ref: '#/components/schemas/Status'
+          $ref: '#/components/schemas/TeacherWorkflowLifecycleState'
     AuthSession:
       type: object
       required:
@@ -4504,7 +5559,117 @@ components:
           maximum: 100
         grade_label:
           type: string
+    GradeCorrectionRequest:
+      type: object
+      additionalProperties: false
+      required:
+      - grade_value
+      - correction_reason
+      properties:
+        grade_value:
+          type: number
+          minimum: 0
+          maximum: 100
+        grade_label:
+          type:
+          - string
+          - 'null'
+        correction_reason:
+          type: string
+          minLength: 10
+          maxLength: 500
+    GradeImportRequest:
+      type: object
+      additionalProperties: false
+      required:
+      - rows
+      properties:
+        rows:
+          type: array
+          minItems: 1
+          maxItems: 500
+          items:
+            $ref: '#/components/schemas/GradeImportRow'
+    GradeImportRow:
+      type: object
+      additionalProperties: false
+      required:
+      - student_profile_id
+      - academic_period_id
+      - grade_value
+      properties:
+        student_profile_id:
+          type: string
+          format: uuid
+        academic_period_id:
+          type: string
+          format: uuid
+        grade_value:
+          type: number
+          minimum: 0
+          maximum: 100
+        grade_label:
+          type:
+          - string
+          - 'null'
     GradeRecord:
+      type: object
+      required:
+      - id
+      - school_id
+      - student_profile_id
+      - academic_period_id
+      - recorded_by_user_id
+      - grade_value
+      - status
+      - recorded_at
+      - current_value
+      - correction_history
+      properties:
+        id:
+          type: string
+          format: uuid
+        school_id:
+          type: string
+          format: uuid
+        student_profile_id:
+          type: string
+          format: uuid
+        academic_period_id:
+          type: string
+          format: uuid
+        recorded_by_user_id:
+          type: string
+          format: uuid
+        original_recorded_by_user_id:
+          type: string
+          format: uuid
+        grade_value:
+          type: number
+          minimum: 0
+          maximum: 100
+        current_value:
+          type: number
+          minimum: 0
+          maximum: 100
+        original_value:
+          type:
+          - number
+          - 'null'
+        grade_label:
+          type:
+          - string
+          - 'null'
+        correction_history:
+          type: array
+          items:
+            $ref: '#/components/schemas/CorrectionRecord'
+        status:
+          $ref: '#/components/schemas/TeacherWorkflowLifecycleState'
+        recorded_at:
+          type: string
+          format: date-time
+    StudentGradeRecord:
       type: object
       required:
       - id
@@ -4535,15 +5700,79 @@ components:
           type: number
           minimum: 0
           maximum: 100
+          description: Current student-visible grade value after any accepted corrections.
         grade_label:
           type:
           - string
           - 'null'
         status:
-          $ref: '#/components/schemas/Status'
+          $ref: '#/components/schemas/TeacherWorkflowLifecycleState'
         recorded_at:
           type: string
           format: date-time
+    ImportRun:
+      type: object
+      required:
+      - id
+      - school_id
+      - actor_user_id
+      - import_type
+      - row_count
+      - accepted_row_count
+      - rejected_row_count
+      - status
+      - error_summary
+      properties:
+        id:
+          type: string
+          format: uuid
+        school_id:
+          type: string
+          format: uuid
+        actor_user_id:
+          type: string
+          format: uuid
+        import_type:
+          type: string
+          enum:
+          - grade
+          - attendance
+        row_count:
+          type: integer
+          minimum: 0
+          maximum: 500
+        accepted_row_count:
+          type: integer
+          minimum: 0
+          maximum: 500
+        rejected_row_count:
+          type: integer
+          minimum: 0
+          maximum: 500
+        status:
+          type: string
+          enum:
+          - accepted
+          - rejected
+        error_summary:
+          type: array
+          items:
+            $ref: '#/components/schemas/ImportErrorSummaryItem'
+    ImportErrorSummaryItem:
+      type: object
+      additionalProperties: false
+      required:
+      - row
+      - code
+      - message
+      properties:
+        row:
+          type: integer
+          minimum: 1
+        code:
+          type: string
+        message:
+          type: string
     Guardian:
       type: object
       required:
@@ -4918,18 +6147,17 @@ components:
           format: uuid
         title:
           type: string
+        description:
+          type:
+          - string
+          - 'null'
         published_at:
           type:
           - string
           - 'null'
           format: date-time
         status:
-          type: string
-          enum:
-          - draft
-          - published
-          - inactive
-          - archived
+          $ref: '#/components/schemas/TeacherWorkflowLifecycleState'
         entries:
           type: array
           items:
@@ -4962,6 +6190,28 @@ components:
           items:
             type: string
             format: uuid
+    LearningSetUpdateRequest:
+      type: object
+      additionalProperties: false
+      properties:
+        title:
+          type: string
+        description:
+          type:
+          - string
+          - 'null'
+        entries:
+          type: array
+          minItems: 1
+          items:
+            $ref: '#/components/schemas/LearningSetEntry'
+        roster_assignment:
+          $ref: '#/components/schemas/LearningSetRosterAssignmentInput'
+        due_at:
+          type:
+          - string
+          - 'null'
+          format: date-time
     LoginRequest:
       type: object
       required:
@@ -5052,13 +6302,12 @@ components:
           format: uuid
         title:
           type: string
+        description:
+          type:
+          - string
+          - 'null'
         status:
-          type: string
-          enum:
-          - draft
-          - active
-          - inactive
-          - archived
+          $ref: '#/components/schemas/TeacherWorkflowLifecycleState'
         questions:
           type: array
           items:
@@ -5071,6 +6320,21 @@ components:
       properties:
         title:
           type: string
+        questions:
+          type: array
+          minItems: 1
+          items:
+            $ref: '#/components/schemas/QuestionnaireQuestionInput'
+    QuestionnaireUpdateRequest:
+      type: object
+      additionalProperties: false
+      properties:
+        title:
+          type: string
+        description:
+          type:
+          - string
+          - 'null'
         questions:
           type: array
           minItems: 1
@@ -5658,12 +6922,38 @@ components:
           format: uuid
         title:
           type: string
+        description:
+          type:
+          - string
+          - 'null'
         content_type:
           $ref: '#/components/schemas/TeacherContentType'
         file:
           type: string
           format: binary
           description: PDF, image, text, or office document up to 25 MB.
+    TeacherContentDownloadResult:
+      type: object
+      required:
+      - content_item_id
+      - file_name
+      - content_type
+      - expires_at
+      - download_url
+      properties:
+        content_item_id:
+          type: string
+          format: uuid
+        file_name:
+          type: string
+        content_type:
+          type: string
+        expires_at:
+          type: string
+          format: date-time
+        download_url:
+          type: string
+          format: uri
     TeacherContentItem:
       type: object
       required:
@@ -5692,6 +6982,10 @@ components:
           format: uuid
         title:
           type: string
+        description:
+          type:
+          - string
+          - 'null'
         content_type:
           $ref: '#/components/schemas/TeacherContentType'
         declared_content_type:
@@ -5704,12 +6998,22 @@ components:
         scan_status:
           $ref: '#/components/schemas/TeacherContentScanStatus'
         status:
+          $ref: '#/components/schemas/TeacherWorkflowLifecycleState'
+    TeacherContentUpdateRequest:
+      type: object
+      additionalProperties: false
+      properties:
+        folder_id:
+          type:
+          - string
+          - 'null'
+          format: uuid
+        title:
           type: string
-          enum:
-          - draft
-          - active
-          - inactive
-          - archived
+        description:
+          type:
+          - string
+          - 'null'
     User:
       type: object
       required:
@@ -5807,7 +7111,7 @@ components:
       - id
       - school_id
       - learning_set_id
-      - student_profile_id
+      - assignment_mode
       - status
       - assigned_at
       properties:
@@ -5820,14 +7124,35 @@ components:
         learning_set_id:
           type: string
           format: uuid
-        student_profile_id:
+        assignment_mode:
           type: string
+          enum:
+          - roster
+          - legacy_direct
+        class_section_id:
+          type:
+          - string
+          - 'null'
+          format: uuid
+        student_profile_id:
+          type:
+          - string
+          - 'null'
           format: uuid
         status:
-          $ref: '#/components/schemas/Status'
+          $ref: '#/components/schemas/TeacherWorkflowLifecycleState'
         assigned_at:
           type: string
           format: date-time
+    LearningSetRosterAssignmentInput:
+      type: object
+      additionalProperties: false
+      required:
+      - class_section_id
+      properties:
+        class_section_id:
+          type: string
+          format: uuid
     LearningSetEntry:
       type: object
       required:
@@ -5953,6 +7278,26 @@ components:
       - pending
       - clean
       - failed
+    TeacherWorkflowLifecycleState:
+      type: string
+      enum:
+      - active
+      - inactive
+      - deleted
+    TeacherWorkflowStatusUpdateRequest:
+      type: object
+      additionalProperties: false
+      required:
+      - status
+      properties:
+        status:
+          type: string
+          enum:
+          - active
+          - inactive
+    TeacherWorkflowRestoreRequest:
+      type: object
+      additionalProperties: false
     TeacherContentType:
       type: string
       enum:
@@ -5990,6 +7335,41 @@ components:
           $ref: '#/components/schemas/TeacherContentScanStatus'
         download_available:
           type: boolean
+    CorrectionRecord:
+      type: object
+      required:
+      - id
+      - school_id
+      - target_record_type
+      - target_record_id
+      - actor_user_id
+      - correction_reason
+      - corrected_at
+      properties:
+        id:
+          type: string
+          format: uuid
+        school_id:
+          type: string
+          format: uuid
+        target_record_type:
+          type: string
+          enum:
+          - grade
+          - attendance
+        target_record_id:
+          type: string
+          format: uuid
+        actor_user_id:
+          type: string
+          format: uuid
+        correction_reason:
+          type: string
+          minLength: 10
+          maxLength: 500
+        corrected_at:
+          type: string
+          format: date-time
   securitySchemes:
     bearerAuth:
       type: http
@@ -6055,10 +7435,30 @@ x-promoted-scope:
   - /api/v1/guardians/{guardianId}/restore
   - /api/v1/guardians/bulk-lifecycle
   - /api/v1/teacher-content
+  - /api/v1/teacher-content/{contentItemId}
+  - /api/v1/teacher-content/{contentItemId}/status
+  - /api/v1/teacher-content/{contentItemId}/restore
+  - /api/v1/teacher-content/{contentItemId}/download
   - /api/v1/questionnaires
+  - /api/v1/questionnaires/{questionnaireId}
+  - /api/v1/questionnaires/{questionnaireId}/status
+  - /api/v1/questionnaires/{questionnaireId}/restore
   - /api/v1/learning-sets
+  - /api/v1/learning-sets/{learningSetId}
+  - /api/v1/learning-sets/{learningSetId}/status
+  - /api/v1/learning-sets/{learningSetId}/restore
   - /api/v1/grades
+  - /api/v1/grades/{gradeId}
+  - /api/v1/grades/{gradeId}/correction
+  - /api/v1/grades/{gradeId}/status
+  - /api/v1/grades/{gradeId}/restore
+  - /api/v1/grades/imports
   - /api/v1/attendance
+  - /api/v1/attendance/{attendanceId}
+  - /api/v1/attendance/{attendanceId}/correction
+  - /api/v1/attendance/{attendanceId}/status
+  - /api/v1/attendance/{attendanceId}/restore
+  - /api/v1/attendance/imports
   - /api/v1/student/learning-sets
   - /api/v1/student/teacher-content/{contentItemId}/download
   - /api/v1/student/grades

@@ -1,0 +1,54 @@
+get:
+  tags:
+    - Grades
+  summary: Retrieve a grade record in permitted scope
+  operationId: getGrade
+  parameters:
+    - $ref: ../../components/parameters/schools/TenantContext.yaml
+    - $ref: ../../components/parameters/grades/GradeId.yaml
+  responses:
+    '200':
+      description: Grade record detail
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: ../../components/schemas/common/SuccessEnvelope.yaml
+              - type: object
+                properties:
+                  data:
+                    $ref: ../../components/schemas/grades/GradeRecord.yaml
+    '401':
+      $ref: ../../components/responses/auth/Unauthorized.yaml
+    '403':
+      $ref: ../../components/responses/teacher-content/TeacherWorkflowForbidden.yaml
+    '404':
+      $ref: ../../components/responses/common/NotFound.yaml
+delete:
+  tags:
+    - Grades
+  summary: Soft-delete a grade record
+  operationId: deleteGrade
+  parameters:
+    - $ref: ../../components/parameters/schools/TenantContext.yaml
+    - $ref: ../../components/parameters/grades/GradeId.yaml
+  responses:
+    '200':
+      description: Grade record moved to deleted state
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: ../../components/schemas/common/SuccessEnvelope.yaml
+              - type: object
+                properties:
+                  data:
+                    $ref: ../../components/schemas/grades/GradeRecord.yaml
+    '401':
+      $ref: ../../components/responses/auth/Unauthorized.yaml
+    '403':
+      $ref: ../../components/responses/teacher-content/TeacherWorkflowForbidden.yaml
+    '404':
+      $ref: ../../components/responses/common/NotFound.yaml
+    '409':
+      $ref: ../../components/responses/common/Conflict.yaml

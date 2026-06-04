@@ -1,0 +1,8 @@
+name: invitationToken
+in: path
+required: true
+description: Opaque single-use invitation token value delivered out of band.
+schema:
+  type: string
+  minLength: 32
+  maxLength: 255

@@ -1,0 +1,7 @@
+name: status
+in: query
+description: >-
+  Optional teacher assignment status filter. Unsupported status values are
+  rejected.
+schema:
+  $ref: ../../schemas/teacher-assignments/TeacherAssignmentStatus.yaml

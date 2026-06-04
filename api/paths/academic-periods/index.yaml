@@ -1,0 +1,60 @@
+get:
+  tags:
+    - Academic Periods
+  summary: List academic periods for a school
+  operationId: listAcademicPeriods
+  parameters:
+    - $ref: ../../components/parameters/schools/TenantContext.yaml
+    - $ref: ../../components/parameters/common/Page.yaml
+    - $ref: ../../components/parameters/common/PerPage.yaml
+    - $ref: ../../components/parameters/common/StatusFilter.yaml
+    - name: academic_year_id
+      in: query
+      schema:
+        type: string
+        format: uuid
+  responses:
+    '200':
+      description: Academic period collection
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: ../../components/schemas/common/PaginatedEnvelope.yaml
+              - type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: ../../components/schemas/academics/AcademicPeriod.yaml
+    '401':
+      $ref: ../../components/responses/auth/Unauthorized.yaml
+    '403':
+      $ref: ../../components/responses/schools/TenantMismatch.yaml
+post:
+  tags:
+    - Academic Periods
+  summary: Create an academic period inside an academic year
+  operationId: createAcademicPeriod
+  parameters:
+    - $ref: ../../components/parameters/schools/TenantContext.yaml
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: ../../components/schemas/academics/AcademicPeriodCreateRequest.yaml
+  responses:
+    '201':
+      description: Academic period created
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: ../../components/schemas/common/SuccessEnvelope.yaml
+              - type: object
+                properties:
+                  data:
+                    $ref: ../../components/schemas/academics/AcademicPeriod.yaml
+    '422':
+      $ref: ../../components/responses/common/ValidationError.yaml

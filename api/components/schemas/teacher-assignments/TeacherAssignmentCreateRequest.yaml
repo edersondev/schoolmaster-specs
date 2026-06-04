@@ -1,0 +1,23 @@
+type: object
+additionalProperties: false
+required:
+  - class_section_id
+  - teacher_user_id
+  - academic_period_id
+  - effective_start_date
+properties:
+  class_section_id:
+    type: string
+    format: uuid
+  teacher_user_id:
+    type: string
+    format: uuid
+  academic_period_id:
+    type: string
+    format: uuid
+  effective_start_date:
+    type: string
+    format: date
+    description: >-
+      Required explicit start date. Must be today-or-past in the resolved school
+      timezone and inside the academic period.

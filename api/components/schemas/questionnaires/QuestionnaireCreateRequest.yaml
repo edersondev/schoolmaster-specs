@@ -1,0 +1,12 @@
+type: object
+required:
+  - title
+  - questions
+properties:
+  title:
+    type: string
+  questions:
+    type: array
+    minItems: 1
+    items:
+      $ref: QuestionnaireQuestionInput.yaml

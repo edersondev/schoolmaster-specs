@@ -1,0 +1,32 @@
+type: object
+required:
+  - id
+  - school_id
+  - academic_year_id
+  - name
+  - sequence
+  - start_date
+  - end_date
+  - status
+properties:
+  id:
+    type: string
+    format: uuid
+  school_id:
+    type: string
+    format: uuid
+  academic_year_id:
+    type: string
+    format: uuid
+  name:
+    type: string
+  sequence:
+    type: integer
+  start_date:
+    type: string
+    format: date
+  end_date:
+    type: string
+    format: date
+  status:
+    $ref: AcademicStatus.yaml

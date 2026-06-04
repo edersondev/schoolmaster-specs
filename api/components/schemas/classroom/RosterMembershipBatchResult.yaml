@@ -1,0 +1,16 @@
+type: object
+required:
+  - affected_count
+  - memberships
+properties:
+  affected_count:
+    type: integer
+    minimum: 0
+  memberships:
+    type: array
+    items:
+      $ref: RosterMembership.yaml
+  audit:
+    type: array
+    items:
+      $ref: ../common/AuditSummary.yaml

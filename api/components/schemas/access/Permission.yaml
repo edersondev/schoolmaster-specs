@@ -1,0 +1,19 @@
+type: object
+required:
+  - id
+  - code
+  - name
+  - scope
+  - status
+properties:
+  id:
+    type: string
+    format: uuid
+  code:
+    type: string
+  name:
+    type: string
+  scope:
+    $ref: Scope.yaml
+  status:
+    $ref: ../common/Status.yaml

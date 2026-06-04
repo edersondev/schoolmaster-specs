@@ -1,0 +1,26 @@
+get:
+  tags:
+    - Student Profiles
+  summary: Retrieve a same-school student profile
+  operationId: getStudentProfile
+  parameters:
+    - $ref: ../../components/parameters/schools/TenantContext.yaml
+    - $ref: ../../components/parameters/student-profiles/StudentProfileId.yaml
+  responses:
+    '200':
+      description: Student profile detail
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: ../../components/schemas/common/SuccessEnvelope.yaml
+              - type: object
+                properties:
+                  data:
+                    $ref: ../../components/schemas/student-profiles/StudentProfile.yaml
+    '401':
+      $ref: ../../components/responses/auth/Unauthorized.yaml
+    '403':
+      $ref: ../../components/responses/student-profiles/StudentProfileForbidden.yaml
+    '404':
+      $ref: ../../components/responses/common/NotFound.yaml

@@ -1,0 +1,18 @@
+type: object
+required:
+  - user_id
+  - status
+  - action
+properties:
+  user_id:
+    type: string
+    format: uuid
+  school_id:
+    type:
+      - string
+      - 'null'
+    format: uuid
+  status:
+    type: string
+  action:
+    type: string

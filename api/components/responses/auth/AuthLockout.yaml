@@ -1,0 +1,13 @@
+description: >-
+  Login is locked after 5 failed attempts for either submitted email or source
+  IP within 15 minutes
+headers:
+  Retry-After:
+    description: Seconds until another login attempt may be accepted.
+    schema:
+      type: integer
+      minimum: 1
+content:
+  application/json:
+    schema:
+      $ref: ../../schemas/common/ErrorEnvelope.yaml

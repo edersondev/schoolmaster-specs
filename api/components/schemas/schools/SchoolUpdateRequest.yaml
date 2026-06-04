@@ -1,0 +1,14 @@
+type: object
+additionalProperties: false
+properties:
+  name:
+    type: string
+  status:
+    $ref: ../common/Status.yaml
+  contact_email:
+    type: string
+    format: email
+  contact_phone:
+    type: string
+  address_summary:
+    type: string

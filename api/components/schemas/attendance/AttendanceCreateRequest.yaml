@@ -1,0 +1,18 @@
+type: object
+required:
+  - student_profile_id
+  - academic_period_id
+  - attendance_date
+  - attendance_status
+properties:
+  student_profile_id:
+    type: string
+    format: uuid
+  academic_period_id:
+    type: string
+    format: uuid
+  attendance_date:
+    type: string
+    format: date
+  attendance_status:
+    $ref: AttendanceStatus.yaml

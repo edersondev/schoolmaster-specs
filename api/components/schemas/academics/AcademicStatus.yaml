@@ -1,0 +1,6 @@
+type: string
+enum:
+  - planned
+  - active
+  - closed
+  - inactive

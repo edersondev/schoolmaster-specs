@@ -1,0 +1,14 @@
+type: object
+additionalProperties: false
+required:
+  - row
+  - code
+  - message
+properties:
+  row:
+    type: integer
+    minimum: 1
+  code:
+    type: string
+  message:
+    type: string

@@ -1,0 +1,56 @@
+get:
+  tags:
+    - Class Sections
+  summary: Get a school-owned class section
+  operationId: getClassSection
+  parameters:
+    - $ref: ../../components/parameters/schools/TenantContext.yaml
+    - $ref: ../../components/parameters/classroom/ClassSectionId.yaml
+  responses:
+    '200':
+      description: Class section detail in the resolved school context
+      content:
+        application/json:
+          schema:
+            $ref: ../../components/schemas/classroom/ClassSectionEnvelope.yaml
+    '401':
+      $ref: ../../components/responses/auth/Unauthorized.yaml
+    '403':
+      $ref: ../../components/responses/classroom/ClassroomRosterForbidden.yaml
+    '404':
+      $ref: ../../components/responses/common/NotFound.yaml
+patch:
+  tags:
+    - Class Sections
+  summary: Update class-section metadata
+  description: >-
+    Updates documented code, name, and structured course/classroom/section/group
+    metadata only. Status changes use the status operation; inactive
+    reactivation is not supported in v1.
+  operationId: updateClassSection
+  parameters:
+    - $ref: ../../components/parameters/schools/TenantContext.yaml
+    - $ref: ../../components/parameters/classroom/ClassSectionId.yaml
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: ../../components/schemas/classroom/ClassSectionUpdateRequest.yaml
+  responses:
+    '200':
+      description: Class section updated
+      content:
+        application/json:
+          schema:
+            $ref: ../../components/schemas/classroom/ClassSectionEnvelope.yaml
+    '401':
+      $ref: ../../components/responses/auth/Unauthorized.yaml
+    '403':
+      $ref: ../../components/responses/classroom/ClassroomRosterForbidden.yaml
+    '404':
+      $ref: ../../components/responses/common/NotFound.yaml
+    '409':
+      $ref: ../../components/responses/common/Conflict.yaml
+    '422':
+      $ref: ../../components/responses/common/ValidationError.yaml

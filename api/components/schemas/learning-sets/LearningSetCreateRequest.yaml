@@ -1,0 +1,23 @@
+type: object
+required:
+  - academic_period_id
+  - title
+  - entries
+  - student_profile_ids
+properties:
+  academic_period_id:
+    type: string
+    format: uuid
+  title:
+    type: string
+  entries:
+    type: array
+    minItems: 1
+    items:
+      $ref: LearningSetEntry.yaml
+  student_profile_ids:
+    type: array
+    minItems: 1
+    items:
+      type: string
+      format: uuid

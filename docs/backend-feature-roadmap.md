@@ -19,6 +19,9 @@ Completed or specified backend slices:
   explicit regeneration through new `ReportRun`.
 - `006-backend-student-enrollment`: draft specification for student profile
   and enrollment management.
+- `009-classroom-roster-foundation`: class-section/roster foundation,
+  roster membership, teacher assignment, academic-period scoping, and
+  read-only legacy direct-assignment compatibility.
 
 ## Recommended Sequence
 
@@ -68,7 +71,8 @@ inactive-user behavior, and allowed actor roles before implementation.
 
 ### 4. Classroom, Course, Section, and Roster Foundation
 
-**Status**: Not specified.
+**Status**: Completed and implemented from
+`specs/009-classroom-roster-foundation/spec.md`.
 
 **Purpose**: Introduce class/course/section/group models, roster membership,
 teacher assignment, and academic-period scoping.
@@ -83,7 +87,8 @@ direct student assignments.
 
 ### 5. Teacher Workflow Lifecycle and Corrections
 
-**Status**: Not specified.
+**Status**: Spec started in
+`specs/specs/010-teacher-workflow-lifecycle/spec.md`.
 
 **Purpose**: Add detail, update, deactivate/activate, delete/restore, download,
 bulk import, and correction workflows for teacher content, questionnaires,

@@ -1,0 +1,6 @@
+type: string
+enum:
+  - pdf
+  - image
+  - text
+  - office_document

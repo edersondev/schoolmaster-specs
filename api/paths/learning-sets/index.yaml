@@ -1,0 +1,60 @@
+get:
+  tags:
+    - Learning Sets
+  summary: List tenant-scoped learning sets
+  operationId: listLearningSets
+  parameters:
+    - $ref: ../../components/parameters/schools/TenantContext.yaml
+    - $ref: ../../components/parameters/common/Page.yaml
+    - $ref: ../../components/parameters/common/PerPage.yaml
+  responses:
+    '200':
+      description: Learning set collection
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: ../../components/schemas/common/PaginatedEnvelope.yaml
+              - type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: ../../components/schemas/learning-sets/LearningSet.yaml
+    '401':
+      $ref: ../../components/responses/auth/Unauthorized.yaml
+    '403':
+      $ref: ../../components/responses/teacher-content/TeacherWorkflowForbidden.yaml
+    '422':
+      $ref: ../../components/responses/common/ValidationError.yaml
+post:
+  tags:
+    - Learning Sets
+  summary: Create a learning set with ordered entries and direct student assignments
+  operationId: createLearningSet
+  parameters:
+    - $ref: ../../components/parameters/schools/TenantContext.yaml
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: ../../components/schemas/learning-sets/LearningSetCreateRequest.yaml
+  responses:
+    '201':
+      description: Learning set created
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: ../../components/schemas/common/SuccessEnvelope.yaml
+              - type: object
+                properties:
+                  data:
+                    $ref: ../../components/schemas/learning-sets/LearningSet.yaml
+    '401':
+      $ref: ../../components/responses/auth/Unauthorized.yaml
+    '403':
+      $ref: ../../components/responses/teacher-content/TeacherWorkflowForbidden.yaml
+    '422':
+      $ref: ../../components/responses/common/ValidationError.yaml

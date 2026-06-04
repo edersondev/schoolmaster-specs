@@ -1,0 +1,7 @@
+description: >-
+  Generated report output file has expired; request a new ReportRun with the
+  same filters
+content:
+  application/json:
+    schema:
+      $ref: ../../schemas/common/ErrorEnvelope.yaml

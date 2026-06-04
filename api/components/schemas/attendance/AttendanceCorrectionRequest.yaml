@@ -1,0 +1,12 @@
+type: object
+additionalProperties: false
+required:
+  - attendance_status
+  - correction_reason
+properties:
+  attendance_status:
+    $ref: AttendanceStatus.yaml
+  correction_reason:
+    type: string
+    minLength: 10
+    maxLength: 500
