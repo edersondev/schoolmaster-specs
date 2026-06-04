@@ -4,6 +4,8 @@
 
 This feature adds the public API surface for guardian self-service read access. Backend implementation must wait until OpenAPI documents exact operations, parameters, request schemas, response schemas, errors, field visibility, tenant behavior, and operation IDs.
 
+This feature also depends on a documented same-school school-admin guardian-user-link provisioning path so administrators can create and deactivate the link required for guardian self-service access.
+
 ## Authoritative Contracts
 
 - Aggregate contract: `api/openapi.yaml`
@@ -39,6 +41,15 @@ OpenAPI may approve a different path or operation set, but backend implementatio
 | `GET` | `/api/v1/guardian/students/{studentProfileId}/academics` | `getGuardianStudentAcademics` |
 | `GET` | `/api/v1/guardian/students/{studentProfileId}/contacts` | `getGuardianStudentContacts` |
 
+## Provisioning Prerequisite Mapping
+
+If the existing school-admin contract does not already publish guardian-user-link lifecycle operations, this feature must add the minimal same-school admin surface required to provision guardian self-service:
+
+| Method | Route | Proposed OpenAPI operation ID |
+|--------|-------|-------------------------------|
+| `POST` | `/api/v1/guardians/{guardianId}/user-links` | `createGuardianUserLink` |
+| `POST` | `/api/v1/guardians/{guardianId}/user-links/{guardianUserLinkId}/deactivate` | `deactivateGuardianUserLink` |
+
 ## Required Contract Expansion
 
 OpenAPI must define, at minimum:
@@ -46,6 +57,7 @@ OpenAPI must define, at minimum:
 - operation IDs and versioned `/api/v1` paths for every approved guardian self-service operation
 - required authentication and active school context behavior
 - required `X-School-Id` tenant context behavior where applicable
+- school-admin guardian-user-link provisioning or deactivation operations if they are not already available in the published admin contract
 - explicit guardian-user link requirement
 - active guardian record requirement
 - active school-approved guardian-student association requirement
@@ -80,7 +92,7 @@ No backend-local product envelope, ad hoc error response, undocumented status co
 
 - Operations use documented `X-School-Id` tenant context behavior when the authenticated actor is not already bound to exactly one active school.
 - V1 school-owned records use `school_id`.
-- Missing, mismatched, inactive, or unauthorized tenant context fails before guardian lookup, guardian-user link lookup, guardian-student association lookup, student lookup, academic-period lookup, academic summary aggregation, contact lookup, authorization, audit creation, or response shaping.
+- Missing, mismatched, inactive, or unauthorized tenant context fails before guardian lookup, guardian-user link lookup, guardian-student association lookup, student lookup, academic-period lookup, academic summary aggregation, contact lookup, or response shaping. Audit-safe denial recording may occur before return using only request metadata and safely resolved tenant context details.
 - A guardian associated with students in multiple schools sees only the active resolved school context.
 - Platform users do not receive implicit permission to view guardian self-service data or support-only school data.
 
@@ -88,6 +100,7 @@ No backend-local product envelope, ad hoc error response, undocumented status co
 
 - All operations require authenticated access and active actor status.
 - Guardian self-service requires an active same-school guardian record explicitly linked to the authenticated user by a school administrator.
+- School administrators need a documented same-school path to create and deactivate guardian-user links without granting guardian self-service target visibility to other actor types.
 - Guardian access to a student requires an active school-approved guardian-student association in the resolved school.
 - Guardian self-service permission does not grant school administration, guardian management, student self-view, teacher workflow, report, account lifecycle administration, roster, import, correction, platform support, or content download authority.
 - Students, teachers, school administrators acting without a guardian-user link, and platform users do not receive guardian self-service target visibility unless OpenAPI and authorization explicitly approve a separate actor path.
@@ -137,6 +150,7 @@ Backend implementation PRs for this slice must link to every operation ID implem
 - response-shape checks for success and standard error envelopes
 - tenant-isolation failures for missing, mismatched, inactive, and unauthorized school context
 - explicit guardian-user link proof checks
+- school-admin guardian-user-link create and deactivate coverage
 - active guardian-student association checks
 - denial checks for missing, unassociated, inactive, and cross-tenant target students returning the same not-found envelope
 - guardian student list empty-result behavior

@@ -62,6 +62,16 @@
 - [ ] T026 Create common guardian self-service unauthorized/not-found response helpers in `schoolmaster-backend/app/Http/Resources/Guardian/GuardianErrorResource.php`
 - [ ] T027 Add guardian self-service factory support in `schoolmaster-backend/database/factories/GuardianUserLinkFactory.php`
 - [ ] T028 [P] Add PHPUnit feature tests for missing, mismatched, inactive, and unauthorized guardian tenant context across list, detail, academics, and contacts in `schoolmaster-backend/tests/Feature/GuardianSelfService/GuardianTenantContextTest.php`
+- [ ] T077 [P] Add school-admin guardian-user-link OpenAPI contract coverage in `schoolmaster-specs/api/paths/guardians/user-links.yaml`
+- [ ] T078 [P] Add guardian-user-link admin schemas and envelopes under `schoolmaster-specs/api/components/schemas/guardians/`
+- [ ] T079 [P] Add PHPUnit feature tests for school-admin guardian-user-link create and deactivate in `schoolmaster-backend/tests/Feature/Api/V1/GuardianUserLinkManagementTest.php`
+- [ ] T080 [P] Implement guardian-user-link create validation in `schoolmaster-backend/app/Http/Requests/Api/V1/CreateGuardianUserLinkRequest.php`
+- [ ] T081 [P] Implement guardian-user-link deactivate validation in `schoolmaster-backend/app/Http/Requests/Api/V1/DeactivateGuardianUserLinkRequest.php`
+- [ ] T082 [P] Implement guardian-user-link response shape in `schoolmaster-backend/app/Http/Resources/Api/V1/GuardianUserLinkResource.php`
+- [ ] T083 [P] Extend guardian authorization policy for guardian-user-link lifecycle in `schoolmaster-backend/app/Policies/GuardianPolicy.php`
+- [ ] T084 Implement school-admin guardian-user-link create and deactivate service in `schoolmaster-backend/app/Services/Guardians/GuardianUserLinkService.php`
+- [ ] T085 Implement school-admin guardian-user-link controller actions in `schoolmaster-backend/app/Http/Controllers/Api/V1/GuardianController.php`
+- [ ] T086 Wire school-admin guardian-user-link routes in `schoolmaster-backend/routes/api.php`
 
 **Checkpoint**: Foundation ready - user story implementation can now begin.
 
@@ -203,6 +213,7 @@
 - Backend directory setup T009-T011 can run in parallel.
 - Foundational model relationship tasks T014-T016 can run in parallel after T013.
 - Foundational tenant-context test T028 can run in parallel with model and factory scaffolding after route signatures are known.
+- Foundational guardian-user-link admin tasks T077-T083 can run in parallel once the contract shape is fixed.
 - US1 tests T029-T033 can run in parallel.
 - US1 request/resource tasks T034-T037 can run in parallel.
 - US2 tests T043-T047 can run in parallel.
@@ -275,7 +286,7 @@ Task: "T063 GuardianContactViewQuery"
 
 ### Incremental Delivery
 
-1. Setup + Foundation: contract paths, guardian-user link proof, access resolver, visibility service, audit service.
+1. Setup + Foundation: contract paths, guardian-user link proof, admin guardian-user-link provisioning, access resolver, visibility service, audit service.
 2. US1: linked student list/detail MVP.
 3. US2: academic summary-only view.
 4. US3: limited contact view.

@@ -54,6 +54,7 @@
 - **Validation rules**:
   - link must be explicitly created by a school administrator
   - link must be active, same-school, and point to an active user and active guardian
+  - permitted same-school school administrators must be able to create and deactivate the link through a documented admin contract path
   - automatic contact matching and invitation completion cannot create or substitute for this link in v1
   - missing or inactive link denies guardian self-service before student data is returned
 
@@ -233,7 +234,7 @@
 
 ## Validation Summary
 
-- Resolve active permitted school context before lookup, authorization, summary aggregation, contact shaping, audit recording, or response shaping.
+- Resolve active permitted school context before lookup, authorization, summary aggregation, contact shaping, or response shaping; audit-safe denial recording may still occur before return when only request metadata and safe tenant context details are available.
 - Validate authenticated active user and explicit active same-school `GuardianUserLink`.
 - Validate active same-school `GuardianStudentAssociation` before returning target-specific student information.
 - Validate explicit same-school academic period for academic summary requests.
