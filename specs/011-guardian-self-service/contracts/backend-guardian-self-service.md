@@ -16,9 +16,9 @@ This feature also depends on a documented same-school school-admin guardian-user
 - Security guidance: `docs/security.md`
 - Tenant decision: `decisions/004-use-tenant-by-column.md`
 
-## Proposed Operation Boundary
+## Approved Operation Boundary
 
-The exact operation IDs must be finalized in OpenAPI, but the backend slice should be limited to this surface:
+OpenAPI now defines the operation IDs and paths for this backend slice. Backend implementation must remain limited to this surface:
 
 | Resource/View | Proposed Operations | Boundary |
 |---------------|---------------------|----------|
@@ -30,9 +30,9 @@ The exact operation IDs must be finalized in OpenAPI, but the backend slice shou
 
 No backend implementation may expose these or adjacent routes until OpenAPI documents them.
 
-## Proposed Route-to-Operation Mapping
+## Approved Route-to-Operation Mapping
 
-OpenAPI may approve a different path or operation set, but backend implementation must remain limited to the approved contract.
+Backend implementation must map routes to the approved OpenAPI operation IDs.
 
 | Method | Route | Proposed OpenAPI operation ID |
 |--------|-------|-------------------------------|
@@ -43,12 +43,24 @@ OpenAPI may approve a different path or operation set, but backend implementatio
 
 ## Provisioning Prerequisite Mapping
 
-If the existing school-admin contract does not already publish guardian-user-link lifecycle operations, this feature must add the minimal same-school admin surface required to provision guardian self-service:
+The school-admin contract now includes the minimal same-school admin surface required to provision guardian self-service:
 
 | Method | Route | Proposed OpenAPI operation ID |
 |--------|-------|-------------------------------|
 | `POST` | `/api/v1/guardians/{guardianId}/user-links` | `createGuardianUserLink` |
 | `POST` | `/api/v1/guardians/{guardianId}/user-links/{guardianUserLinkId}/deactivate` | `deactivateGuardianUserLink` |
+
+## Backend Foundation Requirements
+
+Before user story implementation begins, backend foundation work must provide the guardian-user-link proof mechanism and route shell expected by the approved contract:
+
+- `GuardianUserLink` storage is school-owned through `school_id` and links exactly one authenticated user account to one guardian record in the same school.
+- Link creation requires an active resolved tenant context, a same-school active guardian record, a same-school active user account, and a same-school school administrator with guardian management permission.
+- Link deactivation requires the same tenant and authorization checks and must immediately make that link invalid for guardian self-service access.
+- Duplicate active links for the same `school_id`, `guardian_id`, and `user_id` are conflicts, not silent no-ops.
+- Missing, inactive, deleted, or cross-tenant guardian/user/link references must not create partial records or disclose cross-tenant record existence beyond the documented envelopes.
+- Guardian-user-link provisioning does not grant school administration, student self-view, teacher workflow, reporting, support, or any guardian-visible student target access without an active same-school guardian-student association.
+- The backend route names and controller methods must remain traceable to `createGuardianUserLink` and `deactivateGuardianUserLink`.
 
 ## Required Contract Expansion
 

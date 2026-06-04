@@ -1,0 +1,35 @@
+allOf:
+  - $ref: GuardianStudentSummary.yaml
+  - type: object
+    properties:
+      first_name:
+        type: string
+      last_name:
+        type: string
+      date_of_birth:
+        type:
+          - string
+          - 'null'
+        format: date
+      enrollment_summary:
+        type: object
+        required:
+          - status
+        properties:
+          status:
+            $ref: ../student-profiles/StudentProfileStatus.yaml
+          enrolled_at:
+            type:
+              - string
+              - 'null'
+            format: date
+          status_effective_at:
+            type:
+              - string
+              - 'null'
+            format: date
+          current_academic_year_id:
+            type:
+              - string
+              - 'null'
+            format: uuid

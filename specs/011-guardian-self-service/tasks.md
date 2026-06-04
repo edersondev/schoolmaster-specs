@@ -25,17 +25,17 @@
 
 **Purpose**: Establish the contract-first backend slice and shared implementation structure.
 
-- [ ] T001 Update guardian self-service OpenAPI root path references in `schoolmaster-specs/api/openapi.yaml`
-- [ ] T002 [P] Add guardian self-service operation stubs in `schoolmaster-specs/api/paths/guardian/students/index.yaml`
-- [ ] T003 [P] Add guardian self-service operation stubs in `schoolmaster-specs/api/paths/guardian/students/student.yaml`
-- [ ] T004 [P] Add guardian academic summary operation stub in `schoolmaster-specs/api/paths/guardian/students/academics.yaml`
-- [ ] T005 [P] Add guardian contact operation stub in `schoolmaster-specs/api/paths/guardian/students/contacts.yaml`
-- [ ] T006 Add guardian self-service schemas and response components under `schoolmaster-specs/api/components/schemas/guardians/`
-- [ ] T007 Mirror approved guardian self-service contract surface in `schoolmaster-specs/specs/001-schoolmaster-platform/contracts/openapi.yaml`
-- [ ] T008 Create backend feature directories in `schoolmaster-backend/app/Services/GuardianSelfService/`
-- [ ] T009 [P] Create backend DTO directory in `schoolmaster-backend/app/DTOs/GuardianSelfService/`
-- [ ] T010 [P] Create backend request directory in `schoolmaster-backend/app/Http/Requests/Api/V1/Guardian/`
-- [ ] T011 [P] Create backend resource directory in `schoolmaster-backend/app/Http/Resources/Guardian/`
+- [X] T001 Update guardian self-service OpenAPI root path references in `schoolmaster-specs/api/openapi.yaml`
+- [X] T002 [P] Add guardian self-service operation stubs in `schoolmaster-specs/api/paths/guardian/students/index.yaml`
+- [X] T003 [P] Add guardian self-service operation stubs in `schoolmaster-specs/api/paths/guardian/students/student.yaml`
+- [X] T004 [P] Add guardian academic summary operation stub in `schoolmaster-specs/api/paths/guardian/students/academics.yaml`
+- [X] T005 [P] Add guardian contact operation stub in `schoolmaster-specs/api/paths/guardian/students/contacts.yaml`
+- [X] T006 Add guardian self-service schemas and response components under `schoolmaster-specs/api/components/schemas/guardians/`
+- [X] T007 Mirror approved guardian self-service contract surface in `schoolmaster-specs/specs/001-schoolmaster-platform/contracts/openapi.yaml`
+- [X] T008 Create backend feature directories in `schoolmaster-backend/app/Services/GuardianSelfService/`
+- [X] T009 [P] Create backend DTO directory in `schoolmaster-backend/app/DTOs/GuardianSelfService/`
+- [X] T010 [P] Create backend request directory in `schoolmaster-backend/app/Http/Requests/Api/V1/Guardian/`
+- [X] T011 [P] Create backend resource directory in `schoolmaster-backend/app/Http/Resources/Guardian/`
 
 ---
 
@@ -45,33 +45,35 @@
 
 **Critical**: No user story work can begin until this phase is complete.
 
-- [ ] T012 Create guardian-user link migration in `schoolmaster-backend/database/migrations/2026_06_04_000001_create_guardian_user_links_table.php`
-- [ ] T013 Create GuardianUserLink model with UUID and school ownership in `schoolmaster-backend/app/Models/GuardianUserLink.php`
-- [ ] T014 [P] Add guardian user-link relationships to `schoolmaster-backend/app/Models/Guardian.php`
-- [ ] T015 [P] Add guardian user-link relationships to `schoolmaster-backend/app/Models/User.php`
-- [ ] T016 [P] Add guardian association relationships to `schoolmaster-backend/app/Models/StudentProfile.php`
-- [ ] T017 Create GuardianSelfServicePolicy for read-only access boundaries in `schoolmaster-backend/app/Policies/GuardianSelfServicePolicy.php`
-- [ ] T018 Register GuardianSelfServicePolicy in `schoolmaster-backend/app/Providers/AuthServiceProvider.php`
-- [ ] T019 Create guardian actor resolution DTO in `schoolmaster-backend/app/DTOs/GuardianSelfService/GuardianActorContext.php`
-- [ ] T020 Create guardian target student DTO in `schoolmaster-backend/app/DTOs/GuardianSelfService/GuardianStudentTarget.php`
-- [ ] T021 Create GuardianAccessResolver service for tenant, user-link, and association proof in `schoolmaster-backend/app/Services/GuardianSelfService/GuardianAccessResolver.php`
-- [ ] T022 Create GuardianVisibilityService for approved field visibility rules in `schoolmaster-backend/app/Services/GuardianSelfService/GuardianVisibilityService.php`
-- [ ] T023 Create GuardianAuditService for tenant-safe access and denial audit events in `schoolmaster-backend/app/Services/GuardianSelfService/GuardianAuditService.php`
-- [ ] T024 Create GuardianSelfServiceController shell in `schoolmaster-backend/app/Http/Controllers/Api/V1/Guardian/GuardianSelfServiceController.php`
-- [ ] T025 Register guardian self-service routes in `schoolmaster-backend/routes/api.php`
-- [ ] T026 Create common guardian self-service unauthorized/not-found response helpers in `schoolmaster-backend/app/Http/Resources/Guardian/GuardianErrorResource.php`
-- [ ] T027 Add guardian self-service factory support in `schoolmaster-backend/database/factories/GuardianUserLinkFactory.php`
-- [ ] T028 [P] Add PHPUnit feature tests for missing, mismatched, inactive, and unauthorized guardian tenant context across list, detail, academics, and contacts in `schoolmaster-backend/tests/Feature/GuardianSelfService/GuardianTenantContextTest.php`
-- [ ] T077 [P] Add school-admin guardian-user-link OpenAPI contract coverage in `schoolmaster-specs/api/paths/guardians/user-links.yaml`
-- [ ] T078 [P] Add guardian-user-link admin schemas and envelopes under `schoolmaster-specs/api/components/schemas/guardians/`
-- [ ] T079 [P] Add PHPUnit feature tests for school-admin guardian-user-link create and deactivate in `schoolmaster-backend/tests/Feature/Api/V1/GuardianUserLinkManagementTest.php`
-- [ ] T080 [P] Implement guardian-user-link create validation in `schoolmaster-backend/app/Http/Requests/Api/V1/CreateGuardianUserLinkRequest.php`
-- [ ] T081 [P] Implement guardian-user-link deactivate validation in `schoolmaster-backend/app/Http/Requests/Api/V1/DeactivateGuardianUserLinkRequest.php`
-- [ ] T082 [P] Implement guardian-user-link response shape in `schoolmaster-backend/app/Http/Resources/Api/V1/GuardianUserLinkResource.php`
-- [ ] T083 [P] Extend guardian authorization policy for guardian-user-link lifecycle in `schoolmaster-backend/app/Policies/GuardianPolicy.php`
-- [ ] T084 Implement school-admin guardian-user-link create and deactivate service in `schoolmaster-backend/app/Services/Guardians/GuardianUserLinkService.php`
-- [ ] T085 Implement school-admin guardian-user-link controller actions in `schoolmaster-backend/app/Http/Controllers/Api/V1/GuardianController.php`
-- [ ] T086 Wire school-admin guardian-user-link routes in `schoolmaster-backend/routes/api.php`
+**Documentation note**: The OpenAPI contract is complete, but backend implementation tasks in this phase remain pending. Implement them in `schoolmaster-backend` only after preserving route-to-operation traceability with the approved contract.
+
+- [X] T012 Create guardian-user link migration in `schoolmaster-backend/database/migrations/2026_06_04_000001_create_guardian_user_links_table.php`
+- [X] T013 Create GuardianUserLink model with UUID and school ownership in `schoolmaster-backend/app/Models/GuardianUserLink.php`
+- [X] T014 [P] Add guardian user-link relationships to `schoolmaster-backend/app/Models/Guardian.php`
+- [X] T015 [P] Add guardian user-link relationships to `schoolmaster-backend/app/Models/User.php`
+- [X] T016 [P] Add guardian association relationships to `schoolmaster-backend/app/Models/StudentProfile.php`
+- [X] T017 Create GuardianSelfServicePolicy for read-only access boundaries in `schoolmaster-backend/app/Policies/GuardianSelfServicePolicy.php`
+- [X] T018 Register GuardianSelfServicePolicy in `schoolmaster-backend/app/Providers/AuthServiceProvider.php`
+- [X] T019 Create guardian actor resolution DTO in `schoolmaster-backend/app/DTOs/GuardianSelfService/GuardianActorContext.php`
+- [X] T020 Create guardian target student DTO in `schoolmaster-backend/app/DTOs/GuardianSelfService/GuardianStudentTarget.php`
+- [X] T021 Create GuardianAccessResolver service for tenant, user-link, and association proof in `schoolmaster-backend/app/Services/GuardianSelfService/GuardianAccessResolver.php`
+- [X] T022 Create GuardianVisibilityService for approved field visibility rules in `schoolmaster-backend/app/Services/GuardianSelfService/GuardianVisibilityService.php`
+- [X] T023 Create GuardianAuditService for tenant-safe access and denial audit events in `schoolmaster-backend/app/Services/GuardianSelfService/GuardianAuditService.php`
+- [X] T024 Create GuardianSelfServiceController shell in `schoolmaster-backend/app/Http/Controllers/Api/V1/Guardian/GuardianSelfServiceController.php`
+- [X] T025 Register guardian self-service routes in `schoolmaster-backend/routes/api.php`
+- [X] T026 Create common guardian self-service unauthorized/not-found response helpers in `schoolmaster-backend/app/Http/Resources/Guardian/GuardianErrorResource.php`
+- [X] T027 Add guardian self-service factory support in `schoolmaster-backend/database/factories/GuardianUserLinkFactory.php`
+- [X] T028 [P] Add PHPUnit feature tests for missing, mismatched, inactive, and unauthorized guardian tenant context across list, detail, academics, and contacts in `schoolmaster-backend/tests/Feature/GuardianSelfService/GuardianTenantContextTest.php`
+- [X] T077 [P] Add school-admin guardian-user-link OpenAPI contract coverage in `schoolmaster-specs/api/paths/guardians/user-links.yaml`
+- [X] T078 [P] Add guardian-user-link admin schemas and envelopes under `schoolmaster-specs/api/components/schemas/guardians/`
+- [X] T079 [P] Add PHPUnit feature tests for school-admin guardian-user-link create and deactivate in `schoolmaster-backend/tests/Feature/Api/V1/GuardianUserLinkManagementTest.php`
+- [X] T080 [P] Implement guardian-user-link create validation in `schoolmaster-backend/app/Http/Requests/Api/V1/CreateGuardianUserLinkRequest.php`
+- [X] T081 [P] Implement guardian-user-link deactivate validation in `schoolmaster-backend/app/Http/Requests/Api/V1/DeactivateGuardianUserLinkRequest.php`
+- [X] T082 [P] Implement guardian-user-link response shape in `schoolmaster-backend/app/Http/Resources/Api/V1/GuardianUserLinkResource.php`
+- [X] T083 [P] Extend guardian authorization policy for guardian-user-link lifecycle in `schoolmaster-backend/app/Policies/GuardianPolicy.php`
+- [X] T084 Implement school-admin guardian-user-link create and deactivate service in `schoolmaster-backend/app/Services/Guardians/GuardianUserLinkService.php`
+- [X] T085 Implement school-admin guardian-user-link controller actions in `schoolmaster-backend/app/Http/Controllers/Api/V1/GuardianController.php`
+- [X] T086 Wire school-admin guardian-user-link routes in `schoolmaster-backend/routes/api.php`
 
 **Checkpoint**: Foundation ready - user story implementation can now begin.
 
@@ -85,23 +87,23 @@
 
 ### Tests for User Story 1
 
-- [ ] T029 [P] [US1] Add OpenAPI contract coverage for `listGuardianStudents` and `getGuardianStudent` in `schoolmaster-specs/api/paths/guardian/students/index.yaml` and `schoolmaster-specs/api/paths/guardian/students/student.yaml`
-- [ ] T030 [P] [US1] Add PHPUnit feature tests for guardian student listing in `schoolmaster-backend/tests/Feature/GuardianSelfService/ListGuardianStudentsTest.php`
-- [ ] T031 [P] [US1] Add PHPUnit feature tests for guardian student detail not-found non-enumeration in `schoolmaster-backend/tests/Feature/GuardianSelfService/GetGuardianStudentTest.php`
-- [ ] T032 [P] [US1] Add PHPUnit unit tests for GuardianAccessResolver proof checks in `schoolmaster-backend/tests/Unit/GuardianSelfService/GuardianAccessResolverTest.php`
-- [ ] T033 [P] [US1] Add PHPUnit feature tests for source-school and destination-school guardian student transfer visibility in `schoolmaster-backend/tests/Feature/GuardianSelfService/GuardianStudentTransferVisibilityTest.php`
+- [X] T029 [P] [US1] Add OpenAPI contract coverage for `listGuardianStudents` and `getGuardianStudent` in `schoolmaster-specs/api/paths/guardian/students/index.yaml` and `schoolmaster-specs/api/paths/guardian/students/student.yaml`
+- [X] T030 [P] [US1] Add PHPUnit feature tests for guardian student listing in `schoolmaster-backend/tests/Feature/GuardianSelfService/ListGuardianStudentsTest.php`
+- [X] T031 [P] [US1] Add PHPUnit feature tests for guardian student detail not-found non-enumeration in `schoolmaster-backend/tests/Feature/GuardianSelfService/GetGuardianStudentTest.php`
+- [X] T032 [P] [US1] Add PHPUnit unit tests for GuardianAccessResolver proof checks in `schoolmaster-backend/tests/Unit/GuardianSelfService/GuardianAccessResolverTest.php`
+- [X] T033 [P] [US1] Add PHPUnit feature tests for source-school and destination-school guardian student transfer visibility in `schoolmaster-backend/tests/Feature/GuardianSelfService/GuardianStudentTransferVisibilityTest.php`
 
 ### Implementation for User Story 1
 
-- [ ] T034 [P] [US1] Implement ListGuardianStudentsRequest validation in `schoolmaster-backend/app/Http/Requests/Api/V1/Guardian/ListGuardianStudentsRequest.php`
-- [ ] T035 [P] [US1] Implement GetGuardianStudentRequest validation in `schoolmaster-backend/app/Http/Requests/Api/V1/Guardian/GetGuardianStudentRequest.php`
-- [ ] T036 [P] [US1] Implement GuardianStudentListResource in `schoolmaster-backend/app/Http/Resources/Guardian/GuardianStudentListResource.php`
-- [ ] T037 [P] [US1] Implement GuardianStudentResource limited summary fields in `schoolmaster-backend/app/Http/Resources/Guardian/GuardianStudentResource.php`
-- [ ] T038 [US1] Implement student list query logic in `schoolmaster-backend/app/Services/GuardianSelfService/GuardianStudentService.php`
-- [ ] T039 [US1] Implement target-specific same not-found behavior in `schoolmaster-backend/app/Services/GuardianSelfService/GuardianAccessResolver.php`
-- [ ] T040 [US1] Wire list and detail controller actions in `schoolmaster-backend/app/Http/Controllers/Api/V1/Guardian/GuardianSelfServiceController.php`
-- [ ] T041 [US1] Add tenant-safe audit writes for student list and detail reads in `schoolmaster-backend/app/Services/GuardianSelfService/GuardianAuditService.php`
-- [ ] T042 [US1] Verify guardian student routes map to approved OpenAPI operation IDs in `schoolmaster-backend/routes/api.php`
+- [X] T034 [P] [US1] Implement ListGuardianStudentsRequest validation in `schoolmaster-backend/app/Http/Requests/Api/V1/Guardian/ListGuardianStudentsRequest.php`
+- [X] T035 [P] [US1] Implement GetGuardianStudentRequest validation in `schoolmaster-backend/app/Http/Requests/Api/V1/Guardian/GetGuardianStudentRequest.php`
+- [X] T036 [P] [US1] Implement GuardianStudentListResource in `schoolmaster-backend/app/Http/Resources/Guardian/GuardianStudentListResource.php`
+- [X] T037 [P] [US1] Implement GuardianStudentResource limited summary fields in `schoolmaster-backend/app/Http/Resources/Guardian/GuardianStudentResource.php`
+- [X] T038 [US1] Implement student list query logic in `schoolmaster-backend/app/Services/GuardianSelfService/GuardianStudentService.php`
+- [X] T039 [US1] Implement target-specific same not-found behavior in `schoolmaster-backend/app/Services/GuardianSelfService/GuardianAccessResolver.php`
+- [X] T040 [US1] Wire list and detail controller actions in `schoolmaster-backend/app/Http/Controllers/Api/V1/Guardian/GuardianSelfServiceController.php`
+- [X] T041 [US1] Add tenant-safe audit writes for student list and detail reads in `schoolmaster-backend/app/Services/GuardianSelfService/GuardianAuditService.php`
+- [X] T042 [US1] Verify guardian student routes map to approved OpenAPI operation IDs in `schoolmaster-backend/routes/api.php`
 
 **Checkpoint**: User Story 1 is fully functional and independently testable.
 
@@ -115,23 +117,23 @@
 
 ### Tests for User Story 2
 
-- [ ] T043 [P] [US2] Add OpenAPI contract coverage for `getGuardianStudentAcademics` in `schoolmaster-specs/api/paths/guardian/students/academics.yaml`
-- [ ] T044 [P] [US2] Add PHPUnit feature tests for guardian academic summary success in `schoolmaster-backend/tests/Feature/GuardianSelfService/GetGuardianStudentAcademicsTest.php`
-- [ ] T045 [P] [US2] Add PHPUnit feature tests for academic-period validation failures in `schoolmaster-backend/tests/Feature/GuardianSelfService/GetGuardianStudentAcademicsPeriodTest.php`
-- [ ] T046 [P] [US2] Add PHPUnit unit tests for academic summary aggregation redaction in `schoolmaster-backend/tests/Unit/GuardianSelfService/GuardianAcademicSummaryServiceTest.php`
-- [ ] T047 [P] [US2] Add PHPUnit feature tests for guardian academic summary transfer isolation in `schoolmaster-backend/tests/Feature/GuardianSelfService/GetGuardianStudentAcademicsTransferTest.php`
+- [X] T043 [P] [US2] Add OpenAPI contract coverage for `getGuardianStudentAcademics` in `schoolmaster-specs/api/paths/guardian/students/academics.yaml`
+- [X] T044 [P] [US2] Add PHPUnit feature tests for guardian academic summary success in `schoolmaster-backend/tests/Feature/GuardianSelfService/GetGuardianStudentAcademicsTest.php`
+- [X] T045 [P] [US2] Add PHPUnit feature tests for academic-period validation failures in `schoolmaster-backend/tests/Feature/GuardianSelfService/GetGuardianStudentAcademicsPeriodTest.php`
+- [X] T046 [P] [US2] Add PHPUnit unit tests for academic summary aggregation redaction in `schoolmaster-backend/tests/Unit/GuardianSelfService/GuardianAcademicSummaryServiceTest.php`
+- [X] T047 [P] [US2] Add PHPUnit feature tests for guardian academic summary transfer isolation in `schoolmaster-backend/tests/Feature/GuardianSelfService/GetGuardianStudentAcademicsTransferTest.php`
 
 ### Implementation for User Story 2
 
-- [ ] T048 [P] [US2] Implement GetGuardianStudentAcademicsRequest validation in `schoolmaster-backend/app/Http/Requests/Api/V1/Guardian/GetGuardianStudentAcademicsRequest.php`
-- [ ] T049 [P] [US2] Implement GuardianAcademicSummaryResource in `schoolmaster-backend/app/Http/Resources/Guardian/GuardianAcademicSummaryResource.php`
-- [ ] T050 [P] [US2] Create academic summary query DTO in `schoolmaster-backend/app/DTOs/GuardianSelfService/GuardianAcademicSummaryQuery.php`
-- [ ] T051 [US2] Implement grade summary aggregation in `schoolmaster-backend/app/Services/GuardianSelfService/GuardianAcademicSummaryService.php`
-- [ ] T052 [US2] Implement attendance summary aggregation in `schoolmaster-backend/app/Services/GuardianSelfService/GuardianAcademicSummaryService.php`
-- [ ] T053 [US2] Implement learning-set progress/status summary aggregation in `schoolmaster-backend/app/Services/GuardianSelfService/GuardianAcademicSummaryService.php`
-- [ ] T054 [US2] Enforce detailed grade, attendance, correction, teacher content, questionnaire, and report redaction in `schoolmaster-backend/app/Services/GuardianSelfService/GuardianVisibilityService.php`
-- [ ] T055 [US2] Wire academic summary controller action in `schoolmaster-backend/app/Http/Controllers/Api/V1/Guardian/GuardianSelfServiceController.php`
-- [ ] T056 [US2] Add tenant-safe audit writes for academic summary reads and denials in `schoolmaster-backend/app/Services/GuardianSelfService/GuardianAuditService.php`
+- [X] T048 [P] [US2] Implement GetGuardianStudentAcademicsRequest validation in `schoolmaster-backend/app/Http/Requests/Api/V1/Guardian/GetGuardianStudentAcademicsRequest.php`
+- [X] T049 [P] [US2] Implement GuardianAcademicSummaryResource in `schoolmaster-backend/app/Http/Resources/Guardian/GuardianAcademicSummaryResource.php`
+- [X] T050 [P] [US2] Create academic summary query DTO in `schoolmaster-backend/app/DTOs/GuardianSelfService/GuardianAcademicSummaryQuery.php`
+- [X] T051 [US2] Implement grade summary aggregation in `schoolmaster-backend/app/Services/GuardianSelfService/GuardianAcademicSummaryService.php`
+- [X] T052 [US2] Implement attendance summary aggregation in `schoolmaster-backend/app/Services/GuardianSelfService/GuardianAcademicSummaryService.php`
+- [X] T053 [US2] Implement learning-set progress/status summary aggregation in `schoolmaster-backend/app/Services/GuardianSelfService/GuardianAcademicSummaryService.php`
+- [X] T054 [US2] Enforce detailed grade, attendance, correction, teacher content, questionnaire, and report redaction in `schoolmaster-backend/app/Services/GuardianSelfService/GuardianVisibilityService.php`
+- [X] T055 [US2] Wire academic summary controller action in `schoolmaster-backend/app/Http/Controllers/Api/V1/Guardian/GuardianSelfServiceController.php`
+- [X] T056 [US2] Add tenant-safe audit writes for academic summary reads and denials in `schoolmaster-backend/app/Services/GuardianSelfService/GuardianAuditService.php`
 
 **Checkpoint**: User Story 2 is fully functional and independently testable.
 
@@ -145,20 +147,20 @@
 
 ### Tests for User Story 3
 
-- [ ] T057 [P] [US3] Add OpenAPI contract coverage for `getGuardianStudentContacts` in `schoolmaster-specs/api/paths/guardian/students/contacts.yaml`
-- [ ] T058 [P] [US3] Add PHPUnit feature tests for guardian contact view success in `schoolmaster-backend/tests/Feature/GuardianSelfService/GetGuardianStudentContactsTest.php`
-- [ ] T059 [P] [US3] Add PHPUnit feature tests for contact-field redaction in `schoolmaster-backend/tests/Feature/GuardianSelfService/GetGuardianStudentContactsRedactionTest.php`
-- [ ] T060 [P] [US3] Add PHPUnit unit tests for ContactVisibilityRule behavior in `schoolmaster-backend/tests/Unit/GuardianSelfService/GuardianContactVisibilityTest.php`
+- [X] T057 [P] [US3] Add OpenAPI contract coverage for `getGuardianStudentContacts` in `schoolmaster-specs/api/paths/guardian/students/contacts.yaml`
+- [X] T058 [P] [US3] Add PHPUnit feature tests for guardian contact view success in `schoolmaster-backend/tests/Feature/GuardianSelfService/GetGuardianStudentContactsTest.php`
+- [X] T059 [P] [US3] Add PHPUnit feature tests for contact-field redaction in `schoolmaster-backend/tests/Feature/GuardianSelfService/GetGuardianStudentContactsRedactionTest.php`
+- [X] T060 [P] [US3] Add PHPUnit unit tests for ContactVisibilityRule behavior in `schoolmaster-backend/tests/Unit/GuardianSelfService/GuardianContactVisibilityTest.php`
 
 ### Implementation for User Story 3
 
-- [ ] T061 [P] [US3] Implement GetGuardianStudentContactsRequest validation in `schoolmaster-backend/app/Http/Requests/Api/V1/Guardian/GetGuardianStudentContactsRequest.php`
-- [ ] T062 [P] [US3] Implement GuardianStudentContactsResource in `schoolmaster-backend/app/Http/Resources/Guardian/GuardianStudentContactsResource.php`
-- [ ] T063 [P] [US3] Create contact view query DTO in `schoolmaster-backend/app/DTOs/GuardianSelfService/GuardianContactViewQuery.php`
-- [ ] T064 [US3] Implement contact visibility field selection in `schoolmaster-backend/app/Services/GuardianSelfService/GuardianContactService.php`
-- [ ] T065 [US3] Enforce other-guardian, non-primary contact, emergency detail, and school-only note redaction in `schoolmaster-backend/app/Services/GuardianSelfService/GuardianVisibilityService.php`
-- [ ] T066 [US3] Wire contact controller action in `schoolmaster-backend/app/Http/Controllers/Api/V1/Guardian/GuardianSelfServiceController.php`
-- [ ] T067 [US3] Add tenant-safe audit writes for contact view reads and denials in `schoolmaster-backend/app/Services/GuardianSelfService/GuardianAuditService.php`
+- [X] T061 [P] [US3] Implement GetGuardianStudentContactsRequest validation in `schoolmaster-backend/app/Http/Requests/Api/V1/Guardian/GetGuardianStudentContactsRequest.php`
+- [X] T062 [P] [US3] Implement GuardianStudentContactsResource in `schoolmaster-backend/app/Http/Resources/Guardian/GuardianStudentContactsResource.php`
+- [X] T063 [P] [US3] Create contact view query DTO in `schoolmaster-backend/app/DTOs/GuardianSelfService/GuardianContactViewQuery.php`
+- [X] T064 [US3] Implement contact visibility field selection in `schoolmaster-backend/app/Services/GuardianSelfService/GuardianContactService.php`
+- [X] T065 [US3] Enforce other-guardian, non-primary contact, emergency detail, and school-only note redaction in `schoolmaster-backend/app/Services/GuardianSelfService/GuardianVisibilityService.php`
+- [X] T066 [US3] Wire contact controller action in `schoolmaster-backend/app/Http/Controllers/Api/V1/Guardian/GuardianSelfServiceController.php`
+- [X] T067 [US3] Add tenant-safe audit writes for contact view reads and denials in `schoolmaster-backend/app/Services/GuardianSelfService/GuardianAuditService.php`
 
 **Checkpoint**: User Story 3 is fully functional and independently testable.
 
@@ -168,15 +170,15 @@
 
 **Purpose**: Contract validation, regression hardening, documentation, and release readiness across all stories.
 
-- [ ] T068 Add PHPUnit feature tests for guardian audit events covering allowed reads, denied access, blocked cross-tenant attempts, and payload redaction in `schoolmaster-backend/tests/Feature/GuardianSelfService/GuardianAuditEventsTest.php`
-- [ ] T069 [P] Run Redocly lint for aggregate contract and record results in `schoolmaster-specs/specs/011-guardian-self-service/quickstart.md`
-- [ ] T070 [P] Run Redocly lint for platform contract and record results in `schoolmaster-specs/specs/011-guardian-self-service/quickstart.md`
-- [ ] T071 Run backend PHPUnit suite and record results in `schoolmaster-specs/specs/011-guardian-self-service/quickstart.md`
-- [ ] T072 [P] Review OpenAPI route-to-operation traceability in `schoolmaster-specs/specs/011-guardian-self-service/contracts/backend-guardian-self-service.md`
-- [ ] T073 [P] Review backend route-to-operation traceability in `schoolmaster-backend/routes/api.php`
-- [ ] T074 [P] Review audit payload redaction across all stories in `schoolmaster-backend/app/Services/GuardianSelfService/GuardianAuditService.php`
-- [ ] T075 [P] Review response resource field redaction across all stories in `schoolmaster-backend/app/Http/Resources/Guardian/`
-- [ ] T076 Update backend implementation notes for guardian self-service in `schoolmaster-backend/README.md`
+- [X] T068 Add PHPUnit feature tests for guardian audit events covering allowed reads, denied access, blocked cross-tenant attempts, and payload redaction in `schoolmaster-backend/tests/Feature/GuardianSelfService/GuardianAuditEventsTest.php`
+- [X] T069 [P] Run Redocly lint for aggregate contract and record results in `schoolmaster-specs/specs/011-guardian-self-service/quickstart.md`
+- [X] T070 [P] Run Redocly lint for platform contract and record results in `schoolmaster-specs/specs/011-guardian-self-service/quickstart.md`
+- [X] T071 Run backend PHPUnit suite and record results in `schoolmaster-specs/specs/011-guardian-self-service/quickstart.md`
+- [X] T072 [P] Review OpenAPI route-to-operation traceability in `schoolmaster-specs/specs/011-guardian-self-service/contracts/backend-guardian-self-service.md`
+- [X] T073 [P] Review backend route-to-operation traceability in `schoolmaster-backend/routes/api.php`
+- [X] T074 [P] Review audit payload redaction across all stories in `schoolmaster-backend/app/Services/GuardianSelfService/GuardianAuditService.php`
+- [X] T075 [P] Review response resource field redaction across all stories in `schoolmaster-backend/app/Http/Resources/Guardian/`
+- [X] T076 Update backend implementation notes for guardian self-service in `schoolmaster-backend/README.md`
 
 ---
 

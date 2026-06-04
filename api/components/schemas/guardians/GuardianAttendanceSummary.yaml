@@ -1,0 +1,27 @@
+type: object
+required:
+  - status
+  - total_absences
+  - total_tardies
+properties:
+  status:
+    type: string
+    description: Guardian-visible attendance status for the selected academic period.
+  total_absences:
+    type: integer
+    minimum: 0
+  total_tardies:
+    type: integer
+    minimum: 0
+  attendance_rate:
+    type:
+      - number
+      - 'null'
+    format: float
+    minimum: 0
+    maximum: 100
+  last_updated_at:
+    type:
+      - string
+      - 'null'
+    format: date-time

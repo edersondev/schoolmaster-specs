@@ -1,0 +1,41 @@
+post:
+  tags:
+    - Guardians
+  summary: Link a guardian record to an authenticated user account
+  description: >-
+    Creates the same-school guardian-user link required before a user can act
+    as a guardian in guardian self-service. This operation is school-admin only
+    and does not grant student visibility without active guardian-student
+    associations.
+  operationId: createGuardianUserLink
+  parameters:
+    - $ref: ../../components/parameters/schools/TenantContext.yaml
+    - $ref: ../../components/parameters/guardians/GuardianId.yaml
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: ../../components/schemas/guardians/GuardianUserLinkCreateRequest.yaml
+  responses:
+    '201':
+      description: Guardian user link created
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: ../../components/schemas/common/SuccessEnvelope.yaml
+              - type: object
+                properties:
+                  data:
+                    $ref: ../../components/schemas/guardians/GuardianUserLink.yaml
+    '401':
+      $ref: ../../components/responses/auth/Unauthorized.yaml
+    '403':
+      $ref: ../../components/responses/common/AdministrationForbidden.yaml
+    '404':
+      $ref: ../../components/responses/common/NotFound.yaml
+    '409':
+      $ref: ../../components/responses/common/Conflict.yaml
+    '422':
+      $ref: ../../components/responses/common/ValidationError.yaml

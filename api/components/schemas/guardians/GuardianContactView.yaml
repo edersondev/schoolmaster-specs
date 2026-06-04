@@ -1,0 +1,47 @@
+type: object
+required:
+  - student
+  - guardian_contact
+  - relationship_label
+  - student_primary_contact
+properties:
+  student:
+    $ref: GuardianStudentSummary.yaml
+  relationship_label:
+    type: string
+  guardian_contact:
+    type: object
+    required:
+      - guardian_id
+      - full_name
+    properties:
+      guardian_id:
+        type: string
+        format: uuid
+      full_name:
+        type: string
+      contact_email:
+        type:
+          - string
+          - 'null'
+        format: email
+      contact_phone:
+        type:
+          - string
+          - 'null'
+  student_primary_contact:
+    type: object
+    required:
+      - full_name
+    properties:
+      full_name:
+        type: string
+      contact_email:
+        type:
+          - string
+          - 'null'
+        format: email
+      contact_phone:
+        type:
+          - string
+          - 'null'

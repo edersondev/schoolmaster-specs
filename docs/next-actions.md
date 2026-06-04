@@ -2,12 +2,12 @@
 
 ## Current Status
 
-- The active feature branch is `001-schoolmaster-platform`.
+- The active feature branch is `011-guardian-self-service`.
 - Spec Kit prerequisites pass for the current feature artifacts.
 - `specs/001-schoolmaster-platform/contracts/openapi.yaml` is the active
   feature contract.
-- `api/openapi.yaml` is the aggregate publication target and is not yet the
-  implementation-ready contract.
+- `api/openapi.yaml` is the aggregate publication target and now includes the
+  approved guardian self-service surface promoted for this feature.
 - OpenAPI validation is standardized on Redocly CLI using `redocly.yaml`.
 - P1 foundation areas have baseline contract coverage: authentication, schools,
   users, roles, permissions, academic years, academic periods, and guardians.
@@ -17,21 +17,23 @@
   learning timelines, student academic records, authorized content downloads,
   asynchronous report requests, report output downloads, 90-day output
   retention, and explicit regeneration through a new `ReportRun`.
+- Guardian self-service contract coverage is now in place for guardian student
+  list/detail, academic summary, contact view, and school-admin
+  guardian-user-link provisioning.
 
 ## Immediate Sequence
 
-1. Review the `006-backend-student-enrollment` plan and design artifacts.
-2. Run `/speckit-analyze` for cross-artifact consistency before task
-   generation.
-3. Expand OpenAPI for the approved student profile and enrollment operations
-   before backend implementation.
-4. Use [Backend feature roadmap](backend-feature-roadmap.md) for the remaining
-   backend feature sequence after `006`.
-5. Run the approved OpenAPI validation command before promoting contract
-   behavior.
-6. Keep P1 implementation aligned to the active feature contract until a
-   deliberate promotion updates `api/openapi.yaml`.
-7. Keep backend and frontend repositories pinned to an approved
+1. Implement Phase 2 foundational backend work for
+   `011-guardian-self-service`.
+2. Add school-admin guardian-user-link lifecycle support in the backend before
+   enabling guardian self-service reads.
+3. Implement guardian student list/detail, then academic summary, then contact
+   view with route-to-operation traceability.
+4. Run backend PHPUnit coverage for tenant isolation, authorization,
+   non-enumeration, redaction, transfer visibility, and audit events.
+5. Use [Backend feature roadmap](backend-feature-roadmap.md) for the remaining
+   backend feature sequence after `011`.
+6. Keep backend and frontend repositories pinned to an approved
    `schoolmaster-specs` commit or submodule revision.
 
 ## Resolved Decisions
@@ -53,11 +55,11 @@
 
 - Do not implement undocumented API behavior in backend or frontend
   repositories.
-- Do not consume `api/openapi.yaml` as implementation-ready while it has no
-  promoted paths.
+- Do not implement guardian self-service backend routes that drift from the
+  approved OpenAPI operation IDs and response envelopes.
 - Do not implement report output retention or regeneration behavior outside the
   90-day retention and explicit new-`ReportRun` contract.
-- Link backend and frontend work to feature id `001-schoolmaster-platform` and
+- Link backend and frontend work to feature id `011-guardian-self-service` and
   to the OpenAPI operation IDs implemented or consumed.
 
 ## Promotion Gate

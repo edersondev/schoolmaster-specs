@@ -1,0 +1,21 @@
+type: object
+required:
+  - status
+properties:
+  status:
+    type: string
+    description: Guardian-visible current grade status or label for the selected academic period.
+  average:
+    type:
+      - number
+      - 'null'
+    format: float
+  scale:
+    type:
+      - string
+      - 'null'
+  last_updated_at:
+    type:
+      - string
+      - 'null'
+    format: date-time

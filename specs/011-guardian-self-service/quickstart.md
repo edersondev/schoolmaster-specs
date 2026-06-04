@@ -26,6 +26,11 @@ Validate the platform feature contract if it is updated:
 npx @redocly/cli lint specs/001-schoolmaster-platform/contracts/openapi.yaml
 ```
 
+Validation evidence from 2026-06-04:
+
+- `npx @redocly/cli lint api/openapi.yaml` passed.
+- `npx @redocly/cli lint specs/001-schoolmaster-platform/contracts/openapi.yaml` passed.
+
 Contract review must confirm:
 
 - operation IDs exist for every approved guardian self-service route
@@ -43,6 +48,22 @@ After backend implementation, run the backend test suite from the backend reposi
 ```bash
 docker exec schoolmaster-backend-app-1 php artisan test
 ```
+
+Validation evidence from 2026-06-04:
+
+- `docker exec schoolmaster-backend-app-1 php artisan test tests/Feature/Api/V1/GuardianUserLinkManagementTest.php tests/Feature/GuardianSelfService tests/Unit/GuardianSelfService` passed: 15 tests, 68 assertions.
+- `docker exec schoolmaster-backend-app-1 php artisan test` passed: 283 tests, 1461 assertions.
+- Local host `php artisan test` was not used for final validation because the host PHP runtime lacks the MySQL PDO driver; container validation is the authoritative backend runtime.
+
+## Backend Foundation Implementation Notes
+
+The backend foundation is implemented in `schoolmaster-backend` and remains limited to the approved OpenAPI operations and existing Laravel API conventions:
+
+- `guardian_user_links` stores UUID public identifiers, `school_id`, `guardian_id`, `user_id`, lifecycle status, creator/deactivation metadata, timestamps, soft deletes, and indexes for same-school lookup and active-link uniqueness.
+- `GuardianUserLink`, `Guardian`, `User`, and `StudentProfile` relationships support explicit active guardian-user links and approved guardian-student associations.
+- School-admin create/deactivate guardian-user-link actions use Form Requests, `GuardianPolicy::manageUserLinks`, `GuardianUserLinkService`, `GuardianUserLinkResource`, and the approved admin routes only.
+- Guardian self-service reads use `GuardianAccessResolver`, DTOs, Form Requests, Resources, visibility services, and `GuardianAuditService` to enforce tenant context, active link proof, active association proof, summary-only visibility, and tenant-safe audit metadata.
+- Denied guardian self-service attempts are audited before the existing authorization/not-found exceptions are rethrown, preserving non-enumerating response behavior.
 
 Focused backend coverage must include:
 
