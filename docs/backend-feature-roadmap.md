@@ -103,7 +103,7 @@ impact.
 
 ### 6. Guardian Self-Service
 
-**Status**: Ready for implementation from
+**Status**: Completed and implemented from
 `specs/011-guardian-self-service/spec.md`.
 
 **Purpose**: Allow guardians to view permitted student profile, academic, and
@@ -118,7 +118,8 @@ behavior.
 
 ### 7. Report Lifecycle Expansion
 
-**Status**: Not specified.
+**Status**: Ready for implementation from
+`specs/012-report-lifecycle-expansion/spec.md`.
 
 **Purpose**: Add report retry, cancellation, deletion/restore, manual status
 mutation if allowed, custom report definitions, report designer behavior, and
