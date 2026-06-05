@@ -122,7 +122,7 @@ No backend-local product envelope, ad hoc error response, undocumented status co
 - Changes to domain, selected fields, filters, grouping, sorting, or output formats require the definition to be inactive or draft.
 - Custom definitions must reject hidden/private fields, arbitrary query text, executable expressions, unsupported joins, cross-tenant references, and non-launch-scope domains.
 - Lifecycle reason inputs must be predefined tenant-safe reason codes; free-text lifecycle reasons are rejected.
-- Stale worker completions after cancellation, delete, restore, supersession, or terminal state must be ignored and audited.
+- Stale worker completions after cancellation, supersession, or another terminal generation state must be ignored and audited.
 - Expired downloads must not regenerate, enqueue retry, mutate runs, or change retention timestamps.
 
 ## Blocked Until Future Specification
