@@ -6,13 +6,13 @@ This feature expands the public API surface for school-scoped report lifecycle, 
 
 ## Authoritative Contracts
 
-- Aggregate contract: `api/openapi.yaml`
-- Platform feature contract: `specs/001-schoolmaster-platform/contracts/openapi.yaml`
+- Aggregate contract: `specs/api/openapi.yaml`
+- Platform feature contract: `specs/specs/001-schoolmaster-platform/contracts/openapi.yaml`
 - Source-of-truth guide: `AGENTS.md`
-- Backend implementation guidance: `docs/backend-guidelines.md`
-- Multi-tenant guidance: `docs/multi-tenant.md`
-- Security guidance: `docs/security.md`
-- Tenant decision: `decisions/004-use-tenant-by-column.md`
+- Backend implementation guidance: `specs/docs/backend-guidelines.md`
+- Multi-tenant guidance: `specs/docs/multi-tenant.md`
+- Security guidance: `specs/docs/security.md`
+- Tenant decision: `specs/decisions/004-use-tenant-by-column.md`
 
 ## Current Report Baseline
 

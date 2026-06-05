@@ -1,7 +1,7 @@
 # Implementation Plan: Report Lifecycle Expansion
 
 **Branch**: `012-report-lifecycle-expansion` | **Date**: 2026-06-05 | **Spec**: [spec.md](./spec.md)
-**Input**: Feature specification from `specs/012-report-lifecycle-expansion/spec.md`
+**Input**: Feature specification from `specs/specs/012-report-lifecycle-expansion/spec.md`
 
 **Note**: This plan defines the backend implementation and contract boundary for report lifecycle expansion. It does not decompose tasks and does not authorize behavior outside the specification and OpenAPI contract.
 
@@ -41,7 +41,7 @@ The design preserves the current asynchronous `ReportRun` foundation, 90-day gen
 ### Documentation (this feature)
 
 ```text
-specs/012-report-lifecycle-expansion/
+specs/specs/012-report-lifecycle-expansion/
 ├── plan.md
 ├── research.md
 ├── data-model.md
@@ -52,11 +52,11 @@ specs/012-report-lifecycle-expansion/
     └── requirements.md
 ```
 
-### Source Code (target repositories)
+### Source Code (current workspace and target repositories)
 
 ```text
-# Backend repository (Laravel API)
-schoolmaster-backend/
+# Current backend workspace (Laravel API)
+./
 ├── app/
 │   ├── DTOs/
 │   │   └── Reports/
@@ -79,18 +79,18 @@ schoolmaster-backend/
     ├── Feature/
     └── Unit/
 
-# Frontend repository (Vue 3)
+# Separate frontend repository (Vue 3)
 schoolmaster-frontend/
 └── No implementation changes in this feature.
 
-# Contracts and shared delivery artifacts
-schoolmaster-specs/
+# Nested specification workspace available from this repository
+specs/
 ├── api/openapi.yaml
 ├── specs/001-schoolmaster-platform/contracts/openapi.yaml
 └── specs/012-report-lifecycle-expansion/
 ```
 
-**Structure Decision**: Keep this as a backend-only report lifecycle expansion slice with specification artifacts in `schoolmaster-specs`. Backend implementation should follow the existing Laravel API structure used by prior slices, with domain rules in services, request validation in Form Requests, authorization in Policies, API Resources for response shaping, DTOs for lifecycle/definition/catalog/request inputs, and repositories/query objects only for complex report catalog resolution, definition validation, lifecycle concurrency, per-format output availability, report-run list filtering, definition-name uniqueness, active-definition structural edit validation, and audit-safe reads. Frontend work is explicitly deferred until contract-compliant backend behavior exists.
+**Structure Decision**: Keep this as a backend-only report lifecycle expansion slice with specification artifacts available locally under `specs/`. Backend implementation should follow the existing Laravel API structure used by prior slices, with domain rules in services, request validation in Form Requests, authorization in Policies, API Resources for response shaping, DTOs for lifecycle/definition/catalog/request inputs, and repositories/query objects only for complex report catalog resolution, definition validation, lifecycle concurrency, per-format output availability, report-run list filtering, definition-name uniqueness, active-definition structural edit validation, and audit-safe reads. Frontend work is explicitly deferred until contract-compliant backend behavior exists.
 
 ## Phase 0 Research Summary
 
@@ -118,7 +118,7 @@ Design artifacts are captured in:
 - [contracts/backend-report-lifecycle-expansion.md](./contracts/backend-report-lifecycle-expansion.md): proposed operation boundary, required OpenAPI expansion, tenant and authorization rules, response expectations, blocked behavior, and verification requirements.
 - [quickstart.md](./quickstart.md): validation walkthrough and commands for contract and backend readiness.
 
-Implementation must update `api/openapi.yaml` before routes, controllers, requests, services, or tests are added in the backend repository.
+Implementation must update `specs/api/openapi.yaml` before routes, controllers, requests, services, or tests are added in the backend repository.
 
 ## Post-Design Constitution Check
 

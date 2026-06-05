@@ -121,16 +121,17 @@ behavior.
 **Status**: Ready for implementation from
 `specs/012-report-lifecycle-expansion/spec.md`.
 
-**Purpose**: Add report retry, cancellation, deletion/restore, manual status
-mutation if allowed, custom report definitions, report designer behavior, and
-additional output formats or filters.
+**Purpose**: Add report retry, cancellation, soft delete/restore, report
+catalog discovery, custom report definitions, custom report request snapshots,
+and approved XLSX/filter expansion.
 
 **Why next**: Current reports are limited to launch-scope asynchronous runs,
 PDF/CSV output, 90-day retention, and explicit regeneration through a new
 `ReportRun`.
 
 **Contract gate**: Define report lifecycle state transitions, permissions,
-retention impact, retry semantics, output compatibility, and tenant visibility.
+retention impact, retry semantics, output compatibility, custom-definition
+ownership, and tenant visibility.
 
 ### 8. Platform-Wide Reporting and Support Access
 

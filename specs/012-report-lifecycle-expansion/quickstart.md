@@ -7,23 +7,23 @@ Use this walkthrough to verify that the report lifecycle expansion plan, contrac
 ## Prerequisites
 
 - Active feature branch: `012-report-lifecycle-expansion`
-- Active spec: `specs/012-report-lifecycle-expansion/spec.md`
-- Active plan: `specs/012-report-lifecycle-expansion/plan.md`
+- Active spec: `specs/specs/012-report-lifecycle-expansion/spec.md`
+- Active plan: `specs/specs/012-report-lifecycle-expansion/plan.md`
 - OpenAPI changes must be completed before backend routes expose report lifecycle expansion behavior.
-- Backend implementation must remain API-only and scoped to `schoolmaster-backend`.
+- Backend implementation must remain API-only and scoped to this backend repository.
 
 ## Contract Validation
 
 After OpenAPI is expanded for this feature, validate the aggregate contract:
 
 ```bash
-npx @redocly/cli lint api/openapi.yaml
+npx @redocly/cli lint specs/api/openapi.yaml
 ```
 
 Validate the platform feature contract if it is updated:
 
 ```bash
-npx @redocly/cli lint specs/001-schoolmaster-platform/contracts/openapi.yaml
+npx @redocly/cli lint specs/specs/001-schoolmaster-platform/contracts/openapi.yaml
 ```
 
 Contract review must confirm:

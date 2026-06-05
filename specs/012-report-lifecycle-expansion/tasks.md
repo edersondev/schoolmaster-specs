@@ -1,6 +1,6 @@
 # Tasks: Report Lifecycle Expansion
 
-**Input**: Design documents from `specs/012-report-lifecycle-expansion/`
+**Input**: Design documents from `specs/specs/012-report-lifecycle-expansion/`
 **Prerequisites**: plan.md, spec.md, research.md, data-model.md, contracts/
 
 **Tests**: Critical business flow tests are required. This feature changes REST contracts and backend behavior, so include OpenAPI validation and PHPUnit feature/unit coverage. Frontend implementation is explicitly out of scope, so Vitest tasks are not included in this slice.
@@ -15,8 +15,8 @@
 
 ## Path Conventions
 
-- Specification and contract paths are in `schoolmaster-specs/`.
-- Backend implementation paths are in `schoolmaster-backend/`.
+- Specification and contract paths are in `specs/`.
+- Backend implementation paths are relative to the backend repository root.
 - Frontend implementation is out of scope for this feature.
 
 ---
@@ -25,22 +25,22 @@
 
 **Purpose**: Establish the contract-first backend slice and shared implementation structure.
 
-- [ ] T001 Register report lifecycle, catalog, and definition routes in `schoolmaster-specs/api/openapi.yaml`
-- [ ] T002 Update existing report list/request operations for expanded filters, statuses, custom requests, and output formats in `schoolmaster-specs/api/paths/reports/index.yaml`
-- [ ] T003 Update existing report download operation for XLSX, per-format availability, and expired-output semantics in `schoolmaster-specs/api/paths/reports/download.yaml`
-- [ ] T004 [P] Add report retry operation contract in `schoolmaster-specs/api/paths/reports/retry.yaml`
-- [ ] T005 [P] Add report cancel operation contract in `schoolmaster-specs/api/paths/reports/cancel.yaml`
-- [ ] T006 [P] Add report delete/restore operation contracts in `schoolmaster-specs/api/paths/reports/report-run.yaml`
-- [ ] T007 [P] Add report catalog operation contract in `schoolmaster-specs/api/paths/report-catalog/index.yaml`
-- [ ] T008 [P] Add report definition operation contracts in `schoolmaster-specs/api/paths/report-definitions/index.yaml`
-- [ ] T009 [P] Add report definition item, activation, deactivation, delete, and restore operation contracts in `schoolmaster-specs/api/paths/report-definitions/report-definition.yaml`
-- [ ] T010 Add report lifecycle expansion schemas in `schoolmaster-specs/api/components/schemas/reports/ReportGenerationStatus.yaml`, `schoolmaster-specs/api/components/schemas/reports/ReportOutputAvailability.yaml`, `schoolmaster-specs/api/components/schemas/reports/ReportOutput.yaml`, `schoolmaster-specs/api/components/schemas/reports/ReportDefinition.yaml`, `schoolmaster-specs/api/components/schemas/reports/ReportDefinitionSnapshot.yaml`, `schoolmaster-specs/api/components/schemas/reports/ReportCatalog.yaml`, and `schoolmaster-specs/api/components/schemas/reports/ReportLifecycleEvent.yaml`
-- [ ] T011 Mirror approved report lifecycle expansion in `schoolmaster-specs/specs/001-schoolmaster-platform/contracts/openapi.yaml`
-- [ ] T012 Run Redocly lint for the aggregate contract before backend implementation and record results in `schoolmaster-specs/specs/012-report-lifecycle-expansion/quickstart.md`
-- [ ] T013 [P] Run Redocly lint for the platform contract before backend implementation and record results in `schoolmaster-specs/specs/012-report-lifecycle-expansion/quickstart.md`
-- [ ] T014 [P] Create backend report DTO and enum directories in `schoolmaster-backend/app/DTOs/Reports/` and `schoolmaster-backend/app/Enums/Reports/`
-- [ ] T015 [P] Create backend report request and resource directories in `schoolmaster-backend/app/Http/Requests/Api/V1/Reports/` and `schoolmaster-backend/app/Http/Resources/Reports/`
-- [ ] T016 [P] Create backend report service directory in `schoolmaster-backend/app/Services/Reports/`
+- [ ] T001 Register report lifecycle, catalog, and definition routes in `specs/api/openapi.yaml`
+- [ ] T002 Update existing report list/request operations for expanded filters, statuses, custom requests, and output formats in `specs/api/paths/reports/index.yaml`
+- [ ] T003 Update existing report download operation for XLSX, per-format availability, and expired-output semantics in `specs/api/paths/reports/download.yaml`
+- [ ] T004 [P] Add report retry operation contract in `specs/api/paths/reports/retry.yaml`
+- [ ] T005 [P] Add report cancel operation contract in `specs/api/paths/reports/cancel.yaml`
+- [ ] T006 [P] Add report delete/restore operation contracts in `specs/api/paths/reports/report-run.yaml`
+- [ ] T007 [P] Add report catalog operation contract in `specs/api/paths/report-catalog/index.yaml`
+- [ ] T008 [P] Add report definition operation contracts in `specs/api/paths/report-definitions/index.yaml`
+- [ ] T009 [P] Add report definition item, activation, deactivation, delete, and restore operation contracts in `specs/api/paths/report-definitions/report-definition.yaml`
+- [ ] T010 Add report lifecycle expansion schemas in `specs/api/components/schemas/reports/ReportGenerationStatus.yaml`, `specs/api/components/schemas/reports/ReportOutputAvailability.yaml`, `specs/api/components/schemas/reports/ReportOutput.yaml`, `specs/api/components/schemas/reports/ReportDefinition.yaml`, `specs/api/components/schemas/reports/ReportDefinitionSnapshot.yaml`, `specs/api/components/schemas/reports/ReportCatalog.yaml`, and `specs/api/components/schemas/reports/ReportLifecycleEvent.yaml`
+- [ ] T011 Mirror approved report lifecycle expansion in `specs/specs/001-schoolmaster-platform/contracts/openapi.yaml`
+- [ ] T012 Run Redocly lint for the aggregate contract before backend implementation and record results in `specs/specs/012-report-lifecycle-expansion/quickstart.md`
+- [ ] T013 [P] Run Redocly lint for the platform contract before backend implementation and record results in `specs/specs/012-report-lifecycle-expansion/quickstart.md`
+- [ ] T014 [P] Create backend report DTO and enum directories in `app/DTOs/Reports/` and `app/Enums/Reports/`
+- [ ] T015 [P] Create backend report request and resource directories in `app/Http/Requests/Reports/` and `app/Http/Resources/Reports/`
+- [ ] T016 [P] Create backend report service directory in `app/Services/Reports/`
 
 ---
 
@@ -50,36 +50,36 @@
 
 **Critical**: No user story work can begin until this phase is complete.
 
-- [ ] T017 Create report run lifecycle migration in `schoolmaster-backend/database/migrations/2026_06_05_000001_update_report_runs_for_lifecycle_expansion.php`
-- [ ] T018 Create report outputs migration with per-format availability in `schoolmaster-backend/database/migrations/2026_06_05_000002_create_report_outputs_table.php`
-- [ ] T019 Create report definitions migration with school-scoped non-deleted name uniqueness in `schoolmaster-backend/database/migrations/2026_06_05_000003_create_report_definitions_table.php`
-- [ ] T020 Create report definition snapshots migration in `schoolmaster-backend/database/migrations/2026_06_05_000004_create_report_definition_snapshots_table.php`
-- [ ] T021 Create report lifecycle events migration in `schoolmaster-backend/database/migrations/2026_06_05_000005_create_report_lifecycle_events_table.php`
-- [ ] T022 Update ReportRun model relationships, UUIDs, soft-delete, and lifecycle casts in `schoolmaster-backend/app/Models/ReportRun.php`
-- [ ] T023 [P] Create ReportOutput model with school ownership and availability casts in `schoolmaster-backend/app/Models/ReportOutput.php`
-- [ ] T024 [P] Create ReportDefinition model with school ownership, lifecycle casts, and active edit boundary helpers in `schoolmaster-backend/app/Models/ReportDefinition.php`
-- [ ] T025 [P] Create ReportDefinitionSnapshot model with immutable snapshot relationships in `schoolmaster-backend/app/Models/ReportDefinitionSnapshot.php`
-- [ ] T026 [P] Create ReportLifecycleEvent model with tenant-safe audit casts in `schoolmaster-backend/app/Models/ReportLifecycleEvent.php`
-- [ ] T027 [P] Create report generation status, output availability, definition state, and lifecycle reason-code enums in `schoolmaster-backend/app/Enums/Reports/`
-- [ ] T028 Create report lifecycle policy for report-run view, retry, cancel, delete, restore, and download permissions in `schoolmaster-backend/app/Policies/ReportLifecyclePolicy.php`
-- [ ] T029 Create report definition policy for catalog view and definition management permissions in `schoolmaster-backend/app/Policies/ReportDefinitionPolicy.php`
-- [ ] T030 Register report policies in `schoolmaster-backend/app/Providers/AuthServiceProvider.php`
-- [ ] T031 Create report actor context DTO in `schoolmaster-backend/app/DTOs/Reports/ReportActorContext.php`
-- [ ] T032 [P] Create report lifecycle action DTO in `schoolmaster-backend/app/DTOs/Reports/ReportLifecycleActionData.php`
-- [ ] T033 [P] Create report request DTO in `schoolmaster-backend/app/DTOs/Reports/ReportRequestData.php`
-- [ ] T034 [P] Create report definition DTO in `schoolmaster-backend/app/DTOs/Reports/ReportDefinitionData.php`
-- [ ] T035 Create report tenant context service for school-scoped report operations in `schoolmaster-backend/app/Services/Reports/ReportTenantContextService.php`
-- [ ] T036 Create report audit service for tenant-safe lifecycle and denial events in `schoolmaster-backend/app/Services/Reports/ReportAuditService.php`
-- [ ] T037 Create report response resource base helpers in `schoolmaster-backend/app/Http/Resources/Reports/ReportErrorResource.php`
-- [ ] T038 Create report controller shell for run lifecycle and download endpoints in `schoolmaster-backend/app/Http/Controllers/Api/V1/ReportController.php`
-- [ ] T039 Create report definition controller shell for catalog and definition endpoints in `schoolmaster-backend/app/Http/Controllers/Api/V1/ReportDefinitionController.php`
-- [ ] T040 Register report lifecycle, catalog, and definition routes in `schoolmaster-backend/routes/api.php`
-- [ ] T041 [P] Add report run factory states for requested, generating, generated, failed, canceled, deleted, retried, and expired-output runs in `schoolmaster-backend/database/factories/ReportRunFactory.php`
-- [ ] T042 [P] Add report output factory states for pending, available, failed, expired, and unsupported availability in `schoolmaster-backend/database/factories/ReportOutputFactory.php`
-- [ ] T043 [P] Add report definition and snapshot factories in `schoolmaster-backend/database/factories/ReportDefinitionFactory.php`
-- [ ] T044 [P] Add report lifecycle event factory in `schoolmaster-backend/database/factories/ReportLifecycleEventFactory.php`
-- [ ] T045 [P] Add PHPUnit feature tests for missing, mismatched, inactive, and unauthorized school context across report lifecycle, definition, catalog, and output endpoints in `schoolmaster-backend/tests/Feature/Reports/ReportTenantContextTest.php`
-- [ ] T046 [P] Add PHPUnit feature tests for platform and support users receiving no implicit school-scoped report access in `schoolmaster-backend/tests/Feature/Reports/ReportPlatformAccessBoundaryTest.php`
+- [ ] T017 Create report run lifecycle migration in `database/migrations/2026_06_05_000001_update_report_runs_for_lifecycle_expansion.php`
+- [ ] T018 Create a migration that updates the existing `report_outputs` table for per-format lifecycle availability in `database/migrations/2026_06_05_000002_update_report_outputs_for_lifecycle_expansion.php`
+- [ ] T019 Create report definitions migration with school-scoped non-deleted name uniqueness in `database/migrations/2026_06_05_000003_create_report_definitions_table.php`
+- [ ] T020 Create report definition snapshots migration in `database/migrations/2026_06_05_000004_create_report_definition_snapshots_table.php`
+- [ ] T021 Create report lifecycle events migration in `database/migrations/2026_06_05_000005_create_report_lifecycle_events_table.php`
+- [ ] T022 Update `ReportRun` model relationships, UUIDs, soft-delete, and lifecycle casts in `app/Models/ReportRun.php`
+- [ ] T023 [P] Create `ReportOutput` model lifecycle availability casts in `app/Models/ReportOutput.php`
+- [ ] T024 [P] Create `ReportDefinition` model with school ownership, lifecycle casts, and active edit boundary helpers in `app/Models/ReportDefinition.php`
+- [ ] T025 [P] Create `ReportDefinitionSnapshot` model with immutable snapshot relationships in `app/Models/ReportDefinitionSnapshot.php`
+- [ ] T026 [P] Create `ReportLifecycleEvent` model with tenant-safe audit casts in `app/Models/ReportLifecycleEvent.php`
+- [ ] T027 [P] Create report generation status, output availability, definition state, and lifecycle reason-code enums in `app/Enums/Reports/`
+- [ ] T028 Create report lifecycle policy for report-run view, retry, cancel, delete, restore, and download permissions in `app/Policies/ReportLifecyclePolicy.php`
+- [ ] T029 Create report definition policy for catalog view and definition management permissions in `app/Policies/ReportDefinitionPolicy.php`
+- [ ] T030 Register report policies in `app/Providers/AuthServiceProvider.php`
+- [ ] T031 Create report actor context DTO in `app/DTOs/Reports/ReportActorContext.php`
+- [ ] T032 [P] Create report lifecycle action DTO in `app/DTOs/Reports/ReportLifecycleActionData.php`
+- [ ] T033 [P] Create report request DTO in `app/DTOs/Reports/ReportRequestData.php`
+- [ ] T034 [P] Create report definition DTO in `app/DTOs/Reports/ReportDefinitionData.php`
+- [ ] T035 Create report tenant context service for school-scoped report operations in `app/Services/Reports/ReportTenantContextService.php`
+- [ ] T036 Create report audit service for tenant-safe lifecycle and denial events in `app/Services/Reports/ReportAuditService.php`
+- [ ] T037 Create report response resource base helpers in `app/Http/Resources/Reports/ReportErrorResource.php`
+- [ ] T038 Update the report controller for run lifecycle and download endpoints in `app/Http/Controllers/Api/V1/ReportController.php`
+- [ ] T039 Create report definition controller shell for catalog and definition endpoints in `app/Http/Controllers/Api/V1/ReportDefinitionController.php`
+- [ ] T040 Register report lifecycle, catalog, and definition routes in `routes/api.php`
+- [ ] T041 [P] Extend `database/factories/StudentReportingFactory.php` with requested, generating, generated, failed, canceled, deleted, retried, and expired-output report-run helper states
+- [ ] T042 [P] Extend `database/factories/StudentReportingFactory.php` with pending, available, failed, expired, and unsupported report-output helper states
+- [ ] T043 [P] Add report definition and snapshot factories in `database/factories/ReportDefinitionFactory.php` and `database/factories/ReportDefinitionSnapshotFactory.php`
+- [ ] T044 [P] Add report lifecycle event factory in `database/factories/ReportLifecycleEventFactory.php`
+- [ ] T045 [P] Add PHPUnit feature tests for missing, mismatched, inactive, and unauthorized school context across report lifecycle, definition, catalog, and output endpoints in `tests/Feature/Api/V1/ReportTenantContextTest.php`
+- [ ] T046 [P] Add PHPUnit feature tests for platform and support users receiving no implicit school-scoped report access in `tests/Feature/Api/V1/ReportPlatformAccessBoundaryTest.php`
 
 **Checkpoint**: Foundation ready - user story implementation can now begin.
 
@@ -93,26 +93,26 @@
 
 ### Tests for User Story 1
 
-- [ ] T047 [P] [US1] Add OpenAPI contract coverage for `retryReport`, `cancelReport`, `deleteReport`, `restoreReport`, and expanded `listReports` in `schoolmaster-specs/api/paths/reports/retry.yaml`, `schoolmaster-specs/api/paths/reports/cancel.yaml`, `schoolmaster-specs/api/paths/reports/report-run.yaml`, and `schoolmaster-specs/api/paths/reports/index.yaml`
-- [ ] T048 [P] [US1] Add PHPUnit feature tests for report retry eligibility, retry lineage, and original-run preservation in `schoolmaster-backend/tests/Feature/Reports/ReportRetryTest.php`
-- [ ] T049 [P] [US1] Add PHPUnit feature tests for report cancellation, predefined reason-code validation, and stale worker completion rejection in `schoolmaster-backend/tests/Feature/Reports/ReportCancellationTest.php`
-- [ ] T050 [P] [US1] Add PHPUnit feature tests for report-run soft delete, restore, and default include-deleted list behavior in `schoolmaster-backend/tests/Feature/Reports/ReportRunSoftDeleteRestoreTest.php`
-- [ ] T051 [P] [US1] Add PHPUnit feature tests for lifecycle authorization, cross-tenant denial, and non-enumerating target responses in `schoolmaster-backend/tests/Feature/Reports/ReportLifecycleAuthorizationTest.php`
-- [ ] T052 [P] [US1] Add PHPUnit unit tests for first-valid-transition-wins conflict behavior in `schoolmaster-backend/tests/Unit/Reports/ReportLifecycleServiceTest.php`
-- [ ] T053 [P] [US1] Add PHPUnit feature tests for tenant-safe lifecycle audit events in `schoolmaster-backend/tests/Feature/Reports/ReportLifecycleAuditTest.php`
+- [ ] T047 [P] [US1] Add OpenAPI contract coverage for `retryReport`, `cancelReport`, `deleteReport`, `restoreReport`, and expanded `listReports` in `specs/api/paths/reports/retry.yaml`, `specs/api/paths/reports/cancel.yaml`, `specs/api/paths/reports/report-run.yaml`, and `specs/api/paths/reports/index.yaml`
+- [ ] T048 [P] [US1] Add PHPUnit feature tests for report retry eligibility, retry lineage, and original-run preservation in `tests/Feature/Api/V1/ReportRetryTest.php`
+- [ ] T049 [P] [US1] Add PHPUnit feature tests for report cancellation, predefined reason-code validation, and stale worker completion rejection in `tests/Feature/Api/V1/ReportCancellationTest.php`
+- [ ] T050 [P] [US1] Add PHPUnit feature tests for report-run soft delete, restore, and default include-deleted list behavior in `tests/Feature/Api/V1/ReportRunSoftDeleteRestoreTest.php`
+- [ ] T051 [P] [US1] Add PHPUnit feature tests for lifecycle authorization, cross-tenant denial, and non-enumerating target responses in `tests/Feature/Api/V1/ReportLifecycleAuthorizationTest.php`
+- [ ] T052 [P] [US1] Add PHPUnit unit tests for first-valid-transition-wins conflict behavior in `tests/Unit/Reports/ReportLifecycleServiceTest.php`
+- [ ] T053 [P] [US1] Add PHPUnit feature tests for tenant-safe lifecycle audit events in `tests/Feature/Api/V1/ReportLifecycleAuditTest.php`
 
 ### Implementation for User Story 1
 
-- [ ] T054 [P] [US1] Implement ListReportsRequest with generation-status, built-in/custom, and include-deleted filters in `schoolmaster-backend/app/Http/Requests/Api/V1/Reports/ListReportsRequest.php`
-- [ ] T055 [P] [US1] Implement CancelReportRequest with predefined reason-code validation in `schoolmaster-backend/app/Http/Requests/Api/V1/Reports/CancelReportRequest.php`
-- [ ] T056 [P] [US1] Implement ReportRunResource with generation status, soft-delete metadata, retry lineage, and output availability summary in `schoolmaster-backend/app/Http/Resources/Reports/ReportRunResource.php`
-- [ ] T057 [P] [US1] Implement ReportLifecycleEventResource for tenant-safe audit summaries in `schoolmaster-backend/app/Http/Resources/Reports/ReportLifecycleEventResource.php`
-- [ ] T058 [US1] Implement report-run list query logic with default non-deleted visibility in `schoolmaster-backend/app/Services/Reports/ReportRunQueryService.php`
-- [ ] T059 [US1] Implement retry, cancel, delete, and restore transitions in `schoolmaster-backend/app/Services/Reports/ReportLifecycleService.php`
-- [ ] T060 [US1] Implement stale worker completion guard and terminal-state conflict handling in `schoolmaster-backend/app/Services/Reports/ReportLifecycleService.php`
-- [ ] T061 [US1] Implement lifecycle audit writes for retry, cancel, delete, restore, denial, conflict, and stale completion outcomes in `schoolmaster-backend/app/Services/Reports/ReportAuditService.php`
-- [ ] T062 [US1] Wire list, retry, cancel, delete, and restore controller actions in `schoolmaster-backend/app/Http/Controllers/Api/V1/ReportController.php`
-- [ ] T063 [US1] Verify backend report lifecycle routes map to approved OpenAPI operation IDs in `schoolmaster-backend/routes/api.php`
+- [ ] T054 [P] [US1] Implement `ListReportsRequest` with generation-status, built-in/custom, and include-deleted filters in `app/Http/Requests/Reports/ListReportsRequest.php`
+- [ ] T055 [P] [US1] Implement `CancelReportRequest` with predefined reason-code validation in `app/Http/Requests/Reports/CancelReportRequest.php`
+- [ ] T056 [P] [US1] Implement `ReportRunResource` with generation status, soft-delete metadata, retry lineage, and output availability summary in `app/Http/Resources/Reports/ReportRunResource.php`
+- [ ] T057 [P] [US1] Implement `ReportLifecycleEventResource` for tenant-safe audit summaries in `app/Http/Resources/Reports/ReportLifecycleEventResource.php`
+- [ ] T058 [US1] Implement report-run list query logic with default non-deleted visibility in `app/Services/Reports/ReportRunQueryService.php`
+- [ ] T059 [US1] Implement retry, cancel, delete, and restore transitions in `app/Services/Reports/ReportLifecycleService.php`
+- [ ] T060 [US1] Implement stale worker completion guard and terminal-state conflict handling in `app/Services/Reports/ReportLifecycleService.php`
+- [ ] T061 [US1] Implement lifecycle audit writes for retry, cancel, delete, restore, denial, conflict, and stale completion outcomes in `app/Services/Reports/ReportAuditService.php`
+- [ ] T062 [US1] Wire list, retry, cancel, delete, and restore controller actions in `app/Http/Controllers/Api/V1/ReportController.php`
+- [ ] T063 [US1] Verify backend report lifecycle routes map to approved OpenAPI operation IDs in `routes/api.php`
 
 **Checkpoint**: User Story 1 is fully functional and independently testable.
 
@@ -126,29 +126,29 @@
 
 ### Tests for User Story 2
 
-- [ ] T064 [P] [US2] Add OpenAPI contract coverage for `getReportCatalog` and report definition operations in `schoolmaster-specs/api/paths/report-catalog/index.yaml`, `schoolmaster-specs/api/paths/report-definitions/index.yaml`, and `schoolmaster-specs/api/paths/report-definitions/report-definition.yaml`
-- [ ] T065 [P] [US2] Add PHPUnit feature tests for report catalog visibility and hidden-field exclusion in `schoolmaster-backend/tests/Feature/Reports/ReportCatalogTest.php`
-- [ ] T066 [P] [US2] Add PHPUnit feature tests for custom definition create, update, activate, deactivate, delete, and restore lifecycle in `schoolmaster-backend/tests/Feature/Reports/ReportDefinitionLifecycleTest.php`
-- [ ] T067 [P] [US2] Add PHPUnit feature tests for duplicate non-deleted definition names and restore name conflicts in `schoolmaster-backend/tests/Feature/Reports/ReportDefinitionNameUniquenessTest.php`
-- [ ] T068 [P] [US2] Add PHPUnit feature tests for active-definition metadata-only updates and structural-edit rejection in `schoolmaster-backend/tests/Feature/Reports/ReportDefinitionActiveEditTest.php`
-- [ ] T069 [P] [US2] Add PHPUnit feature tests for custom report request snapshot preservation after definition update, delete, and restore in `schoolmaster-backend/tests/Feature/Reports/CustomReportRequestSnapshotTest.php`
-- [ ] T070 [P] [US2] Add PHPUnit unit tests for catalog validation, complexity limits, unsupported entries, and cross-tenant reference rejection in `schoolmaster-backend/tests/Unit/Reports/ReportDefinitionValidationServiceTest.php`
+- [ ] T064 [P] [US2] Add OpenAPI contract coverage for `getReportCatalog` and report definition operations in `specs/api/paths/report-catalog/index.yaml`, `specs/api/paths/report-definitions/index.yaml`, and `specs/api/paths/report-definitions/report-definition.yaml`
+- [ ] T065 [P] [US2] Add PHPUnit feature tests for report catalog visibility and hidden-field exclusion in `tests/Feature/Api/V1/ReportCatalogTest.php`
+- [ ] T066 [P] [US2] Add PHPUnit feature tests for custom definition create, update, activate, deactivate, delete, and restore lifecycle in `tests/Feature/Api/V1/ReportDefinitionLifecycleTest.php`
+- [ ] T067 [P] [US2] Add PHPUnit feature tests for duplicate non-deleted definition names and restore name conflicts in `tests/Feature/Api/V1/ReportDefinitionNameUniquenessTest.php`
+- [ ] T068 [P] [US2] Add PHPUnit feature tests for active-definition metadata-only updates and structural-edit rejection in `tests/Feature/Api/V1/ReportDefinitionActiveEditTest.php`
+- [ ] T069 [P] [US2] Add PHPUnit feature tests for custom report request snapshot preservation after definition update, delete, and restore in `tests/Feature/Api/V1/CustomReportRequestSnapshotTest.php`
+- [ ] T070 [P] [US2] Add PHPUnit unit tests for catalog validation, complexity limits, unsupported entries, and cross-tenant reference rejection in `tests/Unit/Reports/ReportDefinitionValidationServiceTest.php`
 
 ### Implementation for User Story 2
 
-- [ ] T071 [P] [US2] Implement ReportCatalogResource in `schoolmaster-backend/app/Http/Resources/Reports/ReportCatalogResource.php`
-- [ ] T072 [P] [US2] Implement ReportDefinitionResource in `schoolmaster-backend/app/Http/Resources/Reports/ReportDefinitionResource.php`
-- [ ] T073 [P] [US2] Implement CreateReportDefinitionRequest with catalog, domain, complexity, and name validation in `schoolmaster-backend/app/Http/Requests/Api/V1/Reports/CreateReportDefinitionRequest.php`
-- [ ] T074 [P] [US2] Implement UpdateReportDefinitionRequest with active metadata-only and inactive structural-edit validation in `schoolmaster-backend/app/Http/Requests/Api/V1/Reports/UpdateReportDefinitionRequest.php`
-- [ ] T075 [P] [US2] Implement RequestCustomReportRequest with active-definition and runtime-filter validation in `schoolmaster-backend/app/Http/Requests/Api/V1/Reports/RequestCustomReportRequest.php`
-- [ ] T076 [US2] Implement read-only launch-scope catalog resolution in `schoolmaster-backend/app/Services/Reports/ReportCatalogService.php`
-- [ ] T077 [US2] Implement custom definition create, update, activate, deactivate, delete, and restore behavior in `schoolmaster-backend/app/Services/Reports/ReportDefinitionService.php`
-- [ ] T078 [US2] Implement definition-name uniqueness and restore conflict checks in `schoolmaster-backend/app/Services/Reports/ReportDefinitionService.php`
-- [ ] T079 [US2] Implement active metadata-only edit boundary and inactive structural-edit validation in `schoolmaster-backend/app/Services/Reports/ReportDefinitionValidationService.php`
-- [ ] T080 [US2] Implement definition snapshot creation for custom report requests in `schoolmaster-backend/app/Services/Reports/ReportDefinitionSnapshotService.php`
-- [ ] T081 [US2] Wire catalog and definition controller actions in `schoolmaster-backend/app/Http/Controllers/Api/V1/ReportDefinitionController.php`
-- [ ] T082 [US2] Wire custom definition request path through report request service in `schoolmaster-backend/app/Services/Reports/ReportRequestService.php`
-- [ ] T083 [US2] Add tenant-safe audit writes for catalog reads, definition lifecycle actions, definition validation failures, and custom report requests in `schoolmaster-backend/app/Services/Reports/ReportAuditService.php`
+- [ ] T071 [P] [US2] Implement `ReportCatalogResource` in `app/Http/Resources/Reports/ReportCatalogResource.php`
+- [ ] T072 [P] [US2] Implement `ReportDefinitionResource` in `app/Http/Resources/Reports/ReportDefinitionResource.php`
+- [ ] T073 [P] [US2] Implement `CreateReportDefinitionRequest` with catalog, domain, complexity, and name validation in `app/Http/Requests/Reports/CreateReportDefinitionRequest.php`
+- [ ] T074 [P] [US2] Implement `UpdateReportDefinitionRequest` with active metadata-only and inactive structural-edit validation in `app/Http/Requests/Reports/UpdateReportDefinitionRequest.php`
+- [ ] T075 [P] [US2] Implement `RequestCustomReportRequest` with active-definition and runtime-filter validation in `app/Http/Requests/Reports/RequestCustomReportRequest.php`
+- [ ] T076 [US2] Implement read-only launch-scope catalog resolution in `app/Services/Reports/ReportCatalogService.php`
+- [ ] T077 [US2] Implement custom definition create, update, activate, deactivate, delete, and restore behavior in `app/Services/Reports/ReportDefinitionService.php`
+- [ ] T078 [US2] Implement definition-name uniqueness and restore conflict checks in `app/Services/Reports/ReportDefinitionService.php`
+- [ ] T079 [US2] Implement active metadata-only edit boundary and inactive structural-edit validation in `app/Services/Reports/ReportDefinitionValidationService.php`
+- [ ] T080 [US2] Implement definition snapshot creation for custom report requests in `app/Services/Reports/ReportDefinitionSnapshotService.php`
+- [ ] T081 [US2] Wire catalog and definition controller actions in `app/Http/Controllers/Api/V1/ReportDefinitionController.php`
+- [ ] T082 [US2] Wire custom definition request path through report request service in `app/Services/Reports/ReportRequestService.php`
+- [ ] T083 [US2] Add tenant-safe audit writes for catalog reads, definition lifecycle actions, definition validation failures, and custom report requests in `app/Services/Reports/ReportAuditService.php`
 
 **Checkpoint**: User Story 2 is fully functional and independently testable.
 
@@ -162,25 +162,25 @@
 
 ### Tests for User Story 3
 
-- [ ] T084 [P] [US3] Add OpenAPI contract coverage for expanded `requestReport`, `downloadReport`, `ReportFormat`, `ReportOutput`, and output availability schemas in `schoolmaster-specs/api/paths/reports/index.yaml`, `schoolmaster-specs/api/paths/reports/download.yaml`, `schoolmaster-specs/api/components/schemas/reports/ReportFormat.yaml`, `schoolmaster-specs/api/components/schemas/reports/ReportOutput.yaml`, and `schoolmaster-specs/api/components/schemas/reports/ReportOutputAvailability.yaml`
-- [ ] T085 [P] [US3] Add PHPUnit feature tests for built-in and custom report requests with PDF, CSV, and approved XLSX outputs in `schoolmaster-backend/tests/Feature/Reports/ReportOutputFormatRequestTest.php`
-- [ ] T086 [P] [US3] Add PHPUnit feature tests for unsupported output format, unsupported filter, unsupported domain, and cross-tenant filter rejection in `schoolmaster-backend/tests/Feature/Reports/ReportRequestValidationTest.php`
-- [ ] T087 [P] [US3] Add PHPUnit feature tests for per-format output availability and absence of deleted output availability in `schoolmaster-backend/tests/Feature/Reports/ReportOutputAvailabilityTest.php`
-- [ ] T088 [P] [US3] Add PHPUnit feature tests for expired output downloads returning the documented response without regeneration or timestamp mutation in `schoolmaster-backend/tests/Feature/Reports/ReportOutputExpirationTest.php`
-- [ ] T089 [P] [US3] Add PHPUnit unit tests for report output compatibility and retention rules in `schoolmaster-backend/tests/Unit/Reports/ReportOutputServiceTest.php`
+- [ ] T084 [P] [US3] Add OpenAPI contract coverage for expanded `requestReport`, `downloadReport`, `ReportFormat`, `ReportOutput`, and output availability schemas in `specs/api/paths/reports/index.yaml`, `specs/api/paths/reports/download.yaml`, `specs/api/components/schemas/reports/ReportFormat.yaml`, `specs/api/components/schemas/reports/ReportOutput.yaml`, and `specs/api/components/schemas/reports/ReportOutputAvailability.yaml`
+- [ ] T085 [P] [US3] Add PHPUnit feature tests for built-in and custom report requests with PDF, CSV, and approved XLSX outputs in `tests/Feature/Api/V1/ReportOutputFormatRequestTest.php`
+- [ ] T086 [P] [US3] Add PHPUnit feature tests for unsupported output format, unsupported filter, unsupported domain, and cross-tenant filter rejection in `tests/Feature/Api/V1/ReportRequestValidationTest.php`
+- [ ] T087 [P] [US3] Add PHPUnit feature tests for per-format output availability and absence of deleted output availability in `tests/Feature/Api/V1/ReportOutputAvailabilityTest.php`
+- [ ] T088 [P] [US3] Add PHPUnit feature tests for expired output downloads returning the documented response without regeneration or timestamp mutation in `tests/Feature/Api/V1/ReportOutputExpirationTest.php`
+- [ ] T089 [P] [US3] Add PHPUnit unit tests for report output compatibility and retention rules in `tests/Unit/Reports/ReportOutputServiceTest.php`
 
 ### Implementation for User Story 3
 
-- [ ] T090 [P] [US3] Implement ReportRequestResource with requested formats and per-format availability in `schoolmaster-backend/app/Http/Resources/Reports/ReportRequestResource.php`
-- [ ] T091 [P] [US3] Implement ReportOutputResource without storage paths or deleted availability in `schoolmaster-backend/app/Http/Resources/Reports/ReportOutputResource.php`
-- [ ] T092 [P] [US3] Implement RequestReportRequest for built-in/custom filters, format compatibility, and tenant reference validation in `schoolmaster-backend/app/Http/Requests/Api/V1/Reports/RequestReportRequest.php`
-- [ ] T093 [P] [US3] Implement DownloadReportRequest for requested format, same-school output access, and expired-output validation in `schoolmaster-backend/app/Http/Requests/Api/V1/Reports/DownloadReportRequest.php`
-- [ ] T094 [US3] Implement built-in report request validation and queue handoff in `schoolmaster-backend/app/Services/Reports/ReportRequestService.php`
-- [ ] T095 [US3] Implement per-format output creation, availability transitions, and retention timestamp handling in `schoolmaster-backend/app/Services/Reports/ReportOutputService.php`
-- [ ] T096 [US3] Implement XLSX output support where catalog-approved in `schoolmaster-backend/app/Services/Reports/ReportOutputGenerationService.php`
-- [ ] T097 [US3] Implement download response handling without exposing storage paths in `schoolmaster-backend/app/Services/Reports/ReportDownloadService.php`
-- [ ] T098 [US3] Wire request and download controller actions in `schoolmaster-backend/app/Http/Controllers/Api/V1/ReportController.php`
-- [ ] T099 [US3] Add tenant-safe audit writes for report requests, output generation failures, output expiry, downloads, and denied output access in `schoolmaster-backend/app/Services/Reports/ReportAuditService.php`
+- [ ] T090 [P] [US3] Implement `ReportRequestResource` with requested formats and per-format availability in `app/Http/Resources/Reports/ReportRequestResource.php`
+- [ ] T091 [P] [US3] Implement `ReportOutputResource` without storage paths or deleted availability in `app/Http/Resources/Reports/ReportOutputResource.php`
+- [ ] T092 [P] [US3] Implement `RequestReportRequest` for built-in/custom filters, format compatibility, and tenant reference validation in `app/Http/Requests/Reports/RequestReportRequest.php`
+- [ ] T093 [P] [US3] Implement `DownloadReportRequest` for requested format, same-school output access, and expired-output validation in `app/Http/Requests/Reports/DownloadReportRequest.php`
+- [ ] T094 [US3] Implement built-in report request validation and queue handoff in `app/Services/Reports/ReportRequestService.php`
+- [ ] T095 [US3] Implement per-format output creation, availability transitions, and retention timestamp handling in `app/Services/Reports/ReportOutputService.php`
+- [ ] T096 [US3] Implement XLSX output support where catalog-approved in `app/Services/Reports/ReportOutputGenerationService.php`
+- [ ] T097 [US3] Implement download response handling without exposing storage paths in `app/Services/Reports/ReportDownloadService.php`
+- [ ] T098 [US3] Wire request and download controller actions in `app/Http/Controllers/Api/V1/ReportController.php`
+- [ ] T099 [US3] Add tenant-safe audit writes for report requests, output generation failures, output expiry, downloads, and denied output access in `app/Services/Reports/ReportAuditService.php`
 
 **Checkpoint**: User Story 3 is fully functional and independently testable.
 
@@ -190,15 +190,15 @@
 
 **Purpose**: Contract validation, regression hardening, documentation, and release readiness across all stories.
 
-- [ ] T100 Run Redocly lint for aggregate OpenAPI and record results in `schoolmaster-specs/specs/012-report-lifecycle-expansion/quickstart.md`
-- [ ] T101 [P] Run Redocly lint for platform contract and record results in `schoolmaster-specs/specs/012-report-lifecycle-expansion/quickstart.md`
-- [ ] T102 Run backend PHPUnit suite and record results in `schoolmaster-specs/specs/012-report-lifecycle-expansion/quickstart.md`
-- [ ] T103 [P] Review OpenAPI route-to-operation traceability in `schoolmaster-specs/specs/012-report-lifecycle-expansion/contracts/backend-report-lifecycle-expansion.md`
-- [ ] T104 [P] Review backend route-to-operation traceability in `schoolmaster-backend/routes/api.php`
-- [ ] T105 [P] Review report audit payload redaction and reason-code usage in `schoolmaster-backend/app/Services/Reports/ReportAuditService.php`
-- [ ] T106 [P] Review report output retention and no-output-delete behavior in `schoolmaster-backend/app/Services/Reports/ReportOutputService.php`
-- [ ] T107 [P] Review report definition active-edit and name uniqueness behavior in `schoolmaster-backend/app/Services/Reports/ReportDefinitionService.php`
-- [ ] T108 Update backend implementation notes for report lifecycle expansion in `schoolmaster-backend/README.md`
+- [ ] T100 Run Redocly lint for aggregate OpenAPI and record results in `specs/specs/012-report-lifecycle-expansion/quickstart.md`
+- [ ] T101 [P] Run Redocly lint for platform contract and record results in `specs/specs/012-report-lifecycle-expansion/quickstart.md`
+- [ ] T102 Run backend PHPUnit suite and record results in `specs/specs/012-report-lifecycle-expansion/quickstart.md`
+- [ ] T103 [P] Review OpenAPI route-to-operation traceability in `specs/specs/012-report-lifecycle-expansion/contracts/backend-report-lifecycle-expansion.md`
+- [ ] T104 [P] Review backend route-to-operation traceability in `routes/api.php`
+- [ ] T105 [P] Review report audit payload redaction and reason-code usage in `app/Services/Reports/ReportAuditService.php`
+- [ ] T106 [P] Review report output retention and no-output-delete behavior in `app/Services/Reports/ReportOutputService.php`
+- [ ] T107 [P] Review report definition active-edit and name uniqueness behavior in `app/Services/Reports/ReportDefinitionService.php`
+- [ ] T108 Update backend implementation notes for report lifecycle expansion in `README.md`
 
 ---
 

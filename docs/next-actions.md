@@ -2,12 +2,13 @@
 
 ## Current Status
 
-- The active feature branch is `011-guardian-self-service`.
+- The active feature branch is `012-report-lifecycle-expansion`.
 - Spec Kit prerequisites pass for the current feature artifacts.
 - `specs/001-schoolmaster-platform/contracts/openapi.yaml` is the active
   feature contract.
 - `api/openapi.yaml` is the aggregate publication target and now includes the
-  approved guardian self-service surface promoted for this feature.
+  approved reporting foundation from `005-backend-student-reporting` and the
+  approved guardian self-service surface from `011-guardian-self-service`.
 - OpenAPI validation is standardized on Redocly CLI using `redocly.yaml`.
 - P1 foundation areas have baseline contract coverage: authentication, schools,
   users, roles, permissions, academic years, academic periods, and guardians.
@@ -20,20 +21,27 @@
 - Guardian self-service contract coverage is now in place for guardian student
   list/detail, academic summary, contact view, and school-admin
   guardian-user-link provisioning.
+- Report lifecycle expansion planning is now in place for retry, cancellation,
+  soft delete/restore, report catalog discovery, custom report definitions,
+  XLSX output, and per-format output availability.
 
 ## Immediate Sequence
 
 1. Implement Phase 2 foundational backend work for
-   `011-guardian-self-service`.
-2. Add school-admin guardian-user-link lifecycle support in the backend before
-   enabling guardian self-service reads.
-3. Implement guardian student list/detail, then academic summary, then contact
-   view with route-to-operation traceability.
-4. Run backend PHPUnit coverage for tenant isolation, authorization,
-   non-enumeration, redaction, transfer visibility, and audit events.
-5. Use [Backend feature roadmap](backend-feature-roadmap.md) for the remaining
-   backend feature sequence after `011`.
-6. Keep backend and frontend repositories pinned to an approved
+   `012-report-lifecycle-expansion`.
+2. Expand `api/openapi.yaml` for report lifecycle, report catalog, report
+   definitions, custom report requests, and XLSX output before backend routes
+   expose new behavior.
+3. Remove backend assumptions from the reporting slice that retry, cancel,
+   soft delete/restore, and report-definition endpoints must remain
+   unexposed.
+4. Implement report-run lifecycle foundations first: state separation,
+   soft-delete visibility, per-format output availability, and audit support.
+5. Implement report catalog and custom definition workflows after lifecycle
+   foundations pass route-to-operation traceability checks.
+6. Run backend PHPUnit coverage for tenant isolation, authorization,
+   conflict handling, snapshot preservation, retention, and audit events.
+7. Keep backend and frontend repositories pinned to an approved
    `schoolmaster-specs` commit or submodule revision.
 
 ## Resolved Decisions
@@ -55,12 +63,16 @@
 
 - Do not implement undocumented API behavior in backend or frontend
   repositories.
-- Do not implement guardian self-service backend routes that drift from the
-  approved OpenAPI operation IDs and response envelopes.
+- Do not implement report lifecycle expansion backend routes that drift from
+  the approved OpenAPI operation IDs and response envelopes.
 - Do not implement report output retention or regeneration behavior outside the
   90-day retention and explicit new-`ReportRun` contract.
-- Link backend and frontend work to feature id `011-guardian-self-service` and
-  to the OpenAPI operation IDs implemented or consumed.
+- Do not expose manual report status mutation, output delete/restore,
+  platform-wide reporting, or support-user cross-school overrides in this
+  slice.
+- Link backend and frontend work to feature id
+  `012-report-lifecycle-expansion` and to the OpenAPI operation IDs
+  implemented or consumed.
 
 ## Promotion Gate
 
