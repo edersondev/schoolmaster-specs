@@ -1,0 +1,40 @@
+post:
+  tags:
+    - Guardians
+  summary: Deactivate a guardian-user link
+  description: >-
+    Deactivates a same-school guardian-user link and immediately removes
+    guardian self-service proof for that linked user and guardian record.
+  operationId: deactivateGuardianUserLink
+  parameters:
+    - $ref: ../../components/parameters/schools/TenantContext.yaml
+    - $ref: ../../components/parameters/guardians/GuardianId.yaml
+    - $ref: ../../components/parameters/guardians/GuardianUserLinkId.yaml
+  requestBody:
+    required: false
+    content:
+      application/json:
+        schema:
+          $ref: ../../components/schemas/guardians/GuardianUserLinkDeactivateRequest.yaml
+  responses:
+    '200':
+      description: Guardian user link deactivated
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: ../../components/schemas/common/SuccessEnvelope.yaml
+              - type: object
+                properties:
+                  data:
+                    $ref: ../../components/schemas/guardians/GuardianUserLink.yaml
+    '401':
+      $ref: ../../components/responses/auth/Unauthorized.yaml
+    '403':
+      $ref: ../../components/responses/common/AdministrationForbidden.yaml
+    '404':
+      $ref: ../../components/responses/common/NotFound.yaml
+    '409':
+      $ref: ../../components/responses/common/Conflict.yaml
+    '422':
+      $ref: ../../components/responses/common/ValidationError.yaml

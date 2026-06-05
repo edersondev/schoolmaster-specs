@@ -1,0 +1,21 @@
+type: object
+required:
+  - student
+  - academic_period_id
+  - grade_summary
+  - attendance_summary
+  - learning_sets
+properties:
+  student:
+    $ref: GuardianStudentSummary.yaml
+  academic_period_id:
+    type: string
+    format: uuid
+  grade_summary:
+    $ref: GuardianGradeSummary.yaml
+  attendance_summary:
+    $ref: GuardianAttendanceSummary.yaml
+  learning_sets:
+    type: array
+    items:
+      $ref: GuardianLearningSetSummary.yaml

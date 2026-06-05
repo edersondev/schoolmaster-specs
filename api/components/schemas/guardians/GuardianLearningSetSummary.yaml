@@ -1,0 +1,24 @@
+type: object
+required:
+  - learning_set_id
+  - title
+  - status
+properties:
+  learning_set_id:
+    type: string
+    format: uuid
+  title:
+    type: string
+  status:
+    type: string
+  progress_percent:
+    type:
+      - integer
+      - 'null'
+    minimum: 0
+    maximum: 100
+  last_activity_at:
+    type:
+      - string
+      - 'null'
+    format: date-time

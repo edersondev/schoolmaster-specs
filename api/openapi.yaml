@@ -31,6 +31,8 @@ tags:
     description: Periods inside academic years for academic operations.
   - name: Guardians
     description: Guardian records linked to student profiles.
+  - name: Guardian Self-Service
+    description: Read-only guardian access to approved student information.
   - name: Student Profiles
     description: School-scoped student profile and enrollment lifecycle management.
   - name: Teacher Content
@@ -146,6 +148,10 @@ paths:
     $ref: paths/guardians/index.yaml
   /api/v1/guardians/{guardianId}:
     $ref: paths/guardians/guardian.yaml
+  /api/v1/guardians/{guardianId}/user-links:
+    $ref: paths/guardians/user-links.yaml
+  /api/v1/guardians/{guardianId}/user-links/{guardianUserLinkId}/deactivate:
+    $ref: paths/guardians/user-link-deactivate.yaml
   /api/v1/guardians/{guardianId}/activate:
     $ref: paths/guardians/activate.yaml
   /api/v1/guardians/{guardianId}/deactivate:
@@ -154,6 +160,14 @@ paths:
     $ref: paths/guardians/restore.yaml
   /api/v1/guardians/bulk-lifecycle:
     $ref: paths/guardians/bulk-lifecycle.yaml
+  /api/v1/guardian/students:
+    $ref: paths/guardian/students/index.yaml
+  /api/v1/guardian/students/{studentProfileId}:
+    $ref: paths/guardian/students/student.yaml
+  /api/v1/guardian/students/{studentProfileId}/academics:
+    $ref: paths/guardian/students/academics.yaml
+  /api/v1/guardian/students/{studentProfileId}/contacts:
+    $ref: paths/guardian/students/contacts.yaml
   /api/v1/student-profiles:
     $ref: paths/student-profiles/index.yaml
   /api/v1/student-profiles/{studentProfileId}:
@@ -301,10 +315,16 @@ x-promoted-scope:
     - /api/v1/academic-periods/bulk-lifecycle
     - /api/v1/guardians
     - /api/v1/guardians/{guardianId}
+    - /api/v1/guardians/{guardianId}/user-links
+    - /api/v1/guardians/{guardianId}/user-links/{guardianUserLinkId}/deactivate
     - /api/v1/guardians/{guardianId}/activate
     - /api/v1/guardians/{guardianId}/deactivate
     - /api/v1/guardians/{guardianId}/restore
     - /api/v1/guardians/bulk-lifecycle
+    - /api/v1/guardian/students
+    - /api/v1/guardian/students/{studentProfileId}
+    - /api/v1/guardian/students/{studentProfileId}/academics
+    - /api/v1/guardian/students/{studentProfileId}/contacts
     - /api/v1/teacher-content
     - /api/v1/teacher-content/{contentItemId}
     - /api/v1/teacher-content/{contentItemId}/status

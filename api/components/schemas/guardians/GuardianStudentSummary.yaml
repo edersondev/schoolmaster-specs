@@ -1,0 +1,33 @@
+type: object
+required:
+  - id
+  - school_id
+  - registration_number
+  - full_name
+  - status
+  - relationship_label
+properties:
+  id:
+    type: string
+    format: uuid
+  school_id:
+    type: string
+    format: uuid
+  registration_number:
+    type: string
+  full_name:
+    type: string
+  status:
+    $ref: ../student-profiles/StudentProfileStatus.yaml
+  enrolled_at:
+    type:
+      - string
+      - 'null'
+    format: date
+  relationship_label:
+    type: string
+  current_academic_year_id:
+    type:
+      - string
+      - 'null'
+    format: uuid

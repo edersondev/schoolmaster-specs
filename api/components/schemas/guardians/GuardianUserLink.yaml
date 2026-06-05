@@ -1,0 +1,36 @@
+type: object
+required:
+  - id
+  - school_id
+  - guardian_id
+  - user_id
+  - status
+  - created_at
+properties:
+  id:
+    type: string
+    format: uuid
+  school_id:
+    type: string
+    format: uuid
+  guardian_id:
+    type: string
+    format: uuid
+  user_id:
+    type: string
+    format: uuid
+  status:
+    $ref: ../common/Status.yaml
+  created_at:
+    type: string
+    format: date-time
+  deactivated_at:
+    type:
+      - string
+      - 'null'
+    format: date-time
+  deactivation_reason:
+    type:
+      - string
+      - 'null'
+    maxLength: 500
