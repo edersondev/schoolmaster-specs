@@ -96,7 +96,7 @@
 - [ ] T047 [P] [US1] Add OpenAPI contract coverage for `retryReport`, `cancelReport`, `deleteReport`, `restoreReport`, and expanded `listReports` in `specs/api/paths/reports/retry.yaml`, `specs/api/paths/reports/cancel.yaml`, `specs/api/paths/reports/report-run.yaml`, and `specs/api/paths/reports/index.yaml`
 - [ ] T048 [P] [US1] Add PHPUnit feature tests for report retry eligibility, retry lineage, and original-run preservation in `tests/Feature/Api/V1/ReportRetryTest.php`
 - [ ] T049 [P] [US1] Add PHPUnit feature tests for report cancellation, predefined reason-code validation, and stale worker completion rejection in `tests/Feature/Api/V1/ReportCancellationTest.php`
-- [ ] T050 [P] [US1] Add PHPUnit feature tests for report-run soft delete, restore, and default include-deleted list behavior in `tests/Feature/Api/V1/ReportRunSoftDeleteRestoreTest.php`
+- [ ] T050 [P] [US1] Add PHPUnit feature tests for report-run soft delete, restore, valid worker completion after soft delete/restore of requested or generating runs, and default include-deleted list behavior in `tests/Feature/Api/V1/ReportRunSoftDeleteRestoreTest.php`
 - [ ] T051 [P] [US1] Add PHPUnit feature tests for lifecycle authorization, cross-tenant denial, and non-enumerating target responses in `tests/Feature/Api/V1/ReportLifecycleAuthorizationTest.php`
 - [ ] T052 [P] [US1] Add PHPUnit unit tests for first-valid-transition-wins conflict behavior in `tests/Unit/Reports/ReportLifecycleServiceTest.php`
 - [ ] T053 [P] [US1] Add PHPUnit feature tests for tenant-safe lifecycle audit events in `tests/Feature/Api/V1/ReportLifecycleAuditTest.php`
@@ -109,7 +109,7 @@
 - [ ] T057 [P] [US1] Implement `ReportLifecycleEventResource` for tenant-safe audit summaries in `app/Http/Resources/Reports/ReportLifecycleEventResource.php`
 - [ ] T058 [US1] Implement report-run list query logic with default non-deleted visibility in `app/Services/Reports/ReportRunQueryService.php`
 - [ ] T059 [US1] Implement retry, cancel, delete, and restore transitions in `app/Services/Reports/ReportLifecycleService.php`
-- [ ] T060 [US1] Implement stale worker completion guard and terminal-state conflict handling in `app/Services/Reports/ReportLifecycleService.php`
+- [ ] T060 [US1] Implement stale worker completion guard and terminal-state conflict handling while allowing valid worker completion after soft delete/restore of requested or generating runs in `app/Services/Reports/ReportLifecycleService.php`
 - [ ] T061 [US1] Implement lifecycle audit writes for retry, cancel, delete, restore, denial, conflict, and stale completion outcomes in `app/Services/Reports/ReportAuditService.php`
 - [ ] T062 [US1] Wire list, retry, cancel, delete, and restore controller actions in `app/Http/Controllers/Api/V1/ReportController.php`
 - [ ] T063 [US1] Verify backend report lifecycle routes map to approved OpenAPI operation IDs in `routes/api.php`

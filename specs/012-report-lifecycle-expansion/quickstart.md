@@ -59,6 +59,7 @@ Focused backend coverage must include:
 - successful cancellation before output publication
 - stale worker completion ignored and audited after cancellation
 - report-run delete and restore preserving generation status and output availability
+- valid worker completion still publishing requested outputs after soft delete/restore of requested or generating runs
 - default report lists including all non-deleted runs and excluding deleted runs
 - include-deleted list behavior
 - first-valid-transition-wins conflict behavior for concurrent lifecycle actions
