@@ -25,7 +25,7 @@ OpenAPI must define operation IDs and routes for this backend slice before imple
 |--------|-------|-----------------------|----------|
 | `GET` | `/api/v1/platform/schools` | `listPlatformSchoolSummaries` | List minimized school operational summaries with documented filters, sorting, pagination, and small-count suppression |
 | `GET` | `/api/v1/platform/reporting/overview` | `getPlatformReportingOverview` | Return cross-school aggregate report health and lifecycle summaries without raw outputs or school-owned detail records |
-| `POST` | `/api/v1/platform/support-access` | `requestSupportAccess` | Create or evaluate a target-school support access decision using reason code, target school, opt-in, and internal approval requirements |
+| `POST` | `/api/v1/platform/support-access` | `requestSupportAccess` | Create or evaluate a target-school support access decision in a requested state using reason code, target school, correlation metadata, and target-school opt-in; internal platform approval is recorded later |
 | `GET` | `/api/v1/platform/support-access/{supportAccessId}` | `getSupportAccessDecision` | Retrieve minimized support access decision state for authorized platform/support actors |
 | `POST` | `/api/v1/platform/support-access/{supportAccessId}/approve` | `approveSupportAccess` | Record internal platform approval where target-school opt-in also exists |
 | `POST` | `/api/v1/platform/support-access/{supportAccessId}/revoke` | `revokeSupportAccess` | Revoke an active support access decision before its 24-hour expiration |
@@ -92,7 +92,9 @@ No backend-local product envelope, ad hoc error response, undocumented status co
 
 - Platform summary filters, sorting, pagination, and include fields must be documented in OpenAPI.
 - Protected counts below 5 must be suppressed.
-- Support access decisions must reject missing target school, missing reason code, missing correlation ID, missing target-school opt-in, missing internal platform approval, mismatched actor, mismatched school, stale approval or opt-in, revoked approval or opt-in, expired approval or opt-in, approval or opt-in older than 24 hours, or concurrent approval changes.
+- Support access decisions must reject missing target school, missing reason code, missing correlation ID, missing target-school opt-in, mismatched actor, mismatched school, revoked opt-in, expired opt-in, opt-in older than 24 hours, or concurrent gate changes that invalidate the request before the decision is created.
+- Missing internal platform approval on `requestSupportAccess` returns a requested or pending decision state rather than rejecting the decision creation.
+- Support diagnostics and any transition to approved access must reject missing internal platform approval, stale approval or opt-in, revoked approval or opt-in, expired approval or opt-in, approval or opt-in older than 24 hours, mismatched actor or school, or concurrent approval changes.
 - Target-school support opt-ins must reject missing target school, unsupported reason code, inactive school context, unauthorized school actor, mismatched school, expired opt-in reuse, revoked support access decision, and duplicate active opt-in for the same support purpose where OpenAPI declares uniqueness.
 - Support diagnostics must reject generated report downloads, raw report outputs, private file metadata, emergency access, unrestricted record search, unrestricted impersonation, and all write actions.
 - Audit metadata must reject or redact credentials, bearer tokens, private file paths, raw report outputs, private content, full student/guardian records, full request/response payloads, and unauthorized cross-tenant details.

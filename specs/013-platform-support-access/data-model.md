@@ -80,6 +80,7 @@
   - references one `InternalPlatformApproval`
   - has many `PlatformSupportAuditEvent`
 - **Validation rules**:
+  - `requestSupportAccess` may create or return a `requested` decision before internal platform approval is recorded
   - support drill-down requires active `approved` state
   - support drill-down is denied when approval is missing, stale, expired, revoked, mismatched, older than 24 hours, or concurrently changed
   - one target-school decision cannot be reused for another school
@@ -207,11 +208,13 @@
 ```text
 requested -> approved
 requested -> denied
+requested -> expired
 approved -> expired
 approved -> revoked
 approved -> denied (when stale, mismatched, or concurrently changed before access)
 ```
 
+- `requested` may exist before internal platform approval is recorded, but it cannot return school-owned diagnostics.
 - `approved` requires matching target-school opt-in and internal platform approval, each no older than 24 hours.
 - `approved` decisions expire after 24 hours.
 - `expired`, `revoked`, `denied`, stale, mismatched, and concurrently changed decisions cannot return school-owned diagnostics.

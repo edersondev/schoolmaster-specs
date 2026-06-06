@@ -41,6 +41,7 @@ Contract review must confirm:
 - protected counts below 5 are suppressed
 - target-school opt-in is required for support drill-down
 - target-school opt-in uses dedicated school-scoped support opt-in operations
+- `requestSupportAccess` can create or return a requested or pending decision before internal platform approval exists
 - internal platform approval is required for support drill-down
 - support access approval and target-school opt-in expire after 24 hours
 - stale, revoked, expired, mismatched, concurrently changed, and older-than-24-hour approvals or opt-ins return documented denial or conflict responses before diagnostics are returned
@@ -68,6 +69,7 @@ Focused backend coverage must include:
 - protected counts below 5 are suppressed in platform summary and reporting overview responses
 - unauthorized actors receive documented envelopes without cross-school data disclosure
 - support drill-down succeeds only when support actor permission, target-school opt-in, internal platform approval, target-school match, reason code, and correlation ID are valid
+- support access decision creation succeeds in a requested or pending state when target-school opt-in and request metadata are valid but internal platform approval has not yet been recorded
 - missing target-school opt-in rejected before diagnostics are returned
 - school-scoped support opt-in create and revoke require explicit same-school support opt-in permission
 - missing internal platform approval rejected before diagnostics are returned

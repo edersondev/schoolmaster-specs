@@ -60,9 +60,10 @@ A platform support user investigates a single school through an explicitly autho
 
 1. **Given** a support user has support drill-down permission, target-school opt-in approved by a same-school administrator with explicit support opt-in permission, internal platform approval, and submits the required target-school and reason metadata, **When** they request a school support view, **Then** the system returns only approved redacted school diagnostics and writes an audit event with actor, action, outcome, target school, correlation ID, and tenant-safe reason code.
 2. **Given** a support user attempts to access student, guardian, teacher, report-run, custom-report, or school-admin detail not explicitly allowed by the contract, **When** the request is processed, **Then** access is denied without disclosing whether the hidden record exists.
-3. **Given** a support access request lacks required target-school, target-school opt-in, internal platform approval, purpose, or reason metadata, **When** the request is submitted, **Then** validation rejects the request before school-owned data is accessed.
-4. **Given** support access has been granted for one school, **When** the same actor attempts to reuse that context for another school, **Then** the system requires a separate authorization decision and audit trail.
-5. **Given** an approved support drill-down decision or target-school opt-in is older than 24 hours, revoked, stale, or mismatched to the requested school, **When** the support user requests school diagnostics, **Then** access is denied before school-owned data is returned and the outcome is audited.
+3. **Given** a support user submits a support access request with the required target-school, active target-school opt-in, purpose, reason metadata, and correlation metadata but without internal platform approval yet recorded, **When** the request is submitted, **Then** the system creates or returns a pending support access decision that cannot return school diagnostics until internal platform approval is later recorded.
+4. **Given** a support access request lacks required target-school, active target-school opt-in, purpose, reason metadata, or correlation metadata, **When** the request is submitted, **Then** validation rejects the request before school-owned data is accessed.
+5. **Given** support access has been granted for one school, **When** the same actor attempts to reuse that context for another school, **Then** the system requires a separate authorization decision and audit trail.
+6. **Given** an approved support drill-down decision or target-school opt-in is older than 24 hours, revoked, stale, or mismatched to the requested school, **When** the support user requests school diagnostics, **Then** access is denied before school-owned data is returned and the outcome is audited.
 
 ---
 
@@ -142,9 +143,10 @@ Authorized compliance or platform administrators review support-access decisions
 - **FR-021**: System MUST define support drill-down as a read-only, target-school-bound diagnostic workflow with a maximum 24-hour authorization window and no reusable authorization context across schools.
 - **FR-022**: System MUST suppress platform-visible summary counts below 5 where summary values could identify protected school-owned student, guardian, teacher, report, or administration data.
 - **FR-023**: System MUST reject support access requests that attempt write-oriented intents or mutation endpoints through validation, authorization, or routing before any school-owned operational record is changed.
-- **FR-024**: Support drill-down MUST evaluate both target-school opt-in and internal platform approval at request time before school-owned diagnostics are returned, and both gates MUST be no older than 24 hours.
-- **FR-025**: Generated report downloads and emergency access MUST remain excluded from v1 platform support access; support users MUST NOT download generated report files, receive raw report outputs, or bypass normal approval gates through emergency access in this slice.
-- **FR-026**: Target-school support opt-in approval and revocation MUST require a same-school school administrator with explicit support opt-in permission; school administrator status alone MUST NOT be sufficient.
+- **FR-024**: System MUST allow `requestSupportAccess` to create or return a target-school-specific support access decision in a pending or requested state before internal platform approval is recorded, provided the request includes the documented target school, active target-school opt-in, reason code, purpose, and correlation metadata.
+- **FR-025**: Support drill-down MUST evaluate both target-school opt-in and internal platform approval at diagnostics request time before school-owned diagnostics are returned, and both gates MUST be no older than 24 hours.
+- **FR-026**: Generated report downloads and emergency access MUST remain excluded from v1 platform support access; support users MUST NOT download generated report files, receive raw report outputs, or bypass normal approval gates through emergency access in this slice.
+- **FR-027**: Target-school support opt-in approval and revocation MUST require a same-school school administrator with explicit support opt-in permission; school administrator status alone MUST NOT be sufficient.
 
 ### Key Entities *(include if feature involves data)*
 
