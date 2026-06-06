@@ -63,5 +63,5 @@ When implementing or modifying features:
 - only then implementation repositories should change
 
 <!-- SPECKIT START -->
-Active implementation plan: `specs/011-guardian-self-service/plan.md`
+Active implementation plan: `specs/specs/012-report-lifecycle-expansion/plan.md`
 <!-- SPECKIT END -->

@@ -1,0 +1,35 @@
+post:
+  tags:
+    - Reports
+  summary: Activate a valid draft or inactive custom report definition
+  operationId: activateReportDefinition
+  parameters:
+    - $ref: ../../components/parameters/schools/TenantContext.yaml
+    - name: reportDefinitionId
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+  responses:
+    '200':
+      description: Custom report definition activated
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: ../../components/schemas/common/SuccessEnvelope.yaml
+              - type: object
+                properties:
+                  data:
+                    $ref: ../../components/schemas/reports/ReportDefinition.yaml
+    '401':
+      $ref: ../../components/responses/auth/Unauthorized.yaml
+    '403':
+      $ref: ../../components/responses/schools/TenantMismatch.yaml
+    '404':
+      $ref: ../../components/responses/common/NotFound.yaml
+    '409':
+      $ref: ../../components/responses/common/Conflict.yaml
+    '422':
+      $ref: ../../components/responses/common/ValidationError.yaml

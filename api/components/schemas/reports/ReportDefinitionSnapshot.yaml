@@ -1,0 +1,52 @@
+type: object
+required:
+  - id
+  - school_id
+  - report_definition_id
+  - definition_version
+  - domain
+  - fields
+  - filters
+  - grouping
+  - sorting
+  - output_formats
+properties:
+  id:
+    type: string
+    format: uuid
+  school_id:
+    type: string
+    format: uuid
+  report_definition_id:
+    type: string
+    format: uuid
+  definition_version:
+    type: integer
+    minimum: 1
+  domain:
+    type: string
+  fields:
+    type: array
+    items:
+      type: string
+  filters:
+    type: array
+    items:
+      type: object
+      additionalProperties: true
+  grouping:
+    type: array
+    items:
+      type: string
+  sorting:
+    type: array
+    items:
+      type: object
+      additionalProperties: true
+  output_formats:
+    type: array
+    items:
+      $ref: ReportFormat.yaml
+  runtime_filters:
+    type: object
+    additionalProperties: true

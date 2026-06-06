@@ -46,7 +46,7 @@ tags:
   - name: Attendance
     description: Student attendance records in permitted scope.
   - name: Reports
-    description: Tenant-scoped report requests and outputs.
+    description: Tenant-scoped report requests, lifecycle, definitions, catalog, and outputs.
   - name: Account Lifecycle
     description: >-
       Account invitation, password setup, password reset, lock, recovery, and
@@ -236,8 +236,28 @@ paths:
     $ref: paths/student/attendance.yaml
   /api/v1/reports:
     $ref: paths/reports/index.yaml
+  /api/v1/reports/{reportRunId}:
+    $ref: paths/reports/report-run.yaml
+  /api/v1/reports/{reportRunId}/retry:
+    $ref: paths/reports/retry.yaml
+  /api/v1/reports/{reportRunId}/cancel:
+    $ref: paths/reports/cancel.yaml
   /api/v1/reports/{reportRunId}/download:
     $ref: paths/reports/download.yaml
+  /api/v1/reports/{reportRunId}/restore:
+    $ref: paths/reports/restore.yaml
+  /api/v1/report-catalog:
+    $ref: paths/report-catalog/index.yaml
+  /api/v1/report-definitions:
+    $ref: paths/report-definitions/index.yaml
+  /api/v1/report-definitions/{reportDefinitionId}:
+    $ref: paths/report-definitions/report-definition.yaml
+  /api/v1/report-definitions/{reportDefinitionId}/activate:
+    $ref: paths/report-definitions/activate.yaml
+  /api/v1/report-definitions/{reportDefinitionId}/deactivate:
+    $ref: paths/report-definitions/deactivate.yaml
+  /api/v1/report-definitions/{reportDefinitionId}/restore:
+    $ref: paths/report-definitions/restore.yaml
   /api/v1/class-sections:
     $ref: paths/class-sections/index.yaml
   /api/v1/class-sections/{classSectionId}:
@@ -355,7 +375,17 @@ x-promoted-scope:
     - /api/v1/student/grades
     - /api/v1/student/attendance
     - /api/v1/reports
+    - /api/v1/reports/{reportRunId}
+    - /api/v1/reports/{reportRunId}/retry
+    - /api/v1/reports/{reportRunId}/cancel
     - /api/v1/reports/{reportRunId}/download
+    - /api/v1/reports/{reportRunId}/restore
+    - /api/v1/report-catalog
+    - /api/v1/report-definitions
+    - /api/v1/report-definitions/{reportDefinitionId}
+    - /api/v1/report-definitions/{reportDefinitionId}/activate
+    - /api/v1/report-definitions/{reportDefinitionId}/deactivate
+    - /api/v1/report-definitions/{reportDefinitionId}/restore
     - /api/v1/class-sections
     - /api/v1/class-sections/{classSectionId}
     - /api/v1/class-sections/{classSectionId}/status

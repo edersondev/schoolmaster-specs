@@ -1,0 +1,31 @@
+type: object
+required:
+  - id
+  - report_run_id
+  - format
+  - availability
+properties:
+  id:
+    type: string
+    format: uuid
+  report_run_id:
+    type: string
+    format: uuid
+  format:
+    $ref: ReportFormat.yaml
+  availability:
+    $ref: ReportOutputAvailability.yaml
+  generated_at:
+    type:
+      - string
+      - 'null'
+    format: date-time
+  expires_at:
+    type:
+      - string
+      - 'null'
+    format: date-time
+  failure_reason_code:
+    type:
+      - string
+      - 'null'

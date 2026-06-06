@@ -42,7 +42,7 @@ tags:
   - name: Attendance
     description: Student attendance records in permitted scope.
   - name: Reports
-    description: Tenant-scoped report requests and outputs.
+    description: Tenant-scoped report requests, lifecycle, definitions, catalog, and outputs.
   - name: Account Lifecycle
     description: Account invitation, password setup, password reset, lock, recovery, and reactivation workflows.
   - name: Class Sections
@@ -3922,102 +3922,29 @@ paths:
         '422':
           $ref: '#/components/responses/ValidationError'
   /api/v1/reports:
-    get:
-      tags:
-        - Reports
-      summary: List report requests for the resolved school
-      operationId: listReports
-      parameters:
-        - $ref: '#/components/parameters/TenantContext'
-        - $ref: '#/components/parameters/Page'
-        - $ref: '#/components/parameters/PerPage'
-        - name: report_type
-          in: query
-          schema:
-            $ref: '#/components/schemas/ReportType'
-      responses:
-        '200':
-          description: Report request collection
-          content:
-            application/json:
-              schema:
-                allOf:
-                  - $ref: '#/components/schemas/PaginatedEnvelope'
-                  - type: object
-                    properties:
-                      data:
-                        type: array
-                        items:
-                          $ref: '#/components/schemas/ReportRun'
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-        '403':
-          $ref: '#/components/responses/TenantMismatch'
-        '422':
-          $ref: '#/components/responses/ValidationError'
-    post:
-      tags:
-        - Reports
-      summary: Request a tenant-scoped report
-      operationId: requestReport
-      parameters:
-        - $ref: '#/components/parameters/TenantContext'
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/ReportRequest'
-      responses:
-        '202':
-          description: Report request accepted
-          content:
-            application/json:
-              schema:
-                allOf:
-                  - $ref: '#/components/schemas/SuccessEnvelope'
-                  - type: object
-                    properties:
-                      data:
-                        $ref: '#/components/schemas/ReportRun'
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-        '403':
-          $ref: '#/components/responses/TenantMismatch'
-        '422':
-          $ref: '#/components/responses/ValidationError'
+    $ref: ../../../api/paths/reports/index.yaml
+  /api/v1/reports/{reportRunId}:
+    $ref: ../../../api/paths/reports/report-run.yaml
+  /api/v1/reports/{reportRunId}/retry:
+    $ref: ../../../api/paths/reports/retry.yaml
+  /api/v1/reports/{reportRunId}/cancel:
+    $ref: ../../../api/paths/reports/cancel.yaml
   /api/v1/reports/{reportRunId}/download:
-    get:
-      tags:
-        - Reports
-      summary: Download a generated report output
-      operationId: downloadReport
-      parameters:
-        - $ref: '#/components/parameters/TenantContext'
-        - $ref: '#/components/parameters/ReportRunId'
-        - name: format
-          in: query
-          required: true
-          schema:
-            $ref: '#/components/schemas/ReportFormat'
-      responses:
-        '200':
-          description: Generated report file download
-          content:
-            application/octet-stream:
-              schema:
-                type: string
-                format: binary
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-        '403':
-          $ref: '#/components/responses/TenantMismatch'
-        '404':
-          $ref: '#/components/responses/NotFound'
-        '410':
-          $ref: '#/components/responses/OutputExpired'
-        '422':
-          $ref: '#/components/responses/ValidationError'
+    $ref: ../../../api/paths/reports/download.yaml
+  /api/v1/reports/{reportRunId}/restore:
+    $ref: ../../../api/paths/reports/restore.yaml
+  /api/v1/report-catalog:
+    $ref: ../../../api/paths/report-catalog/index.yaml
+  /api/v1/report-definitions:
+    $ref: ../../../api/paths/report-definitions/index.yaml
+  /api/v1/report-definitions/{reportDefinitionId}:
+    $ref: ../../../api/paths/report-definitions/report-definition.yaml
+  /api/v1/report-definitions/{reportDefinitionId}/activate:
+    $ref: ../../../api/paths/report-definitions/activate.yaml
+  /api/v1/report-definitions/{reportDefinitionId}/deactivate:
+    $ref: ../../../api/paths/report-definitions/deactivate.yaml
+  /api/v1/report-definitions/{reportDefinitionId}/restore:
+    $ref: ../../../api/paths/report-definitions/restore.yaml
   /api/v1/class-sections:
     get:
       tags:
@@ -7941,7 +7868,17 @@ x-promoted-scope:
     - /api/v1/student/grades
     - /api/v1/student/attendance
     - /api/v1/reports
+    - /api/v1/reports/{reportRunId}
+    - /api/v1/reports/{reportRunId}/retry
+    - /api/v1/reports/{reportRunId}/cancel
     - /api/v1/reports/{reportRunId}/download
+    - /api/v1/reports/{reportRunId}/restore
+    - /api/v1/report-catalog
+    - /api/v1/report-definitions
+    - /api/v1/report-definitions/{reportDefinitionId}
+    - /api/v1/report-definitions/{reportDefinitionId}/activate
+    - /api/v1/report-definitions/{reportDefinitionId}/deactivate
+    - /api/v1/report-definitions/{reportDefinitionId}/restore
     - /api/v1/class-sections
     - /api/v1/class-sections/{classSectionId}
     - /api/v1/class-sections/{classSectionId}/status

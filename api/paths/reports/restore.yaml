@@ -1,0 +1,28 @@
+post:
+  tags:
+    - Reports
+  summary: Restore a soft-deleted report run
+  operationId: restoreReport
+  parameters:
+    - $ref: ../../components/parameters/schools/TenantContext.yaml
+    - $ref: ../../components/parameters/reports/ReportRunId.yaml
+  responses:
+    '200':
+      description: Report run restored
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: ../../components/schemas/common/SuccessEnvelope.yaml
+              - type: object
+                properties:
+                  data:
+                    $ref: ../../components/schemas/reports/ReportRun.yaml
+    '401':
+      $ref: ../../components/responses/auth/Unauthorized.yaml
+    '403':
+      $ref: ../../components/responses/schools/TenantMismatch.yaml
+    '404':
+      $ref: ../../components/responses/common/NotFound.yaml
+    '409':
+      $ref: ../../components/responses/common/Conflict.yaml
