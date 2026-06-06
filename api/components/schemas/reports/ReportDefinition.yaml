@@ -1,0 +1,89 @@
+type: object
+required:
+  - id
+  - school_id
+  - name
+  - domain
+  - fields
+  - filters
+  - grouping
+  - sorting
+  - output_formats
+  - lifecycle_state
+  - version
+properties:
+  id:
+    type: string
+    format: uuid
+  school_id:
+    type: string
+    format: uuid
+  name:
+    type: string
+    minLength: 1
+    maxLength: 120
+  description:
+    type:
+      - string
+      - 'null'
+    maxLength: 500
+  domain:
+    type: string
+    enum:
+      - attendance
+      - grades
+      - academic_structure
+      - school_activity
+  fields:
+    type: array
+    maxItems: 25
+    items:
+      type: string
+  filters:
+    type: array
+    maxItems: 10
+    items:
+      type: object
+      additionalProperties: true
+  grouping:
+    type: array
+    maxItems: 2
+    items:
+      type: string
+  sorting:
+    type: array
+    maxItems: 3
+    items:
+      type: object
+      additionalProperties: true
+  output_formats:
+    type: array
+    minItems: 1
+    uniqueItems: true
+    items:
+      $ref: ReportFormat.yaml
+  lifecycle_state:
+    type: string
+    enum:
+      - draft
+      - active
+      - inactive
+      - deleted
+  version:
+    type: integer
+    minimum: 1
+  created_by_user_id:
+    type:
+      - string
+      - 'null'
+    format: uuid
+  updated_by_user_id:
+    type:
+      - string
+      - 'null'
+    format: uuid
+  deleted_at:
+    type:
+      - string
+      - 'null'
+    format: date-time

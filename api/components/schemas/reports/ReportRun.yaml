@@ -6,7 +6,8 @@ required:
   - report_type
   - filter_summary
   - output_formats
-  - status
+  - generation_status
+  - outputs
   - outputs_available
 properties:
   id:
@@ -24,16 +25,48 @@ properties:
     $ref: ReportFilters.yaml
   output_formats:
     type: array
-    minItems: 2
+    minItems: 1
     items:
       $ref: ReportFormat.yaml
+  generation_status:
+    $ref: ReportGenerationStatus.yaml
   status:
-    type: string
-    enum:
-      - requested
-      - generated
-      - failed
-      - inactive
+    $ref: ReportGenerationStatus.yaml
+    deprecated: true
+    description: Deprecated compatibility alias for generation_status.
+  source_report_run_id:
+    type:
+      - string
+      - 'null'
+    format: uuid
+  superseded_by_report_run_id:
+    type:
+      - string
+      - 'null'
+    format: uuid
+  report_definition_id:
+    type:
+      - string
+      - 'null'
+    format: uuid
+  report_definition_snapshot_id:
+    type:
+      - string
+      - 'null'
+    format: uuid
+  deleted_at:
+    type:
+      - string
+      - 'null'
+    format: date-time
+  cancellation_reason_code:
+    type:
+      - string
+      - 'null'
+  failure_reason_code:
+    type:
+      - string
+      - 'null'
   generated_at:
     type:
       - string
@@ -46,3 +79,7 @@ properties:
     format: date-time
   outputs_available:
     type: boolean
+  outputs:
+    type: array
+    items:
+      $ref: ReportOutput.yaml

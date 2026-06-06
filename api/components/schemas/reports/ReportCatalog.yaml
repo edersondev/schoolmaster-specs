@@ -1,0 +1,89 @@
+type: object
+required:
+  - domains
+  - complexity_limits
+properties:
+  domains:
+    type: array
+    items:
+      type: object
+      required:
+        - id
+        - label
+        - fields
+        - filters
+        - grouping
+        - sorting
+        - output_formats
+      properties:
+        id:
+          type: string
+          enum:
+            - attendance
+            - grades
+            - academic_structure
+            - school_activity
+        label:
+          type: string
+        fields:
+          type: array
+          items:
+            type: object
+            required:
+              - id
+              - label
+            properties:
+              id:
+                type: string
+              label:
+                type: string
+        filters:
+          type: array
+          items:
+            type: object
+            required:
+              - id
+              - operators
+            properties:
+              id:
+                type: string
+              operators:
+                type: array
+                items:
+                  type: string
+              reference_type:
+                type:
+                  - string
+                  - 'null'
+        grouping:
+          type: array
+          items:
+            type: string
+        sorting:
+          type: array
+          items:
+            type: string
+        output_formats:
+          type: array
+          items:
+            $ref: ReportFormat.yaml
+  complexity_limits:
+    type: object
+    required:
+      - max_fields
+      - max_filters
+      - max_grouping_levels
+      - max_sort_fields
+    properties:
+      max_fields:
+        type: integer
+        const: 25
+      max_filters:
+        type: integer
+        const: 10
+      max_grouping_levels:
+        type: integer
+        const: 2
+      max_sort_fields:
+        type: integer
+        const: 3

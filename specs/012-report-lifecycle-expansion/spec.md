@@ -2,7 +2,7 @@
 
 **Feature Branch**: `012-report-lifecycle-expansion`  
 **Created**: 2026-06-05  
-**Status**: Ready for Implementation  
+**Status**: Implemented  
 **Input**: User description: "Run speckit-specify for backend roadmap item 7: Report Lifecycle Expansion. Define the next SchoolMaster backend implementation slice after completed guardian self-service. Expand the existing school-scoped reporting foundation beyond launch-scope asynchronous report request, list, download, PDF/CSV output, 90-day output retention, expired-output handling, and explicit regeneration through a new ReportRun.
 
 Specify report retry, cancellation, deletion/restore, manual status mutation if allowed, custom report definitions, report designer backend behavior, additional output formats or filters, and report output lifecycle behavior. Clarify allowed report lifecycle state transitions, retry eligibility, cancellation eligibility, delete versus restore semantics, retention impact, output compatibility, custom report definition ownership, tenant visibility, audit obligations, permissions, validation rules, conflict rules, and response semantics.

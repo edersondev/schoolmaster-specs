@@ -26,6 +26,13 @@ Validate the platform feature contract if it is updated:
 npx @redocly/cli lint specs/specs/001-schoolmaster-platform/contracts/openapi.yaml
 ```
 
+### Validation Results
+
+- 2026-06-05: `npx @redocly/cli lint specs/api/openapi.yaml` passed. Redocly reported the existing `info.license` warning.
+- 2026-06-05: `npx @redocly/cli lint specs/specs/001-schoolmaster-platform/contracts/openapi.yaml` passed. Redocly reported the existing `info.license` warning and unused platform-local report components after report operations were mirrored through shared refs.
+- 2026-06-05 final validation: `npx @redocly/cli lint specs/api/openapi.yaml` passed with the existing `info.license` warning.
+- 2026-06-05 final validation: `npx @redocly/cli lint specs/specs/001-schoolmaster-platform/contracts/openapi.yaml` passed with the existing `info.license` warning and unused platform-local report component warnings.
+
 Contract review must confirm:
 
 - operation IDs exist for every approved report lifecycle, catalog, definition, custom request, restore, retry, cancel, delete, and download operation
@@ -50,6 +57,10 @@ After backend implementation, run the backend test suite from the backend reposi
 ```bash
 docker exec schoolmaster-backend-app-1 php artisan test
 ```
+
+### Backend Validation Results
+
+- 2026-06-05: `docker exec schoolmaster-backend-app-1 php artisan test` passed: 311 tests, 1552 assertions.
 
 Focused backend coverage must include:
 

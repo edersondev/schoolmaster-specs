@@ -1,36 +1,29 @@
 get:
   tags:
     - Reports
-  summary: List report requests for the resolved school
-  operationId: listReports
+  summary: List custom report definitions for the resolved school
+  operationId: listReportDefinitions
   parameters:
     - $ref: ../../components/parameters/schools/TenantContext.yaml
     - $ref: ../../components/parameters/common/Page.yaml
     - $ref: ../../components/parameters/common/PerPage.yaml
-    - name: report_type
-      in: query
-      schema:
-        $ref: ../../components/schemas/reports/ReportType.yaml
-    - name: generation_status
-      in: query
-      schema:
-        $ref: ../../components/schemas/reports/ReportGenerationStatus.yaml
-    - name: report_source
+    - name: lifecycle_state
       in: query
       schema:
         type: string
         enum:
-          - built_in
-          - custom
+          - draft
+          - active
+          - inactive
+          - deleted
     - name: include_deleted
       in: query
-      description: Include soft-deleted report runs. Defaults to false.
       schema:
         type: boolean
         default: false
   responses:
     '200':
-      description: Report request collection
+      description: Custom report definition collection
       content:
         application/json:
           schema:
@@ -41,20 +34,18 @@ get:
                   data:
                     type: array
                     items:
-                      $ref: ../../components/schemas/reports/ReportRun.yaml
+                      $ref: ../../components/schemas/reports/ReportDefinition.yaml
     '401':
       $ref: ../../components/responses/auth/Unauthorized.yaml
     '403':
       $ref: ../../components/responses/schools/TenantMismatch.yaml
-    '404':
-      $ref: ../../components/responses/common/NotFound.yaml
     '422':
       $ref: ../../components/responses/common/ValidationError.yaml
 post:
   tags:
     - Reports
-  summary: Request a tenant-scoped built-in or custom report
-  operationId: requestReport
+  summary: Create a draft custom report definition
+  operationId: createReportDefinition
   parameters:
     - $ref: ../../components/parameters/schools/TenantContext.yaml
   requestBody:
@@ -62,10 +53,10 @@ post:
     content:
       application/json:
         schema:
-          $ref: ../../components/schemas/reports/ReportRequest.yaml
+          $ref: ../../components/schemas/reports/ReportDefinition.yaml
   responses:
-    '202':
-      description: Report request accepted
+    '201':
+      description: Custom report definition created
       content:
         application/json:
           schema:
@@ -74,13 +65,11 @@ post:
               - type: object
                 properties:
                   data:
-                    $ref: ../../components/schemas/reports/ReportRun.yaml
+                    $ref: ../../components/schemas/reports/ReportDefinition.yaml
     '401':
       $ref: ../../components/responses/auth/Unauthorized.yaml
     '403':
       $ref: ../../components/responses/schools/TenantMismatch.yaml
-    '404':
-      $ref: ../../components/responses/common/NotFound.yaml
     '409':
       $ref: ../../components/responses/common/Conflict.yaml
     '422':

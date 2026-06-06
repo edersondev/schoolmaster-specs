@@ -1,0 +1,47 @@
+post:
+  tags:
+    - Reports
+  summary: Cancel a requested or generating report run
+  operationId: cancelReport
+  parameters:
+    - $ref: ../../components/parameters/schools/TenantContext.yaml
+    - $ref: ../../components/parameters/reports/ReportRunId.yaml
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          type: object
+          required:
+            - reason_code
+          additionalProperties: false
+          properties:
+            reason_code:
+              type: string
+              enum:
+                - requested_in_error
+                - duplicate_request
+                - no_longer_needed
+                - invalid_filters
+  responses:
+    '200':
+      description: Report run canceled
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: ../../components/schemas/common/SuccessEnvelope.yaml
+              - type: object
+                properties:
+                  data:
+                    $ref: ../../components/schemas/reports/ReportRun.yaml
+    '401':
+      $ref: ../../components/responses/auth/Unauthorized.yaml
+    '403':
+      $ref: ../../components/responses/schools/TenantMismatch.yaml
+    '404':
+      $ref: ../../components/responses/common/NotFound.yaml
+    '409':
+      $ref: ../../components/responses/common/Conflict.yaml
+    '422':
+      $ref: ../../components/responses/common/ValidationError.yaml

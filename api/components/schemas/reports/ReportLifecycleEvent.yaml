@@ -1,0 +1,72 @@
+type: object
+required:
+  - id
+  - school_id
+  - action
+  - outcome
+  - target_type
+  - correlation_id
+  - reason_code
+  - occurred_at
+properties:
+  id:
+    type: string
+    format: uuid
+  school_id:
+    type: string
+    format: uuid
+  actor_user_id:
+    type:
+      - string
+      - 'null'
+    format: uuid
+  action:
+    type: string
+    enum:
+      - requested
+      - retry_requested
+      - canceled
+      - deleted
+      - restored
+      - output_expired
+      - catalog_viewed
+      - definition_created
+      - definition_updated
+      - definition_activated
+      - definition_deactivated
+      - definition_deleted
+      - definition_restored
+      - validation_rejected
+      - conflict
+      - denied
+      - stale_completion_ignored
+  outcome:
+    type: string
+    enum:
+      - succeeded
+      - rejected
+      - conflicted
+      - denied
+      - ignored
+  target_type:
+    type: string
+    enum:
+      - report_run
+      - report_output
+      - report_definition
+      - report_catalog
+  target_id:
+    type:
+      - string
+      - 'null'
+    format: uuid
+  correlation_id:
+    type: string
+  reason_code:
+    type: string
+  summary:
+    type: object
+    additionalProperties: true
+  occurred_at:
+    type: string
+    format: date-time
