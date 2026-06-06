@@ -118,7 +118,7 @@ behavior.
 
 ### 7. Report Lifecycle Expansion
 
-**Status**: Ready for implementation from
+**Status**: Completed and implemented from
 `specs/012-report-lifecycle-expansion/spec.md`.
 
 **Purpose**: Add report retry, cancellation, soft delete/restore, report
