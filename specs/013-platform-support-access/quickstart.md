@@ -18,19 +18,26 @@ Use this walkthrough to verify that the platform-wide reporting and support acce
 After OpenAPI is expanded for this feature, validate the aggregate contract:
 
 ```bash
+npx @redocly/cli lint --config specs/redocly.yaml aggregate@v1 schoolmaster-platform@v1
+```
+
+If running from the specs repository root instead of the backend checkout, use:
+
+```bash
 npx @redocly/cli lint aggregate@v1 schoolmaster-platform@v1
 ```
 
-If validating individual files directly, use:
+If validating individual files directly from the backend checkout, use:
 
 ```bash
-npx @redocly/cli lint api/openapi.yaml
-npx @redocly/cli lint specs/001-schoolmaster-platform/contracts/openapi.yaml
+npx @redocly/cli lint specs/api/openapi.yaml
+npx @redocly/cli lint specs/specs/001-schoolmaster-platform/contracts/openapi.yaml
 ```
 
 ### Validation Results
 
-- Pending: Run after OpenAPI operations and schemas are added.
+- 2026-06-06: `npx @redocly/cli lint --config specs/redocly.yaml aggregate@v1 schoolmaster-platform@v1` passed for `specs/api/openapi.yaml` and `specs/specs/001-schoolmaster-platform/contracts/openapi.yaml` from the backend checkout. Redocly reported four existing unused-component warnings in the platform contract for `ReportRunId`, `ReportRun`, `ReportRequest`, and `OutputExpired`.
+- 2026-06-06 final validation: `npx @redocly/cli lint --config specs/redocly.yaml aggregate@v1 schoolmaster-platform@v1` passed again with the same four existing unused-component warnings.
 
 Contract review must confirm:
 
@@ -59,7 +66,12 @@ docker exec schoolmaster-backend-app-1 php artisan test
 
 ### Backend Validation Results
 
-- Pending: Run after backend implementation.
+- 2026-06-06: Focused platform support tests passed in Docker.
+  - US1: `6 passed (23 assertions)`
+  - US2: `8 passed (25 assertions)`
+  - US3: `3 passed (8 assertions)`
+- 2026-06-06 final validation: `docker exec schoolmaster-backend-app-1 php artisan test` passed with `336 passed (1633 assertions)`.
+- 2026-06-06 route trace: platform support routes are registered under `/api/v1/platform/...`; school opt-in routes are registered under `/api/v1/schools/{schoolId}/support-opt-ins...`.
 
 Focused backend coverage must include:
 

@@ -1,0 +1,127 @@
+SuppressedCount:
+  type: object
+  required:
+    - value
+    - suppressed
+  properties:
+    value:
+      type:
+        - integer
+        - "null"
+      minimum: 0
+    suppressed:
+      type: boolean
+      description: True when a protected count is below the configured threshold of 5.
+PlatformSchoolSummary:
+  type: object
+  required:
+    - school_id
+    - name
+    - status
+    - protected_counts
+    - report_health
+    - lifecycle_summary
+    - support_diagnostics
+  properties:
+    school_id:
+      type: string
+      format: uuid
+    name:
+      type: string
+    status:
+      type: string
+    protected_counts:
+      type: object
+      properties:
+        students:
+          $ref: '#/SuppressedCount'
+        guardians:
+          $ref: '#/SuppressedCount'
+        teachers:
+          $ref: '#/SuppressedCount'
+        report_runs:
+          $ref: '#/SuppressedCount'
+    report_health:
+      type: object
+      additionalProperties:
+        $ref: '#/SuppressedCount'
+    lifecycle_summary:
+      type: object
+      additionalProperties:
+        $ref: '#/SuppressedCount'
+    support_diagnostics:
+      type: object
+      additionalProperties:
+        type:
+          - string
+          - number
+          - boolean
+          - "null"
+PlatformReportingOverview:
+  type: object
+  required:
+    - reporting_health
+    - lifecycle_states
+    - output_availability
+    - retention_summary
+    - failure_summary
+  properties:
+    reporting_health:
+      type: object
+      additionalProperties:
+        $ref: '#/SuppressedCount'
+    lifecycle_states:
+      type: object
+      additionalProperties:
+        $ref: '#/SuppressedCount'
+    output_availability:
+      type: object
+      additionalProperties:
+        $ref: '#/SuppressedCount'
+    retention_summary:
+      type: object
+      additionalProperties:
+        $ref: '#/SuppressedCount'
+    failure_summary:
+      type: object
+      additionalProperties:
+        $ref: '#/SuppressedCount'
+SupportDiagnosticView:
+  type: object
+  required:
+    - school_id
+    - school_status
+    - operational_indicators
+    - report_health
+    - lifecycle_summary
+    - support_metadata
+    - correlation_id
+  properties:
+    school_id:
+      type: string
+      format: uuid
+    school_status:
+      type: string
+    operational_indicators:
+      type: object
+      additionalProperties:
+        $ref: '#/SuppressedCount'
+    report_health:
+      type: object
+      additionalProperties:
+        $ref: '#/SuppressedCount'
+    lifecycle_summary:
+      type: object
+      additionalProperties:
+        $ref: '#/SuppressedCount'
+    support_metadata:
+      type: object
+      description: Redacted read-only troubleshooting metadata; no raw outputs, private paths, report files, record search results, emergency bypass, impersonation, or write-capable fields are included.
+      additionalProperties:
+        type:
+          - string
+          - number
+          - boolean
+          - "null"
+    correlation_id:
+      type: string

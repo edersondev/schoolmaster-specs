@@ -1,0 +1,91 @@
+SupportOptInState:
+  type: string
+  enum:
+    - pending
+    - approved
+    - denied
+    - expired
+    - revoked
+CreateSchoolSupportOptInRequest:
+  type: object
+  required:
+    - reason_code
+    - purpose
+    - correlation_id
+  properties:
+    reason_code:
+      type: string
+      minLength: 3
+      maxLength: 80
+    purpose:
+      type: string
+      minLength: 10
+      maxLength: 500
+    correlation_id:
+      type: string
+      minLength: 8
+      maxLength: 120
+RevokeSchoolSupportOptInRequest:
+  type: object
+  required:
+    - reason_code
+    - correlation_id
+  properties:
+    reason_code:
+      type: string
+      minLength: 3
+      maxLength: 80
+    correlation_id:
+      type: string
+      minLength: 8
+      maxLength: 120
+SchoolSupportOptIn:
+  type: object
+  required:
+    - id
+    - school_id
+    - state
+    - reason_code
+    - purpose
+    - correlation_id
+    - approved_by_user_id
+    - approved_at
+    - expires_at
+    - created_at
+    - updated_at
+  properties:
+    id:
+      type: string
+      format: uuid
+    school_id:
+      type: string
+      format: uuid
+    state:
+      $ref: '#/SupportOptInState'
+    reason_code:
+      type: string
+    purpose:
+      type: string
+    correlation_id:
+      type: string
+    approved_by_user_id:
+      type: string
+      format: uuid
+    approved_at:
+      type: string
+      format: date-time
+    expires_at:
+      type: string
+      format: date-time
+      description: Target-school support opt-ins expire no later than 24 hours after approval.
+    revoked_at:
+      type:
+        - string
+        - "null"
+      format: date-time
+    created_at:
+      type: string
+      format: date-time
+    updated_at:
+      type: string
+      format: date-time

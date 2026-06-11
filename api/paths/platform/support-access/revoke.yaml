@@ -1,0 +1,40 @@
+post:
+  tags:
+    - Platform Support
+  summary: Revoke a support access decision
+  operationId: revokeSupportAccess
+  parameters:
+    - name: supportAccessId
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: ../../../components/schemas/platform-support/support-access-decision.yaml#/RevokeSupportAccessRequest
+  responses:
+    '200':
+      description: Support access decision revoked.
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: ../../../components/schemas/common/SuccessEnvelope.yaml
+              - type: object
+                properties:
+                  data:
+                    $ref: ../../../components/schemas/platform-support/support-access-decision.yaml#/SupportAccessDecision
+    '401':
+      $ref: ../../../components/responses/auth/Unauthorized.yaml
+    '403':
+      $ref: ../../../components/responses/common/Forbidden.yaml
+    '404':
+      $ref: ../../../components/responses/common/NotFound.yaml
+    '409':
+      $ref: ../../../components/responses/common/Conflict.yaml
+    '422':
+      $ref: ../../../components/responses/common/ValidationError.yaml

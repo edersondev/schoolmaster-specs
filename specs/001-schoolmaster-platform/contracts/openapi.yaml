@@ -51,6 +51,8 @@ tags:
     description: School-owned roster membership administration with all-or-nothing batch changes.
   - name: Teacher Assignments
     description: School-owned teacher assignment administration and teacher own-active-assignment reads.
+  - name: Platform Support
+    description: Platform-wide minimized operational reporting and read-only support access workflows with explicit approval gates.
 paths:
   /api/v1/auth/login:
     post:
@@ -129,6 +131,26 @@ paths:
                         $ref: '#/components/schemas/LogoutResult'
         '401':
           $ref: '#/components/responses/TokenRejected'
+  /api/v1/platform/schools:
+    $ref: ../../../api/paths/platform/schools.yaml
+  /api/v1/platform/reporting/overview:
+    $ref: ../../../api/paths/platform/reporting-overview.yaml
+  /api/v1/platform/support-access:
+    $ref: ../../../api/paths/platform/support-access/index.yaml
+  /api/v1/platform/support-access/{supportAccessId}:
+    $ref: ../../../api/paths/platform/support-access/decision.yaml
+  /api/v1/platform/support-access/{supportAccessId}/approve:
+    $ref: ../../../api/paths/platform/support-access/approve.yaml
+  /api/v1/platform/support-access/{supportAccessId}/revoke:
+    $ref: ../../../api/paths/platform/support-access/revoke.yaml
+  /api/v1/platform/support/schools/{schoolId}/diagnostics:
+    $ref: ../../../api/paths/platform/support-diagnostics.yaml
+  /api/v1/platform/support-audit-events:
+    $ref: ../../../api/paths/platform/support-audit-events.yaml
+  /api/v1/schools/{schoolId}/support-opt-ins:
+    $ref: ../../../api/paths/schools/support-opt-ins.yaml
+  /api/v1/schools/{schoolId}/support-opt-ins/{supportOptInId}/revoke:
+    $ref: ../../../api/paths/schools/support-opt-in-revoke.yaml
   /api/v1/account-invitations:
     post:
       tags:
@@ -7799,6 +7821,16 @@ x-promoted-scope:
     - /api/v1/schools/{schoolId}/activate
     - /api/v1/schools/{schoolId}/deactivate
     - /api/v1/schools/{schoolId}/restore
+    - /api/v1/schools/{schoolId}/support-opt-ins
+    - /api/v1/schools/{schoolId}/support-opt-ins/{supportOptInId}/revoke
+    - /api/v1/platform/schools
+    - /api/v1/platform/reporting/overview
+    - /api/v1/platform/support-access
+    - /api/v1/platform/support-access/{supportAccessId}
+    - /api/v1/platform/support-access/{supportAccessId}/approve
+    - /api/v1/platform/support-access/{supportAccessId}/revoke
+    - /api/v1/platform/support/schools/{schoolId}/diagnostics
+    - /api/v1/platform/support-audit-events
     - /api/v1/users
     - /api/v1/users/{userId}
     - /api/v1/users/{userId}/activate

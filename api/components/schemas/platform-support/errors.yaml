@@ -1,0 +1,52 @@
+PlatformSupportConflict:
+  type: object
+  required:
+    - error
+  properties:
+    error:
+      type: object
+      required:
+        - code
+        - message
+      properties:
+        code:
+          type: string
+          enum:
+            - support_access_missing_opt_in
+            - support_access_missing_platform_approval
+            - support_access_expired
+            - support_access_revoked
+            - support_access_mismatched_school
+            - support_access_stale_gate
+            - support_access_concurrently_changed
+        message:
+          type: string
+        details:
+          type: object
+          additionalProperties: true
+PlatformSupportForbidden:
+  type: object
+  required:
+    - error
+  properties:
+    error:
+      type: object
+      required:
+        - code
+        - message
+      properties:
+        code:
+          type: string
+          enum:
+            - platform_support_forbidden
+            - platform_overview_forbidden
+            - platform_reporting_forbidden
+            - support_drill_down_forbidden
+            - support_approval_forbidden
+            - support_opt_in_forbidden
+            - support_audit_forbidden
+        message:
+          type: string
+        details:
+          type: object
+          additionalProperties: true

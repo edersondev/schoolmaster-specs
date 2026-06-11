@@ -17,14 +17,14 @@
 
 **Purpose**: Establish shared contract files, feature folders, and traceability before backend implementation.
 
-- [ ] T001 Create platform OpenAPI path directory in `schoolmaster-specs/api/paths/platform/`
-- [ ] T002 Create platform support schema directory in `schoolmaster-specs/api/components/schemas/platform-support/`
-- [ ] T003 [P] Create backend platform support DTO directory in `schoolmaster-backend/app/DTOs/PlatformSupport/`
-- [ ] T004 [P] Create backend platform support service directory in `schoolmaster-backend/app/Services/PlatformSupport/`
-- [ ] T005 [P] Create backend platform support request directory in `schoolmaster-backend/app/Http/Requests/Api/V1/Platform/`
-- [ ] T006 [P] Create backend platform support resource directory in `schoolmaster-backend/app/Http/Resources/Platform/`
-- [ ] T007 Create backend platform support test directories in `schoolmaster-backend/tests/Feature/PlatformSupport/` and `schoolmaster-backend/tests/Unit/PlatformSupport/`
-- [ ] T008 Document that frontend implementation is out of scope for this slice in `schoolmaster-specs/specs/013-platform-support-access/quickstart.md`
+- [X] T001 Create platform OpenAPI path directory in `schoolmaster-specs/api/paths/platform/`
+- [X] T002 Create platform support schema directory in `schoolmaster-specs/api/components/schemas/platform-support/`
+- [X] T003 [P] Create backend platform support DTO directory in `schoolmaster-backend/app/DTOs/PlatformSupport/`
+- [X] T004 [P] Create backend platform support service directory in `schoolmaster-backend/app/Services/PlatformSupport/`
+- [X] T005 [P] Create backend platform support request directory in `schoolmaster-backend/app/Http/Requests/Api/V1/Platform/`
+- [X] T006 [P] Create backend platform support resource directory in `schoolmaster-backend/app/Http/Resources/Platform/`
+- [X] T007 Create backend platform support test directories in `schoolmaster-backend/tests/Feature/PlatformSupport/` and `schoolmaster-backend/tests/Unit/PlatformSupport/`
+- [X] T008 Document that frontend implementation is out of scope for this slice in `schoolmaster-specs/specs/013-platform-support-access/quickstart.md`
 
 ---
 
@@ -34,34 +34,34 @@
 
 **CRITICAL**: No user story work can begin until this phase is complete.
 
-- [ ] T009 Add platform support permissions, operation IDs, request schemas, response schemas, pagination, filtering, sorting, authorization errors, validation errors, and conflict responses for all platform support operations in `schoolmaster-specs/api/openapi.yaml`
-- [ ] T010 Add shared platform support error and conflict response schemas in `schoolmaster-specs/api/components/schemas/platform-support/errors.yaml`
-- [ ] T011 Add shared platform support audit schemas including support escalation event types in `schoolmaster-specs/api/components/schemas/platform-support/audit.yaml`
-- [ ] T012 Add shared platform support decision schemas in `schoolmaster-specs/api/components/schemas/platform-support/support-access-decision.yaml`
-- [ ] T013 Add shared target-school support opt-in schemas in `schoolmaster-specs/api/components/schemas/platform-support/support-opt-in.yaml`
-- [ ] T014 Add shared platform summary and reporting overview schemas in `schoolmaster-specs/api/components/schemas/platform-support/platform-summaries.yaml`
-- [ ] T015 Mirror foundational platform support schemas and operation definitions in `schoolmaster-specs/specs/001-schoolmaster-platform/contracts/openapi.yaml`
-- [ ] T016 Create support access decision migration in `schoolmaster-backend/database/migrations/2026_06_06_000001_create_support_access_decisions_table.php`
-- [ ] T017 Create target-school support opt-in migration in `schoolmaster-backend/database/migrations/2026_06_06_000002_create_target_school_support_opt_ins_table.php`
-- [ ] T018 Create internal platform approval migration in `schoolmaster-backend/database/migrations/2026_06_06_000003_create_internal_platform_approvals_table.php`
-- [ ] T019 Create platform support audit event migration in `schoolmaster-backend/database/migrations/2026_06_06_000004_create_platform_support_audit_events_table.php`
-- [ ] T020 [P] Create SupportAccessDecision model in `schoolmaster-backend/app/Models/SupportAccessDecision.php`
-- [ ] T021 [P] Create TargetSchoolSupportOptIn model in `schoolmaster-backend/app/Models/TargetSchoolSupportOptIn.php`
-- [ ] T022 [P] Create InternalPlatformApproval model in `schoolmaster-backend/app/Models/InternalPlatformApproval.php`
-- [ ] T023 [P] Create PlatformSupportAuditEvent model in `schoolmaster-backend/app/Models/PlatformSupportAuditEvent.php`
-- [ ] T024 Add platform support relationships to School model in `schoolmaster-backend/app/Models/School.php`
-- [ ] T025 Add platform support relationships to User model in `schoolmaster-backend/app/Models/User.php`
-- [ ] T026 Seed platform support permissions in `schoolmaster-backend/database/seeders/PermissionSeeder.php`
-- [ ] T027 Create PlatformSupportPolicy authorization boundaries in `schoolmaster-backend/app/Policies/PlatformSupportPolicy.php`
-- [ ] T028 Register platform support policy mappings in `schoolmaster-backend/app/Providers/AuthServiceProvider.php`
-- [ ] T029 Create PlatformSupportActorContext DTO in `schoolmaster-backend/app/DTOs/PlatformSupport/PlatformSupportActorContext.php`
-- [ ] T030 Create PlatformSupportTargetSchool DTO in `schoolmaster-backend/app/DTOs/PlatformSupport/PlatformSupportTargetSchool.php`
-- [ ] T031 Create PlatformSupportReasonCode DTO in `schoolmaster-backend/app/DTOs/PlatformSupport/PlatformSupportReasonCode.php`
-- [ ] T032 Create PlatformSupportAuditService in `schoolmaster-backend/app/Services/PlatformSupport/PlatformSupportAuditService.php`
-- [ ] T033 Create PlatformSupportRedactionService in `schoolmaster-backend/app/Services/PlatformSupport/PlatformSupportRedactionService.php`
-- [ ] T034 Create PlatformSupportAuthorizationService in `schoolmaster-backend/app/Services/PlatformSupport/PlatformSupportAuthorizationService.php`
-- [ ] T035 Create PlatformSupportController shell without exposing undocumented operations in `schoolmaster-backend/app/Http/Controllers/Api/V1/Platform/PlatformSupportController.php`
-- [ ] T036 Run contract-first Redocly validation with `npx @redocly/cli lint aggregate@v1 schoolmaster-platform@v1` and record results in `schoolmaster-specs/specs/013-platform-support-access/quickstart.md`
+- [X] T009 Add platform support permissions, operation IDs, request schemas, response schemas, pagination, filtering, sorting, authorization errors, validation errors, and conflict responses for all platform support operations in `schoolmaster-specs/api/openapi.yaml`
+- [X] T010 Add shared platform support error and conflict response schemas in `schoolmaster-specs/api/components/schemas/platform-support/errors.yaml`
+- [X] T011 Add shared platform support audit schemas including support escalation event types in `schoolmaster-specs/api/components/schemas/platform-support/audit.yaml`
+- [X] T012 Add shared platform support decision schemas in `schoolmaster-specs/api/components/schemas/platform-support/support-access-decision.yaml`
+- [X] T013 Add shared target-school support opt-in schemas in `schoolmaster-specs/api/components/schemas/platform-support/support-opt-in.yaml`
+- [X] T014 Add shared platform summary and reporting overview schemas in `schoolmaster-specs/api/components/schemas/platform-support/platform-summaries.yaml`
+- [X] T015 Mirror foundational platform support schemas and operation definitions in `schoolmaster-specs/specs/001-schoolmaster-platform/contracts/openapi.yaml`
+- [X] T016 Create support access decision migration in `schoolmaster-backend/database/migrations/2026_06_06_000001_create_support_access_decisions_table.php`
+- [X] T017 Create target-school support opt-in migration in `schoolmaster-backend/database/migrations/2026_06_06_000002_create_target_school_support_opt_ins_table.php`
+- [X] T018 Create internal platform approval migration in `schoolmaster-backend/database/migrations/2026_06_06_000003_create_internal_platform_approvals_table.php`
+- [X] T019 Create platform support audit event migration in `schoolmaster-backend/database/migrations/2026_06_06_000004_create_platform_support_audit_events_table.php`
+- [X] T020 [P] Create SupportAccessDecision model in `schoolmaster-backend/app/Models/SupportAccessDecision.php`
+- [X] T021 [P] Create TargetSchoolSupportOptIn model in `schoolmaster-backend/app/Models/TargetSchoolSupportOptIn.php`
+- [X] T022 [P] Create InternalPlatformApproval model in `schoolmaster-backend/app/Models/InternalPlatformApproval.php`
+- [X] T023 [P] Create PlatformSupportAuditEvent model in `schoolmaster-backend/app/Models/PlatformSupportAuditEvent.php`
+- [X] T024 Add platform support relationships to School model in `schoolmaster-backend/app/Models/School.php`
+- [X] T025 Add platform support relationships to User model in `schoolmaster-backend/app/Models/User.php`
+- [X] T026 Seed platform support permissions in `schoolmaster-backend/database/seeders/PermissionSeeder.php`
+- [X] T027 Create PlatformSupportPolicy authorization boundaries in `schoolmaster-backend/app/Policies/PlatformSupportPolicy.php`
+- [X] T028 Register platform support policy mappings in `schoolmaster-backend/app/Providers/AuthServiceProvider.php`
+- [X] T029 Create PlatformSupportActorContext DTO in `schoolmaster-backend/app/DTOs/PlatformSupport/PlatformSupportActorContext.php`
+- [X] T030 Create PlatformSupportTargetSchool DTO in `schoolmaster-backend/app/DTOs/PlatformSupport/PlatformSupportTargetSchool.php`
+- [X] T031 Create PlatformSupportReasonCode DTO in `schoolmaster-backend/app/DTOs/PlatformSupport/PlatformSupportReasonCode.php`
+- [X] T032 Create PlatformSupportAuditService in `schoolmaster-backend/app/Services/PlatformSupport/PlatformSupportAuditService.php`
+- [X] T033 Create PlatformSupportRedactionService in `schoolmaster-backend/app/Services/PlatformSupport/PlatformSupportRedactionService.php`
+- [X] T034 Create PlatformSupportAuthorizationService in `schoolmaster-backend/app/Services/PlatformSupport/PlatformSupportAuthorizationService.php`
+- [X] T035 Create PlatformSupportController shell without exposing undocumented operations in `schoolmaster-backend/app/Http/Controllers/Api/V1/Platform/PlatformSupportController.php`
+- [X] T036 Run contract-first Redocly validation with `npx @redocly/cli lint aggregate@v1 schoolmaster-platform@v1` and record results in `schoolmaster-specs/specs/013-platform-support-access/quickstart.md`
 
 **Checkpoint**: Foundation ready. User story implementation can now begin.
 
@@ -75,26 +75,26 @@
 
 ### Tests for User Story 1
 
-- [ ] T037 [P] [US1] Verify OpenAPI path coverage for `listPlatformSchoolSummaries` before backend route exposure in `schoolmaster-specs/api/paths/platform/schools.yaml`
-- [ ] T038 [P] [US1] Verify OpenAPI path coverage for `getPlatformReportingOverview` before backend route exposure in `schoolmaster-specs/api/paths/platform/reporting-overview.yaml`
-- [ ] T039 [P] [US1] Verify platform summary and reporting overview operation parity in `schoolmaster-specs/specs/001-schoolmaster-platform/contracts/openapi.yaml`
-- [ ] T040 [P] [US1] Add PHPUnit feature tests for platform school summary success and minimization in `schoolmaster-backend/tests/Feature/PlatformSupport/ListPlatformSchoolSummariesTest.php`
-- [ ] T041 [P] [US1] Add PHPUnit feature tests for cross-school reporting overview success and minimization in `schoolmaster-backend/tests/Feature/PlatformSupport/GetPlatformReportingOverviewTest.php`
-- [ ] T042 [P] [US1] Add PHPUnit feature tests for platform overview permission denial and no cross-school disclosure in `schoolmaster-backend/tests/Feature/PlatformSupport/PlatformOverviewAuthorizationTest.php`
-- [ ] T043 [P] [US1] Add PHPUnit unit tests for protected count suppression below 5 in `schoolmaster-backend/tests/Unit/PlatformSupport/PlatformSupportRedactionServiceTest.php`
+- [X] T037 [P] [US1] Verify OpenAPI path coverage for `listPlatformSchoolSummaries` before backend route exposure in `schoolmaster-specs/api/paths/platform/schools.yaml`
+- [X] T038 [P] [US1] Verify OpenAPI path coverage for `getPlatformReportingOverview` before backend route exposure in `schoolmaster-specs/api/paths/platform/reporting-overview.yaml`
+- [X] T039 [P] [US1] Verify platform summary and reporting overview operation parity in `schoolmaster-specs/specs/001-schoolmaster-platform/contracts/openapi.yaml`
+- [X] T040 [P] [US1] Add PHPUnit feature tests for platform school summary success and minimization in `schoolmaster-backend/tests/Feature/PlatformSupport/ListPlatformSchoolSummariesTest.php`
+- [X] T041 [P] [US1] Add PHPUnit feature tests for cross-school reporting overview success and minimization in `schoolmaster-backend/tests/Feature/PlatformSupport/GetPlatformReportingOverviewTest.php`
+- [X] T042 [P] [US1] Add PHPUnit feature tests for platform overview permission denial and no cross-school disclosure in `schoolmaster-backend/tests/Feature/PlatformSupport/PlatformOverviewAuthorizationTest.php`
+- [X] T043 [P] [US1] Add PHPUnit unit tests for protected count suppression below 5 in `schoolmaster-backend/tests/Unit/PlatformSupport/PlatformSupportRedactionServiceTest.php`
 
 ### Implementation for User Story 1
 
-- [ ] T044 [P] [US1] Implement ListPlatformSchoolSummariesRequest validation in `schoolmaster-backend/app/Http/Requests/Api/V1/Platform/ListPlatformSchoolSummariesRequest.php`
-- [ ] T045 [P] [US1] Implement GetPlatformReportingOverviewRequest validation in `schoolmaster-backend/app/Http/Requests/Api/V1/Platform/GetPlatformReportingOverviewRequest.php`
-- [ ] T046 [P] [US1] Implement PlatformSchoolSummaryResource in `schoolmaster-backend/app/Http/Resources/Platform/PlatformSchoolSummaryResource.php`
-- [ ] T047 [P] [US1] Implement PlatformReportingOverviewResource in `schoolmaster-backend/app/Http/Resources/Platform/PlatformReportingOverviewResource.php`
-- [ ] T048 [US1] Implement platform school summary aggregation in `schoolmaster-backend/app/Services/PlatformSupport/PlatformSchoolSummaryService.php`
-- [ ] T049 [US1] Implement cross-school reporting overview aggregation in `schoolmaster-backend/app/Services/PlatformSupport/PlatformReportingOverviewService.php`
-- [ ] T050 [US1] Apply protected count suppression below 5 in `schoolmaster-backend/app/Services/PlatformSupport/PlatformSupportRedactionService.php`
-- [ ] T051 [US1] Wire platform school summary and reporting overview controller actions in `schoolmaster-backend/app/Http/Controllers/Api/V1/Platform/PlatformSupportController.php`
-- [ ] T052 [US1] Register platform summary and reporting overview routes in `schoolmaster-backend/routes/api.php`
-- [ ] T053 [US1] Add tenant-safe audit writes for platform summary and reporting overview reads in `schoolmaster-backend/app/Services/PlatformSupport/PlatformSupportAuditService.php`
+- [X] T044 [P] [US1] Implement ListPlatformSchoolSummariesRequest validation in `schoolmaster-backend/app/Http/Requests/Api/V1/Platform/ListPlatformSchoolSummariesRequest.php`
+- [X] T045 [P] [US1] Implement GetPlatformReportingOverviewRequest validation in `schoolmaster-backend/app/Http/Requests/Api/V1/Platform/GetPlatformReportingOverviewRequest.php`
+- [X] T046 [P] [US1] Implement PlatformSchoolSummaryResource in `schoolmaster-backend/app/Http/Resources/Platform/PlatformSchoolSummaryResource.php`
+- [X] T047 [P] [US1] Implement PlatformReportingOverviewResource in `schoolmaster-backend/app/Http/Resources/Platform/PlatformReportingOverviewResource.php`
+- [X] T048 [US1] Implement platform school summary aggregation in `schoolmaster-backend/app/Services/PlatformSupport/PlatformSchoolSummaryService.php`
+- [X] T049 [US1] Implement cross-school reporting overview aggregation in `schoolmaster-backend/app/Services/PlatformSupport/PlatformReportingOverviewService.php`
+- [X] T050 [US1] Apply protected count suppression below 5 in `schoolmaster-backend/app/Services/PlatformSupport/PlatformSupportRedactionService.php`
+- [X] T051 [US1] Wire platform school summary and reporting overview controller actions in `schoolmaster-backend/app/Http/Controllers/Api/V1/Platform/PlatformSupportController.php`
+- [X] T052 [US1] Register platform summary and reporting overview routes in `schoolmaster-backend/routes/api.php`
+- [X] T053 [US1] Add tenant-safe audit writes for platform summary and reporting overview reads in `schoolmaster-backend/app/Services/PlatformSupport/PlatformSupportAuditService.php`
 
 **Checkpoint**: User Story 1 is independently functional and is the MVP.
 
@@ -108,37 +108,37 @@
 
 ### Tests for User Story 2
 
-- [ ] T054 [P] [US2] Verify OpenAPI path coverage for `requestSupportAccess` and `getSupportAccessDecision` before backend route exposure in `schoolmaster-specs/api/paths/platform/support-access/index.yaml`
-- [ ] T055 [P] [US2] Verify OpenAPI path coverage for `approveSupportAccess` and `revokeSupportAccess` before backend route exposure in `schoolmaster-specs/api/paths/platform/support-access/actions.yaml`
-- [ ] T056 [P] [US2] Verify OpenAPI path coverage for `createSchoolSupportOptIn` and `revokeSchoolSupportOptIn` before backend route exposure in `schoolmaster-specs/api/paths/schools/support-opt-ins.yaml`
-- [ ] T057 [P] [US2] Verify OpenAPI path coverage for `getSupportSchoolDiagnostics` before backend route exposure in `schoolmaster-specs/api/paths/platform/support-diagnostics.yaml`
-- [ ] T058 [P] [US2] Verify support access, support opt-in, and diagnostics operation parity in `schoolmaster-specs/specs/001-schoolmaster-platform/contracts/openapi.yaml`
-- [ ] T059 [P] [US2] Add PHPUnit feature tests for support drill-down success in `schoolmaster-backend/tests/Feature/PlatformSupport/GetSupportSchoolDiagnosticsTest.php`
-- [ ] T060 [P] [US2] Add PHPUnit feature tests for target-school opt-in create and revoke authorization in `schoolmaster-backend/tests/Feature/PlatformSupport/SchoolSupportOptInTest.php`
-- [ ] T061 [P] [US2] Add PHPUnit feature tests for internal platform approval and revocation in `schoolmaster-backend/tests/Feature/PlatformSupport/PlatformSupportApprovalTest.php`
-- [ ] T062 [P] [US2] Add PHPUnit feature tests for 24-hour expiration, stale approval, revoked approval, mismatched school, and concurrent revocation/access denials in `schoolmaster-backend/tests/Feature/PlatformSupport/SupportAccessGateDenialTest.php`
-- [ ] T063 [P] [US2] Add PHPUnit feature tests for support diagnostics blocked outputs, emergency access, impersonation, search, and writes in `schoolmaster-backend/tests/Feature/PlatformSupport/SupportDiagnosticsBlockedBehaviorTest.php`
-- [ ] T064 [P] [US2] Add PHPUnit unit tests for support access decision validation in `schoolmaster-backend/tests/Unit/PlatformSupport/SupportAccessDecisionServiceTest.php`
+- [X] T054 [P] [US2] Verify OpenAPI path coverage for `requestSupportAccess` and `getSupportAccessDecision` before backend route exposure in `schoolmaster-specs/api/paths/platform/support-access/index.yaml`
+- [X] T055 [P] [US2] Verify OpenAPI path coverage for `approveSupportAccess` and `revokeSupportAccess` before backend route exposure in `schoolmaster-specs/api/paths/platform/support-access/actions.yaml`
+- [X] T056 [P] [US2] Verify OpenAPI path coverage for `createSchoolSupportOptIn` and `revokeSchoolSupportOptIn` before backend route exposure in `schoolmaster-specs/api/paths/schools/support-opt-ins.yaml`
+- [X] T057 [P] [US2] Verify OpenAPI path coverage for `getSupportSchoolDiagnostics` before backend route exposure in `schoolmaster-specs/api/paths/platform/support-diagnostics.yaml`
+- [X] T058 [P] [US2] Verify support access, support opt-in, and diagnostics operation parity in `schoolmaster-specs/specs/001-schoolmaster-platform/contracts/openapi.yaml`
+- [X] T059 [P] [US2] Add PHPUnit feature tests for support drill-down success in `schoolmaster-backend/tests/Feature/PlatformSupport/GetSupportSchoolDiagnosticsTest.php`
+- [X] T060 [P] [US2] Add PHPUnit feature tests for target-school opt-in create and revoke authorization in `schoolmaster-backend/tests/Feature/PlatformSupport/SchoolSupportOptInTest.php`
+- [X] T061 [P] [US2] Add PHPUnit feature tests for internal platform approval and revocation in `schoolmaster-backend/tests/Feature/PlatformSupport/PlatformSupportApprovalTest.php`
+- [X] T062 [P] [US2] Add PHPUnit feature tests for 24-hour expiration, stale approval, revoked approval, mismatched school, and concurrent revocation/access denials in `schoolmaster-backend/tests/Feature/PlatformSupport/SupportAccessGateDenialTest.php`
+- [X] T063 [P] [US2] Add PHPUnit feature tests for support diagnostics blocked outputs, emergency access, impersonation, search, and writes in `schoolmaster-backend/tests/Feature/PlatformSupport/SupportDiagnosticsBlockedBehaviorTest.php`
+- [X] T064 [P] [US2] Add PHPUnit unit tests for support access decision validation in `schoolmaster-backend/tests/Unit/PlatformSupport/SupportAccessDecisionServiceTest.php`
 
 ### Implementation for User Story 2
 
-- [ ] T065 [P] [US2] Implement RequestSupportAccessRequest validation in `schoolmaster-backend/app/Http/Requests/Api/V1/Platform/RequestSupportAccessRequest.php`
-- [ ] T066 [P] [US2] Implement ApproveSupportAccessRequest validation in `schoolmaster-backend/app/Http/Requests/Api/V1/Platform/ApproveSupportAccessRequest.php`
-- [ ] T067 [P] [US2] Implement RevokeSupportAccessRequest validation in `schoolmaster-backend/app/Http/Requests/Api/V1/Platform/RevokeSupportAccessRequest.php`
-- [ ] T068 [P] [US2] Implement CreateSchoolSupportOptInRequest validation in `schoolmaster-backend/app/Http/Requests/Api/V1/Platform/CreateSchoolSupportOptInRequest.php`
-- [ ] T069 [P] [US2] Implement RevokeSchoolSupportOptInRequest validation in `schoolmaster-backend/app/Http/Requests/Api/V1/Platform/RevokeSchoolSupportOptInRequest.php`
-- [ ] T070 [P] [US2] Implement GetSupportSchoolDiagnosticsRequest validation in `schoolmaster-backend/app/Http/Requests/Api/V1/Platform/GetSupportSchoolDiagnosticsRequest.php`
-- [ ] T071 [P] [US2] Implement SupportAccessDecisionResource in `schoolmaster-backend/app/Http/Resources/Platform/SupportAccessDecisionResource.php`
-- [ ] T072 [P] [US2] Implement SchoolSupportOptInResource in `schoolmaster-backend/app/Http/Resources/Platform/SchoolSupportOptInResource.php`
-- [ ] T073 [P] [US2] Implement SupportDiagnosticResource in `schoolmaster-backend/app/Http/Resources/Platform/SupportDiagnosticResource.php`
-- [ ] T074 [US2] Implement target-school support opt-in lifecycle in `schoolmaster-backend/app/Services/PlatformSupport/SchoolSupportOptInService.php`
-- [ ] T075 [US2] Implement internal platform approval lifecycle in `schoolmaster-backend/app/Services/PlatformSupport/InternalPlatformApprovalService.php`
-- [ ] T076 [US2] Implement support access decision lifecycle, 24-hour gate validation, and atomic stale/revoked/mismatched/concurrently changed approval checks in `schoolmaster-backend/app/Services/PlatformSupport/SupportAccessDecisionService.php`
-- [ ] T077 [US2] Implement redacted support diagnostic aggregation in `schoolmaster-backend/app/Services/PlatformSupport/SupportDiagnosticService.php`
-- [ ] T078 [US2] Enforce blocked generated report downloads, raw outputs, private metadata, emergency access, impersonation, unrestricted search, and writes in `schoolmaster-backend/app/Services/PlatformSupport/SupportDiagnosticService.php`
-- [ ] T079 [US2] Wire support access, support opt-in, approval, revocation, and diagnostics controller actions in `schoolmaster-backend/app/Http/Controllers/Api/V1/Platform/PlatformSupportController.php`
-- [ ] T080 [US2] Register support access, support opt-in, approval, revocation, and diagnostics routes in `schoolmaster-backend/routes/api.php`
-- [ ] T081 [US2] Add audit writes for support access request, opt-in, approval, revocation, expiration, escalation, diagnostics, and denied outcomes in `schoolmaster-backend/app/Services/PlatformSupport/PlatformSupportAuditService.php`
+- [X] T065 [P] [US2] Implement RequestSupportAccessRequest validation in `schoolmaster-backend/app/Http/Requests/Api/V1/Platform/RequestSupportAccessRequest.php`
+- [X] T066 [P] [US2] Implement ApproveSupportAccessRequest validation in `schoolmaster-backend/app/Http/Requests/Api/V1/Platform/ApproveSupportAccessRequest.php`
+- [X] T067 [P] [US2] Implement RevokeSupportAccessRequest validation in `schoolmaster-backend/app/Http/Requests/Api/V1/Platform/RevokeSupportAccessRequest.php`
+- [X] T068 [P] [US2] Implement CreateSchoolSupportOptInRequest validation in `schoolmaster-backend/app/Http/Requests/Api/V1/Platform/CreateSchoolSupportOptInRequest.php`
+- [X] T069 [P] [US2] Implement RevokeSchoolSupportOptInRequest validation in `schoolmaster-backend/app/Http/Requests/Api/V1/Platform/RevokeSchoolSupportOptInRequest.php`
+- [X] T070 [P] [US2] Implement GetSupportSchoolDiagnosticsRequest validation in `schoolmaster-backend/app/Http/Requests/Api/V1/Platform/GetSupportSchoolDiagnosticsRequest.php`
+- [X] T071 [P] [US2] Implement SupportAccessDecisionResource in `schoolmaster-backend/app/Http/Resources/Platform/SupportAccessDecisionResource.php`
+- [X] T072 [P] [US2] Implement SchoolSupportOptInResource in `schoolmaster-backend/app/Http/Resources/Platform/SchoolSupportOptInResource.php`
+- [X] T073 [P] [US2] Implement SupportDiagnosticResource in `schoolmaster-backend/app/Http/Resources/Platform/SupportDiagnosticResource.php`
+- [X] T074 [US2] Implement target-school support opt-in lifecycle in `schoolmaster-backend/app/Services/PlatformSupport/SchoolSupportOptInService.php`
+- [X] T075 [US2] Implement internal platform approval lifecycle in `schoolmaster-backend/app/Services/PlatformSupport/InternalPlatformApprovalService.php`
+- [X] T076 [US2] Implement support access decision lifecycle, 24-hour gate validation, and atomic stale/revoked/mismatched/concurrently changed approval checks in `schoolmaster-backend/app/Services/PlatformSupport/SupportAccessDecisionService.php`
+- [X] T077 [US2] Implement redacted support diagnostic aggregation in `schoolmaster-backend/app/Services/PlatformSupport/SupportDiagnosticService.php`
+- [X] T078 [US2] Enforce blocked generated report downloads, raw outputs, private metadata, emergency access, impersonation, unrestricted search, and writes in `schoolmaster-backend/app/Services/PlatformSupport/SupportDiagnosticService.php`
+- [X] T079 [US2] Wire support access, support opt-in, approval, revocation, and diagnostics controller actions in `schoolmaster-backend/app/Http/Controllers/Api/V1/Platform/PlatformSupportController.php`
+- [X] T080 [US2] Register support access, support opt-in, approval, revocation, and diagnostics routes in `schoolmaster-backend/routes/api.php`
+- [X] T081 [US2] Add audit writes for support access request, opt-in, approval, revocation, expiration, escalation, diagnostics, and denied outcomes in `schoolmaster-backend/app/Services/PlatformSupport/PlatformSupportAuditService.php`
 
 **Checkpoint**: User Stories 1 and 2 work independently with explicit approval gates.
 
@@ -152,20 +152,20 @@
 
 ### Tests for User Story 3
 
-- [ ] T082 [P] [US3] Verify OpenAPI path coverage for `listSupportAuditEvents` before backend route exposure in `schoolmaster-specs/api/paths/platform/support-audit-events.yaml`
-- [ ] T083 [P] [US3] Verify support audit operation parity in `schoolmaster-specs/specs/001-schoolmaster-platform/contracts/openapi.yaml`
-- [ ] T084 [P] [US3] Add PHPUnit feature tests for support audit summary listing including support escalation events in `schoolmaster-backend/tests/Feature/PlatformSupport/ListSupportAuditEventsTest.php`
-- [ ] T085 [P] [US3] Add PHPUnit feature tests for support audit review permission denials in `schoolmaster-backend/tests/Feature/PlatformSupport/SupportAuditAuthorizationTest.php`
-- [ ] T086 [P] [US3] Add PHPUnit unit tests for audit metadata redaction in `schoolmaster-backend/tests/Unit/PlatformSupport/PlatformSupportAuditServiceTest.php`
+- [X] T082 [P] [US3] Verify OpenAPI path coverage for `listSupportAuditEvents` before backend route exposure in `schoolmaster-specs/api/paths/platform/support-audit-events.yaml`
+- [X] T083 [P] [US3] Verify support audit operation parity in `schoolmaster-specs/specs/001-schoolmaster-platform/contracts/openapi.yaml`
+- [X] T084 [P] [US3] Add PHPUnit feature tests for support audit summary listing including support escalation events in `schoolmaster-backend/tests/Feature/PlatformSupport/ListSupportAuditEventsTest.php`
+- [X] T085 [P] [US3] Add PHPUnit feature tests for support audit review permission denials in `schoolmaster-backend/tests/Feature/PlatformSupport/SupportAuditAuthorizationTest.php`
+- [X] T086 [P] [US3] Add PHPUnit unit tests for audit metadata redaction in `schoolmaster-backend/tests/Unit/PlatformSupport/PlatformSupportAuditServiceTest.php`
 
 ### Implementation for User Story 3
 
-- [ ] T087 [P] [US3] Implement ListSupportAuditEventsRequest validation in `schoolmaster-backend/app/Http/Requests/Api/V1/Platform/ListSupportAuditEventsRequest.php`
-- [ ] T088 [P] [US3] Implement PlatformSupportAuditEventResource in `schoolmaster-backend/app/Http/Resources/Platform/PlatformSupportAuditEventResource.php`
-- [ ] T089 [US3] Implement support audit summary listing in `schoolmaster-backend/app/Services/PlatformSupport/PlatformSupportAuditQueryService.php`
-- [ ] T090 [US3] Enforce audit metadata redaction for credentials, tokens, private paths, raw outputs, private content, full records, and unauthorized cross-tenant details in `schoolmaster-backend/app/Services/PlatformSupport/PlatformSupportAuditService.php`
-- [ ] T091 [US3] Wire support audit controller action in `schoolmaster-backend/app/Http/Controllers/Api/V1/Platform/PlatformSupportController.php`
-- [ ] T092 [US3] Register support audit route in `schoolmaster-backend/routes/api.php`
+- [X] T087 [P] [US3] Implement ListSupportAuditEventsRequest validation in `schoolmaster-backend/app/Http/Requests/Api/V1/Platform/ListSupportAuditEventsRequest.php`
+- [X] T088 [P] [US3] Implement PlatformSupportAuditEventResource in `schoolmaster-backend/app/Http/Resources/Platform/PlatformSupportAuditEventResource.php`
+- [X] T089 [US3] Implement support audit summary listing in `schoolmaster-backend/app/Services/PlatformSupport/PlatformSupportAuditQueryService.php`
+- [X] T090 [US3] Enforce audit metadata redaction for credentials, tokens, private paths, raw outputs, private content, full records, and unauthorized cross-tenant details in `schoolmaster-backend/app/Services/PlatformSupport/PlatformSupportAuditService.php`
+- [X] T091 [US3] Wire support audit controller action in `schoolmaster-backend/app/Http/Controllers/Api/V1/Platform/PlatformSupportController.php`
+- [X] T092 [US3] Register support audit route in `schoolmaster-backend/routes/api.php`
 
 **Checkpoint**: All user stories are independently functional.
 
@@ -175,14 +175,14 @@
 
 **Purpose**: Contract validation, regression coverage, traceability, and readiness review across the full slice.
 
-- [ ] T093 [P] Run final Redocly validation with `npx @redocly/cli lint aggregate@v1 schoolmaster-platform@v1` and record results in `schoolmaster-specs/specs/013-platform-support-access/quickstart.md`
-- [ ] T094 [P] Review route-to-operation traceability for every platform support operation in `schoolmaster-specs/specs/013-platform-support-access/contracts/backend-platform-support-access.md`
-- [ ] T095 [P] Review aggregate OpenAPI publication for undocumented platform/support behavior in `schoolmaster-specs/api/openapi.yaml`
-- [ ] T096 [P] Review platform-local OpenAPI mirror for operation parity in `schoolmaster-specs/specs/001-schoolmaster-platform/contracts/openapi.yaml`
-- [ ] T097 Run backend PHPUnit suite with `docker exec schoolmaster-backend-app-1 php artisan test` and record results in `schoolmaster-specs/specs/013-platform-support-access/quickstart.md`
-- [ ] T098 Review tenant-safe audit payloads across platform support services in `schoolmaster-backend/app/Services/PlatformSupport/`
-- [ ] T099 Review response resources for redaction and small-count suppression in `schoolmaster-backend/app/Http/Resources/Platform/`
-- [ ] T100 Update backend implementation notes for platform support access in `schoolmaster-backend/README.md`
+- [X] T093 [P] Run final Redocly validation with `npx @redocly/cli lint aggregate@v1 schoolmaster-platform@v1` and record results in `schoolmaster-specs/specs/013-platform-support-access/quickstart.md`
+- [X] T094 [P] Review route-to-operation traceability for every platform support operation in `schoolmaster-specs/specs/013-platform-support-access/contracts/backend-platform-support-access.md`
+- [X] T095 [P] Review aggregate OpenAPI publication for undocumented platform/support behavior in `schoolmaster-specs/api/openapi.yaml`
+- [X] T096 [P] Review platform-local OpenAPI mirror for operation parity in `schoolmaster-specs/specs/001-schoolmaster-platform/contracts/openapi.yaml`
+- [X] T097 Run backend PHPUnit suite with `docker exec schoolmaster-backend-app-1 php artisan test` and record results in `schoolmaster-specs/specs/013-platform-support-access/quickstart.md`
+- [X] T098 Review tenant-safe audit payloads across platform support services in `schoolmaster-backend/app/Services/PlatformSupport/`
+- [X] T099 Review response resources for redaction and small-count suppression in `schoolmaster-backend/app/Http/Resources/Platform/`
+- [X] T100 Update backend implementation notes for platform support access in `schoolmaster-backend/README.md`
 
 ---
 

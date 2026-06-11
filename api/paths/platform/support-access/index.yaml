@@ -1,0 +1,33 @@
+post:
+  tags:
+    - Platform Support
+  summary: Request target-school support access
+  operationId: requestSupportAccess
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: ../../../components/schemas/platform-support/support-access-decision.yaml#/RequestSupportAccessRequest
+  responses:
+    '201':
+      description: Support access decision created or returned in requested state when internal platform approval is pending.
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: ../../../components/schemas/common/SuccessEnvelope.yaml
+              - type: object
+                properties:
+                  data:
+                    $ref: ../../../components/schemas/platform-support/support-access-decision.yaml#/SupportAccessDecision
+    '401':
+      $ref: ../../../components/responses/auth/Unauthorized.yaml
+    '403':
+      $ref: ../../../components/responses/common/Forbidden.yaml
+    '404':
+      $ref: ../../../components/responses/common/NotFound.yaml
+    '409':
+      $ref: ../../../components/responses/common/Conflict.yaml
+    '422':
+      $ref: ../../../components/responses/common/ValidationError.yaml

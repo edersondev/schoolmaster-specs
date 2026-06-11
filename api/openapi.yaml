@@ -63,6 +63,10 @@ tags:
     description: >-
       School-owned teacher assignment administration and teacher
       own-active-assignment reads.
+  - name: Platform Support
+    description: >-
+      Platform-wide minimized operational reporting and read-only support access
+      workflows with explicit approval gates.
 paths:
   /api/v1/auth/login:
     $ref: paths/auth/login.yaml
@@ -94,6 +98,26 @@ paths:
     $ref: paths/schools/deactivate.yaml
   /api/v1/schools/{schoolId}/restore:
     $ref: paths/schools/restore.yaml
+  /api/v1/schools/{schoolId}/support-opt-ins:
+    $ref: paths/schools/support-opt-ins.yaml
+  /api/v1/schools/{schoolId}/support-opt-ins/{supportOptInId}/revoke:
+    $ref: paths/schools/support-opt-in-revoke.yaml
+  /api/v1/platform/schools:
+    $ref: paths/platform/schools.yaml
+  /api/v1/platform/reporting/overview:
+    $ref: paths/platform/reporting-overview.yaml
+  /api/v1/platform/support-access:
+    $ref: paths/platform/support-access/index.yaml
+  /api/v1/platform/support-access/{supportAccessId}:
+    $ref: paths/platform/support-access/decision.yaml
+  /api/v1/platform/support-access/{supportAccessId}/approve:
+    $ref: paths/platform/support-access/approve.yaml
+  /api/v1/platform/support-access/{supportAccessId}/revoke:
+    $ref: paths/platform/support-access/revoke.yaml
+  /api/v1/platform/support/schools/{schoolId}/diagnostics:
+    $ref: paths/platform/support-diagnostics.yaml
+  /api/v1/platform/support-audit-events:
+    $ref: paths/platform/support-audit-events.yaml
   /api/v1/users:
     $ref: paths/users/index.yaml
   /api/v1/users/{userId}:
@@ -306,6 +330,16 @@ x-promoted-scope:
     - /api/v1/schools/{schoolId}/activate
     - /api/v1/schools/{schoolId}/deactivate
     - /api/v1/schools/{schoolId}/restore
+    - /api/v1/schools/{schoolId}/support-opt-ins
+    - /api/v1/schools/{schoolId}/support-opt-ins/{supportOptInId}/revoke
+    - /api/v1/platform/schools
+    - /api/v1/platform/reporting/overview
+    - /api/v1/platform/support-access
+    - /api/v1/platform/support-access/{supportAccessId}
+    - /api/v1/platform/support-access/{supportAccessId}/approve
+    - /api/v1/platform/support-access/{supportAccessId}/revoke
+    - /api/v1/platform/support/schools/{schoolId}/diagnostics
+    - /api/v1/platform/support-audit-events
     - /api/v1/users
     - /api/v1/users/{userId}
     - /api/v1/users/{userId}/activate

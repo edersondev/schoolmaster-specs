@@ -1,0 +1,130 @@
+SupportAccessState:
+  type: string
+  enum:
+    - requested
+    - approved
+    - denied
+    - expired
+    - revoked
+SupportApprovalState:
+  type: string
+  enum:
+    - pending
+    - approved
+    - denied
+    - expired
+    - revoked
+RequestSupportAccessRequest:
+  type: object
+  required:
+    - school_id
+    - reason_code
+    - purpose
+    - correlation_id
+    - support_opt_in_id
+  properties:
+    school_id:
+      type: string
+      format: uuid
+    reason_code:
+      type: string
+      minLength: 3
+      maxLength: 80
+    purpose:
+      type: string
+      minLength: 10
+      maxLength: 500
+    correlation_id:
+      type: string
+      minLength: 8
+      maxLength: 120
+    support_opt_in_id:
+      type: string
+      format: uuid
+ApproveSupportAccessRequest:
+  type: object
+  required:
+    - reason_code
+    - correlation_id
+  properties:
+    reason_code:
+      type: string
+      minLength: 3
+      maxLength: 80
+    correlation_id:
+      type: string
+      minLength: 8
+      maxLength: 120
+RevokeSupportAccessRequest:
+  type: object
+  required:
+    - reason_code
+    - correlation_id
+  properties:
+    reason_code:
+      type: string
+      minLength: 3
+      maxLength: 80
+    correlation_id:
+      type: string
+      minLength: 8
+      maxLength: 120
+SupportAccessDecision:
+  type: object
+  required:
+    - id
+    - actor_id
+    - school_id
+    - reason_code
+    - purpose
+    - correlation_id
+    - state
+    - support_opt_in_state
+    - platform_approval_state
+    - expires_at
+    - created_at
+    - updated_at
+  properties:
+    id:
+      type: string
+      format: uuid
+    actor_id:
+      type: string
+      format: uuid
+    school_id:
+      type: string
+      format: uuid
+    reason_code:
+      type: string
+    purpose:
+      type: string
+    correlation_id:
+      type: string
+    state:
+      $ref: '#/SupportAccessState'
+    support_opt_in_state:
+      $ref: '#/SupportApprovalState'
+    platform_approval_state:
+      $ref: '#/SupportApprovalState'
+    approved_at:
+      type:
+        - string
+        - "null"
+      format: date-time
+    expires_at:
+      type:
+        - string
+        - "null"
+      format: date-time
+      description: Approved support access expires no later than 24 hours after approval.
+    revoked_at:
+      type:
+        - string
+        - "null"
+      format: date-time
+    created_at:
+      type: string
+      format: date-time
+    updated_at:
+      type: string
+      format: date-time

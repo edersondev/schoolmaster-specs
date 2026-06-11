@@ -1,0 +1,5 @@
+x-operation-coverage:
+  approveSupportAccess:
+    $ref: approve.yaml
+  revokeSupportAccess:
+    $ref: revoke.yaml

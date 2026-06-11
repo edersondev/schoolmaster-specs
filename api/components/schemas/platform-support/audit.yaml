@@ -1,0 +1,89 @@
+PlatformSupportAuditAction:
+  type: string
+  enum:
+    - platform_school_summary_access
+    - platform_reporting_overview_access
+    - cross_school_lookup
+    - support_access_requested
+    - support_access_approved
+    - support_access_revoked
+    - support_access_expired
+    - support_drill_down_access
+    - support_escalation
+    - support_opt_in_created
+    - support_opt_in_revoked
+    - denied_access
+    - validation_rejected
+    - conflict_detected
+PlatformSupportAuditOutcome:
+  type: string
+  enum:
+    - allowed
+    - denied
+    - pending
+    - rejected
+    - conflicted
+    - expired
+    - revoked
+PlatformSupportAuditEvent:
+  type: object
+  required:
+    - id
+    - actor_id
+    - action
+    - outcome
+    - correlation_id
+    - reason_code
+    - occurred_at
+    - metadata
+  properties:
+    id:
+      type: string
+      format: uuid
+    actor_id:
+      type:
+        - string
+        - "null"
+      format: uuid
+    action:
+      $ref: '#/PlatformSupportAuditAction'
+    outcome:
+      $ref: '#/PlatformSupportAuditOutcome'
+    target_school_id:
+      type:
+        - string
+        - "null"
+      format: uuid
+    target_type:
+      type:
+        - string
+        - "null"
+    target_id:
+      type:
+        - string
+        - "null"
+      format: uuid
+    correlation_id:
+      type: string
+      minLength: 8
+      maxLength: 120
+    reason_code:
+      type: string
+      minLength: 3
+      maxLength: 80
+    occurred_at:
+      type: string
+      format: date-time
+    metadata:
+      type: object
+      description: Tenant-safe minimized metadata only. Credentials, bearer tokens, private file paths, raw outputs, private content, full records, and unauthorized cross-tenant details are excluded.
+      additionalProperties:
+        type:
+          - string
+          - number
+          - boolean
+          - "null"
+PlatformSupportAuditEventList:
+  type: array
+  items:
+    $ref: '#/PlatformSupportAuditEvent'

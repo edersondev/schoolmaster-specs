@@ -1,0 +1,49 @@
+get:
+  tags:
+    - Platform Support
+  summary: Get cross-school reporting health overview
+  operationId: getPlatformReportingOverview
+  parameters:
+    - name: school_status
+      in: query
+      schema:
+        type: string
+        enum:
+          - active
+          - inactive
+          - suspended
+    - name: report_source
+      in: query
+      schema:
+        type: string
+        enum:
+          - built_in
+          - custom
+    - name: from
+      in: query
+      schema:
+        type: string
+        format: date
+    - name: to
+      in: query
+      schema:
+        type: string
+        format: date
+  responses:
+    '200':
+      description: Aggregate cross-school reporting overview without raw outputs, private file paths, or report detail records.
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: ../../components/schemas/common/SuccessEnvelope.yaml
+              - type: object
+                properties:
+                  data:
+                    $ref: ../../components/schemas/platform-support/platform-summaries.yaml#/PlatformReportingOverview
+    '401':
+      $ref: ../../components/responses/auth/Unauthorized.yaml
+    '403':
+      $ref: ../../components/responses/common/Forbidden.yaml
+    '422':
+      $ref: ../../components/responses/common/ValidationError.yaml
