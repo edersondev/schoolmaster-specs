@@ -63,5 +63,5 @@ When implementing or modifying features:
 - only then implementation repositories should change
 
 <!-- SPECKIT START -->
-Active implementation plan: `specs/specs/012-report-lifecycle-expansion/plan.md`
+Active implementation plan: `specs/013-platform-support-access/plan.md`
 <!-- SPECKIT END -->

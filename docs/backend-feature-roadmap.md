@@ -135,7 +135,8 @@ ownership, and tenant visibility.
 
 ### 8. Platform-Wide Reporting and Support Access
 
-**Status**: Not specified.
+**Status**: Specified and planned in
+`specs/013-platform-support-access/spec.md`.
 
 **Purpose**: Define platform administrator or support-user visibility across
 schools for operational oversight.
