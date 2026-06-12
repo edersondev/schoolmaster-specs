@@ -30,7 +30,14 @@ npx @redocly/cli lint specs/001-schoolmaster-platform/contracts/openapi.yaml
 
 ### Validation Results
 
-- Pending: Run after OpenAPI operations and schemas are added.
+- 2026-06-12: `npx @redocly/cli lint aggregate@v1 schoolmaster-platform@v1`
+  passed for `api/openapi.yaml` and
+  `specs/001-schoolmaster-platform/contracts/openapi.yaml`. Existing platform
+  contract warnings remain for unused report components (`ReportRunId`,
+  `ReportRun`, `ReportRequest`, `OutputExpired`).
+- 2026-06-12 final validation: `npx @redocly/cli lint aggregate@v1
+  schoolmaster-platform@v1` passed for both aggregate and platform contracts.
+  The same existing unused report component warnings remain.
 
 Contract review must confirm:
 
@@ -62,7 +69,14 @@ docker exec schoolmaster-backend-app-1 php artisan test
 
 ### Backend Validation Results
 
-- Pending: Run after backend implementation.
+- 2026-06-12 focused assessment validation:
+  `docker exec schoolmaster-backend-app-1 php artisan test --compact
+  tests/Feature/Assessment tests/Unit/Assessment
+  tests/Unit/Services/QuestionnaireValidationTest.php` passed with 45 tests and
+  104 assertions.
+- 2026-06-12 full backend validation:
+  `docker exec schoolmaster-backend-app-1 php artisan test --compact` passed
+  with 389 tests and 1770 assertions.
 
 Focused backend coverage must include:
 

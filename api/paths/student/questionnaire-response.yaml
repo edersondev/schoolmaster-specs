@@ -1,0 +1,31 @@
+get:
+  tags:
+    - Assessment Responses
+  summary: Retrieve the authenticated student's own questionnaire response
+  operationId: getStudentQuestionnaireResponse
+  parameters:
+    - $ref: ../../components/parameters/schools/TenantContext.yaml
+    - name: responseAttemptId
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+  responses:
+    '200':
+      description: Student-safe response status, score, feedback summary, and file availability metadata
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: ../../components/schemas/common/SuccessEnvelope.yaml
+              - type: object
+                properties:
+                  data:
+                    $ref: ../../components/schemas/assessments/AssessmentResponseAttempt.yaml
+    '401':
+      $ref: ../../components/responses/auth/Unauthorized.yaml
+    '403':
+      $ref: ../../components/responses/assessments/AssessmentResponses.yaml#/AssessmentForbidden
+    '404':
+      $ref: ../../components/responses/common/NotFound.yaml

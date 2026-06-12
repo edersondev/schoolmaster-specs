@@ -1,0 +1,30 @@
+AssessmentValidation:
+  description: Advanced assessment validation failed
+  content:
+    application/json:
+      schema:
+        $ref: ../../schemas/common/ErrorEnvelope.yaml
+ScanPending:
+  description: Answer file is pending malware scan and unavailable
+  content:
+    application/json:
+      schema:
+        $ref: ../../schemas/common/ErrorEnvelope.yaml
+ScanFailed:
+  description: Answer file failed malware scan and remains unavailable
+  content:
+    application/json:
+      schema:
+        $ref: ../../schemas/common/ErrorEnvelope.yaml
+UnavailableFile:
+  description: Answer file is unavailable for this actor or state
+  content:
+    application/json:
+      schema:
+        $ref: ../../schemas/common/ErrorEnvelope.yaml
+AssessmentForbidden:
+  description: Actor lacks same-school assessment authority
+  content:
+    application/json:
+      schema:
+        $ref: ../../schemas/common/ErrorEnvelope.yaml

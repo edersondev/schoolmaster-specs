@@ -39,6 +39,8 @@ tags:
     description: Teacher-managed folders and instructional content.
   - name: Questionnaires
     description: Teacher-authored instructional questionnaires.
+  - name: Assessment Responses
+    description: Student submissions, scan-gated files, review, grading, and safe summaries.
   - name: Learning Sets
     description: Ordered instructional sequences for student use.
   - name: Grades
@@ -194,6 +196,18 @@ paths:
     $ref: paths/questionnaires/status.yaml
   /api/v1/questionnaires/{questionnaireId}/restore:
     $ref: paths/questionnaires/restore.yaml
+  /api/v1/student/questionnaire-responses:
+    $ref: paths/student/questionnaire-responses.yaml
+  /api/v1/student/questionnaire-responses/{responseAttemptId}:
+    $ref: paths/student/questionnaire-response.yaml
+  /api/v1/questionnaire-responses:
+    $ref: paths/questionnaire-responses/index.yaml
+  /api/v1/questionnaire-responses/{responseAttemptId}:
+    $ref: paths/questionnaire-responses/response.yaml
+  /api/v1/questionnaire-responses/{responseAttemptId}/grading:
+    $ref: paths/questionnaire-responses/grading.yaml
+  /api/v1/questionnaire-responses/{responseAttemptId}/files/{fileId}/download:
+    $ref: paths/questionnaire-responses/file-download.yaml
   /api/v1/learning-sets:
     $ref: paths/learning-sets/index.yaml
   /api/v1/learning-sets/{learningSetId}:
@@ -354,6 +368,12 @@ x-promoted-scope:
     - /api/v1/questionnaires/{questionnaireId}
     - /api/v1/questionnaires/{questionnaireId}/status
     - /api/v1/questionnaires/{questionnaireId}/restore
+    - /api/v1/student/questionnaire-responses
+    - /api/v1/student/questionnaire-responses/{responseAttemptId}
+    - /api/v1/questionnaire-responses
+    - /api/v1/questionnaire-responses/{responseAttemptId}
+    - /api/v1/questionnaire-responses/{responseAttemptId}/grading
+    - /api/v1/questionnaire-responses/{responseAttemptId}/files/{fileId}/download
     - /api/v1/learning-sets
     - /api/v1/learning-sets/{learningSetId}
     - /api/v1/learning-sets/{learningSetId}/status

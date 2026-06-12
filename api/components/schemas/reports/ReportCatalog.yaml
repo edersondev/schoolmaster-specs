@@ -23,6 +23,7 @@ properties:
             - grades
             - academic_structure
             - school_activity
+            - advanced_assessments
         label:
           type: string
         fields:
@@ -37,6 +38,11 @@ properties:
                 type: string
               label:
                 type: string
+              visibility:
+                type: string
+                enum:
+                  - aggregate_only
+                  - operational
         filters:
           type: array
           items:
