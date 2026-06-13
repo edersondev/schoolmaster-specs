@@ -153,31 +153,34 @@
 
 ### Tests for User Story 3
 
-- [X] T082 [P] [US3] Verify OpenAPI path coverage for `listQuestionnaireResponses` and `getQuestionnaireResponse` in `api/paths/questionnaire-responses/index.yaml`
-- [X] T083 [P] [US3] Verify OpenAPI path coverage for `gradeQuestionnaireResponse` in `api/paths/questionnaire-responses/grading.yaml`
-- [X] T084 [P] [US3] Verify OpenAPI path coverage for `downloadQuestionnaireResponseFile` binary delivery and unsafe-file errors in `api/paths/questionnaire-responses/file-download.yaml`
-- [X] T085 [P] [US3] Verify platform OpenAPI parity for response review, grading, and answer-file download operations in `specs/001-schoolmaster-platform/contracts/openapi.yaml`
-- [X] T086 [P] [US3] Add PHPUnit feature tests for teacher and school administrator response review authorization in `../schoolmaster-backend/tests/Feature/Assessment/AssessmentResponseReviewTest.php`
-- [X] T087 [P] [US3] Add PHPUnit feature tests for clean answer-file download success, denied download attempts, and audit creation in `../schoolmaster-backend/tests/Feature/Assessment/AssessmentFileDownloadTest.php`
-- [X] T088 [P] [US3] Add PHPUnit feature tests for manual 0-100 grading, invalid score rejection, legacy auto-grading compatibility, and stale state rejection in `../schoolmaster-backend/tests/Feature/Assessment/AssessmentManualGradingTest.php`
-- [X] T089 [P] [US3] Add PHPUnit feature tests for pending-scan block, failed-scan zero-only grading, failed-scan exemption, and unclean file exposure denial in `../schoolmaster-backend/tests/Feature/Assessment/AssessmentScanGatingTest.php`
-- [X] T090 [P] [US3] Add PHPUnit feature tests for unauthorized, cross-tenant, unassigned teacher, and inactive actor grading denial in `../schoolmaster-backend/tests/Feature/Assessment/AssessmentGradingAuthorizationTest.php`
-- [X] T091 [P] [US3] Add PHPUnit unit tests for grading state transition rules in `../schoolmaster-backend/tests/Unit/Assessment/AssessmentGradingStateServiceTest.php`
+- [X] T082 [P] [US3] Author OpenAPI path operations for response review listing and detail retrieval in `api/paths/questionnaire-responses/index.yaml`
+- [X] T083 [P] [US3] Author OpenAPI path operation for manual response grading in `api/paths/questionnaire-responses/grading.yaml`
+- [X] T084 [P] [US3] Author OpenAPI path operation for clean answer-file download and unsafe-file errors in `api/paths/questionnaire-responses/file-download.yaml`
+- [X] T085 [P] [US3] Verify OpenAPI path coverage for `listQuestionnaireResponses` and `getQuestionnaireResponse` in `api/paths/questionnaire-responses/index.yaml`
+- [X] T086 [P] [US3] Verify OpenAPI path coverage for `gradeQuestionnaireResponse` in `api/paths/questionnaire-responses/grading.yaml`
+- [X] T087 [P] [US3] Verify OpenAPI path coverage for `downloadQuestionnaireResponseFile` binary delivery and unsafe-file errors in `api/paths/questionnaire-responses/file-download.yaml`
+- [X] T088 [P] [US3] Verify platform OpenAPI parity for response review, grading, and answer-file download operations in `specs/001-schoolmaster-platform/contracts/openapi.yaml`
+- [X] T089 [P] [US3] Add PHPUnit feature tests for teacher and school administrator response review authorization in `../schoolmaster-backend/tests/Feature/Assessment/AssessmentResponseReviewTest.php`
+- [X] T090 [P] [US3] Add PHPUnit feature tests for clean answer-file download success, denied download attempts, and audit creation in `../schoolmaster-backend/tests/Feature/Assessment/AssessmentFileDownloadTest.php`
+- [X] T091 [P] [US3] Add PHPUnit feature tests for manual 0-100 grading, invalid score rejection, legacy auto-grading compatibility, and stale state rejection in `../schoolmaster-backend/tests/Feature/Assessment/AssessmentManualGradingTest.php`
+- [X] T092 [P] [US3] Add PHPUnit feature tests for pending-scan block, failed-scan zero-only grading, failed-scan exemption, and unclean file exposure denial in `../schoolmaster-backend/tests/Feature/Assessment/AssessmentScanGatingTest.php`
+- [X] T093 [P] [US3] Add PHPUnit feature tests for unauthorized, cross-tenant, unassigned teacher, and inactive actor grading denial in `../schoolmaster-backend/tests/Feature/Assessment/AssessmentGradingAuthorizationTest.php`
+- [X] T094 [P] [US3] Add PHPUnit unit tests for grading state transition rules in `../schoolmaster-backend/tests/Unit/Assessment/AssessmentGradingStateServiceTest.php`
 
 ### Implementation for User Story 3
 
-- [X] T092 [P] [US3] Implement GradeAssessmentResponseRequest validation in `../schoolmaster-backend/app/Http/Requests/Api/V1/Assessment/GradeAssessmentResponseRequest.php`
-- [X] T093 [P] [US3] Implement ListQuestionnaireResponsesRequest validation in `../schoolmaster-backend/app/Http/Requests/Api/V1/Assessment/ListQuestionnaireResponsesRequest.php`
-- [X] T094 [P] [US3] Implement DownloadAssessmentFileRequest validation in `../schoolmaster-backend/app/Http/Requests/Api/V1/Assessment/DownloadAssessmentFileRequest.php`
-- [X] T095 [P] [US3] Implement AssessmentResponseReviewResource with hidden storage paths, hidden answer keys, hidden private notes, and safe file metadata in `../schoolmaster-backend/app/Http/Resources/Assessment/AssessmentResponseReviewResource.php`
-- [X] T096 [P] [US3] Implement AssessmentGradingResource with student-visible feedback boundary and private note exclusion from responses in `../schoolmaster-backend/app/Http/Resources/Assessment/AssessmentGradingResource.php`
-- [X] T097 [US3] Implement teacher owner, teacher assignment, school administrator, and same-school grading authorization checks in `../schoolmaster-backend/app/Services/Assessment/AssessmentReviewAuthorizationService.php`
-- [X] T098 [US3] Implement response review listing and detail retrieval with tenant-safe filtering in `../schoolmaster-backend/app/Services/Assessment/AssessmentResponseReviewService.php`
-- [X] T099 [US3] Implement manual grading, legacy auto-grading compatibility checks, failed-scan zero/exempt handling, and state transitions in `../schoolmaster-backend/app/Services/Assessment/AssessmentGradingService.php`
-- [X] T100 [US3] Implement clean answer-file lookup, private download delivery, unsafe-file denial, and successful/denied download auditing in `../schoolmaster-backend/app/Services/Assessment/AssessmentFileDownloadService.php`
-- [X] T101 [US3] Wire review, grading, and file-download controller actions in `../schoolmaster-backend/app/Http/Controllers/Api/V1/Assessment/AssessmentController.php`
-- [X] T102 [US3] Register questionnaire response review, grading, and file-download routes in `../schoolmaster-backend/routes/api.php`
-- [X] T103 [US3] Add audit writes for review, grading, scan outcome, successful file download, denied file download, stale conflict, and unauthorized grading outcomes in `../schoolmaster-backend/app/Services/Assessment/AssessmentAuditService.php`
+- [X] T095 [P] [US3] Implement GradeAssessmentResponseRequest validation in `../schoolmaster-backend/app/Http/Requests/Api/V1/Assessment/GradeAssessmentResponseRequest.php`
+- [X] T096 [P] [US3] Implement ListQuestionnaireResponsesRequest validation in `../schoolmaster-backend/app/Http/Requests/Api/V1/Assessment/ListQuestionnaireResponsesRequest.php`
+- [X] T097 [P] [US3] Implement DownloadAssessmentFileRequest validation in `../schoolmaster-backend/app/Http/Requests/Api/V1/Assessment/DownloadAssessmentFileRequest.php`
+- [X] T098 [P] [US3] Implement AssessmentResponseReviewResource with hidden storage paths, hidden answer keys, hidden private notes, and safe file metadata in `../schoolmaster-backend/app/Http/Resources/Assessment/AssessmentResponseReviewResource.php`
+- [X] T099 [P] [US3] Implement AssessmentGradingResource with student-visible feedback boundary and private note exclusion from responses in `../schoolmaster-backend/app/Http/Resources/Assessment/AssessmentGradingResource.php`
+- [X] T100 [US3] Implement teacher owner, teacher assignment, school administrator, and same-school grading authorization checks in `../schoolmaster-backend/app/Services/Assessment/AssessmentReviewAuthorizationService.php`
+- [X] T101 [US3] Implement response review listing and detail retrieval with tenant-safe filtering in `../schoolmaster-backend/app/Services/Assessment/AssessmentResponseReviewService.php`
+- [X] T102 [US3] Implement manual grading, legacy auto-grading compatibility checks, failed-scan zero/exempt handling, and state transitions in `../schoolmaster-backend/app/Services/Assessment/AssessmentGradingService.php`
+- [X] T103 [US3] Implement clean answer-file lookup, private download delivery, unsafe-file denial, and successful/denied download auditing in `../schoolmaster-backend/app/Services/Assessment/AssessmentFileDownloadService.php`
+- [X] T104 [US3] Wire review, grading, and file-download controller actions in `../schoolmaster-backend/app/Http/Controllers/Api/V1/Assessment/AssessmentController.php`
+- [X] T105 [US3] Register questionnaire response review, grading, and file-download routes in `../schoolmaster-backend/routes/api.php`
+- [X] T106 [US3] Add audit writes for review, grading, scan outcome, successful file download, denied file download, stale conflict, and unauthorized grading outcomes in `../schoolmaster-backend/app/Services/Assessment/AssessmentAuditService.php`
 
 **Checkpoint**: User Stories 1, 2, and 3 work independently with manual grading and file review boundaries.
 
@@ -191,26 +194,26 @@
 
 ### Tests for User Story 4
 
-- [X] T104 [P] [US4] Verify OpenAPI path coverage for `getStudentQuestionnaireResponse` in `api/paths/student/questionnaire-response.yaml`
-- [X] T105 [P] [US4] Verify OpenAPI report catalog and report definition aggregate-only field coverage in `api/paths/report-catalog/index.yaml`
-- [X] T106 [P] [US4] Verify OpenAPI report output exclusion of raw answer text, file links, private metadata, feedback summaries, and grading notes in `api/components/schemas/reports/ReportOutput.yaml`
-- [X] T107 [P] [US4] Verify platform OpenAPI parity for student-safe and report-safe advanced assessment summaries in `specs/001-schoolmaster-platform/contracts/openapi.yaml`
-- [X] T108 [P] [US4] Add PHPUnit feature tests for student own response summary status, grading status, score summary, feedback summary, and file availability metadata in `../schoolmaster-backend/tests/Feature/Assessment/StudentAssessmentResponseViewTest.php`
-- [X] T109 [P] [US4] Add PHPUnit feature tests for report catalog and report definition allowed aggregate fields and rejected private advanced assessment fields in `../schoolmaster-backend/tests/Feature/Assessment/AdvancedAssessmentReportCatalogTest.php`
-- [X] T110 [P] [US4] Add PHPUnit feature tests for generated report aggregate-only output and exclusion of answer text, files, links, metadata, feedback summaries, and private notes in `../schoolmaster-backend/tests/Feature/Assessment/AdvancedAssessmentReportOutputTest.php`
-- [X] T111 [P] [US4] Add PHPUnit feature tests for guardian, platform, support, unauthorized, unclean-file, and cross-tenant detail access denial in `../schoolmaster-backend/tests/Feature/Assessment/AdvancedAssessmentVisibilityBoundaryTest.php`
+- [X] T107 [P] [US4] Verify OpenAPI path coverage for `getStudentQuestionnaireResponse` in `api/paths/student/questionnaire-response.yaml`
+- [X] T108 [P] [US4] Verify OpenAPI report catalog and report definition aggregate-only field coverage in `api/paths/report-catalog/index.yaml`
+- [X] T109 [P] [US4] Verify OpenAPI report output exclusion of raw answer text, file links, private metadata, feedback summaries, and grading notes in `api/components/schemas/reports/ReportOutput.yaml`
+- [X] T110 [P] [US4] Verify platform OpenAPI parity for student-safe and report-safe advanced assessment summaries in `specs/001-schoolmaster-platform/contracts/openapi.yaml`
+- [X] T111 [P] [US4] Add PHPUnit feature tests for student own response summary status, grading status, score summary, feedback summary, and file availability metadata in `../schoolmaster-backend/tests/Feature/Assessment/StudentAssessmentResponseViewTest.php`
+- [X] T112 [P] [US4] Add PHPUnit feature tests for report catalog and report definition allowed aggregate fields and rejected private advanced assessment fields in `../schoolmaster-backend/tests/Feature/Assessment/AdvancedAssessmentReportCatalogTest.php`
+- [X] T113 [P] [US4] Add PHPUnit feature tests for generated report aggregate-only output and exclusion of answer text, files, links, metadata, feedback summaries, and private notes in `../schoolmaster-backend/tests/Feature/Assessment/AdvancedAssessmentReportOutputTest.php`
+- [X] T114 [P] [US4] Add PHPUnit feature tests for guardian, platform, support, unauthorized, unclean-file, and cross-tenant detail access denial in `../schoolmaster-backend/tests/Feature/Assessment/AdvancedAssessmentVisibilityBoundaryTest.php`
 
 ### Implementation for User Story 4
 
-- [X] T112 [P] [US4] Implement GetStudentQuestionnaireResponseRequest validation in `../schoolmaster-backend/app/Http/Requests/Api/V1/Assessment/GetStudentQuestionnaireResponseRequest.php`
-- [X] T113 [P] [US4] Implement AssessmentReportSummaryResource for counts, completion status, grading status, and score summaries only in `../schoolmaster-backend/app/Http/Resources/Assessment/AssessmentReportSummaryResource.php`
-- [X] T114 [US4] Implement student own-response retrieval and safe response shaping in `../schoolmaster-backend/app/Services/Assessment/StudentAssessmentResponseViewService.php`
-- [X] T115 [US4] Implement report catalog aggregate-field registration and hidden-field rejection in `../schoolmaster-backend/app/Services/Assessment/AssessmentReportCatalogService.php`
-- [X] T116 [US4] Implement generated report aggregate-only projection for advanced assessments in `../schoolmaster-backend/app/Services/Assessment/AssessmentReportProjectionService.php`
-- [X] T117 [US4] Enforce guardian, platform, support, raw answer, file link, private metadata, feedback summary, and private note exclusions in `../schoolmaster-backend/app/Services/Assessment/AssessmentResponseVisibilityService.php`
-- [X] T118 [US4] Wire student own-response retrieval in `../schoolmaster-backend/app/Http/Controllers/Api/V1/Student/StudentAssessmentController.php`
-- [X] T119 [US4] Register student questionnaire response retrieval route in `../schoolmaster-backend/routes/api.php`
-- [X] T120 [US4] Add audit writes for report field access, blocked report fields, denied detail access, and cross-tenant visibility blocks in `../schoolmaster-backend/app/Services/Assessment/AssessmentAuditService.php`
+- [X] T115 [P] [US4] Implement GetStudentQuestionnaireResponseRequest validation in `../schoolmaster-backend/app/Http/Requests/Api/V1/Assessment/GetStudentQuestionnaireResponseRequest.php`
+- [X] T116 [P] [US4] Implement AssessmentReportSummaryResource for counts, completion status, grading status, and score summaries only in `../schoolmaster-backend/app/Http/Resources/Assessment/AssessmentReportSummaryResource.php`
+- [X] T117 [US4] Implement student own-response retrieval and safe response shaping in `../schoolmaster-backend/app/Services/Assessment/StudentAssessmentResponseViewService.php`
+- [X] T118 [US4] Implement report catalog aggregate-field registration and hidden-field rejection in `../schoolmaster-backend/app/Services/Assessment/AssessmentReportCatalogService.php`
+- [X] T119 [US4] Implement generated report aggregate-only projection for advanced assessments in `../schoolmaster-backend/app/Services/Assessment/AssessmentReportProjectionService.php`
+- [X] T120 [US4] Enforce guardian, platform, support, raw answer, file link, private metadata, feedback summary, and private note exclusions in `../schoolmaster-backend/app/Services/Assessment/AssessmentResponseVisibilityService.php`
+- [X] T121 [US4] Wire student own-response retrieval in `../schoolmaster-backend/app/Http/Controllers/Api/V1/Student/StudentAssessmentController.php`
+- [X] T122 [US4] Register student questionnaire response retrieval route in `../schoolmaster-backend/routes/api.php`
+- [X] T123 [US4] Add audit writes for report field access, blocked report fields, denied detail access, and cross-tenant visibility blocks in `../schoolmaster-backend/app/Services/Assessment/AssessmentAuditService.php`
 
 **Checkpoint**: All user stories are independently functional with student-safe and report-safe visibility boundaries.
 
@@ -220,17 +223,17 @@
 
 **Purpose**: Contract validation, regression coverage, traceability, security review, and readiness checks across the full slice.
 
-- [X] T121 [P] Run final Redocly validation with `npx @redocly/cli lint aggregate@v1 schoolmaster-platform@v1` and record results in `specs/014-advanced-assessment-content/quickstart.md`
-- [X] T122 [P] Review operation-to-route traceability for every advanced assessment operation in `specs/014-advanced-assessment-content/contracts/backend-advanced-assessment-content.md`
-- [X] T123 [P] Review aggregate OpenAPI publication for undocumented question types, answer fields, report fields, file access paths, states, filters, or authorization exceptions in `api/openapi.yaml`
-- [X] T124 [P] Review platform-local OpenAPI mirror for operation and schema parity in `specs/001-schoolmaster-platform/contracts/openapi.yaml`
-- [X] T125 [P] Add PHPUnit feature tests for inactive school, inactive user, inactive teacher assignment, and inactive academic period denial across authoring, submission, review, grading, file download, and reports in `../schoolmaster-backend/tests/Feature/Assessment/AdvancedAssessmentInactiveBoundaryTest.php`
-- [X] T126 Run backend PHPUnit suite with `docker exec schoolmaster-backend-app-1 php artisan test` and record results in `specs/014-advanced-assessment-content/quickstart.md`
-- [X] T127 [P] Review tenant-safe audit payloads for raw answer text, file contents, private paths, credentials, hidden answer keys, feedback text, private notes, full payloads, and unauthorized cross-tenant details in `../schoolmaster-backend/app/Services/Assessment/AssessmentAuditService.php`
-- [X] T128 [P] Review response resources for student, teacher, report, guardian, platform, and support redaction boundaries in `../schoolmaster-backend/app/Http/Resources/Assessment/`
-- [X] T129 [P] Review file-response storage and malware-scan gating behavior against teacher-content patterns in `../schoolmaster-backend/app/Services/Assessment/AssessmentFileRuleService.php`
-- [X] T130 [P] Review existing v1 questionnaire, learning-set, student self-view, report lifecycle, and platform support regression compatibility in `../schoolmaster-backend/tests/Feature/Assessment/AdvancedAssessmentCompatibilityTest.php`
-- [X] T131 Update backend implementation notes for advanced assessment and content types in `../schoolmaster-backend/README.md`
+- [X] T124 [P] Run final Redocly validation with `npx @redocly/cli lint aggregate@v1 schoolmaster-platform@v1` and record results in `specs/014-advanced-assessment-content/quickstart.md`
+- [X] T125 [P] Review operation-to-route traceability for every advanced assessment operation in `specs/014-advanced-assessment-content/contracts/backend-advanced-assessment-content.md`
+- [X] T126 [P] Review aggregate OpenAPI publication for undocumented question types, answer fields, report fields, file access paths, states, filters, or authorization exceptions in `api/openapi.yaml`
+- [X] T127 [P] Review platform-local OpenAPI mirror for operation and schema parity in `specs/001-schoolmaster-platform/contracts/openapi.yaml`
+- [X] T128 [P] Add PHPUnit feature tests for inactive school, inactive user, inactive teacher assignment, and inactive academic period denial across authoring, submission, review, grading, file download, and reports in `../schoolmaster-backend/tests/Feature/Assessment/AdvancedAssessmentInactiveBoundaryTest.php`
+- [X] T129 Run backend PHPUnit suite with `docker exec schoolmaster-backend-app-1 php artisan test` and record results in `specs/014-advanced-assessment-content/quickstart.md`
+- [X] T130 [P] Review tenant-safe audit payloads for raw answer text, file contents, private paths, credentials, hidden answer keys, feedback text, private notes, full payloads, and unauthorized cross-tenant details in `../schoolmaster-backend/app/Services/Assessment/AssessmentAuditService.php`
+- [X] T131 [P] Review response resources for student, teacher, report, guardian, platform, and support redaction boundaries in `../schoolmaster-backend/app/Http/Resources/Assessment/`
+- [X] T132 [P] Review file-response storage and malware-scan gating behavior against teacher-content patterns in `../schoolmaster-backend/app/Services/Assessment/AssessmentFileRuleService.php`
+- [X] T133 [P] Review existing v1 questionnaire, learning-set, student self-view, report lifecycle, and platform support regression compatibility in `../schoolmaster-backend/tests/Feature/Assessment/AdvancedAssessmentCompatibilityTest.php`
+- [X] T134 Update backend implementation notes for advanced assessment and content types in `../schoolmaster-backend/README.md`
 
 ---
 
