@@ -135,7 +135,7 @@ ownership, and tenant visibility.
 
 ### 8. Platform-Wide Reporting and Support Access
 
-**Status**: Specified and planned in
+**Status**: Completed and implemented from
 `specs/013-platform-support-access/spec.md`.
 
 **Purpose**: Define platform administrator or support-user visibility across
@@ -150,7 +150,7 @@ authorization exceptions.
 
 ### 9. Advanced Assessment and Content Types
 
-**Status**: Specified and planned in
+**Status**: Completed and implemented from
 `specs/014-advanced-assessment-content/spec.md`.
 
 **Purpose**: Add questionnaire types beyond multiple choice, true/false, and
