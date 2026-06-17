@@ -3,3 +3,5 @@ enum:
   - multiple_choice
   - true_false
   - short_text
+  - long_text
+  - file_response

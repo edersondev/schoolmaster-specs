@@ -1,0 +1,39 @@
+get:
+  tags:
+    - Assessment Responses
+  summary: Download a clean answer file for authorized assessment review
+  operationId: downloadQuestionnaireResponseFile
+  parameters:
+    - $ref: ../../components/parameters/schools/TenantContext.yaml
+    - name: responseAttemptId
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+    - name: fileId
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+  responses:
+    '200':
+      description: Clean private answer file
+      content:
+        application/octet-stream:
+          schema:
+            type: string
+            format: binary
+    '401':
+      $ref: ../../components/responses/auth/Unauthorized.yaml
+    '403':
+      $ref: ../../components/responses/assessments/AssessmentResponses.yaml#/AssessmentForbidden
+    '404':
+      $ref: ../../components/responses/common/NotFound.yaml
+    '409':
+      $ref: ../../components/responses/assessments/AssessmentResponses.yaml#/UnavailableFile
+    '423':
+      $ref: ../../components/responses/assessments/AssessmentResponses.yaml#/ScanPending
+    '424':
+      $ref: ../../components/responses/assessments/AssessmentResponses.yaml#/ScanFailed

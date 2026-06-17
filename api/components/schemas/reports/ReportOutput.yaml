@@ -29,3 +29,8 @@ properties:
     type:
       - string
       - 'null'
+  excluded_private_assessment_fields:
+    type: array
+    description: Raw answer text, files, links, metadata, feedback summaries, and private notes are excluded from generated report output.
+    items:
+      type: string

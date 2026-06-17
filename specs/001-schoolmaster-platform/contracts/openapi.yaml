@@ -35,6 +35,8 @@ tags:
     description: Teacher-managed folders and instructional content.
   - name: Questionnaires
     description: Teacher-authored instructional questionnaires.
+  - name: Assessment Responses
+    description: Student submissions, scan-gated files, review, grading, and safe summaries.
   - name: Learning Sets
     description: Ordered instructional sequences for student use.
   - name: Grades
@@ -3056,6 +3058,208 @@ paths:
           $ref: '#/components/responses/NotFound'
         '409':
           $ref: '#/components/responses/Conflict'
+  /api/v1/student/questionnaire-responses:
+    post:
+      tags:
+        - Assessment Responses
+      summary: Submit one assigned questionnaire response attempt as the authenticated student
+      operationId: submitStudentQuestionnaireResponse
+      parameters:
+        - $ref: '#/components/parameters/TenantContext'
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/StudentQuestionnaireResponseSubmissionRequest'
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StudentQuestionnaireResponseSubmissionRequest'
+      responses:
+        '201':
+          description: Student response attempt submitted
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessEnvelope'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/AssessmentResponseAttempt'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/AssessmentForbidden'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '422':
+          $ref: '#/components/responses/AssessmentValidation'
+  /api/v1/student/questionnaire-responses/{responseAttemptId}:
+    get:
+      tags:
+        - Assessment Responses
+      summary: Retrieve the authenticated student's own questionnaire response
+      operationId: getStudentQuestionnaireResponse
+      parameters:
+        - $ref: '#/components/parameters/TenantContext'
+        - $ref: '#/components/parameters/ResponseAttemptId'
+      responses:
+        '200':
+          description: Student-safe response status, score, feedback summary, and file availability metadata
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessEnvelope'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/AssessmentResponseAttempt'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/AssessmentForbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /api/v1/questionnaire-responses:
+    get:
+      tags:
+        - Assessment Responses
+      summary: List same-school questionnaire response attempts for teacher or administrator review
+      operationId: listQuestionnaireResponses
+      parameters:
+        - $ref: '#/components/parameters/TenantContext'
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/PerPage'
+        - name: questionnaire_id
+          in: query
+          schema:
+            type: string
+            format: uuid
+        - name: learning_set_id
+          in: query
+          schema:
+            type: string
+            format: uuid
+        - name: grading_status
+          in: query
+          schema:
+            $ref: '#/components/schemas/AssessmentGradingStatus'
+      responses:
+        '200':
+          description: Reviewable response attempt collection
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/PaginatedEnvelope'
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/AssessmentResponseAttempt'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/AssessmentForbidden'
+        '422':
+          $ref: '#/components/responses/AssessmentValidation'
+  /api/v1/questionnaire-responses/{responseAttemptId}:
+    get:
+      tags:
+        - Assessment Responses
+      summary: Retrieve one same-school questionnaire response for authorized review
+      operationId: getQuestionnaireResponse
+      parameters:
+        - $ref: '#/components/parameters/TenantContext'
+        - $ref: '#/components/parameters/ResponseAttemptId'
+      responses:
+        '200':
+          description: Teacher or school-administrator response review
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessEnvelope'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/AssessmentResponseAttempt'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/AssessmentForbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /api/v1/questionnaire-responses/{responseAttemptId}/grading:
+    post:
+      tags:
+        - Assessment Responses
+      summary: Grade advanced questionnaire response answers
+      operationId: gradeQuestionnaireResponse
+      parameters:
+        - $ref: '#/components/parameters/TenantContext'
+        - $ref: '#/components/parameters/ResponseAttemptId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GradeAssessmentResponseRequest'
+      responses:
+        '200':
+          description: Grading outcomes recorded
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessEnvelope'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/AssessmentResponseAttempt'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/AssessmentForbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '422':
+          $ref: '#/components/responses/AssessmentValidation'
+  /api/v1/questionnaire-responses/{responseAttemptId}/files/{fileId}/download:
+    get:
+      tags:
+        - Assessment Responses
+      summary: Download a clean answer file for authorized assessment review
+      operationId: downloadQuestionnaireResponseFile
+      parameters:
+        - $ref: '#/components/parameters/TenantContext'
+        - $ref: '#/components/parameters/ResponseAttemptId'
+        - $ref: '#/components/parameters/AssessmentFileId'
+      responses:
+        '200':
+          description: Clean private answer file
+          content:
+            application/octet-stream:
+              schema:
+                type: string
+                format: binary
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/AssessmentForbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/UnavailableFile'
+        '423':
+          $ref: '#/components/responses/ScanPending'
+        '424':
+          $ref: '#/components/responses/ScanFailed'
   /api/v1/learning-sets:
     get:
       tags:
@@ -6048,6 +6252,8 @@ components:
         - multiple_choice
         - true_false
         - short_text
+        - long_text
+        - file_response
     QuestionnaireQuestion:
       type: object
       required:
@@ -6073,8 +6279,24 @@ components:
           type:
             - string
             - 'null'
+          description: Hidden from student and report responses unless an existing v1 authoring response documents it.
         sequence:
           type: integer
+        answer_schema:
+          type:
+            - object
+            - 'null'
+          additionalProperties: true
+        grading_rule:
+          type:
+            - object
+            - 'null'
+          additionalProperties: true
+        visibility:
+          type:
+            - object
+            - 'null'
+          additionalProperties: true
     Questionnaire:
       type: object
       required:
@@ -6124,8 +6346,65 @@ components:
           minItems: 2
         correct_answer:
           type: string
+          description: Legacy auto-gradable answer key for v1 question types only.
         sequence:
           type: integer
+        answer_schema:
+          type: object
+          additionalProperties: false
+          description: Contract-defined answer rules for advanced questions.
+          properties:
+            min_length:
+              type: integer
+              minimum: 1
+              maximum: 10000
+              default: 1
+            max_length:
+              type: integer
+              minimum: 1
+              maximum: 10000
+              default: 10000
+            allowed_file_categories:
+              type: array
+              uniqueItems: true
+              items:
+                type: string
+                enum:
+                  - pdf
+                  - image
+                  - text
+                  - office
+            max_file_size_bytes:
+              type: integer
+              const: 26214400
+            max_files:
+              type: integer
+              const: 1
+        grading_rule:
+          type: object
+          additionalProperties: false
+          description: Manual grading rules for long_text and file_response questions.
+          properties:
+            mode:
+              type: string
+              enum:
+                - auto
+                - manual_0_100
+            allow_exempt:
+              type: boolean
+              default: true
+        visibility:
+          type: object
+          additionalProperties: false
+          description: Student and report visibility boundary for advanced question metadata.
+          properties:
+            student_answer_visible:
+              type: boolean
+              default: true
+            report_visibility:
+              type: string
+              enum:
+                - summary_only
     QuestionnaireCreateRequest:
       type: object
       required:
@@ -6134,6 +6413,10 @@ components:
       properties:
         title:
           type: string
+        description:
+          type:
+            - string
+            - 'null'
         questions:
           type: array
           minItems: 1
@@ -6154,6 +6437,285 @@ components:
           minItems: 1
           items:
             $ref: '#/components/schemas/QuestionnaireQuestionInput'
+    AssessmentSubmissionState:
+      type: string
+      enum:
+        - submitted
+        - scan_blocked
+        - scan_failed
+        - needs_review
+        - partially_graded
+        - graded
+        - returned
+        - exempted
+    AssessmentGradingStatus:
+      type: string
+      enum:
+        - unsubmitted
+        - submitted
+        - scan_blocked
+        - scan_failed
+        - needs_review
+        - partially_graded
+        - graded
+        - returned
+        - exempted
+    AssessmentScoreSummary:
+      type: object
+      additionalProperties: false
+      required:
+        - earned_points
+        - possible_points
+        - percentage
+      properties:
+        earned_points:
+          type: number
+          minimum: 0
+        possible_points:
+          type: number
+          minimum: 0
+        percentage:
+          type:
+            - number
+            - 'null'
+          minimum: 0
+          maximum: 100
+    AssessmentFileAttachment:
+      type: object
+      required:
+        - id
+        - filename
+        - file_category
+        - file_size_bytes
+        - scan_status
+        - availability
+      properties:
+        id:
+          type: string
+          format: uuid
+        filename:
+          type: string
+          maxLength: 255
+        declared_content_type:
+          type: string
+        detected_content_type:
+          type:
+            - string
+            - 'null'
+        file_category:
+          type: string
+          enum:
+            - pdf
+            - image
+            - text
+            - office
+        file_size_bytes:
+          type: integer
+          minimum: 1
+          maximum: 26214400
+        scan_status:
+          type: string
+          enum:
+            - pending
+            - clean
+            - failed
+        availability:
+          type: string
+          enum:
+            - unavailable
+            - clean_download_allowed
+            - scan_pending
+            - scan_failed
+    AssessmentFileSummary:
+      type: object
+      additionalProperties: false
+      required:
+        - pending_count
+        - clean_count
+        - failed_count
+      properties:
+        pending_count:
+          type: integer
+          minimum: 0
+        clean_count:
+          type: integer
+          minimum: 0
+        failed_count:
+          type: integer
+          minimum: 0
+    AssessmentAnswer:
+      type: object
+      required:
+        - id
+        - question_id
+        - question_type
+        - grading_status
+        - visibility_state
+      properties:
+        id:
+          type: string
+          format: uuid
+        question_id:
+          type: string
+          format: uuid
+        question_type:
+          $ref: '#/components/schemas/QuestionType'
+        answer_text:
+          type:
+            - string
+            - 'null'
+          minLength: 1
+          maxLength: 10000
+          description: Plain text answer content; never report-visible.
+        file:
+          oneOf:
+            - $ref: '#/components/schemas/AssessmentFileAttachment'
+            - type: 'null'
+        grading_status:
+          $ref: '#/components/schemas/AssessmentGradingStatus'
+        visibility_state:
+          type: string
+          enum:
+            - student_safe
+            - teacher_review
+            - report_summary_only
+            - unavailable
+    AssessmentResponseAttempt:
+      type: object
+      required:
+        - id
+        - school_id
+        - student_profile_id
+        - questionnaire_id
+        - learning_set_id
+        - academic_period_id
+        - submission_state
+        - grading_status
+        - answers
+        - file_summary
+      properties:
+        id:
+          type: string
+          format: uuid
+        school_id:
+          type: string
+          format: uuid
+        student_profile_id:
+          type: string
+          format: uuid
+        questionnaire_id:
+          type: string
+          format: uuid
+        learning_set_id:
+          type: string
+          format: uuid
+        academic_period_id:
+          type: string
+          format: uuid
+        submission_state:
+          $ref: '#/components/schemas/AssessmentSubmissionState'
+        submitted_at:
+          type:
+            - string
+            - 'null'
+          format: date-time
+        grading_status:
+          $ref: '#/components/schemas/AssessmentGradingStatus'
+        score_summary:
+          oneOf:
+            - $ref: '#/components/schemas/AssessmentScoreSummary'
+            - type: 'null'
+        feedback_summary:
+          type:
+            - string
+            - 'null'
+          maxLength: 1000
+        answers:
+          type: array
+          items:
+            $ref: '#/components/schemas/AssessmentAnswer'
+        file_summary:
+          $ref: '#/components/schemas/AssessmentFileSummary'
+    StudentAssessmentAnswerInput:
+      type: object
+      additionalProperties: false
+      required:
+        - question_id
+        - question_type
+      properties:
+        question_id:
+          type: string
+          format: uuid
+        question_type:
+          $ref: '#/components/schemas/QuestionType'
+        answer_text:
+          type: string
+          minLength: 1
+          maxLength: 10000
+        file:
+          type: string
+          format: binary
+          description: One uploaded file for file_response questions only.
+    StudentQuestionnaireResponseSubmissionRequest:
+      type: object
+      additionalProperties: false
+      required:
+        - questionnaire_id
+        - learning_set_id
+        - answers
+      properties:
+        questionnaire_id:
+          type: string
+          format: uuid
+        learning_set_id:
+          type: string
+          format: uuid
+        answers:
+          type: array
+          minItems: 1
+          items:
+            $ref: '#/components/schemas/StudentAssessmentAnswerInput'
+    GradeAssessmentResponseRequest:
+      type: object
+      additionalProperties: false
+      required:
+        - grading_outcomes
+      properties:
+        grading_outcomes:
+          type: array
+          minItems: 1
+          items:
+            type: object
+            additionalProperties: false
+            required:
+              - answer_id
+              - status
+            properties:
+              answer_id:
+                type: string
+                format: uuid
+              status:
+                type: string
+                enum:
+                  - graded
+                  - returned
+                  - exempted
+              score:
+                type:
+                  - number
+                  - 'null'
+                minimum: 0
+                maximum: 100
+              feedback_summary:
+                type:
+                  - string
+                  - 'null'
+                maxLength: 1000
+              private_grading_note:
+                type:
+                  - string
+                  - 'null'
+                maxLength: 2000
     LearningSetEntry:
       type: object
       required:
@@ -6818,6 +7380,7 @@ components:
         - grades
         - academic_structure
         - school_activity
+        - advanced_assessments
     ReportFilters:
       type: object
       required:
@@ -7531,6 +8094,36 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/ErrorEnvelope'
+    AssessmentValidation:
+      description: Advanced assessment validation failed
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorEnvelope'
+    AssessmentForbidden:
+      description: Actor lacks same-school assessment authority
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorEnvelope'
+    ScanPending:
+      description: Answer file is pending malware scan and unavailable
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorEnvelope'
+    ScanFailed:
+      description: Answer file failed malware scan and remains unavailable
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorEnvelope'
+    UnavailableFile:
+      description: Answer file is unavailable for this actor or state
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorEnvelope'
     OutputExpired:
       description: Generated report output file has expired; request a new ReportRun with the same filters
       content:
@@ -7718,6 +8311,20 @@ components:
         format: uuid
     AttendanceId:
       name: attendanceId
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+    ResponseAttemptId:
+      name: responseAttemptId
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+    AssessmentFileId:
+      name: fileId
       in: path
       required: true
       schema:

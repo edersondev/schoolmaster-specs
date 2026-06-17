@@ -1,0 +1,40 @@
+post:
+  tags:
+    - Assessment Responses
+  summary: Submit one assigned questionnaire response attempt as the authenticated student
+  description: >-
+    Records one same-school attempt for an assigned active learning-set
+    questionnaire. Long-text answers are plain text. File-response uploads are
+    private and unavailable until scan status is clean.
+  operationId: submitStudentQuestionnaireResponse
+  parameters:
+    - $ref: ../../components/parameters/schools/TenantContext.yaml
+  requestBody:
+    required: true
+    content:
+      multipart/form-data:
+        schema:
+          $ref: ../../components/schemas/assessments/AssessmentResponseAttempt.yaml#/$defs/StudentQuestionnaireResponseSubmissionRequest
+      application/json:
+        schema:
+          $ref: ../../components/schemas/assessments/AssessmentResponseAttempt.yaml#/$defs/StudentQuestionnaireResponseSubmissionRequest
+  responses:
+    '201':
+      description: Student response attempt submitted
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: ../../components/schemas/common/SuccessEnvelope.yaml
+              - type: object
+                properties:
+                  data:
+                    $ref: ../../components/schemas/assessments/AssessmentResponseAttempt.yaml
+    '401':
+      $ref: ../../components/responses/auth/Unauthorized.yaml
+    '403':
+      $ref: ../../components/responses/assessments/AssessmentResponses.yaml#/AssessmentForbidden
+    '409':
+      $ref: ../../components/responses/common/Conflict.yaml
+    '422':
+      $ref: ../../components/responses/assessments/AssessmentResponses.yaml#/AssessmentValidation

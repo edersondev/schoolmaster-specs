@@ -22,5 +22,21 @@ properties:
     type:
       - string
       - 'null'
+    description: Hidden from student and report responses unless an existing v1 authoring response documents it.
   sequence:
     type: integer
+  answer_schema:
+    type:
+      - object
+      - 'null'
+    additionalProperties: true
+  grading_rule:
+    type:
+      - object
+      - 'null'
+    additionalProperties: true
+  visibility:
+    type:
+      - object
+      - 'null'
+    additionalProperties: true

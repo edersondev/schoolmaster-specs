@@ -1,0 +1,43 @@
+get:
+  tags:
+    - Assessment Responses
+  summary: List same-school questionnaire response attempts for teacher or administrator review
+  operationId: listQuestionnaireResponses
+  parameters:
+    - $ref: ../../components/parameters/schools/TenantContext.yaml
+    - $ref: ../../components/parameters/common/Page.yaml
+    - $ref: ../../components/parameters/common/PerPage.yaml
+    - name: questionnaire_id
+      in: query
+      schema:
+        type: string
+        format: uuid
+    - name: learning_set_id
+      in: query
+      schema:
+        type: string
+        format: uuid
+    - name: grading_status
+      in: query
+      schema:
+        $ref: ../../components/schemas/assessments/AssessmentResponseAttempt.yaml#/$defs/AssessmentGradingStatus
+  responses:
+    '200':
+      description: Reviewable response attempt collection
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: ../../components/schemas/common/PaginatedEnvelope.yaml
+              - type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: ../../components/schemas/assessments/AssessmentResponseAttempt.yaml
+    '401':
+      $ref: ../../components/responses/auth/Unauthorized.yaml
+    '403':
+      $ref: ../../components/responses/assessments/AssessmentResponses.yaml#/AssessmentForbidden
+    '422':
+      $ref: ../../components/responses/assessments/AssessmentResponses.yaml#/AssessmentValidation

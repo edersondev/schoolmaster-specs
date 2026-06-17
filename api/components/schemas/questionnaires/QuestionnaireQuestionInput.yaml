@@ -15,5 +15,62 @@ properties:
     minItems: 2
   correct_answer:
     type: string
+    description: Legacy auto-gradable answer key for v1 question types only.
   sequence:
     type: integer
+  answer_schema:
+    type: object
+    additionalProperties: false
+    description: Contract-defined answer rules for advanced questions.
+    properties:
+      min_length:
+        type: integer
+        minimum: 1
+        maximum: 10000
+        default: 1
+      max_length:
+        type: integer
+        minimum: 1
+        maximum: 10000
+        default: 10000
+      allowed_file_categories:
+        type: array
+        uniqueItems: true
+        items:
+          type: string
+          enum:
+            - pdf
+            - image
+            - text
+            - office
+      max_file_size_bytes:
+        type: integer
+        const: 26214400
+      max_files:
+        type: integer
+        const: 1
+  grading_rule:
+    type: object
+    additionalProperties: false
+    description: Manual grading rules for long_text and file_response questions.
+    properties:
+      mode:
+        type: string
+        enum:
+          - auto
+          - manual_0_100
+      allow_exempt:
+        type: boolean
+        default: true
+  visibility:
+    type: object
+    additionalProperties: false
+    description: Student and report visibility boundary for advanced question metadata.
+    properties:
+      student_answer_visible:
+        type: boolean
+        default: true
+      report_visibility:
+        type: string
+        enum:
+          - summary_only
