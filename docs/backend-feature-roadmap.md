@@ -150,7 +150,8 @@ authorization exceptions.
 
 ### 9. Advanced Assessment and Content Types
 
-**Status**: Not specified.
+**Status**: Specified and planned in
+`specs/014-advanced-assessment-content/spec.md`.
 
 **Purpose**: Add questionnaire types beyond multiple choice, true/false, and
 short text; support long-text or file-response answers; expand content
