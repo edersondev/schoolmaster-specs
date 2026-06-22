@@ -184,12 +184,12 @@ src/
 │       └── shared/
 │
 ├── layouts/
-│   ├── <shared-layout-boundary>.vue
-│   └── <product-area-layouts-defined-by-future-features>.vue
+│   ├── shared/
+│   └── product-area-layouts/
 │
 ├── pages/
 │   ├── shared/
-│   └── <feature-area-pages-defined-by-future-features>/
+│   └── feature-area-pages/
 │
 ├── router/
 │   ├── index.js

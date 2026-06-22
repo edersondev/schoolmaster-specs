@@ -105,7 +105,7 @@ A frontend implementer needs clear contract-consumption rules so frontend screen
 - **FR-001**: The frontend architecture baseline MUST define SchoolMaster as a JavaScript Vue 3 SPA using Composition API with `<script setup>`, Vue Router, Pinia, Axios, Element Plus, Element Plus Icons, Vue I18n, and Tailwind CSS as the approved frontend foundation.
 - **FR-002**: The baseline MUST explicitly exclude TypeScript requirements from this slice and MUST use JavaScript file conventions for frontend services, stores, composables, router modules, contracts, tests, and app entrypoints.
 - **FR-003**: The baseline MUST define clear responsibility boundaries for layouts, pages, components, composables, stores, services, contracts, constants, and utilities.
-- **FR-004**: The baseline MUST require frontend features to organize code by domain or feature where doing so improves clarity, reuse, and long-term scalability.
+- **FR-004**: The baseline MUST require frontend implementation code to be organized by feature module. Shared layer folders are allowed only for cross-feature infrastructure, reusable primitives, and framework boundaries that are not owned by a single feature.
 - **FR-005**: The baseline MUST define reusable CRUD-oriented admin workflow patterns for list pages, search and filters, data tables, forms, dialogs, pagination, loading states, empty states, error states, and validation surfaces.
 - **FR-006**: The baseline MUST require HTTP access to be isolated in frontend services and MUST prohibit route views or UI components from depending directly on transport details.
 - **FR-007**: The baseline MUST require stores to coordinate shared client state without becoming transport layers that bypass approved services.

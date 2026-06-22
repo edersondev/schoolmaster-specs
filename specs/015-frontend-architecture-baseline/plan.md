@@ -15,7 +15,7 @@ Define the durable frontend architecture baseline for the SchoolMaster Vue 3 SPA
 **Testing**: Specification review in `schoolmaster-specs`; future frontend repository work should use Vitest for services, stores, composables, and route-level workflow logic where risk justifies coverage.  
 **Target Platform**: `schoolmaster-frontend` Vue 3 SPA consuming contracts from `schoolmaster-specs`.
 **Project Type**: Frontend architecture baseline and cross-repository specification artifact.  
-**Performance Goals**: Establish reusable frontend boundaries that support responsive admin SaaS workflows without runtime benchmarks in this slice. Future implementations should scope loading states to the active action and keep shared UI primitives predictable across desktop, tablet, and mobile layouts.  
+**Performance Goals**: Establish reusable frontend boundaries that support responsive admin SaaS workflows as architecture guidance only. This slice does not define runtime performance benchmarks; future frontend implementation specs must define measurable performance targets when they approve concrete shell, dashboard, or business module behavior.
 **Constraints**: No TypeScript requirement; no backend implementation; no OpenAPI changes; no concrete business module behavior; only approved OpenAPI-backed `/api/v1` contract semantics may be consumed; Element Plus tags use PascalCase; Tailwind handles layout and visual refinement; shared UI text is centralized through Vue I18n; reusable UI must target WCAG 2.1 AA; icons default to Element Plus Icons.  
 **Scale/Scope**: Baseline applies to all future SchoolMaster frontend features, especially admin CRUD workflows, application shell composition, service/store/composable boundaries, JSDoc-based JavaScript contract definitions, UI primitives, localization readiness, and diagnostic boundaries.
 
@@ -84,10 +84,13 @@ schoolmaster-frontend/
 │   ├── services/
 │   ├── stores/
 │   └── utils/
+│
+│   # Feature modules are organized consistently across these boundaries.
+│   # Shared folders contain only cross-feature infrastructure and primitives.
 └── tests/
 ```
 
-**Structure Decision**: This planning slice changes only specification artifacts in `schoolmaster-specs`. It defines the target frontend structure that later work in `schoolmaster-frontend` must follow, but it does not implement frontend runtime files yet. Backend source layout is intentionally omitted because this feature has no backend implementation impact.
+**Structure Decision**: This planning slice changes only specification artifacts in `schoolmaster-specs`. It defines the target frontend structure that later work in `schoolmaster-frontend` must follow, but it does not implement frontend runtime files yet. Future frontend implementation must organize product code by feature module across the approved responsibility boundaries; shared layer folders are reserved for cross-feature infrastructure, reusable primitives, and framework boundaries. Backend source layout is intentionally omitted because this feature has no backend implementation impact.
 
 ## Phase 0: Research
 

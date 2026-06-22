@@ -64,11 +64,11 @@
 ### Implementation for User Story 1
 
 - [ ] T013 [US1] Define the durable SPA architecture baseline in `docs/frontend-architecture.md`
-- [ ] T014 [US1] Document frontend working principles, state/module conventions, UI composition standards, layout baseline, and error/loading patterns in `docs/frontend-guidelines.md`
+- [ ] T014 [US1] Document frontend working principles, feature-module conventions, state/module conventions, UI composition standards, layout baseline, and error/loading patterns in `docs/frontend-guidelines.md`
 - [ ] T015 [US1] Document frontend naming conventions for Vue components, Element Plus PascalCase tags, composables, Pinia stores, router modules, services, and JSDoc contract shapes in `docs/naming-conventions.md`
 - [ ] T016 [US1] Define the language, file, folder responsibility, UI primitive, icon, internationalization, accessibility, state, and observability contract in `specs/015-frontend-architecture-baseline/contracts/frontend-architecture-contract.md`
 - [ ] T017 [US1] Update the quickstart stack, folder boundary, UI convention, JSDoc contract, and review-command checklist in `specs/015-frontend-architecture-baseline/quickstart.md`
-- [ ] T018 [US1] Cross-check US1 success criteria SC-001, SC-002, SC-005, SC-008, SC-010, SC-012, and SC-013 against `docs/frontend-architecture.md`, `docs/frontend-guidelines.md`, `docs/naming-conventions.md`, and `specs/015-frontend-architecture-baseline/contracts/frontend-architecture-contract.md`
+- [ ] T018 [US1] Cross-check US1 requirements FR-003 and FR-004 plus success criteria SC-001, SC-002, SC-005, SC-008, SC-010, SC-012, and SC-013 against `docs/frontend-architecture.md`, `docs/frontend-guidelines.md`, `docs/naming-conventions.md`, and `specs/015-frontend-architecture-baseline/contracts/frontend-architecture-contract.md`
 
 **Checkpoint**: User Story 1 is independently reviewable as the MVP baseline.
 
@@ -87,7 +87,7 @@
 
 ### Implementation for User Story 2
 
-- [ ] T021 [US2] Document reusable admin layout, dashboard, component, CRUD, store, router, service, and contract blueprint boundaries in `docs/frontend-admin-system-architecture.md`
+- [ ] T021 [US2] Document reusable application-shell, dashboard-pattern, component, CRUD, store, router, service, and contract boundaries in `docs/frontend-admin-system-architecture.md` without approving concrete System Administrator layout or dashboard behavior
 - [ ] T022 [US2] Document reusable CRUD-heavy admin workflow expectations in `docs/frontend-guidelines.md`
 - [ ] T023 [US2] Ensure `ReusableCrudPattern` covers list, filter, table, form, dialog, pagination, loading, empty, error, and validation behavior in `specs/015-frontend-architecture-baseline/data-model.md`
 - [ ] T024 [US2] Ensure quickstart CRUD reuse checks distinguish reusable patterns from resource-specific business rules in `specs/015-frontend-architecture-baseline/quickstart.md`

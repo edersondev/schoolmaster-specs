@@ -30,7 +30,11 @@ Supporting build-time tooling may be added in the frontend repository when neede
 
 ## Folder Responsibility Contract
 
-Future frontend work should organize application code under:
+Future frontend work must organize product code by feature module across the
+approved responsibility boundaries. Shared layer folders are allowed only for
+cross-feature infrastructure, reusable primitives, and framework boundaries.
+
+Application code should use this top-level structure:
 
 ```text
 src/
@@ -59,6 +63,10 @@ Responsibility boundaries:
 - `contracts/`: JSDoc typedefs and service mapping helpers for JavaScript contract shapes.
 - `constants/`: stable app constants.
 - `utils/`: pure utility helpers with no transport or UI ownership.
+
+Feature modules must remain traceable across pages, components, composables,
+stores, services, contracts, and route modules. Shared folders must not become a
+catch-all for feature-owned behavior.
 
 ## API Consumption Contract
 
