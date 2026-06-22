@@ -184,30 +184,12 @@ src/
 │       └── shared/
 │
 ├── layouts/
-│   ├── AdminSystemLayout.vue
-│   ├── TeacherLayout.vue
-│   ├── StudentLayout.vue
-│   └── AuthLayout.vue
+│   ├── <shared-layout-boundary>.vue
+│   └── <product-area-layouts-defined-by-future-features>.vue
 │
 ├── pages/
-│   ├── auth/
-│   │   ├── LoginPage.vue
-│   │   └── ForgotPasswordPage.vue
-│   │
-│   └── admin-system/
-│       ├── dashboard/
-│       │   └── DashboardPage.vue
-│       ├── schools/
-│       ├── academic-years/
-│       ├── users/
-│       ├── guardians/
-│       ├── students/
-│       ├── classes/
-│       ├── teachers/
-│       ├── contents/
-│       ├── quizzes/
-│       ├── reports/
-│       └── settings/
+│   ├── shared/
+│   └── <feature-area-pages-defined-by-future-features>/
 │
 ├── router/
 │   ├── index.js
@@ -311,106 +293,46 @@ components, stores, and
 services. Contract files use JSDoc typedefs plus service mapping helpers so
 the JavaScript frontend has concrete data-shape references without TypeScript.
 
-## Layout Blueprint
+## Application Shell Boundary
 
-### `AdminSystemLayout.vue`
+The baseline approves a reusable shell boundary, not a concrete System
+Administrator layout implementation. A later shell or dashboard feature must
+define the exact layout component names, navigation entries, header actions,
+responsive behavior, and dashboard content before implementation.
 
-This is the reusable System Administrator shell.
+Reusable shell patterns may define:
 
-Structure:
+- where route content is rendered
+- how layout-level navigation state is coordinated
+- how route metadata selects a layout boundary
+- how permission-aware visibility hooks into navigation surfaces
+- how Tailwind owns spacing, breakpoints, widths, overflow behavior, and
+  responsive visibility rules
+- how Element Plus primitives may be composed for container, navigation, and
+  feedback surfaces
 
-1. Fixed left sidebar
-2. Top header
-3. Main content area rendered through `RouterView`
-4. Responsive behavior:
-   - desktop keeps sidebar visible
-   - tablet and mobile use a collapsible sidebar with a hamburger toggle
+Reusable shell patterns must not define in this slice:
 
-### Sidebar Requirements
+- a concrete `AdminSystemLayout.vue` implementation
+- fixed sidebar or header behavior
+- specific sidebar navigation items
+- specific header controls
+- concrete dashboard routes, cards, metrics, recent activity, or quick actions
 
-- dark theme sidebar
-- SchoolMaster logo at the top
-- navigation items:
-  - Dashboard
-  - Schools
-  - Academic Years
-  - Users
-  - Guardians
-  - Students
-  - Classes
-  - Teachers
-  - Learning Content
-  - Quizzes
-  - Reports
-  - Settings
-- active-route highlighting
-- nested children support
-- permission-based visibility
+## Dashboard Pattern Boundary
 
-### Header Requirements
+The baseline approves reusable dashboard primitives only. Future dashboard
+features must define concrete dashboard pages, metric names, activity feeds,
+action buttons, data contracts, and API operation IDs before implementation.
 
-- white background
-- search input
-- notification bell icon
-- user avatar
-- user dropdown menu
-- bottom border
+Reusable dashboard primitives may include generic:
 
-### Recommended Layout Composition
-
-- `ElContainer` for overall shell
-- `ElAside` for sidebar
-- `ElHeader` for top header
-- `ElMain` for route content
-- `ElMenu`, `ElSubMenu`, and `ElMenuItem` for navigation
-- `ElDropdown` and `ElInput` for header actions
-
-Use Tailwind for shell spacing, breakpoints, widths, overflow behavior, and
-responsive visibility rules.
-
-## Dashboard Blueprint
-
-### `DashboardPage.vue`
-
-Main content:
-
-1. page title: `Dashboard`
-2. subtitle: `Overview of the school management system`
-
-### Metric Cards
-
-- Active Schools
-- Users
-- Active Classes
-- Students
-- Learning Contents
-
-### Recent Activity Card
-
-Recent events:
-
-- School created
-- Teacher updated
-- Class created
-
-### Quick Actions Card
-
-Buttons:
-
-- Create School
-- Create User
-- Create Academic Year
-
-### Recommended Dashboard Primitives
-
-- `BasePageHeader`
-- `StatCard`
-- `RecentActivityCard`
-- `QuickActionsCard`
-- `ElRow`
-- `ElCol`
-- `ElCard`
-- `ElButton`
+- page header composition
+- summary card composition
+- recent-activity container composition
+- quick-action container composition
+- loading, empty, error, and forbidden states
+- Element Plus grid, card, button, and feedback composition
 
 ## CRUD Foundation
 
@@ -526,9 +448,8 @@ service mapping helpers where approved API envelopes need normalization.
 
 - `contracts/api/`: API envelopes, pagination, errors
 - `contracts/auth/`: user session, auth payloads, permission claims
-- `contracts/admin-system/`: schools, users, academic years, guardians,
-  settings,
-  dashboard summary models
+- `contracts/admin-system/`: feature-domain contracts approved by future
+  frontend feature specs and OpenAPI-backed behavior
 
 ## Services Baseline
 
@@ -539,8 +460,8 @@ Recommended initial service families:
 
 - `services/api/`: base Axios instance, interceptors, envelope helpers
 - `services/auth/`: login, logout, forgot-password, current-session
-- `services/admin-system/`: schools, users, academic years, guardians,
-  dashboard summary, notifications
+- `services/admin-system/`: feature-domain services approved by future
+  frontend feature specs and OpenAPI-backed behavior
 
 Services should not mutate UI state directly.
 
