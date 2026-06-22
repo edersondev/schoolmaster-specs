@@ -45,6 +45,7 @@ Runtime:
 - `axios`
 - `element-plus`
 - `@element-plus/icons-vue`
+- `vue-i18n`
 
 Styling and tooling:
 
@@ -133,6 +134,25 @@ Owns shared frontend contracts:
 - auth/session contracts
 - admin-system feature models
 - reusable CRUD and pagination contracts
+
+### Localization Layer
+
+Owns reusable interface text and future language expansion:
+
+- centralized messages for shared layouts, CRUD primitives, forms, tables,
+  dialogs, navigation, feedback, empty states, and error states
+- one launch language in the initial baseline
+- future multilingual behavior through Vue I18n
+
+### Icon Layer
+
+Owns shared application iconography:
+
+- use Element Plus Icons from `@element-plus/icons-vue` for navigation,
+  actions, feedback, and shared UI primitives
+- prefer package icons over custom icon assets when a suitable icon exists
+- keep custom icon assets under `assets/icons/` only when Element Plus Icons
+  does not provide a suitable symbol
 
 ## Complete Recommended Folder Structure
 
@@ -225,7 +245,7 @@ src/
 ### `assets/`
 
 - brand assets
-- icon sources that are not covered by Element Plus
+- icon sources that are not covered by Element Plus Icons
 - global stylesheet entrypoints
 - CSS variables for shared theme tokens
 
@@ -288,7 +308,8 @@ HTTP and contract mapping layer. Organize by concern:
 
 Shared frontend contracts and data-shape definitions used across pages,
 components, stores, and
-services.
+services. Contract files use JSDoc typedefs plus service mapping helpers so
+the JavaScript frontend has concrete data-shape references without TypeScript.
 
 ## Layout Blueprint
 
@@ -497,6 +518,9 @@ Initial shared contracts should cover:
 - filter models
 - table column models where shared rendering behavior is standardized
 - module contracts such as `School`, `User`, `AcademicYear`, and `Guardian`
+
+Contract definitions should be expressed as JSDoc typedefs and paired with
+service mapping helpers where approved API envelopes need normalization.
 
 ### Recommended Contract Families
 

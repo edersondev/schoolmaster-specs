@@ -59,6 +59,8 @@
 - Use singular or narrowly scoped PascalCase names for shared frontend
   contracts and data shapes, such as `School`, `SchoolFormModel`,
   `CrudQueryParams`, and `PaginatedResponse`.
+- Define shared frontend contract shapes with JSDoc typedefs in JavaScript
+  files, plus service mapping helpers where API envelopes need normalization.
 - Use plural service filenames only when they clearly represent a collection
   boundary, such as `schools.js`; otherwise prefer explicit purpose-driven
   service names such as `auth-session.js` or `notifications.js`.

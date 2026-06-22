@@ -17,7 +17,11 @@ For the baseline application structure, see
 - Use Vue Router with route modules and lazy-loaded feature pages
 - Keep API access in a service layer
 - Use Element Plus as the primary UI component library
+- Use Element Plus Icons from `@element-plus/icons-vue` as the default icon set
+- Use Vue I18n for centralized reusable UI text
 - Consume only published OpenAPI-backed endpoints
+- Represent JavaScript contract shapes with JSDoc typedefs plus service
+  mapping helpers in `src/contracts/`
 - Keep business rules sourced from approved specifications
 - Favor production-ready code and reusable patterns over mock-only examples
 
@@ -33,6 +37,8 @@ on undocumented payloads or routes.
 - Apply clean architecture principles to frontend organization by keeping
   layouts, pages, components, composables, stores, services, and shared
   contract definitions separated by responsibility.
+- Use `src/contracts/` for JSDoc typedefs and service mapping helpers, not
+  TypeScript types or documentation-only shapes.
 - Keep HTTP access in `src/services/` and keep services free of UI state.
 - Use Pinia stores for session state, tenant context, role-aware navigation,
   and feature state that is shared across views.
@@ -41,11 +47,16 @@ on undocumented payloads or routes.
 - Create reusable primitives for CRUD-heavy admin workflows so tables, filters,
   forms, pagination, confirm dialogs, loading states, empty states, and error
   states are not reimplemented independently per module.
+- Keep reusable UI text centralized through Vue I18n instead of hardcoding
+  labels, actions, validation labels, empty states, and feedback text inside
+  shared components.
 
 ## UI Composition Standards
 
 - Prefer Element Plus components for forms, tables, dialogs, navigation,
   feedback, and data display primitives.
+- Prefer Element Plus Icons for navigation, actions, feedback, and shared UI
+  primitives before adding custom icon assets.
 - Always use PascalCase Element Plus component tags in Vue templates, such as
   `ElButton`, `ElForm`, and `ElTable`; do not use kebab-case equivalents.
 - Use Tailwind CSS for layout, spacing, responsive rules, and restrained

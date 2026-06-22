@@ -18,15 +18,18 @@ Documented frontend baseline sources:
   for Vue, Pinia, Vue Router, Element Plus, Tailwind, and reusable admin
   patterns.
 
-No frontend feature slice is implemented or approved through `specs/` yet.
+The first frontend feature slice is being specified through
+`specs/015-frontend-architecture-baseline/`. No frontend implementation slice
+has been approved yet.
 
 ## Recommended Sequence
 
 ### 1. Frontend Architecture Baseline
 
-**Status**: Documented in `docs/frontend-architecture.md`,
-`docs/frontend-guidelines.md`, and `docs/naming-conventions.md`; feature spec
-not started.
+**Status**: Feature specification and implementation plan started in
+`specs/015-frontend-architecture-baseline/`. Supporting guidance is documented
+in `docs/frontend-architecture.md`, `docs/frontend-guidelines.md`, and
+`docs/naming-conventions.md`.
 
 **Purpose**: Define the durable frontend baseline for Vue 3, JavaScript,
 Element Plus, Tailwind, routing, stores, services, composables, contracts, clean

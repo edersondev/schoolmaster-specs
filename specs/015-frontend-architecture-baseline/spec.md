@@ -5,6 +5,15 @@
 **Status**: Draft  
 **Input**: User description: "Define frontend roadmap item 1: Frontend Architecture Baseline. Specify the durable Vue 3 SPA architecture for SchoolMaster using JavaScript, Vue 3 Composition API with `<script setup>`, Vue Router, Pinia, Axios, Element Plus, Tailwind CSS, and clean frontend boundaries. Establish the shared application structure for layouts, pages, components, composables, stores, services, contracts, constants, and utilities. Define reusable CRUD-oriented frontend patterns for admin workflows, including list pages, filters, tables, forms, dialogs, pagination, loading states, empty states, and error states. Preserve API-first delivery: frontend behavior may consume only approved OpenAPI-backed `/api/v1` endpoints and documented contract semantics. Include Element Plus PascalCase component usage, Tailwind layout responsibilities, JavaScript file conventions, scalable folder organization, and repository sequencing for `schoolmaster-specs` and `schoolmaster-frontend`. Do not define concrete business module behavior, backend implementation, undocumented API behavior, or TypeScript requirements in this slice."
 
+## Clarifications
+
+### Session 2026-06-21
+
+- Q: What accessibility baseline should the frontend architecture require? → A: WCAG 2.1 AA baseline for reusable layouts, forms, tables, dialogs, navigation, and feedback states.
+- Q: What localization baseline should the frontend architecture require? → A: Internationalization-ready with Vue I18n; reusable UI text must be centralized, with one launch language required.
+- Q: What observability baseline should the frontend architecture require? → A: Standard client error boundary, service error normalization, and user-action trace points.
+- Q: How should JavaScript frontend contract definitions be represented without TypeScript? → A: JSDoc typedefs plus service mapping helpers in `src/contracts/`.
+
 ## User Scenarios & Testing *(mandatory)*
 
 ### User Story 1 - Establish Frontend Architecture Baseline (Priority: P1)
@@ -55,13 +64,16 @@ A frontend implementer needs clear contract-consumption rules so frontend screen
 
 ### Edge Cases
 
-- What happens when a future feature requests TypeScript, a different component library, or a different state model? It must be handled as a separate architecture change before implementation.
-- How does the frontend avoid treating client-side permission checks as authoritative authorization? The baseline must state that frontend checks guide visibility and navigation only; backend authorization remains authoritative.
-- What happens when a module needs data that is not yet documented in OpenAPI? The feature must block frontend consumption until the contract is approved.
-- How does the baseline avoid approving concrete module behavior too early? It must define shared structure and reusable patterns only, leaving business workflows to later feature specs.
-- How are loading, empty, validation, unauthorized, forbidden, tenant-mismatch, not-found, inactive-record, and conflict states kept consistent across future modules?
-- How does the baseline keep Element Plus and Tailwind responsibilities distinct so the frontend does not create competing component systems?
-- How are JavaScript file conventions, folder boundaries, and shared contract definitions kept discoverable for future contributors?
+- Future requests for TypeScript, a different component library, or a different state model must be handled as separate architecture changes before implementation.
+- Client-side permission checks must guide visibility and navigation only; backend authorization remains authoritative.
+- Modules that need data not yet documented in OpenAPI must block frontend consumption until the contract is approved.
+- The baseline must define shared structure and reusable patterns only; concrete business workflows remain owned by later feature specs.
+- Future modules must use the baseline loading, empty, validation, unauthorized, forbidden, tenant-mismatch, not-found, inactive-record, and conflict-state conventions where those states apply.
+- Element Plus remains the primary component system, and Tailwind remains responsible for layout, spacing, responsiveness, utility classes, and restrained visual refinement.
+- JavaScript file conventions, folder boundaries, and shared contract definitions must remain discoverable through the feature spec, architecture docs, naming conventions, and quickstart.
+- Reusable layouts, forms, tables, dialogs, navigation, and feedback states must be reviewed against the WCAG 2.1 AA accessibility baseline.
+- Reusable UI text must be centralized through Vue I18n without requiring full multilingual delivery in this slice.
+- Frontend failures must remain diagnosable through the client error boundary, service error normalization, and user-action trace points without requiring a full telemetry platform in this slice.
 
 ## Architecture & Contract Impact *(mandatory)*
 
@@ -90,7 +102,7 @@ A frontend implementer needs clear contract-consumption rules so frontend screen
 
 ### Functional Requirements
 
-- **FR-001**: The frontend architecture baseline MUST define SchoolMaster as a JavaScript Vue 3 SPA using Composition API with `<script setup>`, Vue Router, Pinia, Axios, Element Plus, and Tailwind CSS as the approved frontend foundation.
+- **FR-001**: The frontend architecture baseline MUST define SchoolMaster as a JavaScript Vue 3 SPA using Composition API with `<script setup>`, Vue Router, Pinia, Axios, Element Plus, Element Plus Icons, Vue I18n, and Tailwind CSS as the approved frontend foundation.
 - **FR-002**: The baseline MUST explicitly exclude TypeScript requirements from this slice and MUST use JavaScript file conventions for frontend services, stores, composables, router modules, contracts, tests, and app entrypoints.
 - **FR-003**: The baseline MUST define clear responsibility boundaries for layouts, pages, components, composables, stores, services, contracts, constants, and utilities.
 - **FR-004**: The baseline MUST require frontend features to organize code by domain or feature where doing so improves clarity, reuse, and long-term scalability.
@@ -110,6 +122,11 @@ A frontend implementer needs clear contract-consumption rules so frontend screen
 - **FR-018**: The baseline MUST NOT approve concrete System Administrator layout behavior, authentication screens, business module workflows, backend implementation, undocumented API behavior, reporting behavior, assessment behavior, or platform support behavior in this slice.
 - **FR-019**: The baseline MUST require future frontend features to cover loading, empty, validation, unauthorized, forbidden, tenant-mismatch, not-found, inactive-record, and conflict states where those states apply.
 - **FR-020**: The baseline MUST remain compatible with existing backend-first specifications and MUST not modify backend API behavior without a separate approved OpenAPI change.
+- **FR-021**: The baseline MUST require reusable layouts, forms, tables, dialogs, navigation, and feedback states to meet a WCAG 2.1 AA accessibility baseline.
+- **FR-022**: The baseline MUST be internationalization-ready with Vue I18n by requiring reusable UI text to be centralized, while requiring only one launch language in this slice.
+- **FR-023**: The baseline MUST define standard frontend observability boundaries through a client error boundary, service error normalization, and user-action trace points.
+- **FR-024**: The baseline MUST use Element Plus Icons from `@element-plus/icons-vue` as the default icon source for navigation, actions, feedback, and shared UI primitives, using custom icon assets only when no suitable package icon exists.
+- **FR-025**: The baseline MUST represent JavaScript frontend contract definitions with JSDoc typedefs plus service mapping helpers under `src/contracts/`, without introducing TypeScript requirements.
 
 ### Key Entities *(include if feature involves data)*
 
@@ -120,7 +137,9 @@ A frontend implementer needs clear contract-consumption rules so frontend screen
 - **StateBoundary**: Pinia-based shared state ownership for session, tenant context, permissions, navigation, notifications, and feature state shared across views.
 - **ReusableCrudPattern**: Shared admin workflow pattern covering list, filter, table, form, dialog, pagination, loading, empty, error, and validation behavior.
 - **UiPrimitiveSystem**: Approved UI composition approach using Element Plus as the primary component system with Tailwind for layout and restrained visual refinement.
-- **FrontendContractDefinition**: Shared frontend data-shape definition used to document consumed API envelopes, pagination models, errors, and module data shapes without introducing TypeScript requirements.
+- **FrontendContractDefinition**: Shared frontend data-shape definition using JSDoc typedefs plus service mapping helpers under `src/contracts/` to document consumed API envelopes, pagination models, errors, and module data shapes without introducing TypeScript requirements.
+- **FrontendObservabilityBoundary**: Shared frontend diagnostic boundary for client error capture, normalized service errors, and user-action trace points without requiring a full telemetry platform in this slice.
+- **IconPrimitiveSystem**: Approved iconography approach using Element Plus Icons from `@element-plus/icons-vue` for navigation, actions, feedback, and shared UI primitives.
 
 ## Success Criteria *(mandatory)*
 
@@ -134,6 +153,11 @@ A frontend implementer needs clear contract-consumption rules so frontend screen
 - **SC-006**: Future admin module specs can reuse baseline CRUD patterns for list, filter, table, form, dialog, pagination, loading, empty, and error states without redefining the architecture foundation.
 - **SC-007**: Frontend planning can identify whether each future frontend slice changes only `schoolmaster-frontend`, only `schoolmaster-specs`, or both, before implementation starts.
 - **SC-008**: Architecture review confirms no TypeScript requirement, backend implementation task, concrete business module workflow, or undocumented API behavior is approved by this slice.
+- **SC-009**: Accessibility review confirms reusable layouts, forms, tables, dialogs, navigation, and feedback states satisfy WCAG 2.1 AA expectations before dependent frontend features reuse them.
+- **SC-010**: Frontend review confirms reusable UI text is centralized through Vue I18n for future localization and no full multilingual delivery is required by this baseline slice.
+- **SC-011**: Frontend review confirms reusable error handling, service error mapping, and user-action trace points are defined before dependent frontend features reuse the baseline.
+- **SC-012**: Frontend review confirms shared icon usage comes from Element Plus Icons unless a documented exception requires a custom asset.
+- **SC-013**: Frontend review confirms JavaScript contract definitions use JSDoc typedefs plus service mapping helpers in `src/contracts/` instead of TypeScript types or documentation-only shapes.
 
 ## Assumptions
 
@@ -143,4 +167,7 @@ A frontend implementer needs clear contract-consumption rules so frontend screen
 - Backend API behavior remains contract-first; frontend implementation cannot use routes, fields, filters, status values, or error semantics that are not approved by OpenAPI.
 - JavaScript is the frontend language baseline for this project; TypeScript is intentionally out of scope unless a future approved architecture change revisits the decision.
 - Element Plus is the primary UI component library, while Tailwind is used for layout, responsive behavior, spacing, and restrained visual refinement.
+- Element Plus Icons from `@element-plus/icons-vue` are available as the default icon source for shared UI primitives.
 - Tenant and school context remain sensitive and must be resolved from authenticated backend behavior or approved session metadata.
+- The launch frontend language is a product decision for later feature delivery; this baseline only requires reusable text to be localization-ready through Vue I18n.
+- Full analytics, performance telemetry, and external error-reporting integrations remain future decisions; this baseline only requires diagnostic boundaries that future features can reuse.

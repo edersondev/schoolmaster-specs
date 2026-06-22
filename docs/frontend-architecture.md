@@ -37,7 +37,8 @@ Recommended package baseline:
 - `pinia`
 - `axios`
 - `element-plus`
-- `@element-plus/icons-vue`
+- `@element-plus/icons-vue` for Element Plus Icons
+- `vue-i18n`
 - `tailwindcss`
 
 If the frontend repository uses on-demand Element Plus registration, supporting
@@ -54,6 +55,8 @@ be added in the frontend implementation repository.
   transport, and shared contract definitions.
 - Components handle presentation and interaction, not business rules.
 - Services own HTTP access and transport mapping.
+- JavaScript frontend contracts use JSDoc typedefs plus service mapping helpers
+  under `src/contracts/`.
 - Stores coordinate shared client state and UI workflows, but do not replace
   services as transport boundaries.
 - Tenant context, role visibility, and authorization-sensitive behavior must
@@ -140,6 +143,8 @@ Service responsibilities:
 
 - call approved `/api/v1` endpoints only
 - map request parameters to approved contract fields
+- use `src/contracts/` JSDoc typedefs and mapping helpers for consumed data
+  shapes
 - normalize transport concerns such as headers, pagination primitives, and
   error envelope parsing
 - return contract-shaped data to stores or composables without embedding UI
@@ -197,6 +202,10 @@ Composables must not become hidden service layers or alternate global stores.
   navigation, feedback, and other common application UI primitives.
 - In Vue templates, Element Plus components must be written with PascalCase
   tags such as `ElForm`, `ElTable`, and `ElDialog`, not kebab-case tags.
+- Vue I18n is the default localization package for centralized reusable UI
+  text and future multilingual support.
+- Element Plus Icons from `@element-plus/icons-vue` are the default icon source
+  for navigation, actions, feedback, and shared UI primitives.
 - Shared visual primitives should live in shared components or layouts.
 - Module-specific views should compose shared primitives with feature-local
   state and actions.
