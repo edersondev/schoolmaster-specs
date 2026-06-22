@@ -2,10 +2,11 @@
 
 ## Purpose
 
-This document defines the detailed frontend architecture baseline for the
-SchoolMaster System Administrator panel. It is the reference blueprint for the
-initial `schoolmaster-frontend` admin shell and for reusable CRUD patterns that
-later admin modules should share.
+This document defines reusable frontend architecture patterns that future
+System Administrator panel features may consume after their feature specs
+approve concrete layout, dashboard, route, and contract behavior. It is a
+reference blueprint for reusable admin shell and CRUD boundaries, not an
+implementation approval for a concrete panel.
 
 ## Product Context
 
@@ -17,7 +18,9 @@ roles:
 - Teacher
 - Student
 
-This document is specifically for the System Administrator panel.
+This document focuses on reusable patterns expected by future System
+Administrator panel work. Concrete System Administrator screens, navigation
+entries, dashboards, and resource behavior remain owned by later feature specs.
 
 ## Architecture Requirements
 
@@ -465,7 +468,11 @@ Recommended initial service families:
 
 Services should not mutate UI state directly.
 
-## Example Module: Schools
+## Illustrative Module Shape: Schools
+
+The structure below demonstrates how a future admin resource module can fit the
+baseline boundaries. It does not approve Schools UI behavior, fields,
+permissions, lifecycle transitions, routes, or API consumption.
 
 Recommended structure:
 
@@ -503,14 +510,18 @@ src/
         └── schools.routes.js
 ```
 
-### Schools Module Responsibilities
+### Illustrative Module Responsibilities
 
-- list schools with shared filters and pagination
-- create schools through reusable form composition
-- edit schools through reusable form composition
-- delete or deactivate through shared confirmation workflow where approved by
-  the contract
-- centralize school transport and mapping in `services/admin-system/schools.js`
+- list a resource with shared filters and pagination when a future feature spec
+  approves the list behavior
+- create a resource through reusable form composition when a future feature
+  spec approves create behavior
+- edit a resource through reusable form composition when a future feature spec
+  approves edit behavior
+- delete, deactivate, or restore through shared confirmation workflow only
+  where the consuming feature spec and OpenAPI contract approve the transition
+- centralize resource transport and mapping in the resource service, such as
+  `services/admin-system/schools.js` for a future approved Schools feature
 - keep page orchestration in route pages, not in low-level table or form
   primitives
 

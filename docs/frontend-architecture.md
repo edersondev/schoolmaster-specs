@@ -20,11 +20,15 @@ stores, router, shared contracts, and example Schools module, see
 
 ## Technology Baseline
 
+- JavaScript for frontend services, stores, composables, router modules,
+  contracts, tests, and app entrypoints
 - Vue 3 with Composition API and `<script setup>`
 - Vue Router for route composition
 - Pinia for shared application and feature state
 - Axios for HTTP transport
 - Element Plus for the primary component library
+- Element Plus Icons from `@element-plus/icons-vue`
+- Vue I18n for centralized reusable UI text
 - Tailwind CSS for styling
 
 Do not introduce alternate state, transport, or styling foundations without a

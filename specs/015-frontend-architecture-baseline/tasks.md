@@ -26,10 +26,10 @@
 
 **Purpose**: Confirm the feature artifact set and source documentation before story work starts.
 
-- [ ] T001 Confirm the active feature inputs exist in `specs/015-frontend-architecture-baseline/spec.md`, `specs/015-frontend-architecture-baseline/plan.md`, `specs/015-frontend-architecture-baseline/research.md`, `specs/015-frontend-architecture-baseline/data-model.md`, `specs/015-frontend-architecture-baseline/contracts/frontend-architecture-contract.md`, and `specs/015-frontend-architecture-baseline/quickstart.md`
-- [ ] T002 [P] Inventory existing frontend architecture guidance in `docs/frontend-architecture.md`, `docs/frontend-guidelines.md`, `docs/naming-conventions.md`, and `docs/frontend-admin-system-architecture.md`
-- [ ] T003 [P] Review frontend roadmap sequencing for item 1 in `docs/frontend-feature-roadmap.md`
-- [ ] T004 Verify the feature remains documentation-only with no required changes to `api/openapi.yaml`
+- [X] T001 Confirm the active feature inputs exist in `specs/015-frontend-architecture-baseline/spec.md`, `specs/015-frontend-architecture-baseline/plan.md`, `specs/015-frontend-architecture-baseline/research.md`, `specs/015-frontend-architecture-baseline/data-model.md`, `specs/015-frontend-architecture-baseline/contracts/frontend-architecture-contract.md`, and `specs/015-frontend-architecture-baseline/quickstart.md`
+- [X] T002 [P] Inventory existing frontend architecture guidance in `docs/frontend-architecture.md`, `docs/frontend-guidelines.md`, `docs/naming-conventions.md`, and `docs/frontend-admin-system-architecture.md`
+- [X] T003 [P] Review frontend roadmap sequencing for item 1 in `docs/frontend-feature-roadmap.md`
+- [X] T004 Verify the feature remains documentation-only with no required changes to `api/openapi.yaml`
 
 ---
 
@@ -39,12 +39,12 @@
 
 **CRITICAL**: No user story work should begin until this phase is complete.
 
-- [ ] T005 [P] Align the approved package baseline in `docs/frontend-architecture.md` with JavaScript, Vue 3, Vue Router, Pinia, Axios, Element Plus, `@element-plus/icons-vue`, Vue I18n, and Tailwind CSS
-- [ ] T006 [P] Align the approved package baseline in `docs/frontend-admin-system-architecture.md` with JavaScript, Element Plus Icons, Vue I18n, and Tailwind CSS
-- [ ] T007 [P] Document JavaScript file naming and JSDoc contract-shape conventions in `docs/naming-conventions.md`
-- [ ] T008 [P] Capture research decisions for JavaScript, Vue Router, Pinia, Axios, Element Plus, Element Plus Icons, Vue I18n, Tailwind CSS, JSDoc contracts, accessibility, and observability in `specs/015-frontend-architecture-baseline/research.md`
-- [ ] T009 [P] Update architecture concept entities and relationships in `specs/015-frontend-architecture-baseline/data-model.md`
-- [ ] T010 Update repository sequencing and active plan context in `AGENTS.md`
+- [X] T005 [P] Align the approved package baseline in `docs/frontend-architecture.md` with JavaScript, Vue 3, Vue Router, Pinia, Axios, Element Plus, `@element-plus/icons-vue`, Vue I18n, and Tailwind CSS
+- [X] T006 [P] Align the approved package baseline in `docs/frontend-admin-system-architecture.md` with JavaScript, Element Plus Icons, Vue I18n, and Tailwind CSS
+- [X] T007 [P] Document JavaScript file naming and JSDoc contract-shape conventions in `docs/naming-conventions.md`
+- [X] T008 [P] Capture research decisions for JavaScript, Vue Router, Pinia, Axios, Element Plus, Element Plus Icons, Vue I18n, Tailwind CSS, JSDoc contracts, accessibility, and observability in `specs/015-frontend-architecture-baseline/research.md`
+- [X] T009 [P] Update architecture concept entities and relationships in `specs/015-frontend-architecture-baseline/data-model.md`
+- [X] T010 Update repository sequencing and active plan context in `AGENTS.md`
 
 **Checkpoint**: Shared stack, repository scope, and architecture concept decisions are ready.
 
@@ -58,17 +58,17 @@
 
 ### Validation for User Story 1
 
-- [ ] T011 [P] [US1] Validate approved stack coverage against FR-001, FR-002, FR-011, FR-012, FR-013, FR-014, FR-022, FR-024, and FR-025 in `specs/015-frontend-architecture-baseline/spec.md`
-- [ ] T012 [P] [US1] Validate no TypeScript, backend implementation, concrete business workflow, or undocumented API behavior is approved in `specs/015-frontend-architecture-baseline/spec.md`
+- [X] T011 [P] [US1] Validate approved stack coverage against FR-001, FR-002, FR-011, FR-012, FR-013, FR-014, FR-022, FR-024, and FR-025 in `specs/015-frontend-architecture-baseline/spec.md`
+- [X] T012 [P] [US1] Validate no TypeScript, backend implementation, concrete business workflow, or undocumented API behavior is approved in `specs/015-frontend-architecture-baseline/spec.md`
 
 ### Implementation for User Story 1
 
-- [ ] T013 [US1] Define the durable SPA architecture baseline in `docs/frontend-architecture.md`
-- [ ] T014 [US1] Document frontend working principles, feature-module conventions, state/module conventions, UI composition standards, layout baseline, and error/loading patterns in `docs/frontend-guidelines.md`
-- [ ] T015 [US1] Document frontend naming conventions for Vue components, Element Plus PascalCase tags, composables, Pinia stores, router modules, services, and JSDoc contract shapes in `docs/naming-conventions.md`
-- [ ] T016 [US1] Define the language, file, folder responsibility, UI primitive, icon, internationalization, accessibility, state, and observability contract in `specs/015-frontend-architecture-baseline/contracts/frontend-architecture-contract.md`
-- [ ] T017 [US1] Update the quickstart stack, folder boundary, UI convention, JSDoc contract, and review-command checklist in `specs/015-frontend-architecture-baseline/quickstart.md`
-- [ ] T018 [US1] Cross-check US1 requirements FR-003 and FR-004 plus success criteria SC-001, SC-002, SC-005, SC-008, SC-010, SC-012, and SC-013 against `docs/frontend-architecture.md`, `docs/frontend-guidelines.md`, `docs/naming-conventions.md`, and `specs/015-frontend-architecture-baseline/contracts/frontend-architecture-contract.md`
+- [X] T013 [US1] Define the durable SPA architecture baseline in `docs/frontend-architecture.md`
+- [X] T014 [US1] Document frontend working principles, feature-module conventions, state/module conventions, UI composition standards, layout baseline, and error/loading patterns in `docs/frontend-guidelines.md`
+- [X] T015 [US1] Document frontend naming conventions for Vue components, Element Plus PascalCase tags, composables, Pinia stores, router modules, services, and JSDoc contract shapes in `docs/naming-conventions.md`
+- [X] T016 [US1] Define the language, file, folder responsibility, UI primitive, icon, internationalization, accessibility, state, and observability contract in `specs/015-frontend-architecture-baseline/contracts/frontend-architecture-contract.md`
+- [X] T017 [US1] Update the quickstart stack, folder boundary, UI convention, JSDoc contract, and review-command checklist in `specs/015-frontend-architecture-baseline/quickstart.md`
+- [X] T018 [US1] Cross-check US1 requirements FR-003 and FR-004 plus success criteria SC-001, SC-002, SC-005, SC-008, SC-010, SC-012, and SC-013 against `docs/frontend-architecture.md`, `docs/frontend-guidelines.md`, `docs/naming-conventions.md`, and `specs/015-frontend-architecture-baseline/contracts/frontend-architecture-contract.md`
 
 **Checkpoint**: User Story 1 is independently reviewable as the MVP baseline.
 
@@ -82,16 +82,16 @@
 
 ### Validation for User Story 2
 
-- [ ] T019 [P] [US2] Validate reusable CRUD requirements FR-005, FR-008, FR-019, FR-021, and SC-006 in `specs/015-frontend-architecture-baseline/spec.md`
-- [ ] T020 [P] [US2] Validate reusable CRUD coverage in `specs/015-frontend-architecture-baseline/contracts/frontend-architecture-contract.md`
+- [X] T019 [P] [US2] Validate reusable CRUD requirements FR-005, FR-008, FR-019, FR-021, and SC-006 in `specs/015-frontend-architecture-baseline/spec.md`
+- [X] T020 [P] [US2] Validate reusable CRUD coverage in `specs/015-frontend-architecture-baseline/contracts/frontend-architecture-contract.md`
 
 ### Implementation for User Story 2
 
-- [ ] T021 [US2] Document reusable application-shell, dashboard-pattern, component, CRUD, store, router, service, and contract boundaries in `docs/frontend-admin-system-architecture.md` without approving concrete System Administrator layout or dashboard behavior
-- [ ] T022 [US2] Document reusable CRUD-heavy admin workflow expectations in `docs/frontend-guidelines.md`
-- [ ] T023 [US2] Ensure `ReusableCrudPattern` covers list, filter, table, form, dialog, pagination, loading, empty, error, and validation behavior in `specs/015-frontend-architecture-baseline/data-model.md`
-- [ ] T024 [US2] Ensure quickstart CRUD reuse checks distinguish reusable patterns from resource-specific business rules in `specs/015-frontend-architecture-baseline/quickstart.md`
-- [ ] T025 [US2] Cross-check that `docs/frontend-admin-system-architecture.md` does not approve concrete schools, users, guardians, classes, reports, authentication, or dashboard data behavior beyond reusable blueprint boundaries
+- [X] T021 [US2] Document reusable application-shell, dashboard-pattern, component, CRUD, store, router, service, and contract boundaries in `docs/frontend-admin-system-architecture.md` without approving concrete System Administrator layout or dashboard behavior
+- [X] T022 [US2] Document reusable CRUD-heavy admin workflow expectations in `docs/frontend-guidelines.md`
+- [X] T023 [US2] Ensure `ReusableCrudPattern` covers list, filter, table, form, dialog, pagination, loading, empty, error, and validation behavior in `specs/015-frontend-architecture-baseline/data-model.md`
+- [X] T024 [US2] Ensure quickstart CRUD reuse checks distinguish reusable patterns from resource-specific business rules in `specs/015-frontend-architecture-baseline/quickstart.md`
+- [X] T025 [US2] Cross-check that `docs/frontend-admin-system-architecture.md` does not approve concrete schools, users, guardians, classes, reports, authentication, or dashboard data behavior beyond reusable blueprint boundaries
 
 **Checkpoint**: User Story 2 is independently reviewable as reusable CRUD guidance.
 
@@ -105,16 +105,16 @@
 
 ### Validation for User Story 3
 
-- [ ] T026 [P] [US3] Validate API-first requirements FR-006, FR-009, FR-010, FR-015, FR-016, FR-017, and FR-020 in `specs/015-frontend-architecture-baseline/spec.md`
-- [ ] T027 [P] [US3] Validate API consumption rules, state rules, and blocked behavior in `specs/015-frontend-architecture-baseline/contracts/frontend-architecture-contract.md`
+- [X] T026 [P] [US3] Validate API-first requirements FR-006, FR-009, FR-010, FR-015, FR-016, FR-017, and FR-020 in `specs/015-frontend-architecture-baseline/spec.md`
+- [X] T027 [P] [US3] Validate API consumption rules, state rules, and blocked behavior in `specs/015-frontend-architecture-baseline/contracts/frontend-architecture-contract.md`
 
 ### Implementation for User Story 3
 
-- [ ] T028 [US3] Document service isolation, API access responsibilities, and prohibited direct Axios usage in `docs/frontend-architecture.md`
-- [ ] T029 [US3] Document contract alignment, tenant context sourcing, backend authorization authority, and service/store boundaries in `docs/frontend-guidelines.md`
-- [ ] T030 [US3] Ensure `ServiceBoundary`, `StateBoundary`, and `FrontendContractDefinition` explicitly block undocumented API fields, status meanings, tenant assumptions, and TypeScript-only contracts in `specs/015-frontend-architecture-baseline/data-model.md`
-- [ ] T031 [US3] Ensure quickstart API-first readiness checks require documented `/api/v1` endpoints, fields, filters, pagination, status meanings, error envelopes, auth semantics, and tenant semantics in `specs/015-frontend-architecture-baseline/quickstart.md`
-- [ ] T032 [US3] Cross-check that no task or document in `specs/015-frontend-architecture-baseline/` requires backend code, OpenAPI changes, or undocumented frontend consumption
+- [X] T028 [US3] Document service isolation, API access responsibilities, and prohibited direct Axios usage in `docs/frontend-architecture.md`
+- [X] T029 [US3] Document contract alignment, tenant context sourcing, backend authorization authority, and service/store boundaries in `docs/frontend-guidelines.md`
+- [X] T030 [US3] Ensure `ServiceBoundary`, `StateBoundary`, and `FrontendContractDefinition` explicitly block undocumented API fields, status meanings, tenant assumptions, and TypeScript-only contracts in `specs/015-frontend-architecture-baseline/data-model.md`
+- [X] T031 [US3] Ensure quickstart API-first readiness checks require documented `/api/v1` endpoints, fields, filters, pagination, status meanings, error envelopes, auth semantics, and tenant semantics in `specs/015-frontend-architecture-baseline/quickstart.md`
+- [X] T032 [US3] Cross-check that no task or document in `specs/015-frontend-architecture-baseline/` requires backend code, OpenAPI changes, or undocumented frontend consumption
 
 **Checkpoint**: User Story 3 is independently reviewable as API-first frontend delivery guidance.
 
@@ -124,11 +124,11 @@
 
 **Purpose**: Final consistency and readiness checks across all stories.
 
-- [ ] T033 [P] Run unresolved template-marker scan in `specs/015-frontend-architecture-baseline/` and `docs/`
-- [ ] T034 [P] Run markdown whitespace validation with `git diff --check` in `.`
-- [ ] T035 [P] Verify roadmap item 1 status and sequencing in `docs/frontend-feature-roadmap.md`
-- [ ] T036 Verify all task checklist lines in `specs/015-frontend-architecture-baseline/tasks.md` follow `- [ ] T### [P?] [US?] Description with file path`
-- [ ] T037 Review `specs/015-frontend-architecture-baseline/spec.md`, `specs/015-frontend-architecture-baseline/plan.md`, `specs/015-frontend-architecture-baseline/research.md`, `specs/015-frontend-architecture-baseline/data-model.md`, `specs/015-frontend-architecture-baseline/contracts/frontend-architecture-contract.md`, and `specs/015-frontend-architecture-baseline/quickstart.md` for consistency before handoff
+- [X] T033 [P] Run unresolved template-marker scan in `specs/015-frontend-architecture-baseline/` and `docs/`
+- [X] T034 [P] Run markdown whitespace validation with `git diff --check` in `.`
+- [X] T035 [P] Verify roadmap item 1 status and sequencing in `docs/frontend-feature-roadmap.md`
+- [X] T036 Verify all task checklist lines in `specs/015-frontend-architecture-baseline/tasks.md` follow `- [ ] T### [P?] [US?] Description with file path`
+- [X] T037 Review `specs/015-frontend-architecture-baseline/spec.md`, `specs/015-frontend-architecture-baseline/plan.md`, `specs/015-frontend-architecture-baseline/research.md`, `specs/015-frontend-architecture-baseline/data-model.md`, `specs/015-frontend-architecture-baseline/contracts/frontend-architecture-contract.md`, and `specs/015-frontend-architecture-baseline/quickstart.md` for consistency before handoff
 
 ---
 

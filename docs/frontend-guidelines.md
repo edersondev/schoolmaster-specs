@@ -72,14 +72,17 @@ on undocumented payloads or routes.
 
 ## Layout and Navigation Baseline
 
-- The System Administrator panel uses `AdminSystemLayout.vue` as the reusable
-  admin shell.
-- The shell should provide a fixed left sidebar, top header, and a main content
-  area rendered through `RouterView`.
-- Desktop keeps the sidebar visible; tablet and mobile use a collapsible
-  sidebar controlled by shared layout state.
+- This baseline approves reusable shell responsibilities, not a concrete
+  System Administrator shell implementation.
+- A later shell or dashboard feature spec must define the exact layout
+  component names, sidebar/header behavior, navigation entries, responsive
+  rules, dashboard content, and API contracts before implementation.
+- Reusable shell patterns should provide a route content region, layout
+  selection through route metadata, permission-aware navigation visibility,
+  global feedback surfaces, and responsive state boundaries.
 - Navigation items must support active-route styling, nested children, and
-  permission-based visibility.
+  permission-based visibility when a consuming feature approves concrete
+  navigation behavior.
 
 ## Theme Baseline
 
@@ -94,11 +97,12 @@ Use [frontend-admin-system-architecture.md](frontend-admin-system-architecture.m
 as the source for:
 
 - complete recommended folder structure
-- `AdminSystemLayout.vue` responsibilities
-- dashboard composition
+- reusable shell responsibilities
+- reusable dashboard composition boundaries
 - reusable CRUD foundation components
 - initial router, store, service, and contract organization
-- example `Schools` module structure
+- illustrative feature-module structure that does not approve resource-specific
+  behavior
 
 ## Error and Loading Patterns
 

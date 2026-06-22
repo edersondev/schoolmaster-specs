@@ -26,10 +26,11 @@ has been approved yet.
 
 ### 1. Frontend Architecture Baseline
 
-**Status**: Feature specification and implementation plan started in
-`specs/015-frontend-architecture-baseline/`. Supporting guidance is documented
-in `docs/frontend-architecture.md`, `docs/frontend-guidelines.md`, and
-`docs/naming-conventions.md`.
+**Status**: Baseline specification, implementation plan, contracts, and
+supporting documentation are complete in
+`specs/015-frontend-architecture-baseline/`, `docs/frontend-architecture.md`,
+`docs/frontend-guidelines.md`, `docs/frontend-admin-system-architecture.md`,
+and `docs/naming-conventions.md`.
 
 **Purpose**: Define the durable frontend baseline for Vue 3, JavaScript,
 Element Plus, Tailwind, routing, stores, services, composables, contracts, clean
