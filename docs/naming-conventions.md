@@ -40,6 +40,30 @@
 ## Frontend Modules
 
 - Use lowercase hyphenated filenames for frontend services and tests, such as
-  `academic-years.ts` and `school-onboarding.spec.ts`.
-- Use feature-aligned module folders, such as `admin`, `teacher`, `student`,
-  and `reports`.
+  `academic-years.js` and `school-onboarding.spec.js`.
+- Use feature-aligned folder names for major frontend areas, such as
+  `admin-system`, `teacher`, `student`, `guardian`, and `reporting`.
+- Use PascalCase for Vue component names and for Element Plus component tags in
+  templates, such as `AssessmentTable`, `ElForm`, and `ElDatePicker`.
+- Do not use kebab-case template tags for Element Plus components.
+- Use PascalCase for layout, page, and reusable component filenames, such as
+  `AdminSystemLayout.vue`, `DashboardPage.vue`, `BaseCrudPage.vue`, and
+  `QuickActionsCard.vue`.
+- Use lowerCamelCase with `use` prefixes for composables, such as `useCrud.js`,
+  `usePagination.js`, `useFilters.js`, and `usePermissions.js`.
+- Use lowerCamelCase with `.store.js` suffixes for Pinia store filenames, such
+  as `auth.store.js`, `app.store.js`, and `permissions.store.js`.
+- Use lowercase hyphenated router module filenames, such as
+  `admin-system.routes.js` and `schools.routes.js`, even when route names
+  themselves use lowerCamelCase or PascalCase constants internally.
+- Use singular or narrowly scoped PascalCase names for shared frontend
+  contracts and data shapes, such as `School`, `SchoolFormModel`,
+  `CrudQueryParams`, and `PaginatedResponse`.
+- Define shared frontend contract shapes with JSDoc typedefs in JavaScript
+  files, plus service mapping helpers where API envelopes need normalization.
+- Use plural service filenames only when they clearly represent a collection
+  boundary, such as `schools.js`; otherwise prefer explicit purpose-driven
+  service names such as `auth-session.js` or `notifications.js`.
+- Use PascalCase names for Element Plus wrappers and shared UI primitives, such
+  as `BaseDataTable`, `BaseFilterBar`, `BasePagination`, `BaseConfirmDialog`,
+  `BasePageHeader`, and `StatCard`.

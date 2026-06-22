@@ -63,5 +63,5 @@ When implementing or modifying features:
 - only then implementation repositories should change
 
 <!-- SPECKIT START -->
-Active implementation plan: `specs/014-advanced-assessment-content/plan.md`
+Active implementation plan: `specs/015-frontend-architecture-baseline/plan.md`
 <!-- SPECKIT END -->

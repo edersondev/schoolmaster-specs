@@ -46,6 +46,37 @@ behavior is promoted into `api/openapi.yaml`.
 - Reporting: tenant-bound launch reports for attendance, grades, academic
   structure, and school activity summaries.
 
+## Product Context
+
+SchoolMaster is a school management SaaS platform with these primary user
+roles:
+
+- System Administrator
+- School Administrator
+- Teacher
+- Student
+
+The current frontend architecture baseline starts with the System
+Administrator panel. That panel establishes the reusable layout, CRUD, routing,
+state, permission, and design patterns that later school-admin, teacher,
+student, guardian, and reporting modules should reuse where appropriate.
+
+## Frontend Architecture Direction
+
+- Frontend implementation uses Vue 3 Composition API with `<script setup>`.
+- JavaScript is used across components, composables, stores, services, router
+  modules, and shared frontend contracts.
+- Frontend code follows clean architecture principles with clear boundaries
+  between layouts, pages, components, composables, stores, services, and
+  contract-shaped data definitions.
+- Code should be organized by domain or feature whenever doing so reduces
+  coupling and improves reuse.
+- Shared CRUD patterns for list pages, filters, tables, forms, dialogs, and
+  pagination should be treated as reusable application primitives instead of
+  per-module one-offs.
+- Frontend delivery should favor production-ready module structure and reusable
+  patterns over throwaway mock scaffolding.
+
 ## Cross-Repository Release Workflow
 
 1. Update approved requirements, business rules, and OpenAPI contracts in
@@ -65,3 +96,11 @@ behavior is promoted into `api/openapi.yaml`.
   served only through authorized API access.
 - Report generation may run asynchronously when synchronous generation would
   degrade interactive workflows.
+
+See [frontend-architecture.md](frontend-architecture.md) for the baseline Vue
+SPA structure used by frontend feature delivery.
+
+See [frontend-admin-system-architecture.md](frontend-admin-system-architecture.md)
+for the detailed System Administrator panel architecture, folder structure,
+layout blueprint, CRUD foundation, routing, stores, shared contracts, and example
+Schools module organization.
