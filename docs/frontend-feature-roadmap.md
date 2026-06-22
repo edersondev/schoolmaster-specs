@@ -45,8 +45,9 @@ contract semantics.
 
 ### 2. System Administrator Shell and Dashboard Foundation
 
-**Status**: Feature specification, implementation plan, and tasks drafted in
-`specs/016-admin-shell-dashboard/`.
+**Status**: Complete. Feature specification, implementation plan, completed
+tasks, and frontend implementation are complete in
+`specs/016-admin-shell-dashboard/` and `schoolmaster-frontend`.
 
 **Purpose**: Define the reusable `AdminSystemLayout.vue`, sidebar navigation,
 top header, permission-aware menu visibility, dashboard summary cards, recent

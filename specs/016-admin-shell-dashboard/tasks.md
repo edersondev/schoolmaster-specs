@@ -34,10 +34,10 @@ implementation and testing of each story.
 **Purpose**: Confirm source artifacts, target repository boundaries, and
 frontend baseline before implementation starts.
 
-- [ ] T001 Confirm active feature artifacts exist in `specs/016-admin-shell-dashboard/spec.md`, `specs/016-admin-shell-dashboard/plan.md`, `specs/016-admin-shell-dashboard/research.md`, `specs/016-admin-shell-dashboard/data-model.md`, `specs/016-admin-shell-dashboard/contracts/admin-shell-dashboard-contract.md`, and `specs/016-admin-shell-dashboard/quickstart.md`
-- [ ] T002 [P] Review frontend baseline dependencies in `specs/015-frontend-architecture-baseline/spec.md`, `docs/frontend-architecture.md`, `docs/frontend-guidelines.md`, `docs/frontend-admin-system-architecture.md`, and `docs/naming-conventions.md`
-- [ ] T003 [P] Confirm roadmap item 2 sequencing and placeholder-only live-data boundary in `docs/frontend-feature-roadmap.md`
-- [ ] T004 Verify this feature requires no backend code and no OpenAPI change in `api/openapi.yaml`
+- [X] T001 Confirm active feature artifacts exist in `specs/016-admin-shell-dashboard/spec.md`, `specs/016-admin-shell-dashboard/plan.md`, `specs/016-admin-shell-dashboard/research.md`, `specs/016-admin-shell-dashboard/data-model.md`, `specs/016-admin-shell-dashboard/contracts/admin-shell-dashboard-contract.md`, and `specs/016-admin-shell-dashboard/quickstart.md`
+- [X] T002 [P] Review frontend baseline dependencies in `specs/015-frontend-architecture-baseline/spec.md`, `docs/frontend-architecture.md`, `docs/frontend-guidelines.md`, `docs/frontend-admin-system-architecture.md`, and `docs/naming-conventions.md`
+- [X] T003 [P] Confirm roadmap item 2 sequencing and placeholder-only live-data boundary in `docs/frontend-feature-roadmap.md`
+- [X] T004 Verify this feature requires no backend code and no OpenAPI change in `api/openapi.yaml`
 
 ---
 
@@ -48,16 +48,16 @@ test scaffolding that all user stories depend on.
 
 **CRITICAL**: No user story work should begin until this phase is complete.
 
-- [ ] T005 Create admin-system route module scaffold in `src/router/modules/admin-system.routes.js`
-- [ ] T006 Create System Administrator layout shell scaffold in `src/layouts/admin-system/AdminSystemLayout.vue`
-- [ ] T007 [P] Create admin-system shell state store scaffold in `src/stores/admin-system/shell.store.js`
-- [ ] T008 [P] Create admin-system shell contract definitions in `src/contracts/admin-system/shell.js`
-- [ ] T009 [P] Create admin-system navigation contract definitions in `src/contracts/admin-system/navigation.js`
-- [ ] T010 [P] Create admin-system dashboard contract definitions in `src/contracts/admin-system/dashboard.js`
-- [ ] T011 [P] Create reusable permission visibility composable scaffold in `src/composables/admin-system/useAdminShellPermissions.js`
-- [ ] T012 [P] Create responsive shell state composable scaffold in `src/composables/admin-system/useAdminShellState.js`
-- [ ] T013 [P] Create admin-system i18n message scaffold for shell and dashboard text in `src/locales/admin-system.js`
-- [ ] T014 Create frontend Vitest fixture helpers for admin shell route metadata, permissions, and viewport states in `tests/unit/admin-system/shell.fixtures.js`
+- [X] T005 Create admin-system route module scaffold in `src/router/modules/admin-system.routes.js`
+- [X] T006 Create System Administrator layout shell scaffold in `src/layouts/admin-system/AdminSystemLayout.vue`
+- [X] T007 [P] Create admin-system shell state store scaffold in `src/stores/admin-system/shell.store.js`
+- [X] T008 [P] Create admin-system shell contract definitions in `src/contracts/admin-system/shell.js`
+- [X] T009 [P] Create admin-system navigation contract definitions in `src/contracts/admin-system/navigation.js`
+- [X] T010 [P] Create admin-system dashboard contract definitions in `src/contracts/admin-system/dashboard.js`
+- [X] T011 [P] Create reusable permission visibility composable scaffold in `src/composables/admin-system/useAdminShellPermissions.js`
+- [X] T012 [P] Create responsive shell state composable scaffold in `src/composables/admin-system/useAdminShellState.js`
+- [X] T013 [P] Create admin-system i18n message scaffold for shell and dashboard text in `src/locales/admin-system.js`
+- [X] T014 Create frontend Vitest fixture helpers for admin shell route metadata, permissions, and viewport states in `tests/unit/admin-system/shell.fixtures.js`
 
 **Checkpoint**: Shared route, state, contract, composable, i18n, and test
 fixtures are ready.
@@ -77,23 +77,23 @@ region, and feedback states work without any dashboard live data or CRUD pages.
 
 ### Tests for User Story 1
 
-- [ ] T015 [P] [US1] Add Vitest coverage for admin route metadata layout selection, title, breadcrumb, sidebar placement, auth requirement, and registration through `src/router/index.js` or the existing route-module assembler in `tests/unit/admin-system/admin-system.routes.spec.js`
-- [ ] T016 [P] [US1] Add Vitest coverage for hidden unauthorized sidebar navigation items in `tests/unit/admin-system/useAdminShellPermissions.spec.js`
-- [ ] T017 [P] [US1] Add Vitest coverage for desktop/tablet collapsed sidebar and mobile overlay drawer state in `tests/unit/admin-system/useAdminShellState.spec.js`
-- [ ] T018 [P] [US1] Add Vitest coverage that dashboard content and available navigation destinations are reachable in no more than two interactions in `tests/unit/admin-system/AdminSystemLayout.spec.js`
-- [ ] T019 [P] [US1] Add Vitest coverage for shell-level unauthorized, forbidden, and session-expired states in `tests/unit/admin-system/AdminSystemLayout.spec.js`
+- [X] T015 [P] [US1] Add Vitest coverage for admin route metadata layout selection, title, breadcrumb, sidebar placement, auth requirement, and registration through `src/router/index.js` or the existing route-module assembler in `tests/unit/admin-system/admin-system.routes.spec.js`
+- [X] T016 [P] [US1] Add Vitest coverage for hidden unauthorized sidebar navigation items in `tests/unit/admin-system/useAdminShellPermissions.spec.js`
+- [X] T017 [P] [US1] Add Vitest coverage for desktop/tablet collapsed sidebar and mobile overlay drawer state in `tests/unit/admin-system/useAdminShellState.spec.js`
+- [X] T018 [P] [US1] Add Vitest coverage that dashboard content and available navigation destinations are reachable in no more than two interactions in `tests/unit/admin-system/AdminSystemLayout.spec.js`
+- [X] T019 [P] [US1] Add Vitest coverage for shell-level unauthorized, forbidden, and session-expired states in `tests/unit/admin-system/AdminSystemLayout.spec.js`
 
 ### Implementation for User Story 1
 
-- [ ] T020 [US1] Define admin shell route metadata for dashboard route, layout selection, permissions, breadcrumb, and sidebar placement in `src/router/modules/admin-system.routes.js`, then register the admin-system route module through `src/router/index.js` or the existing route-module assembler
-- [ ] T021 [US1] Implement shell state actions for sidebar collapsed state, mobile drawer open state, active route key, and feedback state in `src/stores/admin-system/shell.store.js`
-- [ ] T022 [US1] Implement permission visibility helpers that hide unauthorized or unapproved navigation entries in `src/composables/admin-system/useAdminShellPermissions.js`
-- [ ] T023 [US1] Implement responsive shell state behavior that uses desktop/tablet collapsed sidebar and mobile overlay drawer in `src/composables/admin-system/useAdminShellState.js`
-- [ ] T024 [US1] Implement `AdminSystemLayout.vue` with sidebar, top header, route content region, page context, global feedback placement, and no direct Axios calls in `src/layouts/admin-system/AdminSystemLayout.vue`
-- [ ] T025 [US1] Implement reusable shell navigation component with hidden unauthorized items and active route state in `src/components/admin-system/shell/AdminShellSidebar.vue`
-- [ ] T026 [US1] Implement reusable top header component with page context, sidebar/drawer controls, and placeholder notification affordance in `src/components/admin-system/shell/AdminShellHeader.vue`
-- [ ] T027 [US1] Implement shell feedback component for loading, empty, error, forbidden, unauthorized, session-expired, tenant-mismatch, and unavailable states in `src/components/admin-system/shell/AdminShellFeedback.vue`
-- [ ] T028 [US1] Add localized shell labels, feedback messages, and accessible control text in `src/locales/admin-system.js`
+- [X] T020 [US1] Define admin shell route metadata for dashboard route, layout selection, permissions, breadcrumb, and sidebar placement in `src/router/modules/admin-system.routes.js`, then register the admin-system route module through `src/router/index.js` or the existing route-module assembler
+- [X] T021 [US1] Implement shell state actions for sidebar collapsed state, mobile drawer open state, active route key, and feedback state in `src/stores/admin-system/shell.store.js`
+- [X] T022 [US1] Implement permission visibility helpers that hide unauthorized or unapproved navigation entries in `src/composables/admin-system/useAdminShellPermissions.js`
+- [X] T023 [US1] Implement responsive shell state behavior that uses desktop/tablet collapsed sidebar and mobile overlay drawer in `src/composables/admin-system/useAdminShellState.js`
+- [X] T024 [US1] Implement `AdminSystemLayout.vue` with sidebar, top header, route content region, page context, global feedback placement, and no direct Axios calls in `src/layouts/admin-system/AdminSystemLayout.vue`
+- [X] T025 [US1] Implement reusable shell navigation component with hidden unauthorized items and active route state in `src/components/admin-system/shell/AdminShellSidebar.vue`
+- [X] T026 [US1] Implement reusable top header component with page context, sidebar/drawer controls, and placeholder notification affordance in `src/components/admin-system/shell/AdminShellHeader.vue`
+- [X] T027 [US1] Implement shell feedback component for loading, empty, error, forbidden, unauthorized, session-expired, tenant-mismatch, and unavailable states in `src/components/admin-system/shell/AdminShellFeedback.vue`
+- [X] T028 [US1] Add localized shell labels, feedback messages, and accessible control text in `src/locales/admin-system.js`
 
 **Checkpoint**: User Story 1 is independently functional and testable as the
 MVP shell.
@@ -113,18 +113,18 @@ activity, notification, or Axios usage.
 
 ### Tests for User Story 2
 
-- [ ] T029 [P] [US2] Add Vitest coverage for placeholder-only dashboard summary card states in `tests/unit/admin-system/AdminDashboardSummary.spec.js`
-- [ ] T030 [P] [US2] Add Vitest coverage for placeholder-only recent activity and notification regions in `tests/unit/admin-system/AdminDashboardPage.spec.js`
-- [ ] T031 [P] [US2] Add Vitest guard coverage rejecting live dashboard data fields such as `summaryMetric`, `recentActivity`, and `notificationCount` in `tests/unit/admin-system/dashboard.contract.spec.js`
+- [X] T029 [P] [US2] Add Vitest coverage for placeholder-only dashboard summary card states in `tests/unit/admin-system/AdminDashboardSummary.spec.js`
+- [X] T030 [P] [US2] Add Vitest coverage for placeholder-only recent activity and notification regions in `tests/unit/admin-system/AdminDashboardPage.spec.js`
+- [X] T031 [P] [US2] Add Vitest guard coverage rejecting live dashboard data fields such as `summaryMetric`, `recentActivity`, and `notificationCount` in `tests/unit/admin-system/dashboard.contract.spec.js`
 
 ### Implementation for User Story 2
 
-- [ ] T032 [US2] Implement dashboard page composition without direct Axios calls or live dashboard data in `src/pages/admin-system/dashboard/AdminDashboardPage.vue`
-- [ ] T033 [US2] Implement placeholder summary card component with empty, unavailable, loading, and error states in `src/components/admin-system/dashboard/AdminDashboardSummaryCard.vue`
-- [ ] T034 [US2] Implement placeholder recent activity component with empty, unavailable, loading, and error states in `src/components/admin-system/dashboard/AdminRecentActivityPanel.vue`
-- [ ] T035 [US2] Implement placeholder notification region or absent-state indicator in `src/components/admin-system/dashboard/AdminNotificationPlaceholder.vue`
-- [ ] T036 [US2] Add JSDoc placeholder dashboard contract shapes and blocked live-data notes in `src/contracts/admin-system/dashboard.js`
-- [ ] T037 [US2] Add localized dashboard placeholder, empty, unavailable, loading, and error text in `src/locales/admin-system.js`
+- [X] T032 [US2] Implement dashboard page composition without direct Axios calls or live dashboard data in `src/pages/admin-system/dashboard/AdminDashboardPage.vue`
+- [X] T033 [US2] Implement placeholder summary card component with empty, unavailable, loading, and error states in `src/components/admin-system/dashboard/AdminDashboardSummaryCard.vue`
+- [X] T034 [US2] Implement placeholder recent activity component with empty, unavailable, loading, and error states in `src/components/admin-system/dashboard/AdminRecentActivityPanel.vue`
+- [X] T035 [US2] Implement placeholder notification region or absent-state indicator in `src/components/admin-system/dashboard/AdminNotificationPlaceholder.vue`
+- [X] T036 [US2] Add JSDoc placeholder dashboard contract shapes and blocked live-data notes in `src/contracts/admin-system/dashboard.js`
+- [X] T037 [US2] Add localized dashboard placeholder, empty, unavailable, loading, and error text in `src/locales/admin-system.js`
 
 **Checkpoint**: User Story 2 is independently functional and testable as a
 placeholder-only dashboard.
@@ -142,17 +142,17 @@ navigate normally and all unapproved or unauthorized actions are hidden.
 
 ### Tests for User Story 3
 
-- [ ] T038 [P] [US3] Add Vitest coverage for hidden quick actions when permission is absent in `tests/unit/admin-system/useAdminQuickActions.spec.js`
-- [ ] T039 [P] [US3] Add Vitest coverage for hidden quick actions when route or workflow approval is missing in `tests/unit/admin-system/useAdminQuickActions.spec.js`
-- [ ] T040 [P] [US3] Add Vitest coverage for approved quick action navigation behavior in `tests/unit/admin-system/AdminQuickActions.spec.js`
+- [X] T038 [P] [US3] Add Vitest coverage for hidden quick actions when permission is absent in `tests/unit/admin-system/useAdminQuickActions.spec.js`
+- [X] T039 [P] [US3] Add Vitest coverage for hidden quick actions when route or workflow approval is missing in `tests/unit/admin-system/useAdminQuickActions.spec.js`
+- [X] T040 [P] [US3] Add Vitest coverage for approved quick action navigation behavior in `tests/unit/admin-system/AdminQuickActions.spec.js`
 
 ### Implementation for User Story 3
 
-- [ ] T041 [US3] Create quick-action visibility and approved-route filtering composable in `src/composables/admin-system/useAdminQuickActions.js`
-- [ ] T042 [US3] Add QuickAction JSDoc contract with permission, route approval, workflow approval, and hidden-state fields in `src/contracts/admin-system/navigation.js`
-- [ ] T043 [US3] Implement quick actions component that renders only approved and authorized actions in `src/components/admin-system/dashboard/AdminQuickActions.vue`
-- [ ] T044 [US3] Integrate approved quick actions into dashboard composition in `src/pages/admin-system/dashboard/AdminDashboardPage.vue`
-- [ ] T045 [US3] Add localized quick-action labels and accessible icon-only text in `src/locales/admin-system.js`
+- [X] T041 [US3] Create quick-action visibility and approved-route filtering composable in `src/composables/admin-system/useAdminQuickActions.js`
+- [X] T042 [US3] Add QuickAction JSDoc contract with permission, route approval, workflow approval, and hidden-state fields in `src/contracts/admin-system/navigation.js`
+- [X] T043 [US3] Implement quick actions component that renders only approved and authorized actions in `src/components/admin-system/dashboard/AdminQuickActions.vue`
+- [X] T044 [US3] Integrate approved quick actions into dashboard composition in `src/pages/admin-system/dashboard/AdminDashboardPage.vue`
+- [X] T045 [US3] Add localized quick-action labels and accessible icon-only text in `src/locales/admin-system.js`
 
 **Checkpoint**: All user stories are independently functional and testable.
 
@@ -163,15 +163,15 @@ navigate normally and all unapproved or unauthorized actions are hidden.
 **Purpose**: Final verification across shell, dashboard, quick actions,
 contracts, and specification artifacts.
 
-- [ ] T046 [P] Run quickstart scope and API-boundary checks from `specs/016-admin-shell-dashboard/quickstart.md`
-- [ ] T047 [P] Scan frontend implementation for direct Axios usage in layouts, pages, and components with `rg "axios" src/layouts src/pages src/components`
-- [ ] T048 [P] Scan frontend implementation for kebab-case Element Plus tags with `rg "<el-" src`
-- [ ] T049 [P] Scan frontend implementation for blocked coming-soon quick actions and live dashboard data names with `rg "Coming soon|coming soon|notificationCount|recentActivity|summaryMetric" src`
-- [ ] T050 Review WCAG 2.1 AA expectations for shell navigation, header controls, dashboard placeholders, quick actions, focus behavior, and feedback states in `src/layouts/admin-system/AdminSystemLayout.vue`
-- [ ] T051 Run frontend unit test suite for admin-system shell and dashboard behavior in `tests/unit/admin-system/`
-- [ ] T052 Verify follow-up frontend and contract dependencies are documented in `specs/016-admin-shell-dashboard/contracts/admin-shell-dashboard-contract.md`, `specs/016-admin-shell-dashboard/quickstart.md`, and `docs/frontend-feature-roadmap.md`
-- [ ] T053 Verify `docs/frontend-feature-roadmap.md` still marks item 2 as task-generated and live-data blocked
-- [ ] T054 Verify task checklist lines in `specs/016-admin-shell-dashboard/tasks.md` follow `- [ ] T### [P?] [US?] Description with file path`
+- [X] T046 [P] Run quickstart scope and API-boundary checks from `specs/016-admin-shell-dashboard/quickstart.md`
+- [X] T047 [P] Scan frontend implementation for direct Axios usage in layouts, pages, and components with `rg "axios" src/layouts src/pages src/components`
+- [X] T048 [P] Scan frontend implementation for kebab-case Element Plus tags with `rg "<el-" src`
+- [X] T049 [P] Scan frontend implementation for blocked coming-soon quick actions and live dashboard data names with `rg "Coming soon|coming soon|notificationCount|recentActivity|summaryMetric" src`
+- [X] T050 Review WCAG 2.1 AA expectations for shell navigation, header controls, dashboard placeholders, quick actions, focus behavior, and feedback states in `src/layouts/admin-system/AdminSystemLayout.vue`
+- [X] T051 Run frontend unit test suite for admin-system shell and dashboard behavior in `tests/unit/admin-system/`
+- [X] T052 Verify follow-up frontend and contract dependencies are documented in `specs/016-admin-shell-dashboard/contracts/admin-shell-dashboard-contract.md`, `specs/016-admin-shell-dashboard/quickstart.md`, and `docs/frontend-feature-roadmap.md`
+- [X] T053 Verify `docs/frontend-feature-roadmap.md` still marks item 2 as task-generated and live-data blocked
+- [X] T054 Verify task checklist lines in `specs/016-admin-shell-dashboard/tasks.md` follow `- [ ] T### [P?] [US?] Description with file path`
 
 ---
 
