@@ -77,7 +77,7 @@ region, and feedback states work without any dashboard live data or CRUD pages.
 
 ### Tests for User Story 1
 
-- [ ] T015 [P] [US1] Add Vitest coverage for admin route metadata layout selection, title, breadcrumb, sidebar placement, and auth requirement in `tests/unit/admin-system/admin-system.routes.spec.js`
+- [ ] T015 [P] [US1] Add Vitest coverage for admin route metadata layout selection, title, breadcrumb, sidebar placement, auth requirement, and registration through `src/router/index.js` or the existing route-module assembler in `tests/unit/admin-system/admin-system.routes.spec.js`
 - [ ] T016 [P] [US1] Add Vitest coverage for hidden unauthorized sidebar navigation items in `tests/unit/admin-system/useAdminShellPermissions.spec.js`
 - [ ] T017 [P] [US1] Add Vitest coverage for desktop/tablet collapsed sidebar and mobile overlay drawer state in `tests/unit/admin-system/useAdminShellState.spec.js`
 - [ ] T018 [P] [US1] Add Vitest coverage that dashboard content and available navigation destinations are reachable in no more than two interactions in `tests/unit/admin-system/AdminSystemLayout.spec.js`
@@ -85,7 +85,7 @@ region, and feedback states work without any dashboard live data or CRUD pages.
 
 ### Implementation for User Story 1
 
-- [ ] T020 [US1] Define admin shell route metadata for dashboard route, layout selection, permissions, breadcrumb, and sidebar placement in `src/router/modules/admin-system.routes.js`
+- [ ] T020 [US1] Define admin shell route metadata for dashboard route, layout selection, permissions, breadcrumb, and sidebar placement in `src/router/modules/admin-system.routes.js`, then register the admin-system route module through `src/router/index.js` or the existing route-module assembler
 - [ ] T021 [US1] Implement shell state actions for sidebar collapsed state, mobile drawer open state, active route key, and feedback state in `src/stores/admin-system/shell.store.js`
 - [ ] T022 [US1] Implement permission visibility helpers that hide unauthorized or unapproved navigation entries in `src/composables/admin-system/useAdminShellPermissions.js`
 - [ ] T023 [US1] Implement responsive shell state behavior that uses desktop/tablet collapsed sidebar and mobile overlay drawer in `src/composables/admin-system/useAdminShellState.js`

@@ -101,6 +101,7 @@ schoolmaster-frontend/
 │   ├── locales/
 │   │   └── admin-system.js
 │   ├── router/
+│   │   ├── index.js
 │   │   └── modules/
 │   │       └── admin-system.routes.js
 │   └── stores/
