@@ -19,8 +19,9 @@ Documented frontend baseline sources:
   patterns.
 
 The first frontend architecture slice is complete in
-`specs/015-frontend-architecture-baseline/`. No concrete frontend runtime
-implementation slice has been approved yet.
+`specs/015-frontend-architecture-baseline/`, and the System Administrator shell
+runtime slice is complete in `specs/016-admin-shell-dashboard/` and
+`schoolmaster-frontend`.
 
 ## Recommended Sequence
 
@@ -64,7 +65,9 @@ until later specs and OpenAPI contracts approve it.
 
 ### 3. Authentication and Session Foundation UI
 
-**Status**: Not specified.
+**Status**: Ready for implementation. Feature specification, quality
+checklist, implementation plan, research, data model, quickstart, frontend
+contract, and tasks are created in `specs/017-auth-session-ui/`.
 
 **Purpose**: Define login, forgot-password, authenticated session bootstrap,
 session expiration handling, current-user hydration, permission loading, and
@@ -74,10 +77,12 @@ layout selection behavior for the SPA.
 authentication, session, and permission baseline before protected CRUD pages
 can behave predictably inside the admin shell.
 
-**Contract and backend gate**: Consume only approved authentication, current
-user, permission, and tenant-context endpoints. Specify session-expired,
-unauthorized, forbidden, inactive-user, and tenant-mismatch UI behavior before
-implementation.
+**Contract and backend gate**: Consume only approved authentication,
+current-user, permission, tenant-context, password-recovery entry, and
+user-authorized school-selection contracts. School selection remains blocked
+unless an approved OpenAPI operation returns only schools authorized for the
+current user. Specify session-expired, unauthorized, forbidden, inactive-user,
+inactive-school, and tenant-mismatch UI behavior before implementation.
 
 ### 4. Administration Foundation UI
 
