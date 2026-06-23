@@ -16,7 +16,7 @@
 ## Path Conventions
 
 - Run frontend implementation tasks from the `schoolmaster-frontend` repository root.
-- Specification and contract paths reference the sibling `schoolmaster-specs` repository.
+- Specification and contract paths reference the sibling `schoolmaster-specs` repository workspace.
 - **Frontend repository**: `src/pages/`, `src/components/`, `src/composables/`, `src/contracts/`, `src/layouts/`, `src/locales/`, `src/router/`, `src/services/`, `src/stores/`, `tests/unit/`
 - **Specification repository**: `../schoolmaster-specs/specs/017-auth-session-ui/`, `../schoolmaster-specs/api/`
 
