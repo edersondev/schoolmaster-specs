@@ -18,16 +18,16 @@ Documented frontend baseline sources:
   for Vue, Pinia, Vue Router, Element Plus, Tailwind, and reusable admin
   patterns.
 
-The first frontend feature slice is being specified through
-`specs/015-frontend-architecture-baseline/`. No frontend implementation slice
-has been approved yet.
+The first frontend architecture slice is complete in
+`specs/015-frontend-architecture-baseline/`. No concrete frontend runtime
+implementation slice has been approved yet.
 
 ## Recommended Sequence
 
 ### 1. Frontend Architecture Baseline
 
-**Status**: Baseline specification, implementation plan, contracts, and
-supporting documentation are complete in
+**Status**: Complete. Baseline specification, implementation plan, contracts,
+tasks, and supporting documentation are complete in
 `specs/015-frontend-architecture-baseline/`, `docs/frontend-architecture.md`,
 `docs/frontend-guidelines.md`, `docs/frontend-admin-system-architecture.md`,
 and `docs/naming-conventions.md`.
@@ -45,8 +45,9 @@ contract semantics.
 
 ### 2. System Administrator Shell and Dashboard Foundation
 
-**Status**: Architecture baseline documented in
-`docs/frontend-admin-system-architecture.md`; feature spec not started.
+**Status**: Complete. Feature specification, implementation plan, completed
+tasks, and frontend implementation are complete in
+`specs/016-admin-shell-dashboard/` and `schoolmaster-frontend`.
 
 **Purpose**: Define the reusable `AdminSystemLayout.vue`, sidebar navigation,
 top header, permission-aware menu visibility, dashboard summary cards, recent
@@ -57,9 +58,9 @@ admin frame that later modules will live inside.
 administration, reporting, and support modules. Reusable navigation and CRUD
 framing should exist before deeper module work begins.
 
-**Contract and backend gate**: Approve dashboard summary, recent activity, and
-notification data requirements or explicitly document placeholder behavior if a
-surface is intentionally UI-only at first.
+**Contract and backend gate**: This slice documents placeholder-only dashboard
+summary, recent activity, and notification regions. Live data remains blocked
+until later specs and OpenAPI contracts approve it.
 
 ### 3. Authentication and Session Foundation UI
 
