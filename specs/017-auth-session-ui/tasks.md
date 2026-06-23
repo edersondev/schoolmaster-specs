@@ -16,9 +16,9 @@
 ## Path Conventions
 
 - Run frontend implementation tasks from the `schoolmaster-frontend` repository root.
-- Specification and contract paths reference the sibling `schoolmaster-specs` repository workspace.
+- Specification and contract paths reference the `schoolmaster-specs` repository workspace.
 - **Frontend repository**: `src/pages/`, `src/components/`, `src/composables/`, `src/contracts/`, `src/layouts/`, `src/locales/`, `src/router/`, `src/services/`, `src/stores/`, `tests/unit/`
-- **Specification repository**: `../schoolmaster-specs/specs/017-auth-session-ui/`, `../schoolmaster-specs/api/`
+- **Specification repository**: `schoolmaster-specs/specs/017-auth-session-ui/`, `schoolmaster-specs/api/`
 
 ## Phase 1: Setup (Shared Infrastructure)
 
@@ -40,8 +40,8 @@
 
 **CRITICAL**: No user story work can begin until this phase is complete.
 
-- [ ] T008 Review approved auth operations `login`, `getCurrentUser`, `logout`, and `requestPasswordReset` against `../schoolmaster-specs/api/openapi.yaml` and record any gaps in `../schoolmaster-specs/specs/017-auth-session-ui/quickstart.md`
-- [ ] T009 Verify whether an approved user-authorized school-selection source exists in `../schoolmaster-specs/api/openapi.yaml`; if none exists, record the OpenAPI blocking gap in `../schoolmaster-specs/specs/017-auth-session-ui/quickstart.md` before enabling school-selection UI
+- [ ] T008 Review approved auth operations `login`, `getCurrentUser`, `logout`, and `requestPasswordReset` against `schoolmaster-specs/api/openapi.yaml` and record any gaps in `schoolmaster-specs/specs/017-auth-session-ui/quickstart.md`
+- [ ] T009 Verify whether an approved user-authorized school-selection source exists in `schoolmaster-specs/api/openapi.yaml`; if none exists, record the OpenAPI blocking gap in `schoolmaster-specs/specs/017-auth-session-ui/quickstart.md` before enabling school-selection UI
 - [ ] T010 Implement shared auth JSDoc typedefs and mapping helpers for AuthSession, CurrentUser, PermissionSet, TenantContext, RequestedRoute, and AuthFeedbackState in `src/contracts/auth/authSession.contract.js`
 - [ ] T011 Implement OpenAPI success and error envelope normalization helpers for auth flows in `src/services/auth/authErrorMapper.js`
 - [ ] T012 Implement auth API service methods for `login`, `getCurrentUser`, `logout`, and `requestPasswordReset` in `src/services/auth/authService.js`
@@ -106,7 +106,7 @@
 - [ ] T039 [US2] Wire protected route guard registration for authenticated routes in `src/router/index.js`
 - [ ] T040 [P] [US2] Implement school selection page as a guarded composition surface that renders a blocked-source state unless T009 confirms an approved source operation in `src/pages/auth/SchoolSelectionPage.vue`
 - [ ] T041 [P] [US2] Implement school selection list component that renders only when T009 confirms an approved source operation and accepts only authorized schools from store state in `src/components/auth/SchoolSelectionList.vue`
-- [ ] T042 [US2] Block school selection list population and service consumption unless the approved source operation from `../schoolmaster-specs/specs/017-auth-session-ui/contracts/auth-session-ui-contract.md` is confirmed in `src/services/auth/authService.js`
+- [ ] T042 [US2] Block school selection list population and service consumption unless the approved source operation from `schoolmaster-specs/specs/017-auth-session-ui/contracts/auth-session-ui-contract.md` is confirmed in `src/services/auth/authService.js`
 - [ ] T043 [US2] Add school selection, bootstrap, permission, and tenant mismatch translation keys in `src/locales/auth.js`
 - [ ] T044 [US2] Integrate authenticated layout selection with the completed admin shell target in `src/router/modules/auth.routes.js`
 
@@ -172,15 +172,15 @@
 
 **Purpose**: Verification, documentation, and cross-story hardening.
 
-- [ ] T067 [P] Run auth/session quickstart review commands, including timing acceptance checks for 30-second sign-in/bootstrap, 15-second password reset confirmation, and SC-006 session-recovery UAT targets, and record results in `../schoolmaster-specs/specs/017-auth-session-ui/quickstart.md`
-- [ ] T068 [P] Verify no direct Axios usage exists in auth pages, components, layouts, or router guards and record findings in `../schoolmaster-specs/specs/017-auth-session-ui/quickstart.md`
-- [ ] T069 [P] Verify Element Plus component tags use PascalCase in auth Vue files and record findings in `../schoolmaster-specs/specs/017-auth-session-ui/quickstart.md`
-- [ ] T070 [P] Review local or session storage usage for token, password, Authorization, and tenant metadata handling and record findings in `../schoolmaster-specs/specs/017-auth-session-ui/quickstart.md`
+- [ ] T067 [P] Run auth/session quickstart review commands, including timing acceptance checks for 30-second sign-in/bootstrap, 15-second password reset confirmation, and SC-006 session-recovery UAT targets, and record results in `schoolmaster-specs/specs/017-auth-session-ui/quickstart.md`
+- [ ] T068 [P] Verify no direct Axios usage exists in auth pages, components, layouts, or router guards and record findings in `schoolmaster-specs/specs/017-auth-session-ui/quickstart.md`
+- [ ] T069 [P] Verify Element Plus component tags use PascalCase in auth Vue files and record findings in `schoolmaster-specs/specs/017-auth-session-ui/quickstart.md`
+- [ ] T070 [P] Review local or session storage usage for token, password, Authorization, and tenant metadata handling and record findings in `schoolmaster-specs/specs/017-auth-session-ui/quickstart.md`
 - [ ] T071 [P] Verify all auth/session reusable text uses Vue I18n keys instead of hardcoded shared messages in `src/locales/auth.js`
-- [ ] T072 [P] Run auth/session Vitest tests, verify timing acceptance coverage is included, and record command output in `../schoolmaster-specs/specs/017-auth-session-ui/quickstart.md`
-- [ ] T073 Update frontend roadmap implementation status and any discovered school-selection contract follow-up in `../schoolmaster-specs/docs/frontend-feature-roadmap.md`
-- [ ] T074 If OpenAPI changed for school selection, run Redocly validation and record result in `../schoolmaster-specs/specs/017-auth-session-ui/quickstart.md`
-- [ ] T075 Review feature against `../schoolmaster-specs/specs/017-auth-session-ui/contracts/auth-session-ui-contract.md` and record deviations or confirmations in `../schoolmaster-specs/specs/017-auth-session-ui/quickstart.md`
+- [ ] T072 [P] Run auth/session Vitest tests, verify timing acceptance coverage is included, and record command output in `schoolmaster-specs/specs/017-auth-session-ui/quickstart.md`
+- [ ] T073 Update frontend roadmap implementation status and any discovered school-selection contract follow-up in `schoolmaster-specs/docs/frontend-feature-roadmap.md`
+- [ ] T074 If OpenAPI changed for school selection, run Redocly validation and record result in `schoolmaster-specs/specs/017-auth-session-ui/quickstart.md`
+- [ ] T075 Review feature against `schoolmaster-specs/specs/017-auth-session-ui/contracts/auth-session-ui-contract.md` and record deviations or confirmations in `schoolmaster-specs/specs/017-auth-session-ui/quickstart.md`
 
 ---
 
