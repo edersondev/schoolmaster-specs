@@ -49,7 +49,7 @@
 - [ ] T014 Implement protected route guard helpers for auth, permission, tenant context, requested-route preservation, and fallback routing in `src/router/authGuards.js`
 - [ ] T015 Register auth routes and guard integration points without enabling story-specific pages in `src/router/index.js`
 - [ ] T016 Add shared auth/session translation keys for form labels, validation, denied states, recovery actions, and neutral confirmations in `src/locales/auth.js`
-- [ ] T017 Create shared auth feedback component for validation, invalid credentials, lockout, expired-session, unauthorized, forbidden, inactive-user, inactive-school, tenant-mismatch, unavailable, and neutral-confirmation states in `src/components/auth/AuthFeedbackState.vue`
+- [ ] T017 Create shared auth feedback component for validation, invalid credentials, lockout, expired-session, unauthorized, forbidden, inactive-user, inactive-school, tenant-mismatch, temporary-unavailable, and neutral-confirmation states in `src/components/auth/AuthFeedbackState.vue`
 - [ ] T018 Create unauthenticated auth layout composition surface in `src/layouts/auth/AuthLayout.vue`
 
 **Checkpoint**: Foundation ready - user story implementation can now begin.
@@ -130,8 +130,8 @@
 ### Implementation for User Story 3
 
 - [ ] T049 [US3] Implement requested-route capture, validation, restoration, and clearing logic in `src/router/authGuards.js`
-- [ ] T050 [US3] Implement expired-session, unauthorized, forbidden, inactive-user, inactive-school, tenant-mismatch, and unavailable state transitions in `src/stores/auth/sessionStore.js`
-- [ ] T051 [US3] Extend error envelope mapping for token_expired, token_revoked, forbidden, tenant_mismatch, inactive_user, inactive_school, and unavailable outcomes in `src/services/auth/authErrorMapper.js`
+- [ ] T050 [US3] Implement expired-session, unauthorized, forbidden, inactive-user, inactive-school, tenant-mismatch, and temporary-unavailable state transitions in `src/stores/auth/sessionStore.js`
+- [ ] T051 [US3] Extend error envelope mapping for token_expired, token_revoked, forbidden, tenant_mismatch, inactive_user, inactive_school, and temporary-unavailable outcomes in `src/services/auth/authErrorMapper.js`
 - [ ] T052 [P] [US3] Implement session recovery action UI in `src/components/auth/AuthRecoveryActions.vue`
 - [ ] T053 [US3] Integrate recovery actions into shared auth feedback rendering in `src/components/auth/AuthFeedbackState.vue`
 - [ ] T054 [US3] Implement direct protected-route access handling from signed-out state in `src/router/authGuards.js`

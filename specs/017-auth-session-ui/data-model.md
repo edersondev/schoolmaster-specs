@@ -234,7 +234,7 @@ re-authentication.
 
 - `state`: Validation, invalid-credentials, lockout, expired-session,
   unauthorized, forbidden, inactive-user, inactive-school, tenant-mismatch,
-  unavailable, or neutral-confirmation.
+  temporary-unavailable, or neutral-confirmation.
 - `messageKey`: Centralized reusable UI text key.
 - `severity`: Informational, warning, or error.
 - `recoveryAction`: Sign in, choose school, go to allowed workspace, retry, or
