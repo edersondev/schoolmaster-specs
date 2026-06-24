@@ -27,6 +27,18 @@ Frontend auth services may consume only:
 Confirm each service maps the published OpenAPI request, response, and error
 envelope before any page, component, store, or route guard consumes the result.
 
+### Implementation Review — 2026-06-23
+
+- Confirmed `login`, `getCurrentUser`, `logout`, and
+  `requestPasswordReset` exist with the documented operation IDs, request
+  schemas, success envelopes, and auth-specific error responses.
+- Confirmed `getCurrentUser` accepts the optional `X-School-Id` header and
+  returns the shared `AuthSession` schema.
+- School selection remains blocked. The existing `listSchools` operation is
+  documented for platform-scope authorization and is not confirmed as a
+  user-authorized school source across the intended user types.
+- No OpenAPI change is made by this frontend slice.
+
 ## 3. Verify Session Bootstrap
 
 The implementation should:
@@ -116,3 +128,35 @@ Expected review result:
 Affected auth services, session store, route guards, tenant context restoration,
 denied-state mapping, and forgot-password entry behavior should have Vitest
 coverage when implemented in `schoolmaster-frontend`.
+
+## 9. Implementation Results — 2026-06-23
+
+- `npm run test:unit -- --run`: PASS, 24 test files and 62 tests.
+- Auth/session subset: PASS, 14 test files and 42 tests.
+- `npm run build`: PASS. Vite reported only dependency annotation and existing
+  large-chunk advisory warnings.
+- `npx eslint src tests/unit/auth --no-cache`: PASS.
+- `npx oxlint src tests/unit/auth`: PASS.
+- Sign-in and bootstrap tests include assertions against the 30-second target.
+- Password reset request tests include assertions against the 15-second target.
+- Automated route-recovery tests confirm authorized restoration and fallback
+  behavior. The SC-006 90% participant UAT target remains a manual product UAT
+  measure because no participant panel is available in this implementation
+  environment.
+
+## 10. Architecture and Security Review — 2026-06-23
+
+- No direct Axios usage exists in auth pages, components, layouts, or guards.
+- All Element Plus tags in auth Vue files use PascalCase.
+- Auth endpoint strings exist only in `src/services/auth/authService.js`.
+- Client persistence is limited to
+  `schoolmaster.auth.lastApprovedSchoolId`; passwords, bearer tokens, and
+  Authorization headers are not persisted.
+- Presentation files contain password form handling only; they do not expose
+  tokens or Authorization headers.
+- Shared auth/session text is centralized in `src/locales/auth.js`.
+- Contract review confirms login, current-user, logout, password-reset request,
+  session errors, requested-route recovery, and tenant-context gating.
+- School-selection choices remain blocked because no approved operation is
+  confirmed for all intended user types.
+- OpenAPI was not changed, so Redocly validation is not applicable.

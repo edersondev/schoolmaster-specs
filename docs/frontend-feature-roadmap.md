@@ -65,9 +65,11 @@ until later specs and OpenAPI contracts approve it.
 
 ### 3. Authentication and Session Foundation UI
 
-**Status**: Ready for implementation. Feature specification, quality
-checklist, implementation plan, research, data model, quickstart, frontend
-contract, and tasks are created in `specs/017-auth-session-ui/`.
+**Status**: Complete. Feature specification, quality checklist, implementation
+plan, research, data model, quickstart, frontend contract, tasks, and runtime
+implementation are complete in `specs/017-auth-session-ui/` and
+`schoolmaster-frontend`. School selection remains intentionally blocked pending
+an approved user-authorized source contract.
 
 **Purpose**: Define login, forgot-password, authenticated session bootstrap,
 session expiration handling, current-user hydration, permission loading, and
