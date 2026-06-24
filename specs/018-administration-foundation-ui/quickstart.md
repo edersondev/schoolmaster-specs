@@ -8,6 +8,8 @@ Use this checklist to implement or review roadmap item 4 in
 - Read `spec.md`, `plan.md`, `research.md`, `data-model.md`, and
   `contracts/administration-foundation-ui-contract.md`.
 - Reuse implemented features 015, 016, and 017.
+- Keep tenant-owned routes blocked when feature 017 cannot confirm an active
+  school. Do not use `listSchools` to populate school selection.
 - Do not add detail, edit, lifecycle, bulk, account, guardian-link, or student
   management actions.
 - Do not add packages unless separately approved.
@@ -58,6 +60,8 @@ Role create UI must not expose scope. Its service payload must submit
 - Add shared list page, filter bar, remote data table, pagination, form page,
   and feedback components.
 - Add list/create composables and unsaved-change guard.
+- Add shared paginated lookup orchestration with selected-option retention and
+  tenant reset for roles, permissions, and academic years.
 - Keep route pages thin.
 - Keep Axios inside services.
 - Split story routes into `schools.routes.js`,
@@ -68,12 +72,12 @@ Role create UI must not expose scope. Its service payload must submit
 
 - Schools: list, status, pagination, create; no sort control until backend
   honors the published sort parameter.
-- Users: list, status, sort, pagination, create with role choices.
-- Roles: list, status, pagination, create with permission choices.
+- Users: list, status, sort, pagination, create with paginated role choices.
+- Roles: list, status, pagination, create with paginated permission choices.
 - Permissions: read-only paginated list.
 - Academic years: list, status, pagination, create.
-- Academic periods: list, status, year filter, pagination, create with year
-  choice.
+- Academic periods: list, status, year filter, pagination, create with
+  paginated year choice.
 - Guardians: list, status, pagination, create with remote active-student
   lookup.
 
@@ -86,6 +90,8 @@ Role create UI must not expose scope. Its service payload must submit
 - Successful create returns to previous validated list query.
 - Dirty create routes confirm every exit.
 - School switch confirms dirty tenant form, then clears old tenant state.
+- Role, permission, and academic-year selectors can reach every API page and
+  retain selected options while paging.
 
 ## 6. Verify Security and Errors
 
@@ -93,6 +99,8 @@ Role create UI must not expose scope. Its service payload must submit
 - No protected rows render for forbidden, mismatch, inactive, or stale school.
 - Not-found messages reveal no cross-tenant existence.
 - Session expiration delegates to feature 017.
+- Missing unresolved school context renders the feature 017 blocked state and
+  sends no tenant-owned administration request.
 - Field errors preserve valid form values.
 - Logs contain no form payloads, emails, tokens, or permission data.
 

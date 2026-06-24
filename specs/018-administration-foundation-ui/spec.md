@@ -1,8 +1,8 @@
 # Feature Specification: Administration Foundation UI
 
-**Feature Branch**: `018-administration-foundation-ui`  
-**Created**: 2026-06-24  
-**Status**: Draft  
+**Feature Branch**: `018-administration-foundation-ui`
+**Created**: 2026-06-24
+**Status**: Draft
 **Input**: User description: "Define the Administration Foundation UI for schools, users, roles, permissions, academic years, academic periods, and guardians. Cover reusable list/create pages, filters, data tables, forms, pagination, empty states, validation errors, authorization denials, and not-found handling, consuming only approved and implemented OpenAPI operations."
 
 ## Clarifications
@@ -14,6 +14,12 @@
 - Q: Where should list filters, sorting, and pagination state persist? → A: Persist approved list state in the URL query.
 - Q: What create workflow pattern should all resources use? → A: Use dedicated create routes.
 - Q: How should unsaved form data be handled when the user leaves a create route? → A: Require confirmation before every route exit.
+- Q: What happens when feature 017 cannot resolve an active school? → A:
+  Keep tenant-owned administration blocked; this feature does not introduce or
+  populate school selection without an approved user-authorized source.
+- Q: How can create forms reach selectable references beyond the first API
+  page? → A: Use paginated remote selectors that retain selected options while
+  traversing every available page with operation-approved parameters.
 
 ## User Scenarios & Testing *(mandatory)*
 
@@ -88,6 +94,9 @@ user assigned to an available role while verifying denied and invalid states.
    **When** an administration request is attempted, **Then** tenant-owned
    content remains hidden and the established tenant recovery or denial state is
    shown.
+7. **Given** available roles or permissions span multiple pages, **When** the
+   administrator traverses lookup pages, **Then** every permitted option is
+   reachable and already selected values remain selected.
 
 ---
 
@@ -123,6 +132,9 @@ validation, empty, and tenant-denial states.
    permitted scope, **When** period creation cannot continue, **Then** the form
    shows a safe not-found state and does not infer whether a cross-tenant record
    exists.
+7. **Given** permitted academic years span multiple pages, **When** the
+   administrator traverses the parent-year lookup, **Then** every permitted
+   option is reachable and the selected year remains available.
 
 ---
 
@@ -190,6 +202,11 @@ states.
   the UI must recover to the nearest valid page.
 - A list route opens with unsupported or malformed query values; the UI must
   normalize them to approved defaults without sending undocumented parameters.
+- A multi-school session has no restorable active school and no approved
+  user-authorized school source; tenant-owned administration remains blocked
+  and no administration list or lookup request is sent.
+- A paginated role, permission, or academic-year lookup changes page after a
+  value is selected; the selected option must remain visible and submittable.
 
 ## Architecture & Contract Impact *(mandatory)*
 
@@ -281,6 +298,9 @@ states.
   resource data.
 - **FR-005**: Tenant-owned administration routes MUST require a valid active
   school context before requesting or rendering resource data.
+- **FR-005a**: When feature 017 cannot confirm an active school, tenant-owned
+  administration MUST remain blocked and MUST NOT use `listSchools` or another
+  unapproved source to populate school selection.
 - **FR-006**: After a school switch is approved by the general unsaved-change
   route guard, the frontend MUST clear tenant-owned resource data, selections,
   pending results, and form context before the new school's data is shown.
@@ -308,6 +328,10 @@ states.
   authorized, approved recovery actions.
 - **FR-013**: Create forms MUST use only fields and selectable references
   published by the corresponding request contract.
+- **FR-013a**: Role, permission, and academic-year selectors MUST provide
+  server-driven page traversal using only parameters approved for their list
+  operations, MUST make every permitted page reachable, and MUST retain
+  selected options across page changes and tenant-safe reloads.
 - **FR-014**: User creation MUST allow only approved role selection and MUST NOT
   offer direct permission assignment.
 - **FR-015**: Role creation in this feature MUST always submit `scope=school`,
@@ -361,7 +385,8 @@ states.
   pagination, URL query restoration and normalization, empty states, create
   success and validation, permission visibility, direct-route denial, tenant
   changes, unsaved-change route guards, not-found handling, duplicate
-  submission prevention, and stale-response protection.
+  submission prevention, paginated form lookups, blocked unresolved school
+  selection, and stale-response protection.
 
 ### Key Entities *(include if feature involves data)*
 
@@ -422,6 +447,10 @@ states.
   and `017-auth-session-ui` are implemented and provide the reusable
   architecture, admin shell, authenticated routing, permissions, tenant
   context, and denial-state foundations.
+- Feature 017 can restore an active school only from authenticated session
+  data. When it cannot do so, school selection remains blocked until a separate
+  approved operation returns only schools authorized for the current user;
+  this feature does not resolve that contract gap.
 - Backend operations `listSchools`, `createSchool`, `listUsers`, `createUser`,
   `listRoles`, `createRole`, `listPermissions`, `listAcademicYears`,
   `createAcademicYear`, `listAcademicPeriods`, `createAcademicPeriod`,

@@ -88,7 +88,9 @@ inactive-school, and tenant-mismatch UI behavior before implementation.
 
 ### 4. Administration Foundation UI
 
-**Status**: Not specified.
+**Status**: Specified. Feature specification, quality checklist,
+implementation plan, research, data model, frontend contract, quickstart, and
+tasks are available in `specs/018-administration-foundation-ui/`.
 
 **Purpose**: Define frontend consumption for schools, users, roles,
 permissions, academic years, academic periods, and guardians list/create

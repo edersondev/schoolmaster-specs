@@ -35,6 +35,9 @@ lifecycle, guardian user links, and student management remain blocked.
 - School routes are platform-scoped.
 - Users, roles, permissions, academic years, academic periods, guardians, and
   student lookup require confirmed active school context.
+- If feature 017 cannot confirm an active school, tenant-owned administration
+  remains blocked. This feature does not use `listSchools` or another
+  unapproved source to populate school selection.
 - Route metadata defines layout, title, breadcrumb, sidebar placement,
   permission codes, auth requirement, and school-context requirement.
 - Unauthorized navigation items and create actions are hidden.
@@ -92,6 +95,20 @@ route access. Backend authorization remains authoritative.
 - Components, pages, composables, and router guards never inspect raw Axios
   errors.
 
+## Lookup Contract
+
+- User-role, role-permission, and period-year selectors use server-driven
+  pagination over `listRoles`, `listPermissions`, and `listAcademicYears`.
+- Those operations publish no general search parameter, so selectors expose
+  explicit page traversal or an equivalent load-more control rather than
+  silently limiting choices to the first page.
+- Lookup calls send only operation-approved page, page-size, and supported
+  status parameters.
+- Selected options remain visible and submittable while another page is
+  displayed.
+- Tenant changes cancel or invalidate pending lookup requests and clear both
+  current and selected tenant-owned options.
+
 ## Component Contract
 
 - Route pages compose shared and resource-specific components.
@@ -115,9 +132,11 @@ route access. Backend authorization remains authoritative.
   returns to the resource list with prior validated query.
 - Cancel or any route exit prompts only when values differ from initial state.
 - Permission remains read-only.
-- User form assigns roles only.
+- User form assigns roles only and can traverse every permitted role page.
 - Role form has no scope selector, assigns active school-scope permissions
-  only, and service mapping submits `scope=school`.
+  only, can traverse every permitted permission page, and service mapping
+  submits `scope=school`.
+- Academic-period form can traverse every permitted academic-year page.
 - Guardian student choices are hidden when `student_profiles.view` is absent;
   when present, choices come from remote `listStudentProfiles` with
   `status=active`.
@@ -160,6 +179,7 @@ or permission payloads.
 Vitest coverage must verify:
 
 - route metadata, hidden navigation, direct-route denial, and tenant gating
+- blocked unresolved school selection without administration API requests
 - query parsing, serialization, normalization, refresh, and back navigation
 - approved service parameters and request payload mappings
 - paginated envelope and error mappings
@@ -167,7 +187,8 @@ Vitest coverage must verify:
 - reusable list/table/filter/pagination/feedback behavior
 - each create form's fields, validation mapping, pending state, and success
   navigation
-- role, permission, academic-year, and student lookup behavior
+- paginated role, permission, academic-year, and student lookup behavior,
+  including selected-option retention and tenant reset
 - exact permission-matrix behavior, including multi-permission create routes
 - absence of platform scope selection in role creation
 - school-switch and generic unsaved-route confirmations

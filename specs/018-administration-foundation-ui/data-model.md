@@ -27,6 +27,8 @@ forms, service mappings, and relationships to approved OpenAPI records.
 - Create routes exist for every resource except permission.
 - Unauthorized navigation remains hidden, but direct-route denial is handled.
 - Tenant-owned routes cannot load before active school resolution.
+- Missing unresolved school context remains blocked by feature 017; routes do
+  not populate school selection from `listSchools`.
 
 ## AdministrationListQuery
 
@@ -90,6 +92,31 @@ forms, service mappings, and relationships to approved OpenAPI records.
 - Successful submit clears dirty/error state before list navigation.
 - Tenant switch uses same discard confirmation and clears draft after approval.
 
+## AdministrationLookupState
+
+**Fields**:
+
+- `items`: Current normalized lookup page.
+- `selectedItems`: Selected options retained independently from the current
+  page.
+- `meta`: `page`, `perPage`, and `total`.
+- `status`: Idle, loading, ready, empty, unavailable, or error.
+- `requestKey`: Current operation, approved lookup parameters, and tenant
+  generation.
+
+**Rules**:
+
+- Role, permission, and academic-year selectors expose server-driven page
+  traversal because their approved operations are paginated and do not publish
+  general search.
+- Lookup requests send only operation-approved page, page-size, and supported
+  status parameters.
+- Every returned page is reachable; implementations must not assume the first
+  page contains all selectable references.
+- Selected options remain visible and submittable while another page is shown.
+- Only the latest request for the current tenant may update options.
+- School change clears current and selected tenant-owned options.
+
 ## School
 
 **Fields**: `id`, `name`, `code`, `status`, `contactEmail`, `contactPhone`,
@@ -109,7 +136,8 @@ forms, service mappings, and relationships to approved OpenAPI records.
 
 **Fields**: `fullName`, `email`, `roleIds`.
 
-**Relationships**: Role choices come from active permitted `listRoles` results.
+**Relationships**: Role choices come from paginated, active permitted
+`listRoles` results coordinated through `AdministrationLookupState`.
 
 **Rules**: Full name, email, and at least the contract-required role selection
 are submitted; direct permission assignment is absent.
@@ -122,7 +150,8 @@ are submitted; direct permission assignment is absent.
 
 **Fields**: `name`, `permissionIds`.
 
-**Relationships**: Permission choices come from `listPermissions`.
+**Relationships**: Permission choices come from paginated `listPermissions`
+results coordinated through `AdministrationLookupState`.
 
 **Rules**: Only active school-scope permissions are selectable. The UI has no
 scope control. The service mapper adds contract-required `scope=school` and
@@ -156,7 +185,7 @@ guidance, while backend validation remains authoritative.
 **Fields**: `academicYearId`, `name`, `sequence`, `startDate`, `endDate`.
 
 **Relationships**: Academic-year choices come from active-school
-`listAcademicYears`.
+`listAcademicYears` pages coordinated through `AdministrationLookupState`.
 
 **Rules**: Parent year and all fields required; sequence is integer; displayed
 date guidance uses selected year bounds; backend remains authoritative.

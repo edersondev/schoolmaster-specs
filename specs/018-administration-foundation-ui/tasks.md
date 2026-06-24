@@ -26,7 +26,7 @@ relative to `schoolmaster-frontend`; specification paths are relative to
 **Purpose**: Confirm contract readiness and create feature-local frontend test
 and localization scaffolding.
 
-- [ ] T001 Verify all 14 approved operation IDs, paths, parameters, request schemas, envelopes, backend readiness, and the exact frontend permission matrix against `api/openapi.yaml` and `../schoolmaster-backend/database/seeders/PermissionSeeder.php`, then record any blocking mismatch in `specs/018-administration-foundation-ui/quickstart.md`
+- [ ] T001 Verify all 14 approved operation IDs, paths, parameters, request schemas, envelopes, backend readiness, the exact frontend permission matrix, and feature 017's unresolved-school selection gate against `api/openapi.yaml`, `specs/017-auth-session-ui/`, and `../schoolmaster-backend/database/seeders/PermissionSeeder.php`, then record any blocking mismatch in `specs/018-administration-foundation-ui/quickstart.md`
 - [ ] T002 [P] Create administration test fixture scaffold for sessions, tenants, envelopes, errors, and resource records in `tests/unit/admin-system/administration/administration.fixtures.js`
 - [ ] T003 [P] Create centralized administration locale scaffold for navigation, lists, forms, feedback, validation summaries, and discard confirmation in `src/locales/administration.js`
 - [ ] T004 Register administration locale messages through the existing i18n assembly used by `src/main.js` and `src/locales/administration.js`
@@ -45,20 +45,20 @@ unsaved-change infrastructure required by every user story.
 - [ ] T005 [P] Add Vitest coverage for administration JSDoc envelope mapping, list metadata, feedback states, and form/list model factories in `tests/unit/admin-system/administration/contracts/administration.contract.spec.js`
 - [ ] T006 [P] Add Vitest coverage for approved query allowlists, school sort exclusion, parsing, serialization, malformed-value normalization, filter page reset, and unknown-key removal in `tests/unit/admin-system/administration/composables/useAdminListQuery.spec.js`
 - [ ] T007 [P] Add Vitest coverage for validation, unauthorized, forbidden, tenant-mismatch, inactive-context, not-found, unavailable, unknown, and safe diagnostic mapping in `tests/unit/admin-system/administration/services/administration-error-mapper.spec.js`
-- [ ] T008 [P] Add Vitest coverage for latest-request protection, empty final-page recovery, retry, and tenant-generation reset in `tests/unit/admin-system/administration/composables/useAdminList.spec.js`
+- [ ] T008 [P] Add Vitest coverage for latest-request protection, empty final-page recovery, retry, tenant-generation reset, paginated role/permission/academic-year lookup traversal, approved lookup parameters, and selected-option retention in `tests/unit/admin-system/administration/composables/useAdminList.spec.js` and `tests/unit/admin-system/administration/composables/useAdminLookup.spec.js`
 - [ ] T009 [P] Add Vitest coverage for dirty-state derivation, duplicate-submit prevention, field-error preservation, success reset, and return-query behavior in `tests/unit/admin-system/administration/composables/useAdminCreateForm.spec.js`
 - [ ] T010 [P] Add Vitest coverage for browser and in-app route exit confirmation, successful-submit bypass, unchanged-form bypass, and school-switch confirmation in `tests/unit/admin-system/administration/composables/useUnsavedChangesGuard.spec.js`
 - [ ] T011 [P] Add Vitest coverage for shared list frame, authorized create slot, loading, base empty, filtered empty, retry, and denial rendering in `tests/unit/admin-system/administration/components/AdminListPage.spec.js`
 - [ ] T012 [P] Add Vitest coverage for approved filter emits, reset behavior, operation-gated remote sort emits, pagination emits, responsive rendering at 390px, 768px, and 1440px, and keyboard access in `tests/unit/admin-system/administration/components/AdminListControls.spec.js`
 - [ ] T013 [P] Add Vitest coverage for shared form frame, accessible validation summary, pending submit state, cancel behavior, success feedback, and focus management in `tests/unit/admin-system/administration/components/AdminFormPage.spec.js`
-- [ ] T014 [P] Add Vitest coverage for administration route metadata schema, lazy loading, auth requirement, school-context requirement, the exact single- and multi-permission matrix, breadcrumb, and sidebar placement in `tests/unit/admin-system/administration/routes/administration.routes.spec.js`
+- [ ] T014 [P] Add Vitest coverage for administration route metadata schema, lazy loading, auth requirement, school-context requirement, unresolved-school blocking without administration requests, the exact single- and multi-permission matrix, breadcrumb, and sidebar placement in `tests/unit/admin-system/administration/routes/administration.routes.spec.js`
 
 ### Foundational Implementation
 
 - [ ] T015 Define shared JSDoc contracts and mapping helpers for list queries, paginated results, feedback, form state, and safe diagnostics in `src/contracts/admin-system/administration.js`
 - [ ] T016 Implement per-resource query allowlists including school sort exclusion, parse/serialize helpers, approved defaults, and page-reset rules in `src/composables/admin-system/useAdminListQuery.js`
 - [ ] T017 Implement normalized administration error mapping without sensitive payload logging in `src/services/admin-system/administration-error-mapper.js`
-- [ ] T018 Implement latest-request-wins list orchestration, scoped loading, retry, tenant clearing, and invalidated-page recovery in `src/composables/admin-system/useAdminList.js`
+- [ ] T018 Implement latest-request-wins list orchestration, scoped loading, retry, tenant clearing, and invalidated-page recovery in `src/composables/admin-system/useAdminList.js`, plus reusable paginated lookup orchestration with approved parameter allowlists and selected-option retention in `src/composables/admin-system/useAdminLookup.js`
 - [ ] T019 Implement create-form orchestration for dirty state, pending submit, validation mapping, success reset, and validated list return query in `src/composables/admin-system/useAdminCreateForm.js`
 - [ ] T020 Implement reusable browser and in-app leave protection with centralized discard confirmation in `src/composables/admin-system/useUnsavedChangesGuard.js`
 - [ ] T021 [P] Implement shared administration feedback rendering for loading, empty, filtered-empty, forbidden, tenant-mismatch, inactive, not-found, unavailable, and retry states in `src/components/ui/admin/AdminFeedbackState.vue`
@@ -122,8 +122,8 @@ mismatched, inactive, forbidden, validation, and school-switch states.
 - [ ] T043 [P] [US2] Add user service tests for approved list query, tenant header, create payload, role IDs, errors, and stale response protection in `tests/unit/admin-system/administration/services/users.spec.js`
 - [ ] T044 [P] [US2] Add role service tests for approved list query, tenant header, fixed `scope=school` create payload, school permission IDs, errors, and stale response protection in `tests/unit/admin-system/administration/services/roles.spec.js`
 - [ ] T045 [P] [US2] Add permission service tests for read-only pagination, tenant header, envelope mapping, denial, and absence of mutation functions in `tests/unit/admin-system/administration/services/permissions.spec.js`
-- [ ] T046 [P] [US2] Add component tests for user/role/permission filters, tables, role choices, school-scope permission choices, absence of role scope control, and no direct user permission assignment in `tests/unit/admin-system/administration/components/AccessAdministrationModules.spec.js`
-- [ ] T047 [P] [US2] Add page-flow tests for user, role, and permission lists, URL query state, create success, field validation, direct denial, tenant clearing, and dirty school-switch confirmation in `tests/unit/admin-system/administration/pages/AccessAdministrationPages.spec.js`
+- [ ] T046 [P] [US2] Add component tests for user/role/permission filters, tables, paginated role choices, paginated school-scope permission choices, selected-option retention, absence of role scope control, and no direct user permission assignment in `tests/unit/admin-system/administration/components/AccessAdministrationModules.spec.js`
+- [ ] T047 [P] [US2] Add page-flow tests for user, role, and permission lists, URL query state, paginated lookup traversal beyond the first page, create success, field validation, direct denial, unresolved-school blocking, tenant clearing, and dirty school-switch confirmation in `tests/unit/admin-system/administration/pages/AccessAdministrationPages.spec.js`
 
 ### Implementation for User Story 2
 
@@ -135,8 +135,8 @@ mismatched, inactive, forbidden, validation, and school-switch states.
 - [ ] T053 [P] [US2] Implement user filters, table, and role-only create form in `src/components/admin-system/users/UserFilters.vue`, `src/components/admin-system/users/UserTable.vue`, and `src/components/admin-system/users/UserForm.vue`
 - [ ] T054 [P] [US2] Implement role filters, table, and school-permission create form with no editable scope control in `src/components/admin-system/roles/RoleFilters.vue`, `src/components/admin-system/roles/RoleTable.vue`, and `src/components/admin-system/roles/RoleForm.vue`
 - [ ] T055 [P] [US2] Implement read-only permission table without create or lifecycle actions in `src/components/admin-system/permissions/PermissionTable.vue`
-- [ ] T056 [US2] Compose user list and dedicated create routes with role lookup, tenant gating, errors, and unsaved guard in `src/pages/admin-system/users/UsersListPage.vue` and `src/pages/admin-system/users/CreateUserPage.vue`
-- [ ] T057 [US2] Compose role list and school-only dedicated create routes with permission lookup, fixed school scope, tenant gating, errors, and unsaved guard in `src/pages/admin-system/roles/RolesListPage.vue` and `src/pages/admin-system/roles/CreateRolePage.vue`
+- [ ] T056 [US2] Compose user list and dedicated create routes with paginated role lookup, selected-option retention, tenant gating, errors, and unsaved guard in `src/pages/admin-system/users/UsersListPage.vue` and `src/pages/admin-system/users/CreateUserPage.vue`
+- [ ] T057 [US2] Compose role list and school-only dedicated create routes with paginated permission lookup, selected-option retention, fixed school scope, tenant gating, errors, and unsaved guard in `src/pages/admin-system/roles/RolesListPage.vue` and `src/pages/admin-system/roles/CreateRolePage.vue`
 - [ ] T058 [US2] Compose read-only permission list with pagination, tenant gating, denial, and empty states in `src/pages/admin-system/permissions/PermissionsListPage.vue`
 - [ ] T059 [US2] Add user, role, and permission route records with exact requirements: `users.view`; `users.view` plus `users.manage` plus `roles.view`; `roles.view`; `roles.view` plus `roles.manage` plus `permissions.view`; and `permissions.view`, including school-context metadata in `src/router/modules/access-administration.routes.js`
 
@@ -159,8 +159,8 @@ not-found, tenant, pagination, and unsaved-route behavior.
 - [ ] T060 [P] [US3] Add contract tests for AcademicYear, AcademicYearCreateForm, AcademicPeriod, AcademicPeriodCreateForm, date mapping, and sequence mapping in `tests/unit/admin-system/administration/contracts/academics.contract.spec.js`
 - [ ] T061 [P] [US3] Add academic-year service tests for approved status/pagination query, tenant header, create payload, validation, denial, and stale response protection in `tests/unit/admin-system/administration/services/academic-years.spec.js`
 - [ ] T062 [P] [US3] Add academic-period service tests for approved status/year/pagination query, tenant header, create payload, validation, not-found, and stale response protection in `tests/unit/admin-system/administration/services/academic-periods.spec.js`
-- [ ] T063 [P] [US3] Add component tests for year/period filters, tables, date fields, sequence field, parent-year choices, and responsive rendering in `tests/unit/admin-system/administration/components/AcademicAdministrationModules.spec.js`
-- [ ] T064 [P] [US3] Add page-flow tests for year and period lists, year filter query, create success, date/sequence validation, unavailable parent, tenant clearing, and unsaved guards in `tests/unit/admin-system/administration/pages/AcademicAdministrationPages.spec.js`
+- [ ] T063 [P] [US3] Add component tests for year/period filters, tables, date fields, sequence field, paginated parent-year choices, selected-option retention, and responsive rendering in `tests/unit/admin-system/administration/components/AcademicAdministrationModules.spec.js`
+- [ ] T064 [P] [US3] Add page-flow tests for year and period lists, year filter query, parent-year lookup traversal beyond the first page, create success, date/sequence validation, unavailable parent, unresolved-school blocking, tenant clearing, and unsaved guards in `tests/unit/admin-system/administration/pages/AcademicAdministrationPages.spec.js`
 
 ### Implementation for User Story 3
 
@@ -170,7 +170,7 @@ not-found, tenant, pagination, and unsaved-route behavior.
 - [ ] T068 [P] [US3] Implement academic-year filters, table, and create form in `src/components/admin-system/academic-years/AcademicYearFilters.vue`, `src/components/admin-system/academic-years/AcademicYearTable.vue`, and `src/components/admin-system/academic-years/AcademicYearForm.vue`
 - [ ] T069 [P] [US3] Implement academic-period filters, table, and create form with parent-year and sequence controls in `src/components/admin-system/academic-periods/AcademicPeriodFilters.vue`, `src/components/admin-system/academic-periods/AcademicPeriodTable.vue`, and `src/components/admin-system/academic-periods/AcademicPeriodForm.vue`
 - [ ] T070 [US3] Compose academic-year list and create pages with tenant gating, validation, query state, and leave guard in `src/pages/admin-system/academic-years/AcademicYearsListPage.vue` and `src/pages/admin-system/academic-years/CreateAcademicYearPage.vue`
-- [ ] T071 [US3] Compose academic-period list and create pages with year lookup/filter, tenant gating, safe not-found state, query state, and leave guard in `src/pages/admin-system/academic-periods/AcademicPeriodsListPage.vue` and `src/pages/admin-system/academic-periods/CreateAcademicPeriodPage.vue`
+- [ ] T071 [US3] Compose academic-period list and create pages with paginated year lookup and selected-option retention, year filtering, tenant gating, safe not-found state, query state, and leave guard in `src/pages/admin-system/academic-periods/AcademicPeriodsListPage.vue` and `src/pages/admin-system/academic-periods/CreateAcademicPeriodPage.vue`
 - [ ] T072 [US3] Add academic route records with exact requirements: `academic_years.view`; `academic_years.view` plus `academic_years.manage`; `academic_periods.view`; and `academic_periods.view` plus `academic_periods.manage` plus `academic_years.view`, including school-context metadata in `src/router/modules/academics.routes.js`
 
 **Checkpoint**: Academic calendar foundation works independently for one active
@@ -218,7 +218,7 @@ used only as same-school lookup data.
 **Purpose**: Full-feature integration, accessibility, security, performance,
 scope, and documentation verification.
 
-- [ ] T087 [P] Add cross-module Vitest coverage for shell navigation reachability within two interactions, exact permission-matrix visibility, multi-permission create routes, and hidden unauthorized administration destinations in `tests/unit/admin-system/administration/routes/administration.navigation.spec.js`
+- [ ] T087 [P] Add cross-module Vitest coverage for shell navigation reachability within two interactions, exact permission-matrix visibility, multi-permission create routes, hidden unauthorized administration destinations, and blocked unresolved school selection without tenant-owned requests in `tests/unit/admin-system/administration/routes/administration.navigation.spec.js`
 - [ ] T088 [P] Add cross-module Vitest coverage that tenant switches clear all tenant-owned lists, lookups, requests, and drafts without affecting platform school state in `tests/unit/admin-system/administration/composables/administration.tenant-isolation.spec.js`
 - [ ] T089 [P] Add cross-module Vitest coverage with the app bootstrapped and mocked service latency of 1.5 seconds, asserting stable list data, empty state, or recoverable error within 2 seconds from route navigation or committed query change, plus scoped loading, stale response rejection, and retry behavior in `tests/unit/admin-system/administration/pages/administration.performance.spec.js`
 - [ ] T090 [P] Add accessibility coverage at 390px, 768px, and 1440px for labels, focus, validation summaries, announced feedback, table alternatives, pagination, forms, and discard confirmation in `tests/unit/admin-system/administration/components/administration.accessibility.spec.js`
@@ -229,7 +229,7 @@ scope, and documentation verification.
 - [ ] T095 Run full frontend unit suite with `npm run test:unit -- --run`
 - [ ] T096 Run production build with `npm run build`
 - [ ] T097 Execute manual review at 390px, 768px, and 1440px plus keyboard, denial, tenant-switch, list-query, create-return, deterministic 1.5-second service-latency checks, and moderated UAT with five administrators and 30 total create attempts from `specs/018-administration-foundation-ui/quickstart.md`, then record results and confirm at least 27 unguided first-attempt completions in `specs/018-administration-foundation-ui/quickstart.md`
-- [ ] T098 Update roadmap item 4 status and artifact links after verified frontend completion in `docs/frontend-feature-roadmap.md`
+- [ ] T098 Update roadmap item 4 from specified to complete and record frontend artifact links after verified frontend completion in `docs/frontend-feature-roadmap.md`
 
 ---
 

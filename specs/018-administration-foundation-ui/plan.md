@@ -11,7 +11,9 @@ permissions, academic years, academic periods, and guardians in
 creatable resources receive dedicated create routes. Approved list state is
 URL-query-driven, tenant-owned requests use the authenticated active school,
 guardian student associations use the approved `listStudentProfiles` lookup,
-and unsaved create forms guard every route exit.
+role, permission, and academic-year form choices use paginated remote
+selectors, and unsaved create forms guard every route exit. Tenant-owned
+administration stays blocked when feature 017 cannot confirm an active school.
 
 The implementation extends the existing admin shell and auth/session
 foundation. Route pages remain composition surfaces. Reusable admin
@@ -21,15 +23,18 @@ calls and OpenAPI mapping. No backend or OpenAPI change is planned.
 
 ## Technical Context
 
-**Language/Version**: JavaScript with Vue 3 SFCs using Composition API and `<script setup>`; TypeScript remains out of scope.  
-**Primary Dependencies**: Vue 3, Vue Router, Pinia session/shell stores, Axios service boundary, Element Plus, `@element-plus/icons-vue`, Vue I18n, Tailwind CSS, and existing OpenAPI-backed administration operations.  
-**Storage**: No backend or database change. List state persists only in route query parameters. Unsaved form drafts remain in memory and are discarded only after confirmation.  
-**Testing**: Vitest and Vue Test Utils for route modules, services, contract mappers, composables, shared CRUD components, list/create pages, tenant changes, permission denials, stale requests, and unsaved-route guards; moderated UAT with five representative administrators completing six create workflows each. Redocly/OpenAPI validation is not required unless contract files change.  
-**Target Platform**: `schoolmaster-frontend` responsive SPA consuming published `/api/v1` contracts from `schoolmaster-specs`.  
-**Project Type**: Frontend SPA feature with specification and cross-repository delivery artifacts.  
-**Performance Goals**: With the app bootstrapped and mocked list service latency capped at 1.5 seconds, each list renders data, empty state, or recoverable error within 2 seconds from route navigation or committed query change; stale requests are cancelled or ignored; one resource action must not block unrelated shell behavior.  
-**Constraints**: No undocumented endpoint, field, filter, sort, or action; no direct Axios in pages/components/router; no lifecycle/detail/edit/delete flows; no direct per-user permission assignment; no client-side tenant inference; dedicated create routes; URL-query list state; school sort hidden until backend honors it; active-only guardian student lookup; WCAG 2.1 AA target at 390px, 768px, and 1440px; PascalCase Element Plus tags; centralized reusable text.  
-**Scale/Scope**: Seven list modules, six create workflows, one student-profile lookup, shared CRUD primitives, route metadata/navigation, URL query coordination, validation/error mapping, responsive layouts, and focused frontend tests.
+**Language/Version**: JavaScript with Vue 3 SFCs using Composition API and `<script setup>`; TypeScript remains out of scope.
+**Primary Dependencies**: Vue 3, Vue Router, Pinia session/shell stores, Axios service boundary, Element Plus, `@element-plus/icons-vue`, Vue I18n, Tailwind CSS, and existing OpenAPI-backed administration operations.
+**Storage**: No backend or database change. List state persists only in route query parameters. Unsaved form drafts remain in memory and are discarded only after confirmation.
+**Testing**: Vitest and Vue Test Utils for route modules, services, contract mappers, composables, shared CRUD components, list/create pages, tenant changes, permission denials, paginated lookups, stale requests, unresolved school gating, and unsaved-route guards; moderated UAT with five representative administrators completing six create workflows each. Redocly/OpenAPI validation is not required unless contract files change.
+**Target Platform**: `schoolmaster-frontend` responsive SPA consuming published `/api/v1` contracts from `schoolmaster-specs`.
+**Project Type**: Frontend SPA feature with specification and cross-repository delivery artifacts.
+**Performance Goals**: With the app bootstrapped and mocked list service latency capped at 1.5 seconds, each list renders data, empty state, or recoverable error within 2 seconds from route navigation or committed query change; stale requests are cancelled or ignored; one resource action must not block unrelated shell behavior.
+**Constraints**: No undocumented endpoint, field, filter, sort, or action; no direct Axios in pages/components/router; no lifecycle/detail/edit/delete flows; no direct per-user permission assignment; no client-side tenant inference; unresolved school selection remains blocked; dedicated create routes; URL-query list state; paginated form selectors for non-searchable lookup operations; school sort hidden until backend honors it; active-only guardian student lookup; WCAG 2.1 AA target at 390px, 768px, and 1440px; PascalCase Element Plus tags; centralized reusable text.
+**Scale/Scope**: Seven list modules, six create workflows, three paginated
+reference selectors, one student-profile lookup, shared CRUD primitives, route
+metadata/navigation, URL query coordination, validation/error mapping,
+responsive layouts, and focused frontend tests.
 
 ## Constitution Check
 
@@ -52,6 +57,9 @@ calls and OpenAPI mapping. No backend or OpenAPI change is planned.
 - PASS: MySQL and soft-delete behavior are unchanged. Tenant-owned modules use
   the authenticated active `school_id`; school changes clear stale tenant data
   after unsaved-change confirmation.
+- PASS: Unresolved multi-school selection remains blocked by feature 017. This
+  feature does not repurpose platform-scoped `listSchools` as an authorized
+  school-selection source.
 - PASS: API compatibility, authentication, authorization, pagination,
   filtering, sorting, success envelopes, error mapping, and exact frontend
   permission requirements are documented.
@@ -115,6 +123,7 @@ schoolmaster-frontend/
 │   ├── composables/admin-system/
 │   │   ├── useAdminListQuery.js
 │   │   ├── useAdminList.js
+│   │   ├── useAdminLookup.js
 │   │   ├── useAdminCreateForm.js
 │   │   ├── useUnsavedChangesGuard.js
 │   │   └── useStudentProfileLookup.js
@@ -188,7 +197,8 @@ separate so story implementation can proceed in parallel;
   and approved options; data and pending state arrive through props, and user
   intent leaves through emits.
 - Route pages: Compose resource components with `useAdminList` or
-  `useAdminCreateForm`; they remain thin and contain no direct HTTP logic.
+  `useAdminCreateForm`; forms with paginated references also use
+  `useAdminLookup`. They remain thin and contain no direct HTTP logic.
 
 ## Permission Matrix
 
@@ -236,7 +246,8 @@ Design outputs are captured in:
   services own transport; composables own route/form coordination; existing
   Pinia stores own only shared session and shell state.
 - PASS: Tenant changes, denied states, stale requests, guardian lookup scope,
-  and cross-tenant privacy are explicit and testable.
+  unresolved school gating, paginated reference selectors, and cross-tenant
+  privacy are explicit and testable.
 - PASS: Route and action visibility use exact implemented permission codes, and
   role creation is constrained to school scope.
 - PASS: School sorting is blocked until backend contract implementation is

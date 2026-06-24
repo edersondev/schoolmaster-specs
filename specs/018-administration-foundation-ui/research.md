@@ -46,6 +46,20 @@ state is not shared across unrelated routes and would duplicate query/form
 state. Putting orchestration in route pages was rejected because seven modules
 would repeat cancellation, errors, pagination, and tenant-reset behavior.
 
+## Decision: Keep unresolved school selection blocked
+
+**Rationale**: Feature 017 restores active school context only when
+authenticated backend data confirms it. The existing `listSchools` operation
+is platform-scoped and is not approved as a user-authorized school source for
+all school users. Tenant-owned administration therefore renders the existing
+blocked context state and sends no resource or lookup request until the session
+store confirms an active school.
+
+**Alternatives considered**: Reusing `listSchools` for multi-school selection
+was rejected because it could expose schools outside the user's authorized
+scope. Adding a new endpoint in this frontend-only feature was rejected because
+OpenAPI and backend changes are not approved.
+
 ## Decision: Use shared CRUD presentation with resource-specific composition
 
 **Rationale**: Shared components own page frame, filters, remote table,
@@ -89,6 +103,20 @@ submits UUIDs only.
 **Alternatives considered**: Manual UUID entry was rejected as unsafe and
 unusable. Loading every student was rejected for scale. Adding student CRUD was
 rejected as outside this feature.
+
+## Decision: Page through non-searchable form lookups
+
+**Rationale**: `listRoles`, `listPermissions`, and `listAcademicYears` are
+paginated but publish no general search parameter. User-role, role-permission,
+and period-year selectors therefore use server-driven page or load-more
+controls, retain selected options independently from the visible page, and
+clear tenant-owned options on school change.
+
+**Alternatives considered**: Loading only the first page was rejected because
+valid references beyond the default page size become unreachable. Fetching
+every page eagerly was rejected because it creates unbounded request bursts.
+Client-side search over loaded pages was rejected because it implies complete
+data when only part of the collection is loaded.
 
 ## Decision: Use server-driven sorting and pagination only where approved
 
