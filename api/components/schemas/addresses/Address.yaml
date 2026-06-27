@@ -1,0 +1,36 @@
+type: object
+additionalProperties: false
+required:
+  - id
+  - street
+  - number
+  - neighborhood
+  - city
+  - state
+  - zip_code
+properties:
+  id:
+    type: string
+    format: uuid
+  street:
+    type: string
+  number:
+    type: string
+    pattern: '^[0-9]+$'
+  complement:
+    type:
+      - string
+      - 'null'
+  neighborhood:
+    type: string
+  city:
+    type: string
+  state:
+    type: string
+  zip_code:
+    type: string
+    pattern: '^[0-9]+$'
+  country:
+    type:
+      - string
+      - 'null'

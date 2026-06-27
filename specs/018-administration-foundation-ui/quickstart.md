@@ -140,3 +140,42 @@ Expected:
   academic-period, and guardian creation once with valid scenario data. Record
   first-attempt completion and facilitator intervention; pass when at least 27
   of 30 attempts complete without guidance.
+
+## 9. Implementation Record
+
+Automated implementation verification completed on 2026-06-25:
+
+- All 14 approved operation IDs were confirmed in aggregate OpenAPI path
+  definitions.
+- All required frontend permission codes were confirmed in
+  `PermissionSeeder.php`.
+- Feature 017 unresolved school selection remains intentionally blocked;
+  tenant-owned administration and lookups send no requests until an active
+  school is confirmed.
+- Backend routes for all approved list/create operations were confirmed.
+- Administration-focused Vitest suite passed.
+- Full frontend unit suite passed with 112 tests across 61 files.
+- ESLint and Oxlint passed.
+- Production build passed. Existing third-party pure-annotation and bundle-size
+  warnings remain non-blocking.
+- Source audits found no direct Axios or endpoint use outside services, no
+  kebab-case Element Plus tags, no sensitive administration logging, and no
+  lifecycle actions outside feature scope.
+- Playwright browser verification passed at 390px, 768px, and 1440px with no
+  horizontal overflow. School list, validation, create, query-state reset,
+  discard confirmation, permission denial without a protected request, and
+  permission-aware post-login routing were verified against the local backend.
+- Extended keyboard review confirmed keyboard reachability for create, status
+  filtering, pagination, validation recovery, and discard confirmation. The
+  validation summary now receives focus after a failed submission, and the
+  create destination is a single interactive element.
+- An already-bootstrapped 1.5-second mocked list request settled in 1.589
+  seconds, within the 2-second target.
+- Automated surrogate UAT completed 30 of 30 mocked create attempts across
+  five isolated browser contexts and all six create workflows without scripted
+  intervention. This is repeatable engineering evidence, not moderated human
+  usability evidence.
+
+Keyboard/announcement review is complete. Moderated UAT with five
+representative human administrators remains pending and cannot be replaced by
+the automated surrogate.

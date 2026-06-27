@@ -10,5 +10,7 @@ properties:
     format: email
   contact_phone:
     type: string
-  address_summary:
-    type: string
+  address:
+    oneOf:
+      - $ref: ../addresses/AddressInput.yaml
+      - type: 'null'

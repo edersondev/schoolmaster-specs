@@ -63,5 +63,5 @@ When implementing or modifying features:
 - only then implementation repositories should change
 
 <!-- SPECKIT START -->
-Active implementation plan: `specs/018-administration-foundation-ui/plan.md`
+Active implementation plan: `specs/019-centralize-addresses/plan.md`
 <!-- SPECKIT END -->
