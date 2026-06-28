@@ -63,5 +63,5 @@ When implementing or modifying features:
 - only then implementation repositories should change
 
 <!-- SPECKIT START -->
-Active implementation plan: `specs/019-centralize-addresses/plan.md`
+Active implementation plan: `specs/020-administration-lifecycle-ui/plan.md`
 <!-- SPECKIT END -->
