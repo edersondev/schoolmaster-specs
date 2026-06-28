@@ -115,7 +115,13 @@ implementation.
 
 ### 5. Administration Lifecycle UI
 
-**Status**: Not specified.
+**Status**: Complete. Feature specification, implementation plan, research,
+data model, frontend contract, quickstart, tasks, runtime implementation,
+review fixes, and verification record are complete in
+`specs/020-administration-lifecycle-ui/` and `schoolmaster-frontend`. Detail,
+update, activate/deactivate, soft-delete/restore, and approved bulk lifecycle
+workflows are implemented for supported administration resources, with schools
+and permissions retaining their scoped lifecycle constraints.
 
 **Purpose**: Define detail, update, activate/deactivate, delete/restore, and
 allowed bulk workflows for administrative resources where contracts approve
