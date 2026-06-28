@@ -188,3 +188,45 @@ Record during implementation:
 - Source audits for direct Axios, endpoint strings, Element Plus tag casing,
   update-form status omission, and out-of-scope lifecycle behavior.
 - Responsive, keyboard, latency, denial, conflict, and privacy review results.
+
+### 2026-06-28 Setup Verification
+
+- OpenAPI operation IDs verified in `specs/api`: all approved detail, update,
+  activate, deactivate, soft-delete, restore, and approved bulk lifecycle
+  operation IDs are present.
+- School bulk lifecycle verified absent: `specs/api/paths/schools/` contains
+  no `bulk-lifecycle.yaml`.
+- Project ignore files verified: `.gitignore`, `.prettierignore`, and
+  `eslint.config.js` already cover Node, Vite, logs, env files, build outputs,
+  coverage, and minified assets.
+
+### 2026-06-28 Implementation Verification
+
+- Unit tests: `npm run test:unit -- --run` passed with 124 test files and 219
+  tests.
+- Production build: `npm run build` passed. Vite/Rolldown reported existing
+  third-party `@vueuse/core` pure-annotation warnings and the existing large
+  `index` chunk warning; no build failure.
+- Source audits:
+  - Direct Axios outside services/API client: no matches in pages,
+    components, composables, or router.
+  - Endpoint strings outside services: no matches in pages, components,
+    composables, or router.
+  - Kebab-case Element Plus tags: no matches in `src`.
+  - Update-form status submission: lifecycle update mappers omit `status`;
+    remaining `status` matches are display, filtering, sorting, feedback,
+    lookup, or lifecycle outcome handling.
+  - Lifecycle reason leakage: reason state is confined to lifecycle/bulk
+    composables and confirmation/dialog input state; no route, store, or
+    diagnostics persistence found.
+  - Out-of-scope lifecycle behavior: no matches on lifecycle list/detail/edit
+    surfaces for account lifecycle, invitations, password reset/setup, account
+    lock/reactivation, guardian user-link, student management, reporting,
+    support, permanent purge, or undocumented lifecycle routes. Broader scan
+    only found pre-existing auth password and guardian-create student lookup
+    flows outside this feature's lifecycle surfaces.
+- Automated responsive, keyboard, latency, route registration, and scope guard
+  coverage added under `tests/unit/admin-system/administration-lifecycle/`.
+- Manual responsive review, manual keyboard review, backend readiness
+  verification against a live backend, and moderated five-administrator UAT
+  remain pending external review activities.

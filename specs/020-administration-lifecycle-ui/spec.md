@@ -192,11 +192,11 @@ validation, conflict, and denial states.
 
 ### API Contract Impact
 
-- **OpenAPI update required**: Yes. Contract review confirmed `updateSchool`
-  must publish the shared `409` conflict envelope before frontend stale or
-  conflict feedback can consume the operation. All other consumed operation,
-  request field, response field, status, conflict envelope, and error envelope
-  coverage must be confirmed before implementation.
+- **OpenAPI update required**: No new OpenAPI change is currently planned.
+  Contract review confirmed `updateSchool` publishes the shared `409`
+  conflict envelope needed by frontend stale and conflict feedback. All other
+  consumed operation, request field, response field, status, conflict envelope,
+  and error envelope coverage must be confirmed before implementation.
 - **Versioned endpoints affected**:
   - Schools: `getSchool`, `updateSchool`, `activateSchool`,
     `deactivateSchool`, `deleteSchool`, and `restoreSchool`.
