@@ -4614,6 +4614,76 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Role'
+    Address:
+      type: object
+      additionalProperties: false
+      required:
+        - id
+        - street
+        - number
+        - neighborhood
+        - city
+        - state
+        - zip_code
+      properties:
+        id:
+          type: string
+          format: uuid
+        street:
+          type: string
+        number:
+          type: string
+          pattern: '^[0-9]+$'
+        complement:
+          type:
+            - string
+            - 'null'
+        neighborhood:
+          type: string
+        city:
+          type: string
+        state:
+          type: string
+        zip_code:
+          type: string
+          pattern: '^[0-9]+$'
+        country:
+          type:
+            - string
+            - 'null'
+    AddressInput:
+      type: object
+      additionalProperties: false
+      required:
+        - street
+        - number
+        - neighborhood
+        - city
+        - state
+        - zip_code
+      properties:
+        street:
+          type: string
+        number:
+          type: string
+          pattern: '^[0-9]+$'
+        complement:
+          type:
+            - string
+            - 'null'
+        neighborhood:
+          type: string
+        city:
+          type: string
+        state:
+          type: string
+        zip_code:
+          type: string
+          pattern: '^[0-9]+$'
+        country:
+          type:
+            - string
+            - 'null'
     School:
       type: object
       required:
@@ -4621,6 +4691,7 @@ components:
         - name
         - code
         - status
+        - address
       properties:
         id:
           type: string
@@ -4640,10 +4711,10 @@ components:
           type:
             - string
             - 'null'
-        address_summary:
-          type:
-            - string
-            - 'null'
+        address:
+          oneOf:
+            - $ref: '#/components/schemas/Address'
+            - type: 'null'
     AuthSession:
       type: object
       required:
@@ -4964,6 +5035,7 @@ components:
                   type: integer
     SchoolCreateRequest:
       type: object
+      additionalProperties: false
       required:
         - name
         - code
@@ -4977,8 +5049,10 @@ components:
           format: email
         contact_phone:
           type: string
-        address_summary:
-          type: string
+        address:
+          oneOf:
+            - $ref: '#/components/schemas/AddressInput'
+            - type: 'null'
     LifecycleActionRequest:
       type: object
       required:
@@ -5089,8 +5163,10 @@ components:
           format: email
         contact_phone:
           type: string
-        address_summary:
-          type: string
+        address:
+          oneOf:
+            - $ref: '#/components/schemas/AddressInput'
+            - type: 'null'
     UserCreateRequest:
       type: object
       required:

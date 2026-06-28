@@ -4,6 +4,7 @@ required:
   - name
   - code
   - status
+  - address
 properties:
   id:
     type: string
@@ -23,7 +24,7 @@ properties:
     type:
       - string
       - 'null'
-  address_summary:
-    type:
-      - string
-      - 'null'
+  address:
+    oneOf:
+      - $ref: ../addresses/Address.yaml
+      - type: 'null'
