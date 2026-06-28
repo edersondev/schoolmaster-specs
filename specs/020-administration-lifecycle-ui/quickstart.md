@@ -54,8 +54,10 @@ refreshes.
 ```text
 schools detail/update/lifecycle            schools.view /
                                            schools.view + schools.manage
-users detail/update/lifecycle/bulk         users.view /
-                                           users.view + users.manage
+users detail/update                        users.view /
+                                           users.view + users.manage +
+                                           roles.view
+users lifecycle/bulk                       users.view + users.manage
 roles detail                               roles.view
 roles update                               roles.view + roles.manage +
                                            permissions.view

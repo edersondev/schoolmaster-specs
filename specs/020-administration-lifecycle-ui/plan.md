@@ -194,7 +194,8 @@ navigation.
 | School detail | `schools.view` |
 | School update and lifecycle | `schools.view`, `schools.manage` |
 | User detail | `users.view` |
-| User update and lifecycle | `users.view`, `users.manage` |
+| User update | `users.view`, `users.manage`, `roles.view` |
+| User lifecycle | `users.view`, `users.manage` |
 | User bulk lifecycle | `users.view`, `users.manage` |
 | Role detail | `roles.view` |
 | Role update | `roles.view`, `roles.manage`, `permissions.view` |

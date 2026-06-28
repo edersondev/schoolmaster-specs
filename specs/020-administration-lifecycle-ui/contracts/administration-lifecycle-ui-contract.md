@@ -87,7 +87,8 @@ post-action refresh, and selectors: `listSchools`, `listUsers`, `listRoles`,
 | School detail | `schools.view` |
 | School update/lifecycle | `schools.view`, `schools.manage` |
 | User detail | `users.view` |
-| User update/lifecycle/bulk | `users.view`, `users.manage` |
+| User update | `users.view`, `users.manage`, `roles.view` |
+| User lifecycle/bulk | `users.view`, `users.manage` |
 | Role detail | `roles.view` |
 | Role update | `roles.view`, `roles.manage`, `permissions.view` |
 | Role lifecycle/bulk | `roles.view`, `roles.manage` |
@@ -115,7 +116,9 @@ route access. Backend authorization remains authoritative.
   `contact_phone`.
 - Status is display-only in edit forms even where the OpenAPI update schema
   publishes a status property.
-- User update assigns roles only and never assigns direct permissions.
+- User update requires `users.view`, `users.manage`, and `roles.view` because
+  role assignment uses the approved role lookup. It assigns roles only and
+  never assigns direct permissions.
 - Role update requires `roles.view`, `roles.manage`, and `permissions.view`,
   does not expose scope editing, and allows only permitted school-scope
   permission assignments.

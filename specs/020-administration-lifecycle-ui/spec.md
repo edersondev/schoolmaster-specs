@@ -192,9 +192,11 @@ validation, conflict, and denial states.
 
 ### API Contract Impact
 
-- **OpenAPI update required**: No expected contract expansion. Contract review
-  must confirm every consumed operation, request field, response field, status,
-  conflict envelope, and error envelope before implementation.
+- **OpenAPI update required**: Yes. Contract review confirmed `updateSchool`
+  must publish the shared `409` conflict envelope before frontend stale or
+  conflict feedback can consume the operation. All other consumed operation,
+  request field, response field, status, conflict envelope, and error envelope
+  coverage must be confirmed before implementation.
 - **Versioned endpoints affected**:
   - Schools: `getSchool`, `updateSchool`, `activateSchool`,
     `deactivateSchool`, `deleteSchool`, and `restoreSchool`.
@@ -261,8 +263,10 @@ validation, conflict, and denial states.
   require active school context for tenant-owned resources.
 - **FR-004**: Update, activate, deactivate, delete, restore, and bulk lifecycle
   actions MUST require both the resource view permission and the corresponding
-  manage permission, except role update MUST also require `permissions.view`
-  because the update workflow includes permission assignment controls.
+  manage permission, except user update MUST also require `roles.view` because
+  the update workflow includes role assignment controls, and role update MUST
+  also require `permissions.view` because the update workflow includes
+  permission assignment controls.
 - **FR-005**: Direct visits to unauthorized detail or action routes MUST show
   the established unauthorized, forbidden, inactive-context, tenant-mismatch,
   or not-found state without rendering protected resource data.
@@ -279,8 +283,9 @@ validation, conflict, and denial states.
   `permissions.view`, MUST allow only approved permission assignments from the
   permitted school-scope permission set, and MUST NOT expose platform role
   scope editing.
-- **FR-009**: User update MUST allow role assignment only and MUST NOT expose
-  direct per-user permission assignment.
+- **FR-009**: User update MUST require `users.view`, `users.manage`, and
+  `roles.view`, MUST allow role assignment only, and MUST NOT expose direct
+  per-user permission assignment.
 - **FR-010**: Academic period update MUST NOT expose academic-year reassignment
   unless a future approved contract publishes that field.
 - **FR-011**: Status transitions MUST be performed only through dedicated
