@@ -88,9 +88,9 @@ inactive-school, and tenant-mismatch UI behavior before implementation.
 
 ### 4. Administration Foundation UI
 
-**Status**: Implemented; moderated UAT pending. Feature specification, quality
-checklist, implementation plan, research, data model, frontend contract,
-quickstart, tasks, and verification record are available in
+**Status**: Complete. Feature specification, quality checklist, implementation
+plan, research, data model, frontend contract, quickstart, tasks, and
+verification record are available in
 `specs/018-administration-foundation-ui/`. Runtime artifacts are implemented
 in `schoolmaster-frontend/src/components/ui/admin/`,
 `schoolmaster-frontend/src/components/admin-system/`,
@@ -98,8 +98,7 @@ in `schoolmaster-frontend/src/components/ui/admin/`,
 `schoolmaster-frontend/src/services/admin-system/`, and
 `schoolmaster-frontend/src/router/modules/`. Automated unit, build,
 responsive, keyboard, latency, denial, and 30-attempt browser-surrogate checks
-pass. Final Complete status remains gated by moderated UAT with five
-representative human administrators.
+pass. Moderated UAT with five representative human administrators is complete.
 
 **Purpose**: Define frontend consumption for schools, users, roles,
 permissions, academic years, academic periods, and guardians list/create
