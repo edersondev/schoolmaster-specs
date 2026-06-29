@@ -108,6 +108,13 @@ context, or any public school selector value in this feature.
 The password must be 12 to 128 characters. Paste and password managers must be
 allowed. Common-password rejection comes from validation feedback.
 
+The SPA must not call an undocumented reset-token validation or lookup endpoint
+when the reset completion page opens. It may show the invalid-token state before
+submission only when the token is missing or locally malformed. Expired, reused,
+superseded, revoked, mismatched, and scope-incompatible token outcomes are
+server-known states and must be surfaced from the documented
+`completePasswordReset` response.
+
 ### Account Lock
 
 `lockAccount` sends:
@@ -145,8 +152,11 @@ envelopes into these UI states where applicable:
 - `conflict`
 - `temporary-unavailable`
 
-Invalid-token state covers lifecycle token expired, reused, superseded,
-revoked, malformed, missing, mismatched, or scope-incompatible outcomes.
+Invalid-token state covers lifecycle token expired, reused, superseded, revoked,
+malformed, missing, mismatched, or scope-incompatible outcomes. For password
+reset completion specifically, only missing or locally malformed tokens are
+detected before submission; server-known invalid-token outcomes are normalized
+after `completePasswordReset` responds.
 
 Password reset request success must always show the same neutral confirmation
 for eligible, missing, inactive, locked, deleted, unauthorized, and over-limit

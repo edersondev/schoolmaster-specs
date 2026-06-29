@@ -90,11 +90,15 @@ approved neutral, invalid-token, validation, and success states appear.
    replacement password that satisfies approved password rules, **Then** reset
    completes, active sessions for the affected user are no longer trusted, and
    the user is guided to sign in with the new password.
-4. **Given** a reset token is expired, reused, superseded, revoked, malformed,
-   missing, mismatched, or scope-incompatible, **When** the user opens or submits
-   the reset completion flow, **Then** the UI shows the approved invalid token
-   state without revealing account or tenant details.
-5. **Given** failed reset-token completion attempts or reset requests exceed
+4. **Given** a reset token is missing or locally malformed, **When** the user
+   opens the reset completion flow, **Then** the UI shows the approved invalid
+   token state without revealing account or tenant details.
+5. **Given** a reset token is expired, reused, superseded, revoked, mismatched,
+   or scope-incompatible, **When** the user submits the reset completion flow,
+   **Then** the UI relies on the documented `completePasswordReset` response and
+   shows the approved invalid token state without revealing account or tenant
+   details.
+6. **Given** failed reset-token completion attempts or reset requests exceed
    approved limits, **When** the user retries, **Then** the UI preserves the
    non-enumerating or invalid-token behavior defined by contract and does not
    claim credentials were changed.
@@ -184,9 +188,13 @@ and recovery actions.
 - Invitation or reset completion response arrives after the user navigates away,
   signs in, signs out, or changes active school; stale results must not replace
   the current view.
-- A lifecycle token appears syntactically valid in the URL but is expired,
-  reused, superseded, revoked, malformed, missing, mismatched, or
-  scope-incompatible.
+- A reset token is missing or locally malformed in the URL; the UI may show the
+  invalid-token state before submission without calling an undocumented
+  validation endpoint.
+- A reset token appears syntactically valid in the URL but is expired, reused,
+  superseded, revoked, mismatched, or scope-incompatible; the UI must submit
+  `completePasswordReset` and rely on its documented response before showing the
+  server-known invalid-token state.
 - A user copies a setup or reset URL, opens it in another browser, or reuses it
   after successful completion.
 - A browser auto-fill tool or password manager inserts a password; the UI must
@@ -343,9 +351,11 @@ and recovery actions.
 - **FR-008a**: Password reset request UI MUST submit email only and MUST NOT
   show a public school selector, use cached active school context, or submit a
   school identifier in this feature.
-- **FR-009**: Password reset completion UI MUST normalize expired, reused,
-  superseded, revoked, malformed, missing, mismatched, and scope-incompatible
-  reset-token outcomes into an approved invalid-token state.
+- **FR-009**: Password reset completion UI MUST normalize missing or locally
+  malformed reset tokens into an approved invalid-token state without an API
+  call, and MUST normalize expired, reused, superseded, revoked, mismatched, and
+  scope-incompatible reset-token outcomes from the documented
+  `completePasswordReset` response into the same approved invalid-token state.
 - **FR-010**: Password reset completion UI MUST validate replacement password
   requirements before submission and show approved validation feedback without
   echoing the password into diagnostics or shared feedback.

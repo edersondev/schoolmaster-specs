@@ -103,6 +103,10 @@ valid reset token.
   password managers.
 - `resetToken` is read from the route/link context and submitted only to
   `completePasswordReset`.
+- Missing or locally malformed `resetToken` values may enter `invalid-token`
+  before submission; expired, reused, superseded, revoked, mismatched, and
+  scope-incompatible token states are only known after `completePasswordReset`
+  responds.
 - Successful reset revokes active bearer tokens for the affected user on the
   backend; frontend must clear stale assumptions and route to sign in.
 - Token values and passwords must not be persisted in Pinia, diagnostics, local

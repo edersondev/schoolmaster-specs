@@ -107,7 +107,7 @@
 - [ ] T041 [P] [US2] Add Vitest coverage for password reset request service mapping that submits email only and never sends `school_id` or `delivery_metadata` in `tests/unit/account-lifecycle/services/passwordResetRequest.service.test.js`
 - [ ] T042 [P] [US2] Add Vitest coverage for neutral reset confirmation privacy across eligible, missing, inactive, locked, deleted, unauthorized, and over-limit outcomes in `tests/unit/account-lifecycle/pages/PasswordResetRequestPage.test.js`
 - [ ] T043 [P] [US2] Add Vitest coverage for password reset completion service success, validation, conflict, invalid-token, and no-secret mapping in `tests/unit/account-lifecycle/services/passwordResetCompletion.service.test.js`
-- [ ] T044 [P] [US2] Add Vitest coverage for password reset completion composable stale-response and sign-in recovery behavior in `tests/unit/account-lifecycle/composables/usePasswordResetCompletion.test.js`
+- [ ] T044 [P] [US2] Add Vitest coverage for password reset completion composable local missing/malformed token handling, server-response invalid-token mapping, stale-response protection, and sign-in recovery behavior in `tests/unit/account-lifecycle/composables/usePasswordResetCompletion.test.js`
 - [ ] T045 [P] [US2] Add Vitest coverage for password reset completion form validation, paste/password-manager compatibility, and submit events in `tests/unit/account-lifecycle/components/PasswordResetCompletionForm.test.js`
 - [ ] T046 [P] [US2] Add Vitest coverage for auth route metadata for password reset request and completion guest flows in `tests/unit/account-lifecycle/routes/passwordReset.routes.test.js`
 
@@ -115,7 +115,7 @@
 
 - [ ] T047 [US2] Implement `usePasswordResetRequest` email-only request state and neutral confirmation handling in `src/composables/auth/usePasswordResetRequest.js`
 - [ ] T048 [US2] Implement `PasswordResetRequestPage.vue` with only email input, neutral confirmation, and no public school selector in `src/pages/auth/PasswordResetRequestPage.vue`
-- [ ] T049 [US2] Implement `usePasswordResetCompletion` token-local state, validation, invalid-token mapping, success, and stale-response protection in `src/composables/auth/usePasswordResetCompletion.js`
+- [ ] T049 [US2] Implement `usePasswordResetCompletion` token-local state, local missing/malformed token handling, `completePasswordReset` invalid-token response mapping, validation, success, and stale-response protection in `src/composables/auth/usePasswordResetCompletion.js`
 - [ ] T050 [P] [US2] Implement `PasswordResetCompletionForm.vue` with password validation, paste/password-manager compatibility, props down, and submit emits in `src/components/auth/PasswordResetCompletionForm.vue`
 - [ ] T051 [US2] Implement `PasswordResetCompletionPage.vue` as a thin composition surface with token extraction and return-to-sign-in guidance in `src/pages/auth/PasswordResetCompletionPage.vue`
 - [ ] T052 [US2] Replace or extend the existing forgot-password route to use `PasswordResetRequestPage.vue` while preserving Feature 017 behavior in `src/router/modules/auth.routes.js`
