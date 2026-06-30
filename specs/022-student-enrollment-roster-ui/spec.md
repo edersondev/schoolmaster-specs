@@ -2,7 +2,7 @@
 
 **Feature Branch**: `022-student-enrollment-roster-ui`
 **Created**: 2026-06-30
-**Status**: Draft
+**Status**: Ready for Implementation
 **Input**: User description: "Implement feature 022-student-enrollment-roster-ui: Student Enrollment and Classroom Roster UI for schoolmaster-frontend. Define student profile, enrollment, class-section roster, membership, teacher assignment, and academic-period scoped admin screens. Consume only approved student-enrollment and roster OpenAPI operations. Specify transfer behavior, lifecycle status display, assignment constraints, authorization denials, empty states, validation errors, pagination, and conflict handling. Follow existing admin shell, CRUD foundation, and lifecycle UI patterns from completed frontend features 016 through 021."
 
 ## Clarifications

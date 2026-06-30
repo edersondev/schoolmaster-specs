@@ -1,7 +1,7 @@
 # Implementation Plan: Student Enrollment and Classroom Roster UI
 
 **Branch**: `022-student-enrollment-roster-ui` | **Date**: 2026-06-30 | **Spec**: [spec.md](spec.md)
-**Input**: Feature specification from `specs/022-student-enrollment-roster-ui/spec.md`
+**Input**: Feature specification from `specs/specs/022-student-enrollment-roster-ui/spec.md`
 
 ## Summary
 
@@ -66,7 +66,7 @@ contracts or feature specs add them.
 ### Documentation (this feature)
 
 ```text
-specs/022-student-enrollment-roster-ui/
+specs/specs/022-student-enrollment-roster-ui/
 ├── plan.md
 ├── research.md
 ├── data-model.md
@@ -97,7 +97,7 @@ schoolmaster-specs/
 │   ├── frontend-admin-system-architecture.md
 │   ├── frontend-guidelines.md
 │   └── frontend-feature-roadmap.md
-├── specs/022-student-enrollment-roster-ui/
+├── specs/specs/022-student-enrollment-roster-ui/
 └── AGENTS.md
 
 # Frontend repository target shape
