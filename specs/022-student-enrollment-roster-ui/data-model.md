@@ -276,6 +276,9 @@ or `updateTeacherAssignmentStatus`.
 
 - Creation requires `classSectionId`, `teacherUserId`, `academicPeriodId`, and
   `effectiveStartDate`.
+- `teacherUserId` must come from approved same-school active user data or a
+  known teacher user ID supplied by approved route/context; the UI must not add
+  undocumented teacher lookup, role-search, or autocomplete behavior.
 - Deactivation uses the dedicated status operation and requires documented
   lifecycle information.
 - Duplicate active teacher assignments map to conflict feedback.

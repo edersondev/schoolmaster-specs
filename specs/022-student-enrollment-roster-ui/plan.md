@@ -23,7 +23,7 @@ contracts or feature specs add them.
 ## Technical Context
 
 **Language/Version**: JavaScript with Vue 3 SFCs using Composition API and `<script setup>`; TypeScript remains out of scope.
-**Primary Dependencies**: Vue 3, Vue Router, Pinia session/shell stores, Axios service boundary, Element Plus, `@element-plus/icons-vue`, Vue I18n, Tailwind CSS, and approved OpenAPI-backed academic-period read, student profile, class-section roster, membership, and teacher-assignment operations.
+**Primary Dependencies**: Vue 3, Vue Router, Pinia session/shell stores, Axios service boundary, Element Plus, `@element-plus/icons-vue`, Vue I18n, Tailwind CSS, and approved OpenAPI-backed academic-period read, user list, student profile, class-section roster, membership, and teacher-assignment operations.
 **Storage**: No backend or database change. List filters, pagination, active academic-period selection, form drafts, confirmation dialogs, batch selections, and lifecycle reasons remain route-local or composable-local. Existing Pinia auth/session state owns current user, permissions, and active school context. Sensitive student, guardian, role, permission, token, payload, and cross-tenant details must not be persisted in reusable frontend state or diagnostics.
 **Testing**: Vitest and Vue Test Utils for contract mappers, services, composables, route metadata, list/detail pages, forms, dialogs, status tags, batch membership flows, transfer flows, teacher assignment flows, stale-response handling, route/query period restoration, authorization gates, conflict and denial mapping, and no-sensitive-data diagnostics. Redocly/OpenAPI validation is required only if contract files change.
 **Target Platform**: `schoolmaster-frontend` responsive SPA consuming published `/api/v1` contracts from `schoolmaster-specs`.
@@ -216,7 +216,10 @@ selection, and lifecycle dialogs.
 - `TeacherAssignmentDetailPage.vue`: Assignment detail/deactivate composition
   for a known assignment ID.
 - `TeacherAssignmentForm.vue`: Assignment create form for class-section,
-  teacher, academic period, and effective date inputs.
+  teacher, academic period, and effective date inputs. Teacher selection may
+  use the approved same-school active user list boundary only with documented
+  list parameters, and backend assignment creation remains authoritative for
+  teacher-compatible role validation.
 - `TeacherAssignmentTable.vue`: Assignment list rows, status, selected period,
   pagination, and safe feedback.
 - `AcademicPeriodScopeSelector.vue`: Current active period default and

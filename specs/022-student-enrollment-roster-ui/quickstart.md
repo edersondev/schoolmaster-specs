@@ -47,14 +47,20 @@ Before frontend implementation:
    - `updateTeacherAssignmentStatus`
 6. Confirm the approved academic-period read operation exists:
    - `listAcademicPeriods`
-7. Confirm class-section and teacher-assignment lists support
+7. Confirm the approved same-school user list operation exists for teacher
+   assignment candidate selection:
+   - `listUsers`
+8. Confirm `listUsers` supports only documented tenant context, page, per-page,
+   status, and sort parameters for this slice; do not add undocumented role or
+   search filters for teacher candidates.
+9. Confirm class-section and teacher-assignment lists support
    `academicPeriodId` and `status` filters only.
-8. Confirm `listTeacherAssignments` has no `classSectionId` filter and class
+10. Confirm `listTeacherAssignments` has no `classSectionId` filter and class
    section detail has no assignment include; keep section-scoped assignment
    lists blocked unless OpenAPI adds one.
-9. Confirm roster membership batch add and end accept 1 to 100 requested
+11. Confirm roster membership batch add and end accept 1 to 100 requested
    changes and reject invalid batches all-or-nothing.
-10. Confirm validation, unauthorized, forbidden, tenant-mismatch,
+12. Confirm validation, unauthorized, forbidden, tenant-mismatch,
    inactive-school, inactive-record, not-found, conflict, unsupported filter,
    unsupported sort, unsupported page-size, and temporary-unavailable envelopes
    are documented for consumed actions.
@@ -127,6 +133,9 @@ Before frontend implementation:
 - Verify teacher-facing own-assignment routes are absent.
 - Verify class-section detail does not scan period-wide assignment pages to
   infer section-scoped assignments.
+- Verify teacher candidates come only from approved same-school active user data
+  or a known teacher user ID, without undocumented role/search/autocomplete
+  requests.
 - Assign an eligible same-school teacher with active teacher-compatible role
   coverage on the effective start date.
 - Attempt inactive, deleted, cross-school, duplicate, incompatible-period, or
@@ -185,6 +194,9 @@ Record in implementation PR:
 - Permission code or session capability source used for each action surface.
 - Evidence that `listAcademicPeriods` is the approved source for current-period
   default and period selector state.
+- Evidence that teacher assignment candidate selection uses only approved
+  same-school active user data or a known teacher user ID, without undocumented
+  role/search/autocomplete requests.
 - Evidence that general student profile edit remains blocked unless
   `updateStudentProfile` is approved.
 - Evidence that teacher-facing own-assignment routes remain deferred.

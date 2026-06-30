@@ -46,6 +46,7 @@ Frontend services may consume only these approved operations for this slice:
 | Operation ID | Method and Path | UI use |
 |--------------|-----------------|--------|
 | `listAcademicPeriods` | `GET /api/v1/academic-periods` | Resolve current active academic period and populate the period selector for roster and assignment lists. |
+| `listUsers` | `GET /api/v1/users` | Provide approved same-school active user candidates for teacher assignment selection when the existing administration user-list contract is available. |
 | `listStudentProfiles` | `GET /api/v1/student-profiles` | Student list with approved pagination, status/search/sort controls, loading, empty, and denied states. |
 | `createStudentProfile` | `POST /api/v1/student-profiles` | Create same-school student profile with optional approved guardian associations. |
 | `getStudentProfile` | `GET /api/v1/student-profiles/{studentProfileId}` | Retrieve same-school student detail, guardian summary, and enrollment history. |
@@ -78,6 +79,16 @@ status, and academic-year filters. Feature 022 uses it only to identify the
 current active period and populate the period selector for roster and teacher
 assignment lists. It must not create, update, activate, deactivate, restore, or
 bulk-change academic periods.
+
+### Teacher Candidate User List
+
+`listUsers` may be used only for teacher assignment candidate selection with
+documented tenant context, page, per-page, `status`, and `sort` parameters.
+Feature 022 must request active same-school users only, must not add
+undocumented role or search filters, and must not scan unbounded user pages to
+infer eligibility. The selector may display returned role summaries where
+approved, but `createTeacherAssignment` remains the authoritative validation for
+teacher-compatible role coverage on the effective start date.
 
 ### Student Profile List
 
@@ -204,6 +215,11 @@ assignment include.
 - `teacher_user_id`
 - `academic_period_id`
 - `effective_start_date`
+
+`teacher_user_id` must come from approved same-school active user data already
+visible to the administrator or from a known teacher user ID supplied by an
+approved route/context. The UI must not call undocumented teacher lookup,
+role-search, or autocomplete endpoints.
 
 ### Teacher Assignment Status
 
