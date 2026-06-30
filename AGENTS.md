@@ -63,5 +63,5 @@ When implementing or modifying features:
 - only then implementation repositories should change
 
 <!-- SPECKIT START -->
-Active implementation plan: `specs/021-account-lifecycle-ui/plan.md`
+Active implementation plan: `specs/022-student-enrollment-roster-ui/plan.md`
 <!-- SPECKIT END -->
