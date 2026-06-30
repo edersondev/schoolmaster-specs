@@ -137,7 +137,9 @@ actions, and role visibility before the frontend exposes maintenance actions.
 
 ### 6. Account Lifecycle Workflows UI
 
-**Status**: Not specified.
+**Status**: Complete. Feature specification, quality checklist,
+implementation plan, research, data model, frontend contract, quickstart, and
+tasks are complete in `specs/021-account-lifecycle-ui/`.
 
 **Purpose**: Define invitation, password setup, password reset, reactivation,
 account lock, and recovery screens and flows for the SPA.
