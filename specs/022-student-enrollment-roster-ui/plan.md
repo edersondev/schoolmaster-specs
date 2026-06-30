@@ -23,7 +23,7 @@ contracts or feature specs add them.
 ## Technical Context
 
 **Language/Version**: JavaScript with Vue 3 SFCs using Composition API and `<script setup>`; TypeScript remains out of scope.
-**Primary Dependencies**: Vue 3, Vue Router, Pinia session/shell stores, Axios service boundary, Element Plus, `@element-plus/icons-vue`, Vue I18n, Tailwind CSS, and approved OpenAPI-backed student profile, class-section roster, membership, and teacher-assignment operations.
+**Primary Dependencies**: Vue 3, Vue Router, Pinia session/shell stores, Axios service boundary, Element Plus, `@element-plus/icons-vue`, Vue I18n, Tailwind CSS, and approved OpenAPI-backed academic-period read, student profile, class-section roster, membership, and teacher-assignment operations.
 **Storage**: No backend or database change. List filters, pagination, active academic-period selection, form drafts, confirmation dialogs, batch selections, and lifecycle reasons remain route-local or composable-local. Existing Pinia auth/session state owns current user, permissions, and active school context. Sensitive student, guardian, role, permission, token, payload, and cross-tenant details must not be persisted in reusable frontend state or diagnostics.
 **Testing**: Vitest and Vue Test Utils for contract mappers, services, composables, route metadata, list/detail pages, forms, dialogs, status tags, batch membership flows, transfer flows, teacher assignment flows, stale-response handling, route/query period restoration, authorization gates, conflict and denial mapping, and no-sensitive-data diagnostics. Redocly/OpenAPI validation is required only if contract files change.
 **Target Platform**: `schoolmaster-frontend` responsive SPA consuming published `/api/v1` contracts from `schoolmaster-specs`.
@@ -114,8 +114,10 @@ schoolmaster-frontend/
 │   │   │   │   ├── ClassSectionForm.vue
 │   │   │   │   ├── ClassSectionSummaryPanel.vue
 │   │   │   │   ├── RosterMembershipBatchPanel.vue
-│   │   │   │   ├── RosterMembershipTable.vue
-│   │   │   │   └── TeacherAssignmentPanel.vue
+│   │   │   │   └── RosterMembershipTable.vue
+│   │   │   ├── teacher-assignments/
+│   │   │   │   ├── TeacherAssignmentForm.vue
+│   │   │   │   └── TeacherAssignmentTable.vue
 │   │   │   └── shared/
 │   │   │       ├── AcademicPeriodScopeSelector.vue
 │   │   │       ├── AdminLifecycleStatusTag.vue
@@ -141,10 +143,13 @@ schoolmaster-frontend/
 │   │   │   ├── StudentProfilesPage.vue
 │   │   │   ├── StudentProfileCreatePage.vue
 │   │   │   └── StudentProfileDetailPage.vue
-│   │   └── class-sections/
-│   │       ├── ClassSectionsPage.vue
-│   │       ├── ClassSectionCreatePage.vue
-│   │       └── ClassSectionDetailPage.vue
+│   │   ├── class-sections/
+│   │   │   ├── ClassSectionsPage.vue
+│   │   │   ├── ClassSectionCreatePage.vue
+│   │   │   └── ClassSectionDetailPage.vue
+│   │   └── teacher-assignments/
+│   │       ├── TeacherAssignmentsPage.vue
+│   │       └── TeacherAssignmentDetailPage.vue
 │   ├── router/modules/
 │   │   └── access-administration.routes.js
 │   └── services/admin-system/
@@ -163,11 +168,14 @@ schoolmaster-frontend/
 **Structure Decision**: Extend existing admin-system feature folders instead
 of creating a detached school operations module. Student profile pages own
 list/create/detail, status, and transfer composition. Class-section pages own
-roster metadata, membership, and teacher-assignment composition. Services stay
-split by backend resource family while sharing error and pagination mapping
-helpers. No new Pinia store is planned unless implementation finds shared
-state that crosses student and class-section routes; route-local composables
-are sufficient for filters, drafts, batch selection, and lifecycle dialogs.
+roster metadata and membership composition. Teacher assignment review uses an
+academic-period scoped admin list/detail surface because the approved OpenAPI
+list operation supports period and status filters only, not a class-section
+filter. Services stay split by backend resource family while sharing error and
+pagination mapping helpers. No new Pinia store is planned unless implementation
+finds shared state that crosses student, class-section, and teacher-assignment
+routes; route-local composables are sufficient for filters, drafts, batch
+selection, and lifecycle dialogs.
 
 ## Component Map
 
@@ -191,7 +199,8 @@ are sufficient for filters, drafts, batch selection, and lifecycle dialogs.
 - `ClassSectionCreatePage.vue`: Route composition surface for approved
   class-section creation.
 - `ClassSectionDetailPage.vue`: Route composition surface for roster metadata,
-  roster lifecycle, memberships, and teacher assignments.
+  roster lifecycle, memberships, and links into teacher-assignment workflows; it
+  does not derive a section-scoped assignment list from period-wide pages.
 - `ClassSectionForm.vue`: Class-section create/update form for approved code,
   name, and structured metadata fields.
 - `ClassSectionSummaryPanel.vue`: Status, academic period, lifecycle
@@ -201,8 +210,15 @@ are sufficient for filters, drafts, batch selection, and lifecycle dialogs.
   batch blocking.
 - `RosterMembershipTable.vue`: Membership list, status tags, history rows,
   pagination, and empty states.
-- `TeacherAssignmentPanel.vue`: Admin-only teacher assignment list/create/
-  deactivate controls and conflict feedback; no teacher-facing route.
+- `TeacherAssignmentsPage.vue`: Admin-only academic-period assignment list and
+  create controls using approved period/status filters; no teacher-facing route
+  and no section-scoped list inference.
+- `TeacherAssignmentDetailPage.vue`: Assignment detail/deactivate composition
+  for a known assignment ID.
+- `TeacherAssignmentForm.vue`: Assignment create form for class-section,
+  teacher, academic period, and effective date inputs.
+- `TeacherAssignmentTable.vue`: Assignment list rows, status, selected period,
+  pagination, and safe feedback.
 - `AcademicPeriodScopeSelector.vue`: Current active period default and
   route/query selected-period synchronization.
 - `AdminBatchActionDialog.vue`: Shared batch confirmation shell for membership
@@ -222,7 +238,8 @@ are sufficient for filters, drafts, batch selection, and lifecycle dialogs.
 | Class-section list/detail | Approved school-scoped roster administration permission or session capability and active permitted school context |
 | Class-section create/update/status | Approved school-scoped roster administration permission or session capability and active academic-period context |
 | Roster membership batch add/end | Approved school-scoped roster administration permission or session capability, active roster, valid selected period, and maximum 100 requested changes |
-| Teacher assignment create/deactivate | Approved school-scoped roster or teacher-assignment administration permission or session capability and eligible teacher state |
+| Teacher assignment list/detail/create/deactivate | Approved school-scoped roster or teacher-assignment administration permission or session capability, active selected academic period, and eligible teacher state |
+| Section-scoped teacher assignment list | Blocked unless OpenAPI adds a documented `classSectionId` filter or class-section assignment include |
 | Teacher own-assignment route | Blocked; deferred to Teacher Workflow Workspace |
 
 Backend authorization remains authoritative. Client-side visibility improves

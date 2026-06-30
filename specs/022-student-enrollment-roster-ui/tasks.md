@@ -31,7 +31,7 @@ under `specs/022-student-enrollment-roster-ui/` are maintained in
 **Purpose**: Confirm contract readiness and create feature-local frontend test,
 localization, and folder scaffolding before shared student/roster work starts.
 
-- [ ] T001 Verify approved student profile, class-section, roster membership, and teacher-assignment operation IDs, request fields, response envelopes, filters, pagination, and no `updateStudentProfile` operation against `api/openapi.yaml` and record blocking mismatches in `specs/022-student-enrollment-roster-ui/quickstart.md`
+- [ ] T001 Verify approved academic-period read, student profile, class-section, roster membership, and teacher-assignment operation IDs, request fields, response envelopes, filters, pagination, no `updateStudentProfile` operation, and no teacher-assignment `classSectionId` filter against `api/openapi.yaml` and record blocking mismatches in `specs/022-student-enrollment-roster-ui/quickstart.md`
 - [ ] T002 Verify Feature 016 through Feature 021 frontend foundations exist in `schoolmaster-frontend/src/router/`, `schoolmaster-frontend/src/pages/admin-system/`, `schoolmaster-frontend/src/components/ui/admin/`, and `schoolmaster-frontend/src/services/api/`
 - [ ] T003 [P] Create student enrollment roster test fixture scaffold for sessions, schools, periods, student profiles, rosters, memberships, teacher assignments, envelopes, and errors in `schoolmaster-frontend/tests/unit/student-enrollment-roster/fixtures/studentEnrollmentRoster.fixtures.js`
 - [ ] T004 [P] Create test directory markers for contracts, services, composables, components, pages, and routes in `schoolmaster-frontend/tests/unit/student-enrollment-roster/contracts/.gitkeep`, `schoolmaster-frontend/tests/unit/student-enrollment-roster/services/.gitkeep`, `schoolmaster-frontend/tests/unit/student-enrollment-roster/composables/.gitkeep`, `schoolmaster-frontend/tests/unit/student-enrollment-roster/components/.gitkeep`, `schoolmaster-frontend/tests/unit/student-enrollment-roster/pages/.gitkeep`, and `schoolmaster-frontend/tests/unit/student-enrollment-roster/routes/.gitkeep`
@@ -59,7 +59,7 @@ story.
 - [ ] T013 [P] Add Vitest coverage for no-sensitive-data diagnostics redacting student, guardian, token, permission, role, reason, full payload, private academic, and cross-tenant details in `schoolmaster-frontend/tests/unit/student-enrollment-roster/services/studentEnrollmentRosterDiagnostics.spec.js`
 - [ ] T014 [P] Add Vitest coverage for current active academic period default, no-current-period blocked state, route/query selected-period restoration, and active-school changes in `schoolmaster-frontend/tests/unit/student-enrollment-roster/composables/useAcademicPeriodScope.spec.js`
 - [ ] T015 [P] Add Vitest coverage for shared safe feedback rendering, status labels, conflict states, and responsive behavior at 390px, 768px, and 1440px in `schoolmaster-frontend/tests/unit/student-enrollment-roster/components/AdminSafeFeedbackState.spec.js`
-- [ ] T016 [P] Add Vitest coverage for route metadata auth requirements, active-school gating, admin-only teacher assignment routes, blocked teacher own-assignment routes, and no direct requests before school resolution in `schoolmaster-frontend/tests/unit/student-enrollment-roster/routes/studentEnrollmentRoster.routes.spec.js`
+- [ ] T016 [P] Add Vitest coverage for route metadata auth requirements, active-school gating, admin-only teacher assignment routes, blocked teacher own-assignment routes, blocked section-scoped assignment-list routes, and no direct requests before school resolution in `schoolmaster-frontend/tests/unit/student-enrollment-roster/routes/studentEnrollmentRoster.routes.spec.js`
 
 ### Foundational Implementation
 
@@ -69,14 +69,14 @@ story.
 - [ ] T020 Implement shared student enrollment roster error mapper without raw Axios exposure or sensitive payload leakage in `schoolmaster-frontend/src/services/admin-system/studentEnrollmentRosterErrorMapper.js`
 - [ ] T021 Implement student profile service functions for `listStudentProfiles`, `createStudentProfile`, `getStudentProfile`, `updateStudentProfileStatus`, and `transferStudentProfile` in `schoolmaster-frontend/src/services/admin-system/studentProfiles.js`
 - [ ] T022 Implement class-section and roster membership service functions for `listClassSections`, `createClassSection`, `getClassSection`, `updateClassSection`, `updateClassSectionStatus`, `listClassSectionMemberships`, `batchAddClassSectionMemberships`, and `batchEndClassSectionMemberships` in `schoolmaster-frontend/src/services/admin-system/classroomRoster.js`
-- [ ] T023 Implement teacher-assignment service functions for `listTeacherAssignments`, `createTeacherAssignment`, `getTeacherAssignment`, and `updateTeacherAssignmentStatus` in `schoolmaster-frontend/src/services/admin-system/teacherAssignments.js`
+- [ ] T023 Implement teacher-assignment service functions for `listTeacherAssignments`, `createTeacherAssignment`, `getTeacherAssignment`, and `updateTeacherAssignmentStatus` with only academic-period and status list filters in `schoolmaster-frontend/src/services/admin-system/teacherAssignments.js`
 - [ ] T024 Implement academic-period scope coordination with current-period default, route/query persistence, no-current-period blocked state, and stale-response reset in `schoolmaster-frontend/src/composables/admin-system/useAcademicPeriodScope.js`
 - [ ] T025 Implement shared student enrollment roster permission and capability gate helpers for student, roster, membership, transfer, and teacher-assignment surfaces in `schoolmaster-frontend/src/composables/admin-system/useStudentEnrollmentRosterPermissions.js`
 - [ ] T026 [P] Implement safe feedback component for loading, empty, validation, forbidden, tenant, inactive, not-found, conflict, unsupported, oversized-batch, and temporary states in `schoolmaster-frontend/src/components/admin-system/shared/AdminSafeFeedbackState.vue`
 - [ ] T027 [P] Implement reusable academic-period selector with selected count-safe labels, current-period default, route/query emits, and no transport logic in `schoolmaster-frontend/src/components/admin-system/shared/AcademicPeriodScopeSelector.vue`
 - [ ] T028 [P] Implement reusable lifecycle status tag for active, inactive, transferred, deleted, unavailable, ended, historical-only, and conflict states in `schoolmaster-frontend/src/components/admin-system/shared/AdminLifecycleStatusTag.vue`
 - [ ] T029 Register student enrollment roster locale messages through existing i18n assembly in `schoolmaster-frontend/src/locales/index.js`
-- [ ] T030 Add admin student and class-section route records, metadata, breadcrumbs, permission gates, and lazy page imports in `schoolmaster-frontend/src/router/modules/access-administration.routes.js`
+- [ ] T030 Add admin student, class-section, and teacher-assignment route records, metadata, breadcrumbs, permission gates, blocked section-scoped assignment-list route coverage, and lazy page imports in `schoolmaster-frontend/src/router/modules/access-administration.routes.js`
 
 **Checkpoint**: Shared contracts, services, composables, feedback, period scope, routes, permission gates, stale-response handling, and diagnostics are testable before story pages begin.
 
@@ -176,25 +176,25 @@ story.
 
 ## Phase 6: User Story 4 - Assign teachers to class sections or rosters (Priority: P4)
 
-**Goal**: Authorized school administrators can assign eligible same-school teachers to class sections or rosters, review assignment status, and deactivate assignments while teacher-facing own-assignment routes remain deferred.
+**Goal**: Authorized school administrators can assign eligible same-school teachers to class sections or rosters, review assignment status in an academic-period scoped admin list/detail flow, and deactivate assignments while teacher-facing own-assignment routes and section-scoped assignment lists remain deferred.
 
-**Independent Test**: Assign an eligible teacher to a roster, attempt inactive or cross-school teachers, duplicate assignments, incompatible periods, missing reasons, or unauthorized actors, and verify admin-visible states plus deferred teacher route absence.
+**Independent Test**: Open the teacher-assignment administration list for a selected academic period, assign an eligible teacher to a roster, attempt inactive or cross-school teachers, duplicate assignments, incompatible periods, missing reasons, or unauthorized actors, and verify admin-visible states plus deferred teacher route and blocked section-scoped list absence.
 
 ### Tests for User Story 4
 
-- [ ] T075 [P] [US4] Add Vitest coverage for teacher-assignment list/create/detail/deactivate service mapping, academic-period and status filters only, tenant headers, duplicate conflict, validation, and stale cancellation in `schoolmaster-frontend/tests/unit/student-enrollment-roster/services/teacherAssignments.service.spec.js`
+- [ ] T075 [P] [US4] Add Vitest coverage for teacher-assignment list/create/detail/deactivate service mapping, academic-period and status filters only, no `classSectionId` list filter, tenant headers, duplicate conflict, validation, and stale cancellation in `schoolmaster-frontend/tests/unit/student-enrollment-roster/services/teacherAssignments.service.spec.js`
 - [ ] T076 [P] [US4] Add Vitest coverage for teacher-assignment composable admin-only visibility, eligible teacher selection, create validation, deactivation validation, conflict feedback, success reconciliation, and stale-response protection in `schoolmaster-frontend/tests/unit/student-enrollment-roster/composables/useTeacherAssignments.spec.js`
-- [ ] T077 [P] [US4] Add component tests for teacher assignment panel list, create controls, deactivation controls, forbidden state, duplicate conflict, invalid teacher feedback, and props/emits contract in `schoolmaster-frontend/tests/unit/student-enrollment-roster/components/TeacherAssignmentPanel.spec.js`
-- [ ] T078 [P] [US4] Add route tests proving teacher-facing own-assignment routes are absent from Feature 022 route modules while admin assignment routes remain protected in `schoolmaster-frontend/tests/unit/student-enrollment-roster/routes/teacherAssignmentRoutes.spec.js`
-- [ ] T079 [P] [US4] Add page-flow tests for teacher assignment from class-section detail, active assignment display, duplicate conflict, invalid effective date, deactivation, forbidden actor, and safe denial feedback in `schoolmaster-frontend/tests/unit/student-enrollment-roster/pages/TeacherAssignmentFlow.spec.js`
+- [ ] T077 [P] [US4] Add component tests for teacher assignment table and form list rows, create controls, deactivation entry state, forbidden state, duplicate conflict, invalid teacher feedback, and props/emits contract in `schoolmaster-frontend/tests/unit/student-enrollment-roster/components/TeacherAssignmentTableForm.spec.js`
+- [ ] T078 [P] [US4] Add route tests proving teacher-facing own-assignment routes and section-scoped assignment-list routes are absent from Feature 022 route modules while admin assignment routes remain protected in `schoolmaster-frontend/tests/unit/student-enrollment-roster/routes/teacherAssignmentRoutes.spec.js`
+- [ ] T079 [P] [US4] Add page-flow tests for teacher assignment list/detail/create/deactivate, class-section detail navigation into assignment workflows without scanning pages, active assignment display, duplicate conflict, invalid effective date, forbidden actor, and safe denial feedback in `schoolmaster-frontend/tests/unit/student-enrollment-roster/pages/TeacherAssignmentFlow.spec.js`
 
 ### Implementation for User Story 4
 
-- [ ] T080 [US4] Implement teacher-assignment orchestration with admin-only eligibility, selected period, list/detail/create/deactivate state, conflict handling, validation mapping, success reconciliation, and stale-response protection in `schoolmaster-frontend/src/composables/admin-system/useTeacherAssignments.js`
-- [ ] T081 [P] [US4] Implement teacher assignment panel with assignment list, teacher selector boundary, create/deactivate controls, effective dates, reason input where required, safe feedback, and no transport logic in `schoolmaster-frontend/src/components/admin-system/class-sections/TeacherAssignmentPanel.vue`
-- [ ] T082 [US4] Integrate teacher assignment panel into class-section detail page using `useTeacherAssignments` and no direct service calls in `schoolmaster-frontend/src/pages/admin-system/class-sections/ClassSectionDetailPage.vue`
-- [ ] T083 [US4] Ensure Feature 022 route registration does not add teacher-facing own-assignment routes and keeps all teacher-assignment management under admin route metadata in `schoolmaster-frontend/src/router/modules/access-administration.routes.js`
-- [ ] T084 [US4] Add teacher assignment labels, eligibility messages, duplicate conflict, deactivation copy, forbidden feedback, and deferred teacher-route text to `schoolmaster-frontend/src/locales/student-enrollment-roster.js`
+- [ ] T080 [US4] Implement teacher-assignment orchestration with admin-only eligibility, selected period, list/detail/create/deactivate state, no section-scoped list inference, conflict handling, validation mapping, success reconciliation, and stale-response protection in `schoolmaster-frontend/src/composables/admin-system/useTeacherAssignments.js`
+- [ ] T081 [P] [US4] Implement teacher assignment table and form with assignment rows, teacher selector boundary, create controls, effective dates, safe feedback, and no transport logic in `schoolmaster-frontend/src/components/admin-system/teacher-assignments/TeacherAssignmentTable.vue` and `schoolmaster-frontend/src/components/admin-system/teacher-assignments/TeacherAssignmentForm.vue`
+- [ ] T082 [US4] Compose teacher assignment list and detail pages with academic-period selector, list/detail/create/deactivate state, validation feedback, safe denied states, and no `classSectionId` list filter in `schoolmaster-frontend/src/pages/admin-system/teacher-assignments/TeacherAssignmentsPage.vue` and `schoolmaster-frontend/src/pages/admin-system/teacher-assignments/TeacherAssignmentDetailPage.vue`
+- [ ] T083 [US4] Ensure Feature 022 route registration does not add teacher-facing own-assignment routes or section-scoped assignment-list routes and keeps all teacher-assignment management under admin route metadata in `schoolmaster-frontend/src/router/modules/access-administration.routes.js`
+- [ ] T084 [US4] Add teacher assignment labels, eligibility messages, duplicate conflict, deactivation copy, forbidden feedback, blocked section-scoped list text, and deferred teacher-route text to `schoolmaster-frontend/src/locales/student-enrollment-roster.js`
 
 **Checkpoint**: All user stories are independently functional.
 
@@ -211,7 +211,7 @@ story.
 - [ ] T089 [P] Review student, transfer, class-section, membership batch, and teacher-assignment screens at 390px, 768px, and 1440px and record responsive findings in `specs/022-student-enrollment-roster-ui/quickstart.md`
 - [ ] T090 [P] Review keyboard navigation, focus order, dialogs, batch selection controls, form labels, status tags, and feedback semantics and record findings in `specs/022-student-enrollment-roster-ui/quickstart.md`
 - [ ] T091 [P] Review diagnostics and client storage for student, guardian, token, permission, role, reason, full payload, private academic, and cross-tenant leaks and record findings in `specs/022-student-enrollment-roster-ui/quickstart.md`
-- [ ] T092 Update implementation evidence for operation mapping, permission/capability sources, blocked student profile edit, deferred teacher own-assignment routes, current-period default, route/query period restoration, batch 100-request cap, and stale-response behavior in `specs/022-student-enrollment-roster-ui/quickstart.md`
+- [ ] T092 Update implementation evidence for operation mapping, `listAcademicPeriods` period source, permission/capability sources, blocked student profile edit, deferred teacher own-assignment routes, blocked section-scoped assignment-list behavior, current-period default, route/query period restoration, batch 100-request cap, and stale-response behavior in `specs/022-student-enrollment-roster-ui/quickstart.md`
 - [ ] T093 Run representative administrator usability review for student lookup, student status review, roster creation/update, batch membership add/end, and state distinction success criteria and record SC-002, SC-003, and SC-007 results in `specs/022-student-enrollment-roster-ui/quickstart.md`
 
 ---
@@ -230,7 +230,7 @@ story.
 - **User Story 1 (P1)**: Can start after Foundational; MVP.
 - **User Story 2 (P2)**: Can start after Foundational and is easiest to integrate into US1 detail page after student detail exists; transfer remains independently testable with mocked detail state.
 - **User Story 3 (P3)**: Can start after Foundational; depends on student status semantics from US1 for full eligibility display but can be tested independently with mocked student records.
-- **User Story 4 (P4)**: Can start after Foundational and integrates into US3 class-section detail page; admin-only teacher assignment behavior remains independently testable.
+- **User Story 4 (P4)**: Can start after Foundational and links from US3 class-section detail where helpful; admin-only teacher assignment behavior remains independently testable through academic-period assignment routes.
 
 ### Within Each User Story
 
@@ -291,8 +291,8 @@ Task: "T061 [P] [US3] Add component tests for roster membership batch panel in s
 ```bash
 Task: "T075 [P] [US4] Add Vitest coverage for teacher-assignment services in schoolmaster-frontend/tests/unit/student-enrollment-roster/services/teacherAssignments.service.spec.js"
 Task: "T076 [P] [US4] Add Vitest coverage for teacher-assignment composable in schoolmaster-frontend/tests/unit/student-enrollment-roster/composables/useTeacherAssignments.spec.js"
-Task: "T077 [P] [US4] Add component tests for teacher assignment panel in schoolmaster-frontend/tests/unit/student-enrollment-roster/components/TeacherAssignmentPanel.spec.js"
-Task: "T078 [P] [US4] Add route tests proving teacher-facing own-assignment routes are absent in schoolmaster-frontend/tests/unit/student-enrollment-roster/routes/teacherAssignmentRoutes.spec.js"
+Task: "T077 [P] [US4] Add component tests for teacher assignment table and form in schoolmaster-frontend/tests/unit/student-enrollment-roster/components/TeacherAssignmentTableForm.spec.js"
+Task: "T078 [P] [US4] Add route tests proving teacher-facing own-assignment and section-scoped assignment-list routes are absent in schoolmaster-frontend/tests/unit/student-enrollment-roster/routes/teacherAssignmentRoutes.spec.js"
 ```
 
 ---
@@ -332,4 +332,4 @@ With multiple implementers:
 - [P] tasks change different files and can run in parallel after their prerequisites.
 - Every user-story task includes a concrete file path.
 - Backend and OpenAPI tasks are intentionally limited to verification/evidence because this slice is frontend-only.
-- General student profile edit and teacher-facing own-assignment routes remain blocked by contract and roadmap scope.
+- General student profile edit, teacher-facing own-assignment routes, and section-scoped teacher assignment lists remain blocked by contract and roadmap scope.

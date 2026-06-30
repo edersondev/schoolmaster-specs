@@ -8,7 +8,8 @@ teacher-assignment lists.
 **Fields**: `academicPeriodId`, `label`, `status`, `isCurrent`, `routeQuery`.
 
 **Source**: Existing academic period administration contracts and approved
-class-section or teacher-assignment filters.
+`listAcademicPeriods` contract plus approved class-section or
+teacher-assignment filters.
 
 **Rules**:
 
@@ -18,6 +19,7 @@ class-section or teacher-assignment filters.
 - If no current active period exists, scoped roster and assignment loading is
   blocked until an approved period is selected or created elsewhere.
 - The frontend must not infer a period outside authenticated school-owned data.
+- The period selector may consume only approved academic-period read operations.
 
 ## StudentProfileListView
 
@@ -252,6 +254,10 @@ period and status.
 - Feature 022 exposes admin assignment management only.
 - Teacher-facing own-assignment screens are deferred.
 - Supported filters are page, per-page, `academicPeriodId`, and `status`.
+- Class-section detail must not derive a section-scoped assignment list by
+  scanning paginated period-wide assignment responses.
+- Section-scoped assignment lists remain blocked unless OpenAPI adds a
+  documented `classSectionId` filter or class-section assignment include.
 - Status is `active` or `inactive`.
 
 ## TeacherAssignmentDraft

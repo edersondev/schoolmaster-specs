@@ -72,19 +72,20 @@ A school administrator creates and maintains academic-period-scoped class sectio
 
 ### User Story 4 - Assign teachers to class sections or rosters (Priority: P4)
 
-A school administrator assigns eligible same-school teachers to class sections or rosters for an academic period and reviews assignment status. Teacher-facing own-assignment screens are deferred to Teacher Workflow Workspace.
+A school administrator assigns eligible same-school teachers to class sections or rosters in an academic-period-scoped assignment administration view and reviews assignment status. Class-section detail may link to assignment workflows or launch create with known class-section context, but section-scoped assignment lists remain blocked unless OpenAPI adds an approved section filter or include. Teacher-facing own-assignment screens are deferred to Teacher Workflow Workspace.
 
 **Why this priority**: Teacher assignment rules define who can operate against roster-scoped future workflows. The admin UI must enforce eligibility, duplicate prevention, and denied-state clarity before teacher-facing features expand.
 
-**Independent Test**: Can be fully tested by assigning an eligible teacher to a roster, attempting assignment with inactive or cross-school teachers, duplicate assignments, incompatible periods, missing reasons, or unauthorized actors, and verifying admin-visible states plus deferred teacher route absence.
+**Independent Test**: Can be fully tested by opening the academic-period teacher-assignment administration view, assigning an eligible teacher to a roster, attempting assignment with inactive or cross-school teachers, duplicate assignments, incompatible periods, missing reasons, or unauthorized actors, and verifying admin-visible states, blocked section-scoped list behavior, plus deferred teacher route absence.
 
 **Acceptance Scenarios**:
 
-1. **Given** an authorized school administrator opens roster assignment controls, **When** they search or select teachers, **Then** the UI offers only approved same-school teacher assignment interactions and shows eligibility feedback for unavailable choices.
+1. **Given** an authorized school administrator opens academic-period teacher-assignment controls, **When** they search or select teachers, **Then** the UI offers only approved same-school teacher assignment interactions and shows eligibility feedback for unavailable choices.
 2. **Given** a teacher is active and eligible for the target roster and academic period, **When** an administrator submits assignment with required effective details, **Then** the assignment appears with active status and period context in the current selected academic-period view.
 3. **Given** the assignment would duplicate an active same-teacher, same-roster, same-period assignment or uses an invalid effective date, **When** it is submitted, **Then** the UI shows documented conflict or validation feedback without changing visible assignment state.
 4. **Given** a teacher assignment is deactivated where approved, **When** the administrator provides required lifecycle information, **Then** the UI shows inactive assignment state and preserves assignment history.
 5. **Given** an actor lacks teacher-assignment management authority, **When** they open roster or assignment surfaces, **Then** management controls are hidden or disabled and forbidden responses show safe denial feedback.
+6. **Given** OpenAPI does not provide a class-section assignment filter or include, **When** an administrator opens class-section detail, **Then** the UI does not scan period-wide assignment pages to infer a section-scoped assignment list.
 
 ### Edge Cases
 
@@ -99,6 +100,7 @@ A school administrator assigns eligible same-school teachers to class sections o
 - Roster membership or teacher assignment effective dates are future dates, outside the selected academic period, or earlier than the record start date.
 - Roster inactivation is attempted while active memberships or teacher assignments remain.
 - Teacher assignment requests include inactive users, users without teacher-compatible role coverage, cross-school teachers, duplicate active assignments, or unauthorized actors.
+- Class-section detail needs teacher assignment context but OpenAPI lacks a class-section assignment filter or include; the UI must not infer section membership by scanning period-wide assignment pages.
 - Contract responses return validation, unauthorized, forbidden, tenant-mismatch, inactive-school, not-found, conflict, temporary-unavailable, unsupported filter, unsupported sort, or unsupported page-size states.
 - Diagnostics, client-side errors, and test output must not persist or print student, guardian, token, permission, role, full request payload, or cross-tenant details for student, roster, membership, transfer, or teacher-assignment flows.
 
@@ -184,6 +186,7 @@ A school administrator assigns eligible same-school teachers to class sections o
 - Roster membership eligibility depends on active same-school student enrollment covering the membership effective start date.
 - Teacher assignment eligibility depends on an active same-school teacher-compatible user state covering the assignment effective start date.
 - Academic-period filters and effective-date constraints follow approved backend contract behavior.
+- Academic-period selectors may consume approved academic-period read operations. Teacher assignment lists may consume only approved assignment filters and must not infer class-section assignment membership from paginated period-wide lists.
 - Schools normally have one current active academic period for roster administration; if none is available, the UI blocks roster and assignment scoped loading until an approved period is selected or created elsewhere.
 - Existing admin shell, authentication, administration foundation, administration lifecycle, and account lifecycle UI behavior from completed frontend features 016 through 021 remains the baseline.
 - Teacher-facing own-assignment screens, teacher-facing workflow workspace, student self-service, guardian self-service, reporting workspace, bulk import, billing, messaging, and notification features remain outside this slice.

@@ -16,7 +16,11 @@ This feature approves:
   selected period preserved in route/query state.
 - Roster membership list and all-or-nothing batch add/end UI capped at 100
   requested changes.
-- Admin teacher-assignment list, detail, create, and deactivate UI.
+- Admin teacher-assignment list, detail, create, and deactivate UI scoped by
+  academic period. Class-section detail may link to assignment workflows or
+  launch create with known class-section context, but it must not display a
+  section-scoped assignment list unless OpenAPI adds a documented section
+  filter or include.
 - Safe loading, empty, validation, unauthorized, forbidden, tenant-mismatch,
   inactive-school, inactive-record, not-found, conflict, unsupported filter,
   unsupported sort, unsupported page-size, oversized-batch, and
@@ -41,6 +45,7 @@ Frontend services may consume only these approved operations for this slice:
 
 | Operation ID | Method and Path | UI use |
 |--------------|-----------------|--------|
+| `listAcademicPeriods` | `GET /api/v1/academic-periods` | Resolve current active academic period and populate the period selector for roster and assignment lists. |
 | `listStudentProfiles` | `GET /api/v1/student-profiles` | Student list with approved pagination, status/search/sort controls, loading, empty, and denied states. |
 | `createStudentProfile` | `POST /api/v1/student-profiles` | Create same-school student profile with optional approved guardian associations. |
 | `getStudentProfile` | `GET /api/v1/student-profiles/{studentProfileId}` | Retrieve same-school student detail, guardian summary, and enrollment history. |
@@ -65,6 +70,14 @@ actions, batch modes, status values, permission names, or capability names that
 are not documented in OpenAPI or the approved session contract.
 
 ## Request Contract
+
+### Academic Period List
+
+`listAcademicPeriods` may send only documented tenant context, page, per-page,
+status, and academic-year filters. Feature 022 uses it only to identify the
+current active period and populate the period selector for roster and teacher
+assignment lists. It must not create, update, activate, deactivate, restore, or
+bulk-change academic periods.
 
 ### Student Profile List
 
@@ -178,7 +191,10 @@ partial success when any requested membership is invalid.
 
 `listTeacherAssignments` may send only tenant context, page, per-page,
 `academicPeriodId`, and `status`. Feature 022 uses this for admin-visible
-screens only.
+academic-period assignment screens only. It must not be used to populate a
+single class-section detail assignment panel by scanning pages, because the
+approved operation does not expose a `classSectionId` filter or class-section
+assignment include.
 
 ### Teacher Assignment Create
 

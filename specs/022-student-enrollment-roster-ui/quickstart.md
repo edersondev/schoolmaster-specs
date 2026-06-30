@@ -45,11 +45,16 @@ Before frontend implementation:
    - `createTeacherAssignment`
    - `getTeacherAssignment`
    - `updateTeacherAssignmentStatus`
-6. Confirm class-section and teacher-assignment lists support
+6. Confirm the approved academic-period read operation exists:
+   - `listAcademicPeriods`
+7. Confirm class-section and teacher-assignment lists support
    `academicPeriodId` and `status` filters only.
-7. Confirm roster membership batch add and end accept 1 to 100 requested
+8. Confirm `listTeacherAssignments` has no `classSectionId` filter and class
+   section detail has no assignment include; keep section-scoped assignment
+   lists blocked unless OpenAPI adds one.
+9. Confirm roster membership batch add and end accept 1 to 100 requested
    changes and reject invalid batches all-or-nothing.
-8. Confirm validation, unauthorized, forbidden, tenant-mismatch,
+10. Confirm validation, unauthorized, forbidden, tenant-mismatch,
    inactive-school, inactive-record, not-found, conflict, unsupported filter,
    unsupported sort, unsupported page-size, and temporary-unavailable envelopes
    are documented for consumed actions.
@@ -118,9 +123,10 @@ Before frontend implementation:
 
 ### Teacher Assignments
 
-- Open admin teacher-assignment controls from class-section detail or approved
-  assignment list.
+- Open the academic-period teacher-assignment administration list.
 - Verify teacher-facing own-assignment routes are absent.
+- Verify class-section detail does not scan period-wide assignment pages to
+  infer section-scoped assignments.
 - Assign an eligible same-school teacher with active teacher-compatible role
   coverage on the effective start date.
 - Attempt inactive, deleted, cross-school, duplicate, incompatible-period, or
@@ -150,6 +156,7 @@ Focused Vitest coverage should include:
 - roster membership batch selection, 100-request cap, and all-or-nothing
   feedback
 - teacher assignment admin-only visibility, create, and deactivate flows
+- blocked section-scoped teacher assignment list behavior
 - blocked general student profile edit state
 - deferred teacher own-assignment route absence
 - stale response protection
@@ -176,9 +183,13 @@ Record in implementation PR:
 
 - Operation ID to UI surface mapping.
 - Permission code or session capability source used for each action surface.
+- Evidence that `listAcademicPeriods` is the approved source for current-period
+  default and period selector state.
 - Evidence that general student profile edit remains blocked unless
   `updateStudentProfile` is approved.
 - Evidence that teacher-facing own-assignment routes remain deferred.
+- Evidence that class-section detail does not infer section-scoped teacher
+  assignments from paginated period-wide assignment lists.
 - Evidence that roster and assignment lists default to current active academic
   period and restore explicit route/query selection.
 - Evidence that roster membership batch add/end enforce the 100-request cap
