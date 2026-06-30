@@ -137,3 +137,17 @@ Record in implementation PR:
 - Evidence that token values, plaintext passwords, reasons, tenant-private
   details, role internals, and permission payloads are absent from diagnostics.
 - Responsive and keyboard review for 390px, 768px, and 1440px.
+
+## Implementation Evidence - 2026-06-29
+
+- Operation mapping implemented in `src/services/auth/accountLifecycle.js`, `src/services/admin-system/accountLifecycle.js`, `src/contracts/auth/account-lifecycle.js`, and `src/contracts/admin-system/account-lifecycle.js`.
+- Permission/capability source: no approved exact account lifecycle permission code or session capability flag was found in the current OpenAPI/session contract; admin invitation/action visibility remains blocked by `ACCOUNT_LIFECYCLE_PERMISSION_SOURCE_CONFIRMED = false`.
+- Admin resend remains blocked because `resendAccountInvitation` still requires `{invitationToken}`.
+- Password reset request mapper submits email only; `school_id` and `delivery_metadata` are omitted.
+- No-secret diagnostics implemented in `src/services/api/errorDiagnostics.js`; token, password, reason, tenant, role, and permission keys are redacted.
+- Focused account lifecycle suite: `npm run test:unit -- tests/unit/account-lifecycle tests/unit/auth/AuthFeedbackState.test.js` passed, 28 files / 57 tests.
+- Full frontend unit suite: `npm run test:unit` passed, 151 files / 276 tests. `package.json` has no `npm test` script; `test:unit` is the project unit-test command.
+- Build check: `npm run build` passed. Build emitted existing third-party Rolldown pure-annotation warnings from `node_modules/@vueuse/core` and a large chunk warning.
+- Responsive/static review: forms, token states, panels, and dialogs use constrained card widths, grid/flex layouts, full-width mobile buttons, and Element Plus dialog width `min(92vw, 520px)`/`min(92vw, 560px)` suitable for 390px, 768px, and 1440px review.
+- Keyboard/accessibility review: forms use labels, native submit handling, password-manager-compatible inputs, status regions with `aria-live`, and Element Plus dialog focus behavior.
+- Representative administrator usability review (SC-009) remains pending because no human administrator review was available in this execution.

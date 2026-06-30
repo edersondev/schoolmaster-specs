@@ -26,13 +26,13 @@
 
 **Purpose**: Confirm repository state, contract gates, and shared frontend structure before story work.
 
-- [ ] T001 Verify the frontend repository has the Feature 017 auth/session and Feature 020 user-detail foundations needed by this plan in `src/pages/auth/` and `src/pages/admin-system/users/`
-- [ ] T002 Verify approved account lifecycle operation IDs and blocked token-based admin resend behavior against `schoolmaster-specs/api/openapi.yaml`
-- [ ] T003 [P] Create account lifecycle test folder structure in `tests/unit/account-lifecycle/`
-- [ ] T004 [P] Create frontend account lifecycle component folders in `src/components/auth/`, `src/components/admin-system/users/`, and `src/components/ui/admin/`
-- [ ] T005 [P] Create frontend account lifecycle composable folders in `src/composables/auth/` and `src/composables/admin-system/`
-- [ ] T006 [P] Create frontend account lifecycle service and contract placeholders in `src/services/auth/accountLifecycle.js`, `src/services/admin-system/accountLifecycle.js`, `src/contracts/auth/account-lifecycle.js`, and `src/contracts/admin-system/account-lifecycle.js`
-- [ ] T007 [P] Create shared account lifecycle locale placeholder in `src/locales/account-lifecycle.js`
+- [X] T001 Verify the frontend repository has the Feature 017 auth/session and Feature 020 user-detail foundations needed by this plan in `src/pages/auth/` and `src/pages/admin-system/users/`
+- [X] T002 Verify approved account lifecycle operation IDs and blocked token-based admin resend behavior against `schoolmaster-specs/api/openapi.yaml`
+- [X] T003 [P] Create account lifecycle test folder structure in `tests/unit/account-lifecycle/`
+- [X] T004 [P] Create frontend account lifecycle component folders in `src/components/auth/`, `src/components/admin-system/users/`, and `src/components/ui/admin/`
+- [X] T005 [P] Create frontend account lifecycle composable folders in `src/composables/auth/` and `src/composables/admin-system/`
+- [X] T006 [P] Create frontend account lifecycle service and contract placeholders in `src/services/auth/accountLifecycle.js`, `src/services/admin-system/accountLifecycle.js`, `src/contracts/auth/account-lifecycle.js`, and `src/contracts/admin-system/account-lifecycle.js`
+- [X] T007 [P] Create shared account lifecycle locale placeholder in `src/locales/account-lifecycle.js`
 
 ---
 
@@ -42,22 +42,22 @@
 
 **CRITICAL**: No user story work can begin until this phase is complete.
 
-- [ ] T008 [P] Add JSDoc typedefs and mappers for `AccountInvitationView`, `InvitationSetupDraft`, `PasswordResetRequestDraft`, `PasswordResetCompletionDraft`, `AccountLifecycleResultView`, and `SafeFeedbackState` in `src/contracts/auth/account-lifecycle.js`
-- [ ] T009 [P] Add JSDoc typedefs and mappers for `AccountLockView`, `AccountLifecycleActionDraft`, `AccountLifecycleResultView`, and admin eligibility inputs in `src/contracts/admin-system/account-lifecycle.js`
-- [ ] T010 Implement shared account lifecycle operation constants and blocked admin resend constant in `src/contracts/admin-system/account-lifecycle.js`
-- [ ] T011 Implement guest account lifecycle service functions for `completeAccountInvitation`, `requestPasswordReset`, and `completePasswordReset` with no UI state mutation in `src/services/auth/accountLifecycle.js`
-- [ ] T012 Implement admin account lifecycle service functions for `createAccountInvitation`, `getAccountLock`, `lockAccount`, `unlockAccount`, and `reactivateAccount` with `X-School-Id` support in `src/services/admin-system/accountLifecycle.js`
-- [ ] T013 Normalize invalid-token, neutral-confirmation, validation, unauthorized, forbidden, tenant-mismatch, inactive-school, not-found, conflict, and temporary-unavailable outcomes in `src/services/auth/accountLifecycle.js`
-- [ ] T014 Normalize admin forbidden, tenant-mismatch, not-found, conflict, validation, and temporary-unavailable outcomes in `src/services/admin-system/accountLifecycle.js`
-- [ ] T015 Add account lifecycle translation keys for labels, validation, neutral confirmation, invalid-token, blocked resend, confirmations, conflicts, and recovery actions in `src/locales/account-lifecycle.js`
-- [ ] T016 Integrate account lifecycle locale loading with existing i18n registration in `src/locales/index.js`
-- [ ] T017 Add shared no-secret diagnostic helper expectations for account lifecycle operations in `src/services/api/errorDiagnostics.js`
-- [ ] T018 [P] Add Vitest coverage for guest contract mappers in `tests/unit/account-lifecycle/contracts/authAccountLifecycle.contract.test.js`
-- [ ] T019 [P] Add Vitest coverage for admin contract mappers in `tests/unit/account-lifecycle/contracts/adminAccountLifecycle.contract.test.js`
-- [ ] T020 [P] Add Vitest coverage for guest service success/error mapping in `tests/unit/account-lifecycle/services/authAccountLifecycle.service.test.js`
-- [ ] T021 [P] Add Vitest coverage for admin service success/error mapping and tenant header behavior in `tests/unit/account-lifecycle/services/adminAccountLifecycle.service.test.js`
-- [ ] T022 [P] Add Vitest coverage proving token, password, reason, tenant-private, role, and permission values are excluded from diagnostics in `tests/unit/account-lifecycle/services/accountLifecycleDiagnostics.test.js`
-- [ ] T023 Wire account lifecycle locale keys into existing auth feedback tests in `tests/unit/auth/AuthFeedbackState.test.js`
+- [X] T008 [P] Add JSDoc typedefs and mappers for `AccountInvitationView`, `InvitationSetupDraft`, `PasswordResetRequestDraft`, `PasswordResetCompletionDraft`, `AccountLifecycleResultView`, and `SafeFeedbackState` in `src/contracts/auth/account-lifecycle.js`
+- [X] T009 [P] Add JSDoc typedefs and mappers for `AccountLockView`, `AccountLifecycleActionDraft`, `AccountLifecycleResultView`, and admin eligibility inputs in `src/contracts/admin-system/account-lifecycle.js`
+- [X] T010 Implement shared account lifecycle operation constants and blocked admin resend constant in `src/contracts/admin-system/account-lifecycle.js`
+- [X] T011 Implement guest account lifecycle service functions for `completeAccountInvitation`, `requestPasswordReset`, and `completePasswordReset` with no UI state mutation in `src/services/auth/accountLifecycle.js`
+- [X] T012 Implement admin account lifecycle service functions for `createAccountInvitation`, `getAccountLock`, `lockAccount`, `unlockAccount`, and `reactivateAccount` with `X-School-Id` support in `src/services/admin-system/accountLifecycle.js`
+- [X] T013 Normalize invalid-token, neutral-confirmation, validation, unauthorized, forbidden, tenant-mismatch, inactive-school, not-found, conflict, and temporary-unavailable outcomes in `src/services/auth/accountLifecycle.js`
+- [X] T014 Normalize admin forbidden, tenant-mismatch, not-found, conflict, validation, and temporary-unavailable outcomes in `src/services/admin-system/accountLifecycle.js`
+- [X] T015 Add account lifecycle translation keys for labels, validation, neutral confirmation, invalid-token, blocked resend, confirmations, conflicts, and recovery actions in `src/locales/account-lifecycle.js`
+- [X] T016 Integrate account lifecycle locale loading with existing i18n registration in `src/locales/index.js`
+- [X] T017 Add shared no-secret diagnostic helper expectations for account lifecycle operations in `src/services/api/errorDiagnostics.js`
+- [X] T018 [P] Add Vitest coverage for guest contract mappers in `tests/unit/account-lifecycle/contracts/authAccountLifecycle.contract.test.js`
+- [X] T019 [P] Add Vitest coverage for admin contract mappers in `tests/unit/account-lifecycle/contracts/adminAccountLifecycle.contract.test.js`
+- [X] T020 [P] Add Vitest coverage for guest service success/error mapping in `tests/unit/account-lifecycle/services/authAccountLifecycle.service.test.js`
+- [X] T021 [P] Add Vitest coverage for admin service success/error mapping and tenant header behavior in `tests/unit/account-lifecycle/services/adminAccountLifecycle.service.test.js`
+- [X] T022 [P] Add Vitest coverage proving token, password, reason, tenant-private, role, and permission values are excluded from diagnostics in `tests/unit/account-lifecycle/services/accountLifecycleDiagnostics.test.js`
+- [X] T023 Wire account lifecycle locale keys into existing auth feedback tests in `tests/unit/auth/AuthFeedbackState.test.js`
 
 **Checkpoint**: Foundation ready. User story implementation can now begin in parallel.
 
@@ -71,26 +71,26 @@
 
 ### Tests for User Story 1
 
-- [ ] T024 [P] [US1] Add Vitest coverage for invitation creation request mapping without `delivery_metadata` in `tests/unit/account-lifecycle/services/createAccountInvitation.test.js`
-- [ ] T025 [P] [US1] Add Vitest coverage for blocked admin resend rendering in `tests/unit/account-lifecycle/components/UserInvitationPanel.test.js`
-- [ ] T026 [P] [US1] Add Vitest coverage for invitation setup composable success, validation, conflict, invalid-token, stale response, and no-secret state in `tests/unit/account-lifecycle/composables/useInvitationSetup.test.js`
-- [ ] T027 [P] [US1] Add Vitest coverage for password setup form validation, paste/password-manager compatibility, and submit events in `tests/unit/account-lifecycle/components/PasswordSetupForm.test.js`
-- [ ] T028 [P] [US1] Add Vitest coverage for invitation setup page route token handling and sign-in recovery in `tests/unit/account-lifecycle/pages/InvitationSetupPage.test.js`
-- [ ] T029 [P] [US1] Add Vitest coverage for auth route metadata for invitation setup guest flow in `tests/unit/account-lifecycle/routes/invitationSetup.routes.test.js`
+- [X] T024 [P] [US1] Add Vitest coverage for invitation creation request mapping without `delivery_metadata` in `tests/unit/account-lifecycle/services/createAccountInvitation.test.js`
+- [X] T025 [P] [US1] Add Vitest coverage for blocked admin resend rendering in `tests/unit/account-lifecycle/components/UserInvitationPanel.test.js`
+- [X] T026 [P] [US1] Add Vitest coverage for invitation setup composable success, validation, conflict, invalid-token, stale response, and no-secret state in `tests/unit/account-lifecycle/composables/useInvitationSetup.test.js`
+- [X] T027 [P] [US1] Add Vitest coverage for password setup form validation, paste/password-manager compatibility, and submit events in `tests/unit/account-lifecycle/components/PasswordSetupForm.test.js`
+- [X] T028 [P] [US1] Add Vitest coverage for invitation setup page route token handling and sign-in recovery in `tests/unit/account-lifecycle/pages/InvitationSetupPage.test.js`
+- [X] T029 [P] [US1] Add Vitest coverage for auth route metadata for invitation setup guest flow in `tests/unit/account-lifecycle/routes/invitationSetup.routes.test.js`
 
 ### Implementation for User Story 1
 
-- [ ] T030 [US1] Implement `createAccountInvitation` request mapper that omits `delivery_metadata` in `src/contracts/admin-system/account-lifecycle.js`
-- [ ] T031 [US1] Implement invitation creation and blocked resend service consumption in `src/services/admin-system/accountLifecycle.js`
-- [ ] T032 [P] [US1] Implement `useInvitationSetup` route-local state, pending handling, validation mapping, invalid-token mapping, and stale-response protection in `src/composables/auth/useInvitationSetup.js`
-- [ ] T033 [P] [US1] Implement `PasswordSetupForm.vue` with password validation, paste/password-manager compatibility, props down, and submit emits in `src/components/auth/PasswordSetupForm.vue`
-- [ ] T034 [P] [US1] Implement `AccountLifecycleTokenState.vue` for invalid-token, conflict, and temporary failure feedback in `src/components/auth/AccountLifecycleTokenState.vue`
-- [ ] T035 [P] [US1] Implement `AccountLifecycleSuccessState.vue` with return-to-sign-in guidance and no automatic session claim in `src/components/auth/AccountLifecycleSuccessState.vue`
-- [ ] T036 [US1] Implement `InvitationSetupPage.vue` as a thin composition surface using `useInvitationSetup` in `src/pages/auth/InvitationSetupPage.vue`
-- [ ] T037 [US1] Add invitation setup guest route and metadata in `src/router/modules/auth.routes.js`
-- [ ] T038 [US1] Implement `UserInvitationPanel.vue` for invitation creation status and blocked admin resend messaging in `src/components/admin-system/users/UserInvitationPanel.vue`
-- [ ] T039 [US1] Integrate `UserInvitationPanel.vue` into existing user create and detail surfaces without direct HTTP calls in `src/pages/admin-system/users/UserCreatePage.vue` and `src/pages/admin-system/users/UserDetailPage.vue`
-- [ ] T040 [US1] Add US1 labels, errors, blocked resend, and success messages to `src/locales/account-lifecycle.js`
+- [X] T030 [US1] Implement `createAccountInvitation` request mapper that omits `delivery_metadata` in `src/contracts/admin-system/account-lifecycle.js`
+- [X] T031 [US1] Implement invitation creation and blocked resend service consumption in `src/services/admin-system/accountLifecycle.js`
+- [X] T032 [P] [US1] Implement `useInvitationSetup` route-local state, pending handling, validation mapping, invalid-token mapping, and stale-response protection in `src/composables/auth/useInvitationSetup.js`
+- [X] T033 [P] [US1] Implement `PasswordSetupForm.vue` with password validation, paste/password-manager compatibility, props down, and submit emits in `src/components/auth/PasswordSetupForm.vue`
+- [X] T034 [P] [US1] Implement `AccountLifecycleTokenState.vue` for invalid-token, conflict, and temporary failure feedback in `src/components/auth/AccountLifecycleTokenState.vue`
+- [X] T035 [P] [US1] Implement `AccountLifecycleSuccessState.vue` with return-to-sign-in guidance and no automatic session claim in `src/components/auth/AccountLifecycleSuccessState.vue`
+- [X] T036 [US1] Implement `InvitationSetupPage.vue` as a thin composition surface using `useInvitationSetup` in `src/pages/auth/InvitationSetupPage.vue`
+- [X] T037 [US1] Add invitation setup guest route and metadata in `src/router/modules/auth.routes.js`
+- [X] T038 [US1] Implement `UserInvitationPanel.vue` for invitation creation status and blocked admin resend messaging in `src/components/admin-system/users/UserInvitationPanel.vue`
+- [X] T039 [US1] Integrate `UserInvitationPanel.vue` into existing user create and detail surfaces without direct HTTP calls in `src/pages/admin-system/users/UserCreatePage.vue` and `src/pages/admin-system/users/UserDetailPage.vue`
+- [X] T040 [US1] Add US1 labels, errors, blocked resend, and success messages to `src/locales/account-lifecycle.js`
 
 **Checkpoint**: User Story 1 is independently functional and testable.
 
@@ -104,23 +104,23 @@
 
 ### Tests for User Story 2
 
-- [ ] T041 [P] [US2] Add Vitest coverage for password reset request service mapping that submits email only and never sends `school_id` or `delivery_metadata` in `tests/unit/account-lifecycle/services/passwordResetRequest.service.test.js`
-- [ ] T042 [P] [US2] Add Vitest coverage for neutral reset confirmation privacy across eligible, missing, inactive, locked, deleted, unauthorized, and over-limit outcomes in `tests/unit/account-lifecycle/pages/PasswordResetRequestPage.test.js`
-- [ ] T043 [P] [US2] Add Vitest coverage for password reset completion service success, validation, conflict, invalid-token, and no-secret mapping in `tests/unit/account-lifecycle/services/passwordResetCompletion.service.test.js`
-- [ ] T044 [P] [US2] Add Vitest coverage for password reset completion composable local missing/malformed token handling, server-response invalid-token mapping, stale-response protection, and sign-in recovery behavior in `tests/unit/account-lifecycle/composables/usePasswordResetCompletion.test.js`
-- [ ] T045 [P] [US2] Add Vitest coverage for password reset completion form validation, paste/password-manager compatibility, and submit events in `tests/unit/account-lifecycle/components/PasswordResetCompletionForm.test.js`
-- [ ] T046 [P] [US2] Add Vitest coverage for auth route metadata for password reset request and completion guest flows in `tests/unit/account-lifecycle/routes/passwordReset.routes.test.js`
+- [X] T041 [P] [US2] Add Vitest coverage for password reset request service mapping that submits email only and never sends `school_id` or `delivery_metadata` in `tests/unit/account-lifecycle/services/passwordResetRequest.service.test.js`
+- [X] T042 [P] [US2] Add Vitest coverage for neutral reset confirmation privacy across eligible, missing, inactive, locked, deleted, unauthorized, and over-limit outcomes in `tests/unit/account-lifecycle/pages/PasswordResetRequestPage.test.js`
+- [X] T043 [P] [US2] Add Vitest coverage for password reset completion service success, validation, conflict, invalid-token, and no-secret mapping in `tests/unit/account-lifecycle/services/passwordResetCompletion.service.test.js`
+- [X] T044 [P] [US2] Add Vitest coverage for password reset completion composable local missing/malformed token handling, server-response invalid-token mapping, stale-response protection, and sign-in recovery behavior in `tests/unit/account-lifecycle/composables/usePasswordResetCompletion.test.js`
+- [X] T045 [P] [US2] Add Vitest coverage for password reset completion form validation, paste/password-manager compatibility, and submit events in `tests/unit/account-lifecycle/components/PasswordResetCompletionForm.test.js`
+- [X] T046 [P] [US2] Add Vitest coverage for auth route metadata for password reset request and completion guest flows in `tests/unit/account-lifecycle/routes/passwordReset.routes.test.js`
 
 ### Implementation for User Story 2
 
-- [ ] T047 [US2] Implement `usePasswordResetRequest` email-only request state and neutral confirmation handling in `src/composables/auth/usePasswordResetRequest.js`
-- [ ] T048 [US2] Implement `PasswordResetRequestPage.vue` with only email input, neutral confirmation, and no public school selector in `src/pages/auth/PasswordResetRequestPage.vue`
-- [ ] T049 [US2] Implement `usePasswordResetCompletion` token-local state, local missing/malformed token handling, `completePasswordReset` invalid-token response mapping, validation, success, and stale-response protection in `src/composables/auth/usePasswordResetCompletion.js`
-- [ ] T050 [P] [US2] Implement `PasswordResetCompletionForm.vue` with password validation, paste/password-manager compatibility, props down, and submit emits in `src/components/auth/PasswordResetCompletionForm.vue`
-- [ ] T051 [US2] Implement `PasswordResetCompletionPage.vue` as a thin composition surface with token extraction and return-to-sign-in guidance in `src/pages/auth/PasswordResetCompletionPage.vue`
-- [ ] T052 [US2] Replace or extend the existing forgot-password route to use `PasswordResetRequestPage.vue` while preserving Feature 017 behavior in `src/router/modules/auth.routes.js`
-- [ ] T053 [US2] Add password reset request and completion labels, neutral confirmation, validation, invalid-token, and success messages to `src/locales/account-lifecycle.js`
-- [ ] T054 [US2] Ensure successful reset completion clears stale session assumptions without automatic sign-in in `src/stores/auth/sessionStore.js`
+- [X] T047 [US2] Implement `usePasswordResetRequest` email-only request state and neutral confirmation handling in `src/composables/auth/usePasswordResetRequest.js`
+- [X] T048 [US2] Implement `PasswordResetRequestPage.vue` with only email input, neutral confirmation, and no public school selector in `src/pages/auth/PasswordResetRequestPage.vue`
+- [X] T049 [US2] Implement `usePasswordResetCompletion` token-local state, local missing/malformed token handling, `completePasswordReset` invalid-token response mapping, validation, success, and stale-response protection in `src/composables/auth/usePasswordResetCompletion.js`
+- [X] T050 [P] [US2] Implement `PasswordResetCompletionForm.vue` with password validation, paste/password-manager compatibility, props down, and submit emits in `src/components/auth/PasswordResetCompletionForm.vue`
+- [X] T051 [US2] Implement `PasswordResetCompletionPage.vue` as a thin composition surface with token extraction and return-to-sign-in guidance in `src/pages/auth/PasswordResetCompletionPage.vue`
+- [X] T052 [US2] Replace or extend the existing forgot-password route to use `PasswordResetRequestPage.vue` while preserving Feature 017 behavior in `src/router/modules/auth.routes.js`
+- [X] T053 [US2] Add password reset request and completion labels, neutral confirmation, validation, invalid-token, and success messages to `src/locales/account-lifecycle.js`
+- [X] T054 [US2] Ensure successful reset completion clears stale session assumptions without automatic sign-in in `src/stores/auth/sessionStore.js`
 
 **Checkpoint**: User Stories 1 and 2 both work independently.
 
@@ -134,23 +134,23 @@
 
 ### Tests for User Story 3
 
-- [ ] T055 [P] [US3] Add Vitest coverage for account lifecycle permission/capability gate and blocked visibility in `tests/unit/account-lifecycle/composables/useAccountLifecycleActions.permissions.test.js`
-- [ ] T056 [P] [US3] Add Vitest coverage for account lock review service and mapper behavior in `tests/unit/account-lifecycle/services/getAccountLock.service.test.js`
-- [ ] T057 [P] [US3] Add Vitest coverage for lock required reason, unlock no-reason, and optional recovery/reactivation reason request mapping in `tests/unit/account-lifecycle/services/accountLifecycleActions.service.test.js`
-- [ ] T058 [P] [US3] Add Vitest coverage for account lifecycle conflict, forbidden, tenant-mismatch, not-found, validation, and temporary-unavailable feedback in `tests/unit/account-lifecycle/composables/useAccountLifecycleActions.outcomes.test.js`
-- [ ] T059 [P] [US3] Add Vitest coverage for account lifecycle confirmation dialog reason rules and submit emits in `tests/unit/account-lifecycle/components/AdminAccountLifecycleDialog.test.js`
-- [ ] T060 [P] [US3] Add Vitest coverage for user detail account lock and action panels in `tests/unit/account-lifecycle/pages/UserDetailAccountLifecycle.test.js`
+- [X] T055 [P] [US3] Add Vitest coverage for account lifecycle permission/capability gate and blocked visibility in `tests/unit/account-lifecycle/composables/useAccountLifecycleActions.permissions.test.js`
+- [X] T056 [P] [US3] Add Vitest coverage for account lock review service and mapper behavior in `tests/unit/account-lifecycle/services/getAccountLock.service.test.js`
+- [X] T057 [P] [US3] Add Vitest coverage for lock required reason, unlock no-reason, and optional recovery/reactivation reason request mapping in `tests/unit/account-lifecycle/services/accountLifecycleActions.service.test.js`
+- [X] T058 [P] [US3] Add Vitest coverage for account lifecycle conflict, forbidden, tenant-mismatch, not-found, validation, and temporary-unavailable feedback in `tests/unit/account-lifecycle/composables/useAccountLifecycleActions.outcomes.test.js`
+- [X] T059 [P] [US3] Add Vitest coverage for account lifecycle confirmation dialog reason rules and submit emits in `tests/unit/account-lifecycle/components/AdminAccountLifecycleDialog.test.js`
+- [X] T060 [P] [US3] Add Vitest coverage for user detail account lock and action panels in `tests/unit/account-lifecycle/pages/UserDetailAccountLifecycle.test.js`
 
 ### Implementation for User Story 3
 
-- [ ] T061 [US3] Verify and document the approved permission codes or session capability flags for platform and school account lifecycle administration in `specs/021-account-lifecycle-ui/quickstart.md`
-- [ ] T062 [US3] Implement account lifecycle eligibility derivation using confirmed permission codes or capability flags in `src/composables/admin-system/useAccountLifecycleActions.js`
-- [ ] T063 [US3] Implement lock state loading, action pending state, stale-response protection, and outcome normalization in `src/composables/admin-system/useAccountLifecycleActions.js`
-- [ ] T064 [P] [US3] Implement `AccountLockPanel.vue` with safe lock state display and denied/not-found hiding in `src/components/admin-system/users/AccountLockPanel.vue`
-- [ ] T065 [P] [US3] Implement `AccountLifecycleActions.vue` for lock, unlock, recovery, and reactivation visibility and action emits in `src/components/admin-system/users/AccountLifecycleActions.vue`
-- [ ] T066 [P] [US3] Implement `AdminAccountLifecycleDialog.vue` with required lock reason, optional recovery/reactivation reason, no-reason unlock, validation summary, and pending state in `src/components/ui/admin/AdminAccountLifecycleDialog.vue`
-- [ ] T067 [US3] Integrate account lock and action panels into the existing user detail page without direct HTTP calls in `src/pages/admin-system/users/UserDetailPage.vue`
-- [ ] T068 [US3] Add account lock, unlock, recovery, reactivation, conflict, denial, and permission-gate text to `src/locales/account-lifecycle.js`
+- [X] T061 [US3] Verify and document the approved permission codes or session capability flags for platform and school account lifecycle administration in `specs/021-account-lifecycle-ui/quickstart.md`
+- [X] T062 [US3] Implement account lifecycle eligibility derivation using confirmed permission codes or capability flags in `src/composables/admin-system/useAccountLifecycleActions.js`
+- [X] T063 [US3] Implement lock state loading, action pending state, stale-response protection, and outcome normalization in `src/composables/admin-system/useAccountLifecycleActions.js`
+- [X] T064 [P] [US3] Implement `AccountLockPanel.vue` with safe lock state display and denied/not-found hiding in `src/components/admin-system/users/AccountLockPanel.vue`
+- [X] T065 [P] [US3] Implement `AccountLifecycleActions.vue` for lock, unlock, recovery, and reactivation visibility and action emits in `src/components/admin-system/users/AccountLifecycleActions.vue`
+- [X] T066 [P] [US3] Implement `AdminAccountLifecycleDialog.vue` with required lock reason, optional recovery/reactivation reason, no-reason unlock, validation summary, and pending state in `src/components/ui/admin/AdminAccountLifecycleDialog.vue`
+- [X] T067 [US3] Integrate account lock and action panels into the existing user detail page without direct HTTP calls in `src/pages/admin-system/users/UserDetailPage.vue`
+- [X] T068 [US3] Add account lock, unlock, recovery, reactivation, conflict, denial, and permission-gate text to `src/locales/account-lifecycle.js`
 
 **Checkpoint**: User Stories 1, 2, and 3 work independently.
 
@@ -164,18 +164,18 @@
 
 ### Tests for User Story 4
 
-- [ ] T069 [P] [US4] Add Vitest coverage for signed-in users opening guest invitation setup and password reset completion links in `tests/unit/account-lifecycle/routes/guestLifecycleRouteGuards.test.js`
-- [ ] T070 [P] [US4] Add Vitest coverage for preserving Feature 017 inactive-user, lockout, expired-session, unauthorized, forbidden, inactive-school, tenant-mismatch, and temporary-unavailable mappings in `tests/unit/account-lifecycle/services/accountLifecycleAuthIntegration.test.js`
-- [ ] T071 [P] [US4] Add Vitest coverage for shared token and success feedback accessibility and recovery actions in `tests/unit/account-lifecycle/components/AccountLifecycleFeedbackState.test.js`
-- [ ] T072 [P] [US4] Add Vitest coverage that lifecycle flows never claim automatic sign-in after setup/reset completion in `tests/unit/account-lifecycle/pages/accountLifecycleNoAutoSignin.test.js`
+- [X] T069 [P] [US4] Add Vitest coverage for signed-in users opening guest invitation setup and password reset completion links in `tests/unit/account-lifecycle/routes/guestLifecycleRouteGuards.test.js`
+- [X] T070 [P] [US4] Add Vitest coverage for preserving Feature 017 inactive-user, lockout, expired-session, unauthorized, forbidden, inactive-school, tenant-mismatch, and temporary-unavailable mappings in `tests/unit/account-lifecycle/services/accountLifecycleAuthIntegration.test.js`
+- [X] T071 [P] [US4] Add Vitest coverage for shared token and success feedback accessibility and recovery actions in `tests/unit/account-lifecycle/components/AccountLifecycleFeedbackState.test.js`
+- [X] T072 [P] [US4] Add Vitest coverage that lifecycle flows never claim automatic sign-in after setup/reset completion in `tests/unit/account-lifecycle/pages/accountLifecycleNoAutoSignin.test.js`
 
 ### Implementation for User Story 4
 
-- [ ] T073 [US4] Update route guards to allow token-proven guest lifecycle routes without mixing current signed-in permissions in `src/router/modules/auth.routes.js`
-- [ ] T074 [US4] Integrate lifecycle invalid-token and success states with existing auth feedback patterns in `src/components/auth/AuthFeedbackState.vue`
-- [ ] T075 [US4] Add auth/session recovery actions for lifecycle invalid-token, success, and temporary-unavailable states in `src/components/auth/AuthRecoveryActions.vue`
-- [ ] T076 [US4] Ensure account lifecycle services preserve existing auth/session error mapping for inactive-user, lockout, expired-session, unauthorized, forbidden, inactive-school, tenant-mismatch, and temporary-unavailable outcomes in `src/services/auth/authErrorMapper.js`
-- [ ] T077 [US4] Add remaining auth/session integration labels and recovery action text to `src/locales/account-lifecycle.js`
+- [X] T073 [US4] Update route guards to allow token-proven guest lifecycle routes without mixing current signed-in permissions in `src/router/modules/auth.routes.js`
+- [X] T074 [US4] Integrate lifecycle invalid-token and success states with existing auth feedback patterns in `src/components/auth/AuthFeedbackState.vue`
+- [X] T075 [US4] Add auth/session recovery actions for lifecycle invalid-token, success, and temporary-unavailable states in `src/components/auth/AuthRecoveryActions.vue`
+- [X] T076 [US4] Ensure account lifecycle services preserve existing auth/session error mapping for inactive-user, lockout, expired-session, unauthorized, forbidden, inactive-school, tenant-mismatch, and temporary-unavailable outcomes in `src/services/auth/authErrorMapper.js`
+- [X] T077 [US4] Add remaining auth/session integration labels and recovery action text to `src/locales/account-lifecycle.js`
 
 **Checkpoint**: All user stories are independently functional.
 
@@ -185,14 +185,14 @@
 
 **Purpose**: Verification, documentation, accessibility, and release readiness across all stories.
 
-- [ ] T078 [P] Run focused account lifecycle Vitest suite and record results in `specs/021-account-lifecycle-ui/quickstart.md`
-- [ ] T079 [P] Run full frontend unit suite and record `npm test` result in `specs/021-account-lifecycle-ui/quickstart.md`
-- [ ] T080 [P] Run frontend build check and record `npm run build` result in `specs/021-account-lifecycle-ui/quickstart.md`
-- [ ] T081 [P] Review account lifecycle forms and dialogs at 390px, 768px, and 1440px and record responsive findings in `specs/021-account-lifecycle-ui/quickstart.md`
-- [ ] T082 [P] Review keyboard navigation, focus order, dialog focus trap, form labels, and feedback semantics for account lifecycle UI in `specs/021-account-lifecycle-ui/quickstart.md`
-- [ ] T083 [P] Review diagnostics and client storage for lifecycle token, password, reason, tenant-private, role, and permission leaks in `specs/021-account-lifecycle-ui/quickstart.md`
-- [ ] T084 Update implementation evidence for operation mapping, permission/capability source, blocked resend state, email-only reset request, no-secret diagnostics, and timed SC-003/SC-005/SC-006 scenario results in `specs/021-account-lifecycle-ui/quickstart.md`
-- [ ] T085 If OpenAPI changes were required for non-secret resend or permission/capability exposure, run Redocly validation and record the result in `specs/021-account-lifecycle-ui/quickstart.md`
+- [X] T078 [P] Run focused account lifecycle Vitest suite and record results in `specs/021-account-lifecycle-ui/quickstart.md`
+- [X] T079 [P] Run full frontend unit suite and record `npm test` result in `specs/021-account-lifecycle-ui/quickstart.md`
+- [X] T080 [P] Run frontend build check and record `npm run build` result in `specs/021-account-lifecycle-ui/quickstart.md`
+- [X] T081 [P] Review account lifecycle forms and dialogs at 390px, 768px, and 1440px and record responsive findings in `specs/021-account-lifecycle-ui/quickstart.md`
+- [X] T082 [P] Review keyboard navigation, focus order, dialog focus trap, form labels, and feedback semantics for account lifecycle UI in `specs/021-account-lifecycle-ui/quickstart.md`
+- [X] T083 [P] Review diagnostics and client storage for lifecycle token, password, reason, tenant-private, role, and permission leaks in `specs/021-account-lifecycle-ui/quickstart.md`
+- [X] T084 Update implementation evidence for operation mapping, permission/capability source, blocked resend state, email-only reset request, no-secret diagnostics, and timed SC-003/SC-005/SC-006 scenario results in `specs/021-account-lifecycle-ui/quickstart.md`
+- [X] T085 If OpenAPI changes were required for non-secret resend or permission/capability exposure, run Redocly validation and record the result in `specs/021-account-lifecycle-ui/quickstart.md`
 - [ ] T086 Run representative administrator usability review for invite, blocked resend, lock, unlock, recover, and reactivate decisions and record the SC-009 result in `specs/021-account-lifecycle-ui/quickstart.md`
 
 ---
