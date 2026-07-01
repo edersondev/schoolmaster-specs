@@ -170,7 +170,15 @@ assignment constraints, and conflict handling before implementation.
 
 ### 8. Teacher Workflow Workspace
 
-**Status**: Not specified.
+**Status**: Complete. Feature specification, quality checklist,
+implementation plan, research, data model, frontend contract, quickstart,
+tasks, runtime implementation, and verification record are complete in
+`specs/023-teacher-workflow-workspace/` and `schoolmaster-frontend`.
+Teacher-facing workspace surfaces and limited same-school admin-observed
+surfaces are implemented for approved content, questionnaires, grades,
+attendance, correction history, downloads, and JSON imports. Learning-set
+create and scoped learning-set, grade, and attendance lists remain
+intentionally blocked where OpenAPI contract support is still undocumented.
 
 **Purpose**: Define teacher-facing or admin-observed screens for content,
 questionnaires, learning sets, grades, attendance, correction history,
