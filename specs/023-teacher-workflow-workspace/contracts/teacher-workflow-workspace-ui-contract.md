@@ -44,6 +44,26 @@ This feature does not approve:
 
 ## OpenAPI Consumption Contract
 
+### Implementation Contract Review - 2026-07-01
+
+The frontend checkout exposes the aggregate OpenAPI contract at
+`specs/api/openapi.yaml`.
+
+- Confirmed approved teacher content, questionnaire, learning-set, grade,
+  attendance, import, academic-period, class-section membership, and teacher
+  assignment operation IDs are present in `specs/api/openapi.yaml`.
+- Confirmed `createLearningSet` still requires direct `student_profile_ids`
+  in `LearningSetCreateRequest`; roster-aware create remains a contract gap and
+  learning-set create UI must stay blocked.
+- Confirmed `LearningSetUpdateRequest` documents `roster_assignment` with
+  `class_section_id`; update/detail UI may display and submit only documented
+  roster-aware fields where the backend authorizes them.
+- Confirmed `listLearningSets`, `listGrades`, and `listAttendance` document
+  tenant context, page, and per-page parameters only; academic-period and
+  roster/class-section scoped list filters remain contract gaps and scoped list
+  loading must stay blocked.
+- Confirmed grade and attendance JSON import requests enforce 1 to 500 rows.
+
 Frontend services may consume only these approved operations for this slice:
 
 | Operation ID | Method and Path | UI use |
