@@ -50,6 +50,7 @@ Frontend services may consume only these approved operations for this slice:
 |--------------|-----------------|--------|
 | `listAcademicPeriods` | `GET /api/v1/academic-periods` | Resolve current active academic period and populate period selector where approved. |
 | `listClassSections` | `GET /api/v1/class-sections` | Resolve active roster/class-section options where approved by feature 022 contracts. |
+| `listClassSectionMemberships` | `GET /api/v1/class-sections/{classSectionId}/memberships` | Resolve selected roster active memberships and eligible `student_profile_id` values for roster-aware learning-set audiences and grade/attendance create forms. |
 | `listTeacherAssignments` | `GET /api/v1/teacher-assignments` | Resolve teacher active roster scope and admin observation where approved. |
 | `getTeacherAssignment` | `GET /api/v1/teacher-assignments/{teacherAssignmentId}` | Retrieve assignment detail for active teacher workspace scope or admin observation. |
 | `listTeacherContent` | `GET /api/v1/teacher-content` | Content list with approved pagination, loading, empty, and denied states. |
@@ -102,10 +103,18 @@ contract.
 ### Workspace Scope
 
 Teacher workspace scope may use only authenticated session state, active school
-context, approved academic-period reads, `listTeacherAssignments`, and approved
-class-section/roster reads. Teacher-facing list pages default to the current
-active academic period and active teacher rosters. Explicit selected period and
-roster are preserved in route/query state.
+context, approved academic-period reads, `listTeacherAssignments`, approved
+class-section/roster reads, and `listClassSectionMemberships` for the selected
+class section. Teacher-facing list pages default to the current active academic
+period and active teacher rosters. Explicit selected period and roster are
+preserved in route/query state.
+
+`listClassSectionMemberships` may send only tenant context, class section ID,
+page, per-page, academic-period filter, and membership status filter. Teacher
+workflow forms use active same-school memberships from the selected roster as
+the approved source for eligible `student_profile_id` choices. The UI must not
+load broad student profile lists or infer eligibility outside the approved
+membership response.
 
 ### Teacher Content
 

@@ -10,7 +10,9 @@ actions.
 `scopeStatus`, `feedbackState`.
 
 **Source**: Existing authenticated session state, active school context,
-approved academic-period read contracts, and `listTeacherAssignments`.
+approved academic-period read contracts, `listTeacherAssignments`, approved
+class-section reads, and `listClassSectionMemberships` for selected roster
+membership eligibility.
 
 **Rules**:
 
@@ -20,6 +22,9 @@ approved academic-period read contracts, and `listTeacherAssignments`.
   state.
 - If no current active period or active teacher roster exists, scoped data
   loading is blocked and the UI shows safe unavailable feedback.
+- Eligible student choices for roster-aware learning sets, grades, and
+  attendance come from active same-school memberships returned for the selected
+  roster; broad student profile lists are not an allowed eligibility source.
 - The frontend must not infer teacher assignment, roster, or school context
   outside authenticated approved responses.
 

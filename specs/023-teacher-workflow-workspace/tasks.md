@@ -29,13 +29,13 @@
 - [ ] T007 Create the service HTTP wrapper that uses the existing Axios service boundary in `src/modules/teacher-workflow/services/teacherWorkflowHttp.js`
 - [ ] T008 [P] Create shared feedback-state normalization for validation, denial, conflict, download, import, unsupported, stale, and temporary states in `src/modules/teacher-workflow/services/teacherWorkflowFeedbackMapper.js`
 - [ ] T009 [P] Create shared status and lifecycle helpers for active, inactive, deleted, restored, scan, unavailable, and read-only legacy states in `src/modules/teacher-workflow/services/teacherWorkflowStatus.js`
-- [ ] T010 Create the workspace scope composable for active school, current academic period, active teacher roster, and route query sync in `src/modules/teacher-workflow/composables/useTeacherWorkspaceScope.js`
+- [ ] T010 Create the workspace scope composable for active school, current academic period, active teacher roster, active roster memberships from `listClassSectionMemberships`, eligible `student_profile_id` choices, and route query sync in `src/modules/teacher-workflow/composables/useTeacherWorkspaceScope.js`
 - [ ] T011 Create the stale-response guard composable for route, pagination, period, roster, school, target, dialog, and auth changes in `src/modules/teacher-workflow/composables/useTeacherWorkflowStaleGuard.js`
 - [ ] T012 [P] Create the safe diagnostics helper that redacts students, teachers, guardians, tokens, permissions, roles, file paths, upload metadata, import payloads, correction notes, and cross-tenant details in `src/modules/teacher-workflow/services/teacherWorkflowDiagnostics.js`
 - [ ] T013 [P] Create shared feedback components for empty, denied, conflict, validation, unsupported-contract, and temporary-unavailable states in `src/modules/teacher-workflow/components/TeacherWorkflowFeedbackState.vue`
 - [ ] T014 [P] Create shared status and action components for workflow badges, disabled reasons, and confirmation dialogs in `src/modules/teacher-workflow/components/TeacherWorkflowStatusControls.vue`
 - [ ] T015 Wire protected teacher and admin-observed route groups into the application router in `src/router/index.js`
-- [ ] T016 Add foundation tests for scope query sync, stale guard, feedback mapping, and diagnostics redaction in `tests/teacher-workflow/composables/teacherWorkflowFoundation.spec.js`
+- [ ] T016 Add foundation tests for scope query sync, selected-roster membership loading, eligible `student_profile_id` choices, stale guard, feedback mapping, and diagnostics redaction in `tests/teacher-workflow/composables/teacherWorkflowFoundation.spec.js`
 
 **Checkpoint**: Foundation ready. User story implementation can begin.
 
@@ -82,7 +82,7 @@
 
 ### Tests for User Story 2
 
-- [ ] T034 [P] [US2] Add learning-set service tests for blocked create gate, blocked scoped list gate, detail, update, lifecycle, delete, restore, read-only legacy direct assignments, and no undocumented filters in `tests/teacher-workflow/services/learningSetService.spec.js`
+- [ ] T034 [P] [US2] Add learning-set service tests for blocked create gate, blocked scoped list gate, selected-roster membership audience source, detail, update, lifecycle, delete, restore, read-only legacy direct assignments, and no undocumented filters in `tests/teacher-workflow/services/learningSetService.spec.js`
 - [ ] T035 [P] [US2] Add learning-set composable tests for selected period/roster scope, unsupported-contract states, dependency conflicts, stale responses, and no broad client-side filtering in `tests/teacher-workflow/composables/useLearningSets.spec.js`
 - [ ] T036 [P] [US2] Add learning-set route/component tests for blocked create, blocked scoped list, roster-aware audience display, legacy read-only display, lifecycle states, and dependency conflict feedback in `tests/teacher-workflow/components/learningSetViews.spec.js`
 
@@ -108,8 +108,8 @@
 
 ### Tests for User Story 3
 
-- [ ] T044 [P] [US3] Add grade service tests for blocked scoped list gate, create, detail, correction, lifecycle, delete, restore, validation, closed-period denial, and tenant-safe correction history mapping in `tests/teacher-workflow/services/gradeService.spec.js`
-- [ ] T045 [P] [US3] Add attendance service tests for blocked scoped list gate, create, detail, correction, lifecycle, delete, restore, supported statuses, closed-period denial, and tenant-safe correction history mapping in `tests/teacher-workflow/services/attendanceService.spec.js`
+- [ ] T044 [P] [US3] Add grade service tests for blocked scoped list gate, eligible `student_profile_id` source from selected-roster memberships, create, detail, correction, lifecycle, delete, restore, validation, closed-period denial, and tenant-safe correction history mapping in `tests/teacher-workflow/services/gradeService.spec.js`
+- [ ] T045 [P] [US3] Add attendance service tests for blocked scoped list gate, eligible `student_profile_id` source from selected-roster memberships, create, detail, correction, lifecycle, delete, restore, supported statuses, closed-period denial, and tenant-safe correction history mapping in `tests/teacher-workflow/services/attendanceService.spec.js`
 - [ ] T046 [P] [US3] Add grade and attendance composable tests for selected period/roster scope, correction reason length, current value updates, private-note redaction, conflict feedback, and stale responses in `tests/teacher-workflow/composables/useAcademicRecords.spec.js`
 - [ ] T047 [P] [US3] Add grade, attendance, correction dialog, and admin closed-period component tests in `tests/teacher-workflow/components/academicRecordViews.spec.js`
 

@@ -89,13 +89,18 @@ Before frontend implementation:
    operations needed for scope exist:
    - `listAcademicPeriods`
    - `listClassSections`
+   - `listClassSectionMemberships`
    - `listTeacherAssignments`
    - `getTeacherAssignment`
-13. Confirm grade and attendance correction reasons require 10 to 500
+13. Confirm `listClassSectionMemberships` supports tenant context, class
+    section ID, academic-period filter, and membership status filter so the UI
+    can resolve active selected-roster memberships and eligible
+    `student_profile_id` choices without broad student profile loading.
+14. Confirm grade and attendance correction reasons require 10 to 500
     characters.
-14. Confirm grade and attendance imports accept JSON payloads only, contain 1
+15. Confirm grade and attendance imports accept JSON payloads only, contain 1
     to 500 rows, and reject invalid imports all-or-nothing.
-15. Confirm validation, unauthorized, forbidden, tenant-mismatch,
+16. Confirm validation, unauthorized, forbidden, tenant-mismatch,
     inactive-school, inactive-record, not-found, conflict, scan-unavailable,
     download-denied, import-validation, unsupported filter, unsupported sort,
     unsupported page-size, stale-record, and temporary-unavailable envelopes
@@ -112,6 +117,9 @@ Before frontend implementation:
   teacher rosters.
 - Change selected academic period or roster and verify route/query persistence
   across refresh and back navigation.
+- Verify selected-roster active memberships load through
+  `listClassSectionMemberships` and provide the eligible `student_profile_id`
+  choices used by roster-aware learning-set, grade, and attendance forms.
 - Verify no-current-active-period and no-active-teacher-roster states block
   scoped loading and show safe feedback.
 
