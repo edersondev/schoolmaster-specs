@@ -153,7 +153,9 @@ before frontend implementation.
 
 ### 7. Student Enrollment and Classroom Roster UI
 
-**Status**: Not specified.
+**Status**: Complete. Feature specification, implementation plan, tasks, and
+supporting documentation are complete in
+`specs/022-student-enrollment-roster-ui/`.
 
 **Purpose**: Define student profile, enrollment, class-section/roster,
 membership, teacher assignment, academic-period scoping, and related admin
