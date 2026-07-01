@@ -128,9 +128,9 @@ authenticated student's own grades.
 
 **Rules**:
 
-- Request uses tenant context, page, per-page, and current active
-  `academic_period_id` where available.
-- Manual period switching is outside this slice.
+- Request uses tenant context, page, per-page, and required current active
+  `academic_period_id`.
+- Manual period switching and unscoped grade lists are outside this slice.
 - Empty result is a true empty state.
 - Detail surfaces use loaded list records only.
 - No correction, import, restore, authoring, or other-student controls exist.
@@ -163,9 +163,9 @@ authenticated student's own attendance.
 
 **Rules**:
 
-- Request uses tenant context, page, per-page, and current active
-  `academic_period_id` where available.
-- Manual period switching is outside this slice.
+- Request uses tenant context, page, per-page, and required current active
+  `academic_period_id`.
+- Manual period switching and unscoped attendance lists are outside this slice.
 - Empty result is a true empty state.
 - Detail surfaces use loaded list records only.
 - No correction, import, restore, authoring, or other-student controls exist.

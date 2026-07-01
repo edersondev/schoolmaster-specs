@@ -157,8 +157,8 @@ student-facing contracts.
   active period are confirmed.
 - Content download is enabled only when returned student content metadata says
   `download_available` is true.
-- Grade and attendance screens may use current active academic-period filter
-  where available, but no manual period switch appears in this slice.
+- Grade and attendance screens require current active academic-period scope;
+  no manual period switch or unscoped list fallback appears in this slice.
 - Learning-set, grade, and attendance detail views use loaded list data only.
   Missing loaded records show not-found or contract-unavailable state rather
   than undocumented detail requests.

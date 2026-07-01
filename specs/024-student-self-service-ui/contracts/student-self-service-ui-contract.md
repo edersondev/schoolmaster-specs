@@ -23,9 +23,9 @@ consumption contract, not a backend API change.
 | Assigned Learning Sets | Load current active academic-period timeline with pagination |
 | Learning-set detail | Use already loaded timeline item; no standalone request |
 | Content download | Call approved binary download operation only when `download_available` is true |
-| Grades | Load own records with pagination and current active period where available |
+| Grades | Load own records with pagination and required current active academic period |
 | Grade detail | Use already loaded grade record; no standalone request |
-| Attendance | Load own records with pagination and current active period where available |
+| Attendance | Load own records with pagination and required current active academic period |
 | Attendance detail | Use already loaded attendance record; no standalone request |
 | Academic overview | Display counts/statuses from loaded approved responses only |
 
@@ -78,6 +78,8 @@ missing current period, denial, unavailable content, validation, or not-found.
 - No student data request before active linked student profile is confirmed.
 - No assigned learning-set request before current active academic period is
   confirmed.
+- No grade, attendance, or academic overview data request before current active
+  academic period is confirmed.
 - No content download action unless returned metadata says
   `download_available` is true.
 - No manual academic-period switch.

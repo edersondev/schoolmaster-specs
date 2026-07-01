@@ -103,19 +103,19 @@
 
 - [ ] T037 [P] [US3] Add grade service and mapper tests for `listStudentGrades`, current active academic-period parameter, pagination, student-visible fields, dropped private fields, and no undocumented detail request in `tests/student-self-service/services/studentGradesService.spec.js`
 - [ ] T038 [P] [US3] Add attendance service and mapper tests for `listStudentAttendance`, current active academic-period parameter, pagination, student-visible fields, dropped private fields, and no undocumented detail request in `tests/student-self-service/services/studentAttendanceService.spec.js`
-- [ ] T039 [P] [US3] Add grade and attendance composable tests for pagination, current-period scope, empty states, loaded-record detail lookup, stale direct route not-found, and stale-response handling in `tests/student-self-service/composables/useStudentAcademicRecords.spec.js`
-- [ ] T040 [P] [US3] Add grade and attendance route/component tests for own-record lists, read-only details, no correction/import/restore controls, denied states, empty states, and not-found states in `tests/student-self-service/components/studentAcademicRecordViews.spec.js`
+- [ ] T039 [P] [US3] Add grade and attendance composable tests for pagination, required current-period scope, no-current-period request blocking, empty states, loaded-record detail lookup, stale direct route not-found, and stale-response handling in `tests/student-self-service/composables/useStudentAcademicRecords.spec.js`
+- [ ] T040 [P] [US3] Add grade and attendance route/component tests for own-record lists, read-only details, no correction/import/restore controls, denied states, no-current-period states, empty states, and not-found states in `tests/student-self-service/components/studentAcademicRecordViews.spec.js`
 
 ### Implementation for User Story 3
 
 - [ ] T041 [P] [US3] Implement student grade service method and response mapper in `src/services/student/studentSelfServiceService.js`
 - [ ] T042 [P] [US3] Implement student attendance service method and response mapper in `src/services/student/studentSelfServiceService.js`
-- [ ] T043 [US3] Implement shared student academic records composable for current-period scope, pagination, loaded-record detail lookup, empty state, stale guard, and safe feedback in `src/composables/student/useStudentAcademicRecords.js`
+- [ ] T043 [US3] Implement shared student academic records composable for required current-period scope, pagination, no-current-period request blocking, loaded-record detail lookup, empty state, stale guard, and safe feedback in `src/composables/student/useStudentAcademicRecords.js`
 - [ ] T044 [P] [US3] Implement student grades list and read-only detail route states in `src/pages/student/StudentGradesView.vue`
 - [ ] T045 [P] [US3] Implement student attendance list and read-only detail route states in `src/pages/student/StudentAttendanceView.vue`
 - [ ] T046 [P] [US3] Implement reusable read-only academic record detail component with no correction/import/restore actions in `src/components/student/StudentAcademicRecordDetail.vue`
 - [ ] T047 [US3] Register grades and attendance routes in `src/router/modules/student.js`
-- [ ] T048 [US3] Add grade, attendance, read-only detail, empty, denied, and not-found text in `src/i18n/modules/studentSelfService.js`
+- [ ] T048 [US3] Add grade, attendance, read-only detail, no-current-period, empty, denied, and not-found text in `src/i18n/modules/studentSelfService.js`
 
 **Checkpoint**: User Story 3 is independently functional and own-record scoped.
 
@@ -151,7 +151,7 @@
 - [ ] T056 [P] Verify operation ID to UI surface traceability against `specs/024-student-self-service-ui/contracts/student-self-service-ui-contract.md`
 - [ ] T057 [P] Verify WCAG 2.1 AA responsive behavior, keyboard navigation, focus visibility, form/control labels, landmarks/headings, and contrast at 390px, 768px, and 1440px for all student routes in `src/pages/student/`
 - [ ] T058 Verify no direct Axios calls exist outside student services in `src/pages/student/`, `src/components/student/`, and `src/composables/student/`
-- [ ] T059 Verify no manual period switch, questionnaire response submit/review, standalone detail API calls, report UI, transcript UI, GPA, attendance-rate, ranking, trend, correction, import, restore, guardian, teacher, administrator, platform, billing, messaging, or undocumented behavior exists in `src/pages/student/`
+- [ ] T059 Verify no manual period switch, questionnaire response submit/review, standalone detail API calls, report UI, transcript UI, GPA, attendance-rate, ranking, trend, correction, import, restore, guardian, teacher, administrator, platform, billing, messaging, or undocumented behavior exists in `src/pages/student/`, `src/components/student/`, `src/composables/student/`, `src/services/student/`, `src/contracts/student/`, and `src/router/modules/student.js`
 - [ ] T060 [P] Verify diagnostics and test output redaction for private file paths, storage keys, tokens, role internals, scan internals, guardian data, other-student data, and cross-tenant details in `tests/student-self-service/`
 - [ ] T061 Run focused student self-service tests through `npm run test:unit -- tests/student-self-service` and record results in the implementation PR notes
 - [ ] T062 Run full frontend unit tests through the `npm run test:unit` script in `package.json` and record results in the implementation PR notes
