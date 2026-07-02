@@ -193,7 +193,10 @@ behavior before implementation.
 
 ### 9. Student Self-Service UI
 
-**Status**: Not specified.
+**Status**: Complete. Feature specification, quality checklist,
+implementation plan, research, data model, frontend contract, quickstart, and
+tasks, runtime implementation, and verification evidence are complete in
+`specs/024-student-self-service-ui/` and `schoolmaster-frontend`.
 
 **Purpose**: Define the frontend surfaces for assigned learning sets, own
 grades, own attendance, authorized content access, and approved academic or
