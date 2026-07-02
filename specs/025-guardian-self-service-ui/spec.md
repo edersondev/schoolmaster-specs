@@ -49,17 +49,17 @@ A guardian opens a linked student's detail view and sees only the limited profil
 
 ### User Story 3 - Review Academic Summaries (Priority: P3)
 
-A guardian reviews summary-only academic information for a linked student and explicit same-school academic period, including guardian-visible grade summary, attendance summary, and learning-set progress or status where approved.
+A guardian reviews summary-only academic information for a linked student using the current active same-school academic period only, including guardian-visible grade summary, attendance summary, and learning-set progress or status where approved.
 
 **Why this priority**: Guardians need academic context to support students, but this UI must remain narrower than student self-service and must not expose detailed grade rows, attendance rows, correction history, teacher content, questionnaires, or report output.
 
-**Independent Test**: Can be fully tested by opening a linked student's academic summary for an approved academic period and verifying only summary values appear, then attempting missing-period, inactive-period, unassociated-student, and cross-tenant cases.
+**Independent Test**: Can be fully tested by opening a linked student's academic summary with current active same-school academic period context and verifying only summary values appear, then attempting no-current-period, unassociated-student, and cross-tenant cases.
 
 **Acceptance Scenarios**:
 
-1. **Given** a guardian has a selected linked student and an approved same-school academic period, **When** they open academic summary, **Then** the UI shows guardian-visible grade summary, attendance summary, and learning-set summary values from the approved academic summary contract.
+1. **Given** a guardian has a selected linked student and current active same-school academic period context, **When** they open academic summary, **Then** the UI shows guardian-visible grade summary, attendance summary, and learning-set summary values from the approved academic summary contract.
 2. **Given** no current active same-school academic period is available from approved context, **When** the guardian opens academic summary, **Then** the UI shows a no-academic-period state and does not request guardian academic data without the required period.
-3. **Given** academic summary values are unavailable, empty, or not yet recorded for the selected period, **When** the academic summary loads successfully, **Then** the UI shows a true empty or unavailable-summary state distinct from denied, validation, tenant-mismatch, and not-found states.
+3. **Given** academic summary values are unavailable, empty, or not yet recorded for the current active period, **When** the academic summary loads successfully, **Then** the UI shows a true empty or unavailable-summary state distinct from denied, validation, tenant-mismatch, and not-found states.
 4. **Given** a guardian attempts to access detailed grades, detailed attendance, correction history, teacher content downloads, questionnaire answers, student activity submission, reports, rankings, or custom reporting through the guardian workspace, **When** the route or control is evaluated, **Then** those surfaces remain hidden or blocked with a contract-unavailable state.
 
 ---
@@ -158,7 +158,7 @@ A guardian views their own school-maintained guardian contact fields, school-app
 
 - **SC-001**: 100% of guardian student list, student detail, academic summary, contact, and safe-state UI actions can be traced to approved guardian self-service contract behavior before frontend implementation begins.
 - **SC-002**: In usability checks, an authenticated guardian with an active school and at least one active linked student can open the guardian workspace, find a linked student, and open the student detail in under 2 minutes without assistance.
-- **SC-003**: In usability checks, an authenticated guardian can find a linked student's academic summary for an approved academic period and correctly identify grade, attendance, and learning-set summary status in under 3 minutes without assistance.
+- **SC-003**: In usability checks, an authenticated guardian can find a linked student's academic summary for the current active academic period and correctly identify grade, attendance, and learning-set summary status in under 3 minutes without assistance.
 - **SC-004**: In usability checks, an authenticated guardian can find their own contact view for a linked student and distinguish available, missing, empty, unavailable, and denied contact states in under 2 minutes without assistance.
 - **SC-005**: 100% of tested unauthorized, forbidden, tenant-mismatch, inactive-school, no-active-school, no-guardian-link, no-linked-students, no-academic-period, unavailable-summary, validation, not-found, unsupported page-size, stale-response, and temporary-unavailable responses show safe feedback without exposing protected student, guardian, contact, academic, report, or cross-school details.
 - **SC-006**: 100% of target-specific missing, unassociated, inactive, transferred, deleted, and cross-tenant student attempts render the same not-found experience without protected-record enumeration.
