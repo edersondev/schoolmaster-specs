@@ -11,11 +11,11 @@
 
 **Purpose**: Establish frontend module boundaries, route/i18n scaffolds, and contract traceability before shared implementation starts.
 
-- [ ] T001 Confirm approved guardian self-service operation IDs and blocked contract gaps in `specs/025-guardian-self-service-ui/contracts/guardian-self-service-ui-contract.md`
-- [ ] T002 Create guardian feature folders in `src/pages/guardian/`, `src/components/guardian/`, `src/composables/guardian/`, `src/services/guardian/`, and `src/contracts/guardian/`
-- [ ] T003 [P] Create focused test folders in `tests/guardian-self-service/services/`, `tests/guardian-self-service/composables/`, `tests/guardian-self-service/components/`, and `tests/guardian-self-service/routes/`
-- [ ] T004 [P] Add guardian self-service i18n namespace scaffold in `src/i18n/modules/guardianSelfService.js`
-- [ ] T005 [P] Add guardian route module scaffold in `src/router/modules/guardian.js`
+- [X] T001 Confirm approved guardian self-service operation IDs and blocked contract gaps in `specs/025-guardian-self-service-ui/contracts/guardian-self-service-ui-contract.md`
+- [X] T002 Create guardian feature folders in `src/pages/guardian/`, `src/components/guardian/`, `src/composables/guardian/`, `src/services/guardian/`, and `src/contracts/guardian/`
+- [X] T003 [P] Create focused test folders in `tests/guardian-self-service/services/`, `tests/guardian-self-service/composables/`, `tests/guardian-self-service/components/`, and `tests/guardian-self-service/routes/`
+- [X] T004 [P] Add guardian self-service i18n namespace scaffold in `src/i18n/modules/guardianSelfService.js`
+- [X] T005 [P] Add guardian route module scaffold in `src/router/modules/guardian.js`
 
 ---
 
@@ -25,18 +25,18 @@
 
 **Critical**: No user story work starts until this phase is complete.
 
-- [ ] T006 [P] Add foundation tests for authenticated access, active school, no-guardian-link safe signal, generic denial without no-guardian-link inference, current period, feedback mapping, stale guard, and diagnostics redaction in `tests/guardian-self-service/composables/guardianSelfServiceFoundation.spec.js`
-- [ ] T007 Create approved operation and blocked-capability map in `src/contracts/guardian/guardianSelfServiceContract.js`
-- [ ] T008 Create guardian response mappers for paginated envelopes, student summaries, student detail, academic summary, contact view, and safe dropped fields in `src/contracts/guardian/guardianSelfServiceMappers.js`
-- [ ] T009 Create guardian self-service Axios wrapper and exported service methods in `src/services/guardian/guardianSelfServiceService.js`
-- [ ] T010 [P] Create shared feedback-state normalization for unauthorized, forbidden, tenant-mismatch, inactive-school, no-active-school, no-guardian-link, no-linked-students, no-academic-period, unavailable-summary, validation, not-found, unsupported-page-size, stale-response, and temporary-unavailable states in `src/services/guardian/guardianSelfServiceFeedbackMapper.js`
-- [ ] T011 [P] Create safe diagnostics redaction for unassociated student identifiers, other guardian data, non-primary contacts, school-only notes, correction details, teacher-private data, report data, tokens, role internals, raw denial reasons, and cross-tenant details in `src/services/guardian/guardianSelfServiceDiagnostics.js`
-- [ ] T012 Create stale-response guard composable for route, selected student, active school, academic period, pagination, authentication, and session changes in `src/composables/guardian/useGuardianSelfServiceStaleGuard.js`
-- [ ] T013 Create guardian workspace context composable for active school, safe no-guardian-link signal, current active academic period, default landing, and blocking gates in `src/composables/guardian/useGuardianWorkspaceContext.js`
-- [ ] T014 [P] Create shared guardian feedback-state component for loading, empty, denied, unavailable, no-active-school, no-guardian-link, no-linked-students, no-academic-period, unavailable-summary, not-found, and temporary-unavailable states in `src/components/guardian/GuardianFeedbackState.vue`
-- [ ] T015 [P] Create shared guardian status and pagination components for relationship labels, profile status, summary status, and paginated list controls in `src/components/guardian/GuardianStatusControls.vue`
-- [ ] T016 Wire guardian route module into application router in `src/router/index.js`
-- [ ] T017 Add shared guardian workspace and feedback display text to `src/i18n/modules/guardianSelfService.js`
+- [X] T006 [P] Add foundation tests for authenticated access, active school, no-guardian-link safe signal, generic denial without no-guardian-link inference, current period, feedback mapping, stale guard, and diagnostics redaction in `tests/guardian-self-service/composables/guardianSelfServiceFoundation.spec.js`
+- [X] T007 Create approved operation and blocked-capability map in `src/contracts/guardian/guardianSelfServiceContract.js`
+- [X] T008 Create guardian response mappers for paginated envelopes, student summaries, student detail, academic summary, contact view, and safe dropped fields in `src/contracts/guardian/guardianSelfServiceMappers.js`
+- [X] T009 Create guardian self-service Axios wrapper and exported service methods in `src/services/guardian/guardianSelfServiceService.js`
+- [X] T010 [P] Create shared feedback-state normalization for unauthorized, forbidden, tenant-mismatch, inactive-school, no-active-school, no-guardian-link, no-linked-students, no-academic-period, unavailable-summary, validation, not-found, unsupported-page-size, stale-response, and temporary-unavailable states in `src/services/guardian/guardianSelfServiceFeedbackMapper.js`
+- [X] T011 [P] Create safe diagnostics redaction for unassociated student identifiers, other guardian data, non-primary contacts, school-only notes, correction details, teacher-private data, report data, tokens, role internals, raw denial reasons, and cross-tenant details in `src/services/guardian/guardianSelfServiceDiagnostics.js`
+- [X] T012 Create stale-response guard composable for route, selected student, active school, academic period, pagination, authentication, and session changes in `src/composables/guardian/useGuardianSelfServiceStaleGuard.js`
+- [X] T013 Create guardian workspace context composable for active school, safe no-guardian-link signal, current active academic period, default landing, and blocking gates in `src/composables/guardian/useGuardianWorkspaceContext.js`
+- [X] T014 [P] Create shared guardian feedback-state component for loading, empty, denied, unavailable, no-active-school, no-guardian-link, no-linked-students, no-academic-period, unavailable-summary, not-found, and temporary-unavailable states in `src/components/guardian/GuardianFeedbackState.vue`
+- [X] T015 [P] Create shared guardian status and pagination components for relationship labels, profile status, summary status, and paginated list controls in `src/components/guardian/GuardianStatusControls.vue`
+- [X] T016 Wire guardian route module into application router in `src/router/index.js`
+- [X] T017 Add shared guardian workspace and feedback display text to `src/i18n/modules/guardianSelfService.js`
 
 **Checkpoint**: Foundation ready. User story implementation can begin.
 
@@ -50,18 +50,18 @@
 
 ### Tests for User Story 1
 
-- [ ] T018 [P] [US1] Add service and mapper tests for `listGuardianStudents`, tenant context, pagination, dropped fields, no-linked-students, and no undocumented parameters in `tests/guardian-self-service/services/linkedStudentsService.spec.js`
-- [ ] T019 [P] [US1] Add composable tests for workspace default landing, active-school gate, safe no-guardian-link signal, generic denial without no-guardian-link inference, pagination, empty state, and stale-response handling in `tests/guardian-self-service/composables/useGuardianLinkedStudents.spec.js`
-- [ ] T020 [P] [US1] Add route/component tests for workspace root, linked student list, relationship labels, no-active-school, no-guardian-link, no-linked-students, unauthorized, forbidden, tenant-mismatch, and inactive-school states in `tests/guardian-self-service/components/linkedStudentsViews.spec.js`
+- [X] T018 [P] [US1] Add service and mapper tests for `listGuardianStudents`, tenant context, pagination, dropped fields, no-linked-students, and no undocumented parameters in `tests/guardian-self-service/services/linkedStudentsService.spec.js`
+- [X] T019 [P] [US1] Add composable tests for workspace default landing, active-school gate, safe no-guardian-link signal, generic denial without no-guardian-link inference, pagination, empty state, and stale-response handling in `tests/guardian-self-service/composables/useGuardianLinkedStudents.spec.js`
+- [X] T020 [P] [US1] Add route/component tests for workspace root, linked student list, relationship labels, no-active-school, no-guardian-link, no-linked-students, unauthorized, forbidden, tenant-mismatch, and inactive-school states in `tests/guardian-self-service/components/linkedStudentsViews.spec.js`
 
 ### Implementation for User Story 1
 
-- [ ] T021 [US1] Implement linked student service method and request/response mapper in `src/services/guardian/guardianSelfServiceService.js`
-- [ ] T022 [US1] Implement linked student state, pagination, active-school gate, safe no-guardian-link handling, empty state, stale guard, and feedback mapping in `src/composables/guardian/useGuardianLinkedStudents.js`
-- [ ] T023 [P] [US1] Implement linked student list component with status, relationship label, pagination, empty, loading, and denied states in `src/components/guardian/GuardianLinkedStudentsList.vue`
-- [ ] T024 [P] [US1] Implement guardian workspace route view with default Linked Students landing and context gates in `src/pages/guardian/GuardianWorkspaceView.vue`
-- [ ] T025 [US1] Register guardian workspace root and linked student list routes in `src/router/modules/guardian.js`
-- [ ] T026 [US1] Add linked students, no-linked-students, no-guardian-link, generic denial, inactive-school, tenant-mismatch, and workspace display text in `src/i18n/modules/guardianSelfService.js`
+- [X] T021 [US1] Implement linked student service method and request/response mapper in `src/services/guardian/guardianSelfServiceService.js`
+- [X] T022 [US1] Implement linked student state, pagination, active-school gate, safe no-guardian-link handling, empty state, stale guard, and feedback mapping in `src/composables/guardian/useGuardianLinkedStudents.js`
+- [X] T023 [P] [US1] Implement linked student list component with status, relationship label, pagination, empty, loading, and denied states in `src/components/guardian/GuardianLinkedStudentsList.vue`
+- [X] T024 [P] [US1] Implement guardian workspace route view with default Linked Students landing and context gates in `src/pages/guardian/GuardianWorkspaceView.vue`
+- [X] T025 [US1] Register guardian workspace root and linked student list routes in `src/router/modules/guardian.js`
+- [X] T026 [US1] Add linked students, no-linked-students, no-guardian-link, generic denial, inactive-school, tenant-mismatch, and workspace display text in `src/i18n/modules/guardianSelfService.js`
 
 **Checkpoint**: User Story 1 is independently functional and testable as MVP.
 
@@ -75,18 +75,18 @@
 
 ### Tests for User Story 2
 
-- [ ] T027 [P] [US2] Add service and mapper tests for `getGuardianStudent`, limited profile fields, enrollment summary fields, dropped restricted fields, and not-found mapping in `tests/guardian-self-service/services/guardianStudentDetailService.spec.js`
-- [ ] T028 [P] [US2] Add composable tests for selected student detail loading, target-specific not-found non-enumeration, stale selected-student changes, and safe diagnostics in `tests/guardian-self-service/composables/useGuardianStudentDetail.spec.js`
-- [ ] T029 [P] [US2] Add route/component tests for linked student detail, restricted field absence, stale direct routes, not-found state, and return-to-list behavior in `tests/guardian-self-service/components/guardianStudentDetailViews.spec.js`
+- [X] T027 [P] [US2] Add service and mapper tests for `getGuardianStudent`, limited profile fields, enrollment summary fields, dropped restricted fields, and not-found mapping in `tests/guardian-self-service/services/guardianStudentDetailService.spec.js`
+- [X] T028 [P] [US2] Add composable tests for selected student detail loading, target-specific not-found non-enumeration, stale selected-student changes, and safe diagnostics in `tests/guardian-self-service/composables/useGuardianStudentDetail.spec.js`
+- [X] T029 [P] [US2] Add route/component tests for linked student detail, restricted field absence, stale direct routes, not-found state, and return-to-list behavior in `tests/guardian-self-service/components/guardianStudentDetailViews.spec.js`
 
 ### Implementation for User Story 2
 
-- [ ] T030 [US2] Implement guardian student detail service method and response mapper in `src/services/guardian/guardianSelfServiceService.js`
-- [ ] T031 [US2] Implement selected student detail state, non-enumerating not-found mapping, stale guard, and diagnostics redaction in `src/composables/guardian/useGuardianStudentDetail.js`
-- [ ] T032 [P] [US2] Implement limited student detail summary component with profile, enrollment, relationship label, and restricted-field omission in `src/components/guardian/GuardianStudentDetailSummary.vue`
-- [ ] T033 [US2] Implement linked student detail route view with safe not-found and no-active-school/no-guardian-link states in `src/pages/guardian/GuardianStudentDetailView.vue`
-- [ ] T034 [US2] Register linked student detail route in `src/router/modules/guardian.js`
-- [ ] T035 [US2] Add linked student detail, enrollment summary, restricted field absence, and non-enumerating not-found display text in `src/i18n/modules/guardianSelfService.js`
+- [X] T030 [US2] Implement guardian student detail service method and response mapper in `src/services/guardian/guardianSelfServiceService.js`
+- [X] T031 [US2] Implement selected student detail state, non-enumerating not-found mapping, stale guard, and diagnostics redaction in `src/composables/guardian/useGuardianStudentDetail.js`
+- [X] T032 [P] [US2] Implement limited student detail summary component with profile, enrollment, relationship label, and restricted-field omission in `src/components/guardian/GuardianStudentDetailSummary.vue`
+- [X] T033 [US2] Implement linked student detail route view with safe not-found and no-active-school/no-guardian-link states in `src/pages/guardian/GuardianStudentDetailView.vue`
+- [X] T034 [US2] Register linked student detail route in `src/router/modules/guardian.js`
+- [X] T035 [US2] Add linked student detail, enrollment summary, restricted field absence, and non-enumerating not-found display text in `src/i18n/modules/guardianSelfService.js`
 
 **Checkpoint**: User Story 2 is independently functional and non-enumerating.
 
@@ -100,19 +100,19 @@
 
 ### Tests for User Story 3
 
-- [ ] T036 [P] [US3] Add service and mapper tests for `getGuardianStudentAcademics`, required current `academic_period_id`, grade summary, attendance summary, learning-set summary, dropped restricted fields, and no undocumented parameters in `tests/guardian-self-service/services/guardianAcademicSummaryService.spec.js`
-- [ ] T037 [P] [US3] Add composable tests for current active period gate, no-academic-period request blocking, unavailable-summary mapping, target-specific not-found, stale period/student changes, and diagnostics redaction in `tests/guardian-self-service/composables/useGuardianAcademicSummary.spec.js`
-- [ ] T038 [P] [US3] Add route/component tests for grade summary, attendance summary, learning-set summary, null value rendering, no manual period picker, no detailed rows, no reports, and denied states in `tests/guardian-self-service/components/guardianAcademicSummaryViews.spec.js`
+- [X] T036 [P] [US3] Add service and mapper tests for `getGuardianStudentAcademics`, required current `academic_period_id`, grade summary, attendance summary, learning-set summary, dropped restricted fields, and no undocumented parameters in `tests/guardian-self-service/services/guardianAcademicSummaryService.spec.js`
+- [X] T037 [P] [US3] Add composable tests for current active period gate, no-academic-period request blocking, unavailable-summary mapping, target-specific not-found, stale period/student changes, and diagnostics redaction in `tests/guardian-self-service/composables/useGuardianAcademicSummary.spec.js`
+- [X] T038 [P] [US3] Add route/component tests for grade summary, attendance summary, learning-set summary, null value rendering, no manual period picker, no detailed rows, no reports, and denied states in `tests/guardian-self-service/components/guardianAcademicSummaryViews.spec.js`
 
 ### Implementation for User Story 3
 
-- [ ] T039 [US3] Implement guardian academic summary service method and response mapper in `src/services/guardian/guardianSelfServiceService.js`
-- [ ] T040 [US3] Implement academic summary state, current-period gate, no-academic-period request blocking, unavailable-summary mapping, stale guard, and safe feedback in `src/composables/guardian/useGuardianAcademicSummary.js`
-- [ ] T041 [P] [US3] Implement grade and attendance summary panels with safe null-value rendering in `src/components/guardian/GuardianAcademicSummaryPanels.vue`
-- [ ] T042 [P] [US3] Implement learning-set summary list with status, progress, last activity, and no teacher content or questionnaire actions in `src/components/guardian/GuardianLearningSetSummaryList.vue`
-- [ ] T043 [US3] Implement academic summary route view with current active period only and no period picker in `src/pages/guardian/GuardianAcademicSummaryView.vue`
-- [ ] T044 [US3] Register guardian academic summary route in `src/router/modules/guardian.js`
-- [ ] T045 [US3] Add academic summary, no-academic-period, unavailable-summary, null summary, blocked detail, blocked report, and blocked period-picker display text in `src/i18n/modules/guardianSelfService.js`
+- [X] T039 [US3] Implement guardian academic summary service method and response mapper in `src/services/guardian/guardianSelfServiceService.js`
+- [X] T040 [US3] Implement academic summary state, current-period gate, no-academic-period request blocking, unavailable-summary mapping, stale guard, and safe feedback in `src/composables/guardian/useGuardianAcademicSummary.js`
+- [X] T041 [P] [US3] Implement grade and attendance summary panels with safe null-value rendering in `src/components/guardian/GuardianAcademicSummaryPanels.vue`
+- [X] T042 [P] [US3] Implement learning-set summary list with status, progress, last activity, and no teacher content or questionnaire actions in `src/components/guardian/GuardianLearningSetSummaryList.vue`
+- [X] T043 [US3] Implement academic summary route view with current active period only and no period picker in `src/pages/guardian/GuardianAcademicSummaryView.vue`
+- [X] T044 [US3] Register guardian academic summary route in `src/router/modules/guardian.js`
+- [X] T045 [US3] Add academic summary, no-academic-period, unavailable-summary, null summary, blocked detail, blocked report, and blocked period-picker display text in `src/i18n/modules/guardianSelfService.js`
 
 **Checkpoint**: User Story 3 is independently functional and summary-limited.
 
@@ -126,19 +126,19 @@
 
 ### Tests for User Story 4
 
-- [ ] T046 [P] [US4] Add service and mapper tests for `getGuardianStudentContacts`, guardian contact fields, relationship label, student primary contact fields, safe null values, dropped restricted fields, and not-found mapping in `tests/guardian-self-service/services/guardianContactViewService.spec.js`
-- [ ] T047 [P] [US4] Add composable tests for contact loading, safe missing-value state, target-specific not-found, stale selected-student changes, and diagnostics redaction in `tests/guardian-self-service/composables/useGuardianContactView.spec.js`
-- [ ] T048 [P] [US4] Add route/component tests for guardian contact, relationship label, student primary contact, missing values, restricted contact absence, no edit controls, and denied states in `tests/guardian-self-service/components/guardianContactView.spec.js`
+- [X] T046 [P] [US4] Add service and mapper tests for `getGuardianStudentContacts`, guardian contact fields, relationship label, student primary contact fields, safe null values, dropped restricted fields, and not-found mapping in `tests/guardian-self-service/services/guardianContactViewService.spec.js`
+- [X] T047 [P] [US4] Add composable tests for contact loading, safe missing-value state, target-specific not-found, stale selected-student changes, and diagnostics redaction in `tests/guardian-self-service/composables/useGuardianContactView.spec.js`
+- [X] T048 [P] [US4] Add route/component tests for guardian contact, relationship label, student primary contact, missing values, restricted contact absence, no edit controls, and denied states in `tests/guardian-self-service/components/guardianContactView.spec.js`
 
 ### Implementation for User Story 4
 
-- [ ] T049 [US4] Implement guardian contact view service method and response mapper in `src/services/guardian/guardianSelfServiceService.js`
-- [ ] T050 [US4] Implement contact view state, safe missing-value handling, target not-found mapping, stale guard, and diagnostics redaction in `src/composables/guardian/useGuardianContactView.js`
-- [ ] T051 [P] [US4] Implement guardian contact panel with guardian-owned fields and relationship label in `src/components/guardian/GuardianContactPanel.vue`
-- [ ] T052 [P] [US4] Implement student primary contact panel with safe missing-value rendering and restricted contact omission in `src/components/guardian/GuardianStudentPrimaryContactPanel.vue`
-- [ ] T053 [US4] Implement contact view route with no edit controls and safe denied/not-found states in `src/pages/guardian/GuardianContactView.vue`
-- [ ] T054 [US4] Register guardian contact view route in `src/router/modules/guardian.js`
-- [ ] T055 [US4] Add contact view, missing contact value, relationship label, blocked contact edit, restricted contact, and not-found display text in `src/i18n/modules/guardianSelfService.js`
+- [X] T049 [US4] Implement guardian contact view service method and response mapper in `src/services/guardian/guardianSelfServiceService.js`
+- [X] T050 [US4] Implement contact view state, safe missing-value handling, target not-found mapping, stale guard, and diagnostics redaction in `src/composables/guardian/useGuardianContactView.js`
+- [X] T051 [P] [US4] Implement guardian contact panel with guardian-owned fields and relationship label in `src/components/guardian/GuardianContactPanel.vue`
+- [X] T052 [P] [US4] Implement student primary contact panel with safe missing-value rendering and restricted contact omission in `src/components/guardian/GuardianStudentPrimaryContactPanel.vue`
+- [X] T053 [US4] Implement contact view route with no edit controls and safe denied/not-found states in `src/pages/guardian/GuardianContactView.vue`
+- [X] T054 [US4] Register guardian contact view route in `src/router/modules/guardian.js`
+- [X] T055 [US4] Add contact view, missing contact value, relationship label, blocked contact edit, restricted contact, and not-found display text in `src/i18n/modules/guardianSelfService.js`
 
 **Checkpoint**: User Story 4 is independently functional and contact-limited.
 
@@ -148,18 +148,18 @@
 
 **Purpose**: Verify feature-wide contract compliance, accessibility, diagnostics, documentation, and quality gates.
 
-- [ ] T056 [P] Verify operation ID to UI surface traceability against `specs/025-guardian-self-service-ui/contracts/guardian-self-service-ui-contract.md`
-- [ ] T057 [P] Verify WCAG 2.1 AA responsive behavior, keyboard navigation, focus visibility, labels, landmarks/headings, and contrast at 390px, 768px, and 1440px for all guardian routes in `src/pages/guardian/`
-- [ ] T058 Verify no direct Axios calls exist outside guardian services in `src/pages/guardian/`, `src/components/guardian/`, and `src/composables/guardian/`
-- [ ] T059 Verify no manual period switch, free-form academic period query, guardian write, profile update, association request, guardian-user-link provisioning, detailed academic rows, teacher content, questionnaire action, report UI, messaging, notification-center, school-admin, student self-service, platform support, billing, legal workflow, or undocumented behavior exists in `src/pages/guardian/`, `src/components/guardian/`, `src/composables/guardian/`, `src/services/guardian/`, `src/contracts/guardian/`, and `src/router/modules/guardian.js`
-- [ ] T060 [P] Verify diagnostics and test output redaction for unassociated student identifiers, other guardian data, non-primary contacts, school-only notes, correction details, teacher-private data, report data, tokens, role internals, raw denial reasons, and cross-tenant details in `tests/guardian-self-service/`
-- [ ] T061 Run focused guardian self-service tests through `npm run test:unit -- tests/guardian-self-service` using `package.json` and record results in implementation PR notes
-- [ ] T062 Run full frontend unit tests through `npm run test:unit` using `package.json` and record results in implementation PR notes
-- [ ] T063 Run frontend build verification through `npm run build` using `package.json` and record results in implementation PR notes
-- [ ] T064 Run OpenAPI validation with `npx @redocly/cli lint api/openapi.yaml` only if `api/openapi.yaml` changed and record results in implementation PR notes
-- [ ] T065 Record timed usability evidence for SC-002, SC-003, and SC-004 against `specs/025-guardian-self-service-ui/spec.md` using linked student detail under 2 minutes, academic summary under 3 minutes, and contact view under 2 minutes
-- [ ] T066 Record representative guardian UAT evidence for SC-009 against `specs/025-guardian-self-service-ui/spec.md` confirming at least 90% can distinguish linked-student list, no-linked-students, student detail, academic summary, contact view, no-academic-period, unavailable-summary, and not-found states
-- [ ] T067 Verify frontend timing goals from `specs/025-guardian-self-service-ui/plan.md` and record evidence in implementation PR notes for mocked service render within 1.5s, guardian route transition within 2s, and selected-student views within 2s after service resolution
+- [X] T056 [P] Verify operation ID to UI surface traceability against `specs/025-guardian-self-service-ui/contracts/guardian-self-service-ui-contract.md`
+- [X] T057 [P] Verify WCAG 2.1 AA responsive behavior, keyboard navigation, focus visibility, labels, landmarks/headings, and contrast at 390px, 768px, and 1440px for all guardian routes in `src/pages/guardian/`
+- [X] T058 Verify no direct Axios calls exist outside guardian services in `src/pages/guardian/`, `src/components/guardian/`, and `src/composables/guardian/`
+- [X] T059 Verify no manual period switch, free-form academic period query, guardian write, profile update, association request, guardian-user-link provisioning, detailed academic rows, teacher content, questionnaire action, report UI, messaging, notification-center, school-admin, student self-service, platform support, billing, legal workflow, or undocumented behavior exists in `src/pages/guardian/`, `src/components/guardian/`, `src/composables/guardian/`, `src/services/guardian/`, `src/contracts/guardian/`, and `src/router/modules/guardian.js`
+- [X] T060 [P] Verify diagnostics and test output redaction for unassociated student identifiers, other guardian data, non-primary contacts, school-only notes, correction details, teacher-private data, report data, tokens, role internals, raw denial reasons, and cross-tenant details in `tests/guardian-self-service/`
+- [X] T061 Run focused guardian self-service tests through `npm run test:unit -- tests/guardian-self-service` using `package.json` and record results in implementation PR notes
+- [X] T062 Run full frontend unit tests through `npm run test:unit` using `package.json` and record results in implementation PR notes
+- [X] T063 Run frontend build verification through `npm run build` using `package.json` and record results in implementation PR notes
+- [X] T064 Run OpenAPI validation with `npx @redocly/cli lint api/openapi.yaml` only if `api/openapi.yaml` changed and record results in implementation PR notes
+- [X] T065 Record timed usability evidence for SC-002, SC-003, and SC-004 against `specs/025-guardian-self-service-ui/spec.md` using linked student detail under 2 minutes, academic summary under 3 minutes, and contact view under 2 minutes
+- [X] T066 Record representative guardian UAT evidence for SC-009 against `specs/025-guardian-self-service-ui/spec.md` confirming at least 90% can distinguish linked-student list, no-linked-students, student detail, academic summary, contact view, no-academic-period, unavailable-summary, and not-found states
+- [X] T067 Verify frontend timing goals from `specs/025-guardian-self-service-ui/plan.md` and record evidence in implementation PR notes for mocked service render within 1.5s, guardian route transition within 2s, and selected-student views within 2s after service resolution
 
 ---
 
