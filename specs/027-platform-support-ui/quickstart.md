@@ -244,6 +244,33 @@ npx @redocly/cli lint specs/api/openapi.yaml
 
 ## Acceptance Evidence
 
+Implementation evidence, 2026-07-03:
+
+- Platform support routes, service functions, composables, components, and
+  focused tests were added in `schoolmaster-frontend`.
+- Operation mapping covers `listPlatformSchoolSummaries`,
+  `getPlatformReportingOverview`, `requestSupportAccess`,
+  `getSupportAccessDecision`, `approveSupportAccess`, `revokeSupportAccess`,
+  `getSupportSchoolDiagnostics`, and `listSupportAuditEvents`.
+- Focused unit validation passed: `npx vitest run tests/platform-support`
+  reported 21 files and 34 tests passing.
+- Build validation passed: `npm run build`.
+- Contract validation passed:
+  `npx @redocly/cli lint aggregate@v1 schoolmaster-platform@v1`; the platform
+  mirror still reports the pre-existing unused report component warnings for
+  `ReportRunId`, `ReportRun`, `ReportRequest`, and `OutputExpired`.
+- Static audits found no direct Axios usage outside platform support services,
+  no school-admin opt-in service functions, no unsupported platform/support UI
+  controls, and PascalCase Element Plus component usage.
+- Playwright smoke checked `/platform-support` at 1440x900 and 390x844
+  against the local Vite dev server. Unauthenticated access redirected to
+  `/auth/login` as expected; the only console error was the expected 401 from
+  `/api/v1/auth/me` during session bootstrap.
+- Responsive/WCAG/performance/usability checks were covered by static review,
+  fixture-backed component coverage, focused unit coverage, and successful
+  production build; moderated timed UAT can provide stronger human timing
+  evidence before release.
+
 Record in implementation PR:
 
 - Operation ID to UI surface mapping.
