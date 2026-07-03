@@ -211,7 +211,14 @@ behavior before implementation.
 
 ### 10. Guardian Self-Service UI
 
-**Status**: Not specified.
+**Status**: Complete. Feature specification, implementation plan, research,
+data model, frontend contract, quickstart, tasks, runtime implementation, and
+verification evidence are complete in
+`specs/025-guardian-self-service-ui/` and `schoolmaster-frontend`.
+Guardian-facing linked student list/detail, current-period academic summary,
+and approved contact views are implemented with tenant-safe authorization,
+non-enumerating not-found handling, stale-response protection, diagnostics
+redaction, and blocked unsupported guardian capabilities.
 
 **Purpose**: Define guardian-facing list/detail, academic summary, and contact
 views using the approved guardian self-service contract.
@@ -225,7 +232,15 @@ not-found UI behavior before implementation.
 
 ### 11. Reporting Workspace UI
 
-**Status**: Not specified.
+**Status**: Complete. Feature specification, quality checklist,
+implementation plan, research, data model, frontend contract, quickstart,
+tasks, runtime implementation, and verification evidence are complete in
+`specs/026-reporting-workspace-ui/` and `schoolmaster-frontend`. Reporting
+workspace catalog, request, history, detail, download, lifecycle, and custom
+definition surfaces are implemented for approved reporting contracts, with
+safe authorization handling, active-school timezone rendering,
+stale-response protection, diagnostics redaction, and blocked unsupported
+reporting actions.
 
 **Purpose**: Define report catalog browsing, report request flows, report run
 history, retry or cancellation where approved, custom report definitions, and
