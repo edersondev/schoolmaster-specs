@@ -39,7 +39,7 @@ A platform support user requests or reviews target-school support access, sees t
 
 **Why this priority**: Support drill-down is sensitive. Users need clear decision state and approval expiry visibility before any redacted diagnostics are reachable.
 
-**Independent Test**: Can be fully tested by signing in as a support user with support access permission, creating or viewing support access decisions across requested, approved, denied, expired, revoked, stale, and mismatched states, and verifying drill-down controls remain unavailable until active target-school opt-in and internal platform approval are both valid.
+**Independent Test**: Can be fully tested by signing in as a support user with support access permission, creating or viewing support access decisions across requested, pending, approved, denied, expired, revoked, stale, and mismatched states, and verifying drill-down controls remain unavailable until active target-school opt-in and internal platform approval are both valid.
 
 **Acceptance Scenarios**:
 
@@ -138,7 +138,7 @@ An authorized platform compliance or support-audit reviewer lists minimized supp
 - **FR-008**: The UI MUST distinguish true empty summaries, no filtered results, denied access, validation failure, tenant mismatch, not found, conflict, temporary unavailable, loading, and stale-response states.
 - **FR-009**: The platform support workspace root MUST open Platform Operational Oversight by default after authenticated access and operational oversight permission are confirmed.
 - **FR-010**: The UI MUST submit support access requests only with documented target school, reason code, purpose, and correlation metadata.
-- **FR-011**: The UI MUST render support access decision states `requested`, `approved`, `denied`, `expired`, and `revoked` without inventing additional decision states.
+- **FR-011**: The UI MUST render documented support access decision states `requested`, `pending`, `approved`, `denied`, `expired`, and `revoked` without inventing additional decision states.
 - **FR-012**: The UI MUST show target-school opt-in state, internal platform approval state, target-school match, revocation state, and 24-hour expiry visibility where returned by approved support access contracts.
 - **FR-013**: The UI MUST block support diagnostics until both target-school opt-in and internal platform approval are valid for the same target school and no older than 24 hours.
 - **FR-014**: The UI MUST hide or block diagnostics when support access is missing, pending, denied, expired, revoked, stale, mismatched, concurrently changed, older than 24 hours, or not authorized.
@@ -174,7 +174,7 @@ An authorized platform compliance or support-audit reviewer lists minimized supp
 
 - **SC-001**: 100% of platform summary, reporting overview, support decision, approval, revocation, display-only opt-in state, diagnostics, and audit UI behavior can be traced to approved platform/support contract behavior before frontend implementation begins.
 - **SC-002**: In usability checks, an authorized platform administrator can open the platform support workspace, identify school operational status, reporting-health status, suppressed counts, and unavailable states in under 3 minutes without assistance.
-- **SC-003**: In usability checks, an authorized support user can identify whether a support access decision is requested, approved, denied, expired, revoked, stale, or mismatched with at least 90% accuracy.
+- **SC-003**: In usability checks, an authorized support user can identify whether a support access decision is requested, pending, approved, denied, expired, revoked, stale, or mismatched with at least 90% accuracy.
 - **SC-004**: In usability checks, an authorized support user can identify target-school opt-in state, internal platform approval state, revocation state, and 24-hour expiry timing in under 2 minutes without assistance and without school-admin opt-in controls.
 - **SC-005**: 100% of tested diagnostics views remain unavailable until target-school opt-in and internal platform approval are both valid for the same target school and no older than 24 hours.
 - **SC-006**: 100% of tested platform summary and diagnostics cases preserve suppressed-count and redacted-field indicators without exposing hidden values in visible UI, errors, route labels, filenames, diagnostics, or test output.

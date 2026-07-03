@@ -104,8 +104,8 @@ decision.
 
 **Rules**:
 
-- Decision state is one of `requested`, `approved`, `denied`, `expired`, or
-  `revoked`.
+- Decision state is one of `requested`, `pending`, `approved`, `denied`,
+  `expired`, or `revoked`.
 - Requested or pending decisions do not load diagnostics.
 - Diagnostics require valid target-school opt-in and internal platform
   approval for the same target school and no older than 24 hours.

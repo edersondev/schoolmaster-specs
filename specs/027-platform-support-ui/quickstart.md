@@ -43,8 +43,8 @@ Before frontend implementation:
    reason code, purpose, and correlation metadata.
 8. Confirm `api/openapi.yaml` and the platform contract mirror include
    `getSupportAccessDecision`.
-9. Confirm support decision states are requested, approved, denied, expired,
-   and revoked.
+9. Confirm support decision states are requested, pending, approved, denied,
+   expired, and revoked.
 10. Confirm support decision responses include target-school opt-in state,
     internal platform approval state, target-school match, revocation state,
     and 24-hour expiry visibility where needed by UI.

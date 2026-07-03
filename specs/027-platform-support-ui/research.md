@@ -70,9 +70,9 @@ surface or future feature.
 
 **Rationale**: Support diagnostics are valid only for one target school when
 target-school opt-in and internal platform approval are valid, matched, active,
-and no older than 24 hours. UI state must represent requested, approved,
-denied, expired, revoked, stale, and mismatched outcomes without implying
-reusable support context.
+and no older than 24 hours. UI state must represent requested, pending,
+approved, denied, expired, revoked, stale, and mismatched outcomes without
+implying reusable support context.
 
 **Alternatives considered**:
 

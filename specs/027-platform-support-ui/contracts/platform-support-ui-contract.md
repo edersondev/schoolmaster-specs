@@ -150,6 +150,7 @@ Blocked:
 Decision states:
 
 - `requested`
+- `pending`
 - `approved`
 - `denied`
 - `expired`

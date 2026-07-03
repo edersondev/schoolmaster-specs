@@ -3,7 +3,7 @@
 **Input**: Design documents from `specs/027-platform-support-ui/`
 **Prerequisites**: `plan.md`, `spec.md`, `research.md`, `data-model.md`, `contracts/platform-support-ui-contract.md`, `quickstart.md`
 
-**Tests**: Frontend behavior changes require Vitest service, composable, route/component integration, stale-response, and safe-diagnostics coverage. OpenAPI validation is required because frontend implementation is blocked until platform/support operations are promoted into `specs/api/openapi.yaml` and the platform contract mirror. Backend implementation is out of scope unless a separate backend/API feature approves missing behavior.
+**Tests**: Frontend behavior changes require Vitest service, composable, route/component integration, stale-response, and safe-diagnostics coverage. OpenAPI validation is required because frontend implementation is blocked until platform/support operations are promoted into `api/openapi.yaml` and the platform contract mirror. Backend implementation is out of scope unless a separate backend/API feature approves missing behavior.
 
 **Organization**: Tasks are grouped by user story so each story can be implemented and tested independently after shared platform-support foundations are complete.
 
@@ -20,7 +20,7 @@
 **Purpose**: Confirm contract readiness, target frontend structure, and shared implementation locations before story work begins.
 
 - [ ] T001 Review platform support UI scope and blocked actions in `specs/027-platform-support-ui/spec.md`
-- [ ] T002 Verify platform/support operation IDs in `specs/api/openapi.yaml` and record coverage or gaps in `specs/027-platform-support-ui/quickstart.md`
+- [ ] T002 Verify platform/support operation IDs in `api/openapi.yaml` and record coverage or gaps in `specs/027-platform-support-ui/quickstart.md`
 - [ ] T003 Verify platform/support operation parity in `specs/001-schoolmaster-platform/contracts/openapi.yaml` and record coverage or gaps in `specs/027-platform-support-ui/quickstart.md`
 - [ ] T004 [P] Confirm frontend platform-support target folders in `src/pages/platform-support/`, `src/components/platform-support/`, `src/composables/platform-support/`, `src/services/platform-support/`, and `src/contracts/platform-support/`
 - [ ] T005 [P] Confirm frontend test target folders in `tests/platform-support/fixtures/`, `tests/platform-support/services/`, `tests/platform-support/composables/`, and `tests/platform-support/components/`
@@ -37,12 +37,12 @@
 
 ### Contract and Readiness Tasks
 
-- [ ] T008 Add or verify platform school summary OpenAPI coverage for `listPlatformSchoolSummaries` in `specs/api/openapi.yaml`
-- [ ] T009 Add or verify platform reporting overview OpenAPI coverage for `getPlatformReportingOverview` in `specs/api/openapi.yaml`
-- [ ] T010 Add or verify support access decision OpenAPI coverage for `requestSupportAccess` and `getSupportAccessDecision` in `specs/api/openapi.yaml`
-- [ ] T011 Add or verify support approval and revocation OpenAPI coverage for `approveSupportAccess` and `revokeSupportAccess` in `specs/api/openapi.yaml`
-- [ ] T012 Add or verify support diagnostics OpenAPI coverage for `getSupportSchoolDiagnostics` in `specs/api/openapi.yaml`
-- [ ] T013 Add or verify support audit OpenAPI coverage for `listSupportAuditEvents` in `specs/api/openapi.yaml`
+- [ ] T008 Add or verify platform school summary OpenAPI coverage for `listPlatformSchoolSummaries` in `api/openapi.yaml`
+- [ ] T009 Add or verify platform reporting overview OpenAPI coverage for `getPlatformReportingOverview` in `api/openapi.yaml`
+- [ ] T010 Add or verify support access decision OpenAPI coverage for `requestSupportAccess` and `getSupportAccessDecision` in `api/openapi.yaml`
+- [ ] T011 Add or verify support approval and revocation OpenAPI coverage for `approveSupportAccess` and `revokeSupportAccess` in `api/openapi.yaml`
+- [ ] T012 Add or verify support diagnostics OpenAPI coverage for `getSupportSchoolDiagnostics` in `api/openapi.yaml`
+- [ ] T013 Add or verify support audit OpenAPI coverage for `listSupportAuditEvents` in `api/openapi.yaml`
 - [ ] T014 Mirror verified platform/support operation coverage in `specs/001-schoolmaster-platform/contracts/openapi.yaml`
 - [ ] T015 Run Redocly validation for aggregate and platform contracts and record result in `specs/027-platform-support-ui/quickstart.md`
 
@@ -103,11 +103,11 @@
 
 **Goal**: Platform support users can request or view target-school support access decisions, understand display-only opt-in and internal approval state, see 24-hour expiry, and use platform approval/revocation controls only where permitted.
 
-**Independent Test**: Sign in as a support user with support access permission, create or view support access decisions across requested, approved, denied, expired, revoked, stale, and mismatched states, and verify diagnostics remain unavailable until active target-school opt-in and internal platform approval are both valid.
+**Independent Test**: Sign in as a support user with support access permission, create or view support access decisions across requested, pending, approved, denied, expired, revoked, stale, and mismatched states, and verify diagnostics remain unavailable until active target-school opt-in and internal platform approval are both valid.
 
 ### Tests for User Story 2
 
-- [ ] T043 [P] [US2] Add support access decision service tests for request, detail, requested, approved, denied, expired, revoked, stale, mismatched, validation, conflict, and denied responses in `tests/platform-support/services/supportAccessDecisionService.test.js`
+- [ ] T043 [P] [US2] Add support access decision service tests for request, detail, requested, pending, approved, denied, expired, revoked, stale, mismatched, validation, conflict, and denied responses in `tests/platform-support/services/supportAccessDecisionService.test.js`
 - [ ] T044 [P] [US2] Add support approval service tests for approve, revoke, permission denial, stale state, expired decision, mismatched target, and returned-state authority in `tests/platform-support/services/supportApprovalService.test.js`
 - [ ] T045 [P] [US2] Add support decision composable tests for target school, reason code, purpose, correlation metadata, display-only opt-in state, internal approval state, expiry, and diagnostics gating in `tests/platform-support/composables/useSupportAccessDecision.test.js`
 - [ ] T046 [P] [US2] Add approval action composable tests for permission gates, confirmation state, conflict handling, stale responses, and no school-owned writes in `tests/platform-support/composables/useSupportApprovalActions.test.js`
