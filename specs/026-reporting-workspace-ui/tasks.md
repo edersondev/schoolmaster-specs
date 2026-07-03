@@ -36,7 +36,7 @@
 
 - [ ] T007 [P] Add reporting fixture builders for catalog, report runs, outputs, definitions, and error envelopes in `schoolmaster-frontend/tests/reporting-workspace/fixtures/reportingFixtures.js`
 - [ ] T008 [P] Add reporting service contract mapper tests for approved operations and undocumented-field dropping in `schoolmaster-frontend/tests/reporting-workspace/services/reportingService.test.js`
-- [ ] T009 [P] Add reporting access-gate composable tests for active school, inactive school, no active school, report, lifecycle, and definition permissions in `schoolmaster-frontend/tests/reporting-workspace/composables/useReportingAccess.test.js`
+- [ ] T009 [P] Add reporting access-gate composable tests for active school, inactive school, no active school, report, lifecycle, definition, and definition-only catalog permissions in `schoolmaster-frontend/tests/reporting-workspace/composables/useReportingAccess.test.js`
 - [ ] T010 [P] Add stale-response and safe-diagnostics tests in `schoolmaster-frontend/tests/reporting-workspace/composables/useReportingRequestGuards.test.js`
 - [ ] T011 [P] Add shared reporting feedback and status component tests in `schoolmaster-frontend/tests/reporting-workspace/components/ReportingSharedStates.test.js`
 
@@ -67,7 +67,7 @@
 ### Tests for User Story 1
 
 - [ ] T023 [P] [US1] Add catalog service and request service mapper tests in `schoolmaster-frontend/tests/reporting-workspace/services/reportingCatalogRequestService.test.js`
-- [ ] T024 [P] [US1] Add catalog composable tests for approved domains, fields, filters, formats, complexity limits, and unavailable catalog state in `schoolmaster-frontend/tests/reporting-workspace/composables/useReportCatalog.test.js`
+- [ ] T024 [P] [US1] Add catalog composable tests for approved domains, fields, filters, formats, complexity limits, report-permission catalog access, report-definition-permission catalog access, and unavailable catalog state in `schoolmaster-frontend/tests/reporting-workspace/composables/useReportCatalog.test.js`
 - [ ] T025 [P] [US1] Add report request form composable tests for built-in requests, active custom-definition requests, validation, and unsupported-option blocking in `schoolmaster-frontend/tests/reporting-workspace/composables/useReportRequestForm.test.js`
 - [ ] T026 [P] [US1] Add catalog browser and request form component tests in `schoolmaster-frontend/tests/reporting-workspace/components/ReportCatalogRequestFlow.test.js`
 
@@ -101,7 +101,7 @@
 ### Implementation for User Story 2
 
 - [ ] T038 [P] [US2] Implement report history list state, filters, pagination, and empty-state mapping in `schoolmaster-frontend/src/composables/reporting/useReportHistory.js`
-- [ ] T039 [P] [US2] Implement report run detail loading and tenant-safe not-found handling in `schoolmaster-frontend/src/composables/reporting/useReportRunDetail.js`
+- [ ] T039 [P] [US2] Implement list-backed report run detail hydration and tenant-safe unavailable or not-found handling in `schoolmaster-frontend/src/composables/reporting/useReportRunDetail.js`
 - [ ] T040 [P] [US2] Implement auto-refresh, manual refresh, and meaningful-change detection in `schoolmaster-frontend/src/composables/reporting/useReportAutoRefresh.js`
 - [ ] T041 [P] [US2] Implement active school timezone timestamp formatting in `schoolmaster-frontend/src/composables/reporting/useReportingTimeFormatter.js`
 - [ ] T042 [P] [US2] Build report history list, filters, pagination, and empty states in `schoolmaster-frontend/src/components/reporting/ReportHistoryList.vue`

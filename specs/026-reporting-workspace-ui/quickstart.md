@@ -26,34 +26,40 @@ Before frontend implementation:
 1. Confirm `api/openapi.yaml` includes `getReportCatalog`.
 2. Confirm `ReportCatalog` exposes approved domains, fields, filters,
    operators, grouping, sorting, output formats, and complexity limits.
-3. Confirm `api/openapi.yaml` includes `listReports` with page, per-page,
+3. Confirm catalog access is approved for report request workflows with report
+   permission and for custom definition workflows with report-definition
+   permission.
+4. Confirm `api/openapi.yaml` includes `listReports` with page, per-page,
    report type, generation status, report source, and include-deleted filters.
-4. Confirm `ReportRun` includes generation status, soft-delete metadata,
+5. Confirm `ReportRun` includes generation status, soft-delete metadata,
    retry lineage, generated timestamp, expiry timestamp, output availability,
    and per-format outputs.
-5. Confirm `api/openapi.yaml` includes `requestReport` for built-in and custom
+6. Confirm no standalone `GET /api/v1/reports/{reportRunId}` operation is
+   required by this UI slice; report-run detail is hydrated only from approved
+   list, request, retry, cancel, delete, or restore response state.
+7. Confirm `api/openapi.yaml` includes `requestReport` for built-in and custom
    report requests.
-6. Confirm `ReportRequest` supports documented report type or definition ID,
+8. Confirm `ReportRequest` supports documented report type or definition ID,
    filters, and output formats only.
-7. Confirm `api/openapi.yaml` includes `downloadReport` and the documented
+9. Confirm `api/openapi.yaml` includes `downloadReport` and the documented
    expired-output response.
-8. Confirm `ReportFormat` includes PDF, CSV, and catalog-approved XLSX.
-9. Confirm `ReportOutputAvailability` includes pending, available, failed,
+10. Confirm `ReportFormat` includes PDF, CSV, and catalog-approved XLSX.
+11. Confirm `ReportOutputAvailability` includes pending, available, failed,
    expired, and unsupported.
-10. Confirm `api/openapi.yaml` includes retry, cancel, delete, and restore
+12. Confirm `api/openapi.yaml` includes retry, cancel, delete, and restore
     operations for report runs.
-11. Confirm retry and cancellation reason codes are predefined and tenant-safe.
-12. Confirm `api/openapi.yaml` includes report definition list, create,
+13. Confirm retry and cancellation reason codes are predefined and tenant-safe.
+14. Confirm `api/openapi.yaml` includes report definition list, create,
     detail, update, delete, activate, deactivate, and restore operations.
-13. Confirm `ReportDefinition` lifecycle states are draft, active, inactive,
+15. Confirm `ReportDefinition` lifecycle states are draft, active, inactive,
     and deleted.
-14. Confirm active definitions allow metadata-only edits and restored
+16. Confirm active definitions allow metadata-only edits and restored
     definitions return to inactive.
-15. Confirm validation, unauthorized, forbidden where applicable,
+17. Confirm validation, unauthorized, forbidden where applicable,
     tenant-mismatch, inactive-school, not-found, conflict, output-expired,
     unsupported page-size, and temporary-unavailable envelopes are documented
     or normalized by existing frontend error mapping.
-16. Confirm no platform-wide reporting, manual status mutation, output delete
+18. Confirm no platform-wide reporting, manual status mutation, output delete
     or restore, retention override, report sharing, notifications, messaging,
     billing, arbitrary query text, custom code, uploaded templates, or
     unapproved domains are approved for this slice.
@@ -64,9 +70,10 @@ Before frontend implementation:
 - Reporting services own all HTTP access, binary download handling, and
   contract mapping.
 - Reporting composables coordinate school context, permission gates, catalog,
-  report forms, report history filters, auto-refresh, manual refresh, selected
-  report, selected definition, downloads, lifecycle dialogs, custom definition
-  editing, stale-response protection, announcements, and safe feedback.
+  report forms, report history filters, list-backed report detail,
+  auto-refresh, manual refresh, selected report, selected definition,
+  downloads, lifecycle dialogs, custom definition editing, stale-response
+  protection, announcements, and safe feedback.
 - Components receive mapped data through props and emit user intent.
 - Element Plus component tags remain PascalCase.
 - Display text is centralized through Vue I18n.
@@ -89,6 +96,9 @@ Before frontend implementation:
   retry, cancel, delete, and restore controls are absent or blocked.
 - Sign in with report permission but without report-definition permission and
   verify custom definition screens are absent or blocked.
+- Sign in with report-definition permission but without report permission and
+  verify custom definition catalog access works while report request, history,
+  and download surfaces remain absent or blocked.
 - Verify platform/support roles do not bypass same-school reporting permission.
 
 ### Report Catalog and Request
@@ -118,6 +128,9 @@ Before frontend implementation:
   is available.
 - Verify generated time, expiry time, lifecycle timestamps, and custom
   definition timestamps render in active school timezone.
+- Verify direct or bookmarked report-run detail identifiers that are not
+  present in approved list/request/lifecycle response state show safe
+  unavailable or not-found feedback without a standalone detail API call.
 - Verify meaningful state changes show visible updates and polite
   assistive-technology announcements without moving keyboard focus.
 - Verify stale refresh responses do not overwrite current visible state.
@@ -197,10 +210,12 @@ Focused Vitest coverage should include:
 - no undocumented request parameters or fields
 - active school gate before reporting data requests
 - report, lifecycle, and definition permission gates
+- definition-only catalog permission for custom definition workflows
 - Report History as the workspace root default
 - catalog-driven request fields and filters
 - built-in and active custom-definition report requests
 - report history pagination, filters, empty states, and include-deleted state
+- list-backed report-run detail hydration without undocumented detail lookup
 - automatic refresh and manual refresh
 - stale-response protection
 - active school timezone formatting

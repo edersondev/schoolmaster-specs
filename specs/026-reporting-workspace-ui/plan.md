@@ -16,8 +16,8 @@ The implementation extends completed authentication/session, protected shell,
 administration, teacher, student, and guardian frontend patterns. Route views
 stay thin. Services own Axios/OpenAPI mapping. Composables coordinate active
 school, permission gates, report catalog state, report request forms, report
-history filters, report detail, automatic refresh for requested/generating
-runs, active school timezone formatting, download availability, lifecycle
+history filters, list-backed report detail, automatic refresh for
+requested/generating runs, active school timezone formatting, download availability, lifecycle
 dialogs, custom definition editing, stale-response protection, polite
 state-change announcements, and no-sensitive-data diagnostics.
 
@@ -30,13 +30,13 @@ a future specification and OpenAPI contract approve them.
 ## Technical Context
 
 **Language/Version**: JavaScript with Vue 3 SFCs using Composition API and `<script setup>`; TypeScript out of scope for this project baseline.  
-**Primary Dependencies**: Vue 3, Vue Router, Pinia session/shell stores, Axios service boundary, Element Plus, `@element-plus/icons-vue`, Vue I18n, Tailwind CSS, approved OpenAPI-backed report catalog, report list/request/download/retry/cancel/delete/restore, report definition list/detail/create/update/activate/deactivate/delete/restore, authentication, current-user, permission, active-school, and session-context behavior.  
+**Primary Dependencies**: Vue 3, Vue Router, Pinia session/shell stores, Axios service boundary, Element Plus, `@element-plus/icons-vue`, Vue I18n, Tailwind CSS, approved OpenAPI-backed report catalog, report list/request/download/retry/cancel/delete/restore, report definition list/detail/create/update/activate/deactivate/delete/restore, authentication, current-user, permission, active-school, and session-context behavior. Report-run detail is list-backed because no standalone report-run detail operation is approved in this UI slice.
 **Storage**: No backend database change. Route-local state, composable-local state, loaded report/catalog/definition caches, automatic-refresh timers, selected report/definition state, and Pinia session/shell context only; report contents, binary files, private filter payloads, storage paths, storage keys, token values, role internals, unauthorized identifiers, and cross-tenant details are not persisted.  
 **Testing**: Vitest, Vue Test Utils, service/composable tests, route/component integration tests, accessibility-oriented state announcement tests, and Redocly only if OpenAPI contract files change.  
 **Target Platform**: `schoolmaster-frontend` responsive SPA consuming `/api/v1`.  
 **Project Type**: Frontend SPA feature with specification and delivery artifacts.  
 **Performance Goals**: Mocked service responses render within 1.5s; protected reporting route transitions settle within 2s after session context resolves; report request submission shows accepted run state within 2s after service resolution; download action starts within 2s after service resolution; visible requested/generating runs refresh to their latest documented state without page reload; stale responses are ignored or cancelled.  
-**Constraints**: No undocumented endpoints, filters, sort keys, include expansions, page sizes, fields, denial details, output formats, lifecycle reasons, or inferred backend state. No direct Axios calls outside services. No client-side tenant inference. No report content preview. No free-text lifecycle reasons. No platform-wide reporting, manual status mutation, output delete/restore, retention override, permanent purge, legal hold, anonymization, arbitrary query text, custom code, uploaded templates, unapproved domains, report sharing, messaging, notifications, billing, or undocumented controls. Active school timezone is used for report and definition timestamps. Meaningful automatic-refresh state changes receive visible updates and polite assistive-technology announcements. WCAG 2.1 AA at 390px, 768px, and 1440px. PascalCase Element Plus components. Centralized display text.  
+**Constraints**: No undocumented endpoints, filters, sort keys, include expansions, page sizes, fields, denial details, output formats, lifecycle reasons, or inferred backend state. No standalone report-run detail lookup is allowed without a future approved OpenAPI operation. No direct Axios calls outside services. No client-side tenant inference. No report content preview. No free-text lifecycle reasons. No platform-wide reporting, manual status mutation, output delete/restore, retention override, permanent purge, legal hold, anonymization, arbitrary query text, custom code, uploaded templates, unapproved domains, report sharing, messaging, notifications, billing, or undocumented controls. Active school timezone is used for report and definition timestamps. Meaningful automatic-refresh state changes receive visible updates and polite assistive-technology announcements. WCAG 2.1 AA at 390px, 768px, and 1440px. PascalCase Element Plus components. Centralized display text.
 **Scale/Scope**: Five user-story slices, reporting route module, reporting service family, contract mappers, catalog browser, request flow, report history/detail, auto-refresh/manual refresh, output download surfaces, lifecycle actions, custom definition workspace, empty/denied/unavailable/conflict/expired/stale states, active school timezone formatting, polite announcements, and focused tests.
 
 ## Constitution Check
@@ -163,8 +163,10 @@ reporting contracts.
 - All screens require authenticated access and active permitted school context.
 - Reporting workspace root opens Report History by default after authenticated
   access, active school, and report permission are confirmed.
-- Report catalog, report requests, report history, and downloads require
-  explicit same-school report permission.
+- Report catalog use for report request workflows, report requests, report
+  history, and downloads require explicit same-school report permission.
+- Report catalog use for custom definition workflows requires explicit
+  same-school report-definition permission.
 - Retry, cancellation, delete, and restore controls require explicit
   same-school report lifecycle permission and state eligibility from the
   approved contract.
@@ -176,9 +178,9 @@ reporting contracts.
   filters, references, and output formats are valid for the selected report.
 - Download controls are enabled only for available generated outputs in
   documented formats.
-- Automatic refresh runs only while visible report history or detail contains
-  requested or generating runs, and stops or ignores responses when route,
-  active school, authentication, filters, selected report, selected
+- Automatic refresh runs only while visible report history or list-backed
+  detail contains requested or generating runs, and stops or ignores responses
+  when route, active school, authentication, filters, selected report, selected
   definition, catalog, or dialog state changes.
 - Custom report requests are enabled only for active custom definitions.
 - Active custom definitions allow metadata-only edits; structural edits

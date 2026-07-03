@@ -19,8 +19,10 @@ or permission context, and approved reporting access behavior.
 - Active permitted school context is required before reporting requests.
 - Active school timezone is required before timestamped reporting data is
   displayed.
-- Report catalog, report requests, report history, and downloads require
-  report permission.
+- Report catalog use for report request workflows, report requests, report
+  history, and downloads require report permission.
+- Report catalog use for custom definition workflows requires
+  report-definition permission.
 - Lifecycle actions require report lifecycle permission.
 - Custom definition screens require report-definition permission.
 - Missing school, inactive school, denied access, unavailable catalog,
@@ -40,6 +42,8 @@ school.
 **Rules**:
 
 - Request uses active school tenant context only.
+- Request is allowed with report permission for report request workflows or
+  report-definition permission for custom definition workflows.
 - Catalog drives built-in report requests and custom definition forms.
 - Unsupported domains, fields, filters, operators, grouping, sorting, and
   formats are not represented as selectable options.
@@ -95,8 +99,8 @@ and loaded custom definitions.
 
 ## ReportRunView
 
-**Purpose**: Frontend-safe representation of one report run in list/detail,
-download, and lifecycle surfaces.
+**Purpose**: Frontend-safe representation of one report run in list-backed
+detail, download, and lifecycle surfaces.
 
 **Fields**: `id`, `schoolId`, `requestedByUserId`, `reportType`,
 `reportSource`, `filterSummary`, `outputFormats`, `generationStatus`,
@@ -106,7 +110,8 @@ download, and lifecycle surfaces.
 `outputs`, `timestampLabels`, `feedbackState`.
 
 **Source**: `ReportRun` from report list, request, retry, cancel, delete, or
-restore responses.
+restore responses. No standalone report-run detail source is approved for this
+UI slice.
 
 **Rules**:
 
@@ -118,6 +123,9 @@ restore responses.
 - Timestamps render in active school timezone.
 - Returned run state is authoritative after lifecycle actions; optimistic
   state cannot contradict returned data.
+- Direct or bookmarked report-run identifiers that are not already present in
+  approved response state render a safe unavailable or not-found state without
+  calling an undocumented detail operation.
 
 ## ReportOutputAvailabilityView
 

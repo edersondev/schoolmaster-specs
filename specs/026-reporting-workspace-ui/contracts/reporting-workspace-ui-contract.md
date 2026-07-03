@@ -10,7 +10,7 @@ consumption contract, not a backend API change.
 
 | UI surface | Operation ID | Method/path | Required context |
 |------------|--------------|-------------|------------------|
-| Report catalog | `getReportCatalog` | `GET /api/v1/report-catalog` | Authenticated session, active school, report/report-definition permission as approved |
+| Report catalog | `getReportCatalog` | `GET /api/v1/report-catalog` | Authenticated session, active school, report permission for report requests or report-definition permission for custom definition editing |
 | Report history | `listReports` | `GET /api/v1/reports` | Authenticated session, active school, report permission |
 | Report request | `requestReport` | `POST /api/v1/reports` | Authenticated session, active school, report permission, valid report type or active custom definition |
 | Report retry | `retryReport` | `POST /api/v1/reports/{reportRunId}/retry` | Authenticated session, active school, lifecycle permission, retry-eligible run |
@@ -35,10 +35,10 @@ consumption contract, not a backend API change.
 | Report catalog | Load approved catalog and complexity limits for request and definition forms |
 | Report request | Submit built-in or active custom-definition report requests from catalog-approved inputs |
 | Report history | Load paginated report runs with documented filters and auto-refresh requested/generating visible runs |
-| Report run detail | Show status, source, retry lineage, timestamps, output availability, retention, and approved lifecycle controls |
+| Report run detail | Show status, source, retry lineage, timestamps, output availability, retention, and approved lifecycle controls only for a report run already returned by list, request, retry, cancel, delete, or restore responses |
 | Report download | Download only available generated output formats through approved binary operation |
 | Custom definitions | List, create, view, edit, activate, deactivate, delete, and restore definitions through approved contracts |
-| Direct target route | Show safe not-found, denied, conflict, or tenant-mismatch state without exposing cross-tenant report/definition details |
+| Direct target route | Show safe unavailable, not-found, denied, conflict, or tenant-mismatch state without exposing cross-tenant report/definition details; report-run direct targets do not perform an undocumented detail lookup |
 
 ## Service Boundary
 
@@ -74,6 +74,8 @@ Mapping requirements:
 - Drop undocumented response fields.
 - Preserve per-format output availability.
 - Render timestamps in active school timezone.
+- Do not add a `getReportRun` service function unless an approved OpenAPI
+  detail operation is introduced.
 
 ## UI State Contract
 
@@ -103,7 +105,10 @@ download, or stale response.
 ## Capability Gates
 
 - No reporting data request before active school is confirmed.
-- No report catalog, history, request, or download without report permission.
+- No report catalog for report request workflows, history, request, or
+  download without report permission.
+- No report catalog for custom definition list, editor, or validation
+  workflows without report-definition permission.
 - No retry, cancel, delete, or restore controls without lifecycle permission.
 - No custom definition screens without report-definition permission.
 - No report request before catalog-valid filters and output formats are
@@ -147,6 +152,18 @@ Allowed:
 - Include-deleted filter.
 - Manual refresh.
 - Automatic refresh while visible runs remain `requested` or `generating`.
+
+Report-run detail rules:
+
+- Report-run detail is hydrated from `listReports`, `requestReport`,
+  `retryReport`, `cancelReport`, `deleteReport`, or `restoreReport` responses.
+- Report-run detail auto-refresh uses the currently visible history/list
+  context or returned lifecycle/request state only.
+- Direct or bookmarked report-run identifiers that are not already present in
+  approved response state must render a safe unavailable or not-found state and
+  must not call an undocumented `GET /api/v1/reports/{reportRunId}` operation.
+- A standalone report-run detail lookup requires a future specification and
+  approved OpenAPI operation before frontend implementation.
 
 Refresh rules:
 
