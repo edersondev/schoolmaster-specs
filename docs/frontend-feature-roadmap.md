@@ -211,7 +211,14 @@ behavior before implementation.
 
 ### 10. Guardian Self-Service UI
 
-**Status**: Not specified.
+**Status**: Complete. Feature specification, implementation plan, research,
+data model, frontend contract, quickstart, tasks, runtime implementation, and
+verification evidence are complete in
+`specs/025-guardian-self-service-ui/` and `schoolmaster-frontend`.
+Guardian-facing linked student list/detail, current-period academic summary,
+and approved contact views are implemented with tenant-safe authorization,
+non-enumerating not-found handling, stale-response protection, diagnostics
+redaction, and blocked unsupported guardian capabilities.
 
 **Purpose**: Define guardian-facing list/detail, academic summary, and contact
 views using the approved guardian self-service contract.
