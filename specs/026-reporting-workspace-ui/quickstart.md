@@ -276,6 +276,43 @@ Record in implementation PR:
   internals, token values, raw denial reasons, or unauthorized report
   existence appear in diagnostics or test output.
 
+## Implementation Evidence
+
+- 2026-07-03: Reporting workspace implemented in `src/pages/reporting/`,
+  `src/components/reporting/`, `src/composables/reporting/`,
+  `src/services/reporting/`, `src/contracts/reporting/`,
+  `src/router/modules/reporting.js`, and `src/i18n/modules/reporting.js`.
+- 2026-07-03: Operation IDs verified in `specs/api/openapi.yaml` and referenced
+  path files for catalog, reports, report lifecycle, downloads, and report
+  definitions. No OpenAPI file changes were required.
+- 2026-07-03: Reporting root redirects to Report History by default.
+- 2026-07-03: Services isolate all HTTP access; reporting pages, components,
+  and composables contain no direct Axios calls.
+- 2026-07-03: Catalog, request, history, list-backed detail, auto-refresh,
+  manual refresh, active-school timezone formatting, downloads, lifecycle
+  actions, custom definitions, stale-response guards, and safe diagnostics
+  are covered by focused Vitest tests.
+- 2026-07-03: `npm run test:unit -- tests/reporting-workspace` passed:
+  23 test files, 29 tests.
+- 2026-07-03: `npm run build` passed. Vite/Rolldown reported existing
+  third-party pure-annotation and chunk-size warnings only.
+- 2026-07-03: OpenAPI lint was not run because `specs/api/openapi.yaml` was not
+  changed by this frontend implementation.
+- 2026-07-03: Code audit found unsupported reporting actions absent from
+  controls; blocked capabilities are represented only as contract constants.
+- 2026-07-03: Code audit found Element Plus components use PascalCase tags.
+- 2026-07-03: Automated tests verify safe redaction for reporting diagnostics
+  and fixtures avoid private report contents, storage paths, token values, raw
+  denial reasons, and unauthorized report existence.
+- 2026-07-03: Playwright timed usability and performance verification passed
+  with mocked approved reporting APIs:
+  `env CI=1 npm run test:e2e -- reporting-workspace --project=chromium --retries=0`.
+  The Chromium run passed in 3.3s and covered reporting root-to-history
+  default routing, report state identification, available/expired output
+  states, available output download feedback, built-in report request timing,
+  active custom-definition request handoff, and mocked render/route/download/
+  request/definition timing thresholds.
+
 ## Out of Scope Verification
 
 Confirm none of these appear in the reporting workspace UI slice:
