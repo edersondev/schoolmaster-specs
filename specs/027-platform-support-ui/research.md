@@ -3,7 +3,7 @@
 ## Decision: Block frontend implementation until platform/support operations are approved in OpenAPI
 
 **Rationale**: Feature `013-platform-support-access` defines the backend
-operation boundary, but aggregate `api/openapi.yaml` and the platform contract
+operation boundary, but aggregate `specs/api/openapi.yaml` and the platform contract
 mirror may not yet expose the platform/support operations. The frontend must
 not consume inferred routes, response fields, filters, denial semantics, or
 diagnostic categories.

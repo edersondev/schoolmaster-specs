@@ -9,7 +9,7 @@ behavior. It is a frontend consumption contract, not a backend API change.
 ## Contract Readiness Gate
 
 Frontend implementation must confirm each consumed platform/support operation
-is present in `api/openapi.yaml` and the platform contract mirror before any
+is present in `specs/api/openapi.yaml` and the platform contract mirror before any
 runtime route calls it. Proposed operation names from
 `specs/013-platform-support-access/contracts/backend-platform-support-access.md`
 are not sufficient until promoted into the aggregate OpenAPI contract.

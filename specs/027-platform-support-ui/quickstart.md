@@ -13,7 +13,7 @@
   diagnostics.
 - Backend platform support access from `specs/013-platform-support-access/` is
   implemented and contract-compliant, or implementation is blocked until the
-  required platform/support operations are promoted into `api/openapi.yaml` and
+  required platform/support operations are promoted into `specs/api/openapi.yaml` and
   the platform contract mirror.
 - Implementation confirms how authenticated session or approved access
   behavior exposes platform-wide operational oversight, platform reporting,
@@ -22,9 +22,19 @@
 
 ## Contract Review
 
+Promotion status, 2026-07-03: `specs/api/openapi.yaml` and
+`specs/specs/001-schoolmaster-platform/contracts/openapi.yaml` include
+`listPlatformSchoolSummaries`, `getPlatformReportingOverview`,
+`requestSupportAccess`, `getSupportAccessDecision`, `approveSupportAccess`,
+`revokeSupportAccess`, `getSupportSchoolDiagnostics`, and
+`listSupportAuditEvents`. Redocly validation passed for
+`aggregate@v1 schoolmaster-platform@v1`; the platform mirror still reports the
+pre-existing unused report component warnings for `ReportRunId`, `ReportRun`,
+`ReportRequest`, and `OutputExpired`.
+
 Before frontend implementation:
 
-1. Confirm `api/openapi.yaml` and the platform contract mirror include
+1. Confirm `specs/api/openapi.yaml` and the platform contract mirror include
    `listPlatformSchoolSummaries`.
 2. Confirm platform school summaries expose only approved minimized school
    identity/status fields, aggregate operational indicators, reporting-health
@@ -32,32 +42,32 @@ Before frontend implementation:
    markers.
 3. Confirm protected counts below 5 use the documented suppressed-count
    representation.
-4. Confirm `api/openapi.yaml` and the platform contract mirror include
+4. Confirm `specs/api/openapi.yaml` and the platform contract mirror include
    `getPlatformReportingOverview`.
 5. Confirm reporting overview excludes raw report outputs, generated files,
    private payloads, report-run detail, custom-report detail, and private
    storage metadata.
-6. Confirm `api/openapi.yaml` and the platform contract mirror include
+6. Confirm `specs/api/openapi.yaml` and the platform contract mirror include
    `requestSupportAccess`.
 7. Confirm support access request fields are documented for target school,
    reason code, purpose, and correlation metadata.
-8. Confirm `api/openapi.yaml` and the platform contract mirror include
+8. Confirm `specs/api/openapi.yaml` and the platform contract mirror include
    `getSupportAccessDecision`.
 9. Confirm support decision states are requested, pending, approved, denied,
    expired, and revoked.
 10. Confirm support decision responses include target-school opt-in state,
     internal platform approval state, target-school match, revocation state,
     and 24-hour expiry visibility where needed by UI.
-11. Confirm `api/openapi.yaml` and the platform contract mirror include
+11. Confirm `specs/api/openapi.yaml` and the platform contract mirror include
     `approveSupportAccess` and `revokeSupportAccess`.
 12. Confirm approval/revocation permissions and conflict responses are
     documented.
-13. Confirm `api/openapi.yaml` and the platform contract mirror include
+13. Confirm `specs/api/openapi.yaml` and the platform contract mirror include
     `getSupportSchoolDiagnostics`.
 14. Confirm diagnostics responses are read-only and redacted and exclude
     generated report downloads, raw outputs, private file metadata, emergency
     access, unrestricted impersonation, unrestricted search, and writes.
-15. Confirm `api/openapi.yaml` and the platform contract mirror include
+15. Confirm `specs/api/openapi.yaml` and the platform contract mirror include
     `listSupportAuditEvents`.
 16. Confirm support audit event fields are minimized to actor, action,
     outcome, target school where safe, correlation ID, reason code, timestamp,
@@ -229,7 +239,7 @@ npm run build
 Run OpenAPI validation if platform/support contracts are promoted or changed:
 
 ```bash
-npx @redocly/cli lint api/openapi.yaml
+npx @redocly/cli lint specs/api/openapi.yaml
 ```
 
 ## Acceptance Evidence

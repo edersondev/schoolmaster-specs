@@ -46,7 +46,7 @@ unless a future specification and OpenAPI contract approve them.
 *GATE: Must pass before Phase 0 research. Re-check after Phase 1 design.*
 
 - PASS: OpenAPI impact is identified. Platform/support frontend consumption is
-  blocked until approved operations are present in `api/openapi.yaml` and the
+  blocked until approved operations are present in `specs/api/openapi.yaml` and the
   platform contract mirror. Any missing operation must start from OpenAPI
   before frontend implementation.
 - PASS: Backend, frontend, and specification repository impacts are separated.
