@@ -232,7 +232,15 @@ not-found UI behavior before implementation.
 
 ### 11. Reporting Workspace UI
 
-**Status**: Not specified.
+**Status**: Complete. Feature specification, quality checklist,
+implementation plan, research, data model, frontend contract, quickstart,
+tasks, runtime implementation, and verification evidence are complete in
+`specs/026-reporting-workspace-ui/` and `schoolmaster-frontend`. Reporting
+workspace catalog, request, history, detail, download, lifecycle, and custom
+definition surfaces are implemented for approved reporting contracts, with
+safe authorization handling, active-school timezone rendering,
+stale-response protection, diagnostics redaction, and blocked unsupported
+reporting actions.
 
 **Purpose**: Define report catalog browsing, report request flows, report run
 history, retry or cancellation where approved, custom report definitions, and
