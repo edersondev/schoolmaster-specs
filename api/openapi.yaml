@@ -49,6 +49,8 @@ tags:
     description: Student attendance records in permitted scope.
   - name: Reports
     description: Tenant-scoped report requests, lifecycle, definitions, catalog, and outputs.
+  - name: Platform Support
+    description: Platform-wide operational summaries, support access decisions, diagnostics, and audit review.
   - name: Account Lifecycle
     description: >-
       Account invitation, password setup, password reset, lock, recovery, and
@@ -272,6 +274,254 @@ paths:
     $ref: paths/report-definitions/deactivate.yaml
   /api/v1/report-definitions/{reportDefinitionId}/restore:
     $ref: paths/report-definitions/restore.yaml
+  /api/v1/platform/schools:
+    get:
+      tags:
+        - Platform Support
+      summary: List minimized platform school summaries
+      description: Returns platform-wide school operational summaries with documented filters, pagination, sorting, small-count suppression, and no school-owned detail records.
+      operationId: listPlatformSchoolSummaries
+      parameters:
+        - $ref: components/parameters/common/Page.yaml
+        - $ref: components/parameters/common/PerPage.yaml
+        - $ref: components/parameters/common/Sort.yaml
+        - name: status
+          in: query
+          schema:
+            type: string
+            enum:
+              - active
+              - inactive
+        - name: search
+          in: query
+          schema:
+            type: string
+            minLength: 1
+            maxLength: 120
+      responses:
+        '200':
+          description: Minimized platform school summaries
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PlatformSchoolSummaryPaginatedEnvelope'
+        '401':
+          $ref: components/responses/auth/Unauthorized.yaml
+        '403':
+          $ref: '#/components/responses/PlatformSupportForbidden'
+        '422':
+          $ref: components/responses/common/ValidationError.yaml
+  /api/v1/platform/reporting/overview:
+    get:
+      tags:
+        - Platform Support
+      summary: Get cross-school reporting overview
+      description: Returns approved aggregate reporting health and lifecycle indicators without raw report outputs, generated files, or school-owned detail records.
+      operationId: getPlatformReportingOverview
+      parameters:
+        - $ref: components/parameters/common/Page.yaml
+        - $ref: components/parameters/common/PerPage.yaml
+        - $ref: components/parameters/common/Sort.yaml
+      responses:
+        '200':
+          description: Platform reporting overview
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PlatformReportingOverviewEnvelope'
+        '401':
+          $ref: components/responses/auth/Unauthorized.yaml
+        '403':
+          $ref: '#/components/responses/PlatformSupportForbidden'
+        '422':
+          $ref: components/responses/common/ValidationError.yaml
+  /api/v1/platform/support-access:
+    post:
+      tags:
+        - Platform Support
+      summary: Request target-school support access
+      description: Creates or evaluates a minimized support access decision for exactly one target school using documented reason, purpose, correlation metadata, and target-school opt-in state.
+      operationId: requestSupportAccess
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SupportAccessRequest'
+      responses:
+        '201':
+          description: Support access decision created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SupportAccessDecisionEnvelope'
+        '401':
+          $ref: components/responses/auth/Unauthorized.yaml
+        '403':
+          $ref: '#/components/responses/PlatformSupportForbidden'
+        '409':
+          $ref: '#/components/responses/PlatformSupportConflict'
+        '422':
+          $ref: components/responses/common/ValidationError.yaml
+  /api/v1/platform/support-access/{supportAccessId}:
+    get:
+      tags:
+        - Platform Support
+      summary: Get support access decision detail
+      operationId: getSupportAccessDecision
+      parameters:
+        - $ref: '#/components/parameters/SupportAccessId'
+      responses:
+        '200':
+          description: Support access decision
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SupportAccessDecisionEnvelope'
+        '401':
+          $ref: components/responses/auth/Unauthorized.yaml
+        '403':
+          $ref: '#/components/responses/PlatformSupportForbidden'
+        '404':
+          $ref: components/responses/common/NotFound.yaml
+  /api/v1/platform/support-access/{supportAccessId}/approve:
+    post:
+      tags:
+        - Platform Support
+      summary: Approve support access
+      description: Records internal platform approval only when the matching target-school opt-in and support decision gates are valid.
+      operationId: approveSupportAccess
+      parameters:
+        - $ref: '#/components/parameters/SupportAccessId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SupportAccessTransitionRequest'
+      responses:
+        '200':
+          description: Support access approved
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SupportAccessDecisionEnvelope'
+        '401':
+          $ref: components/responses/auth/Unauthorized.yaml
+        '403':
+          $ref: '#/components/responses/PlatformSupportForbidden'
+        '404':
+          $ref: components/responses/common/NotFound.yaml
+        '409':
+          $ref: '#/components/responses/PlatformSupportConflict'
+        '422':
+          $ref: components/responses/common/ValidationError.yaml
+  /api/v1/platform/support-access/{supportAccessId}/revoke:
+    post:
+      tags:
+        - Platform Support
+      summary: Revoke support access
+      operationId: revokeSupportAccess
+      parameters:
+        - $ref: '#/components/parameters/SupportAccessId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SupportAccessTransitionRequest'
+      responses:
+        '200':
+          description: Support access revoked
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SupportAccessDecisionEnvelope'
+        '401':
+          $ref: components/responses/auth/Unauthorized.yaml
+        '403':
+          $ref: '#/components/responses/PlatformSupportForbidden'
+        '404':
+          $ref: components/responses/common/NotFound.yaml
+        '409':
+          $ref: '#/components/responses/PlatformSupportConflict'
+        '422':
+          $ref: components/responses/common/ValidationError.yaml
+  /api/v1/platform/support/schools/{schoolId}/diagnostics:
+    get:
+      tags:
+        - Platform Support
+      summary: Get redacted support diagnostics for one school
+      description: Returns redacted read-only diagnostics for one target school only when target-school opt-in and internal platform approval gates are valid and no older than 24 hours.
+      operationId: getSupportSchoolDiagnostics
+      parameters:
+        - $ref: components/parameters/schools/SchoolId.yaml
+        - name: support_access_id
+          in: query
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Redacted support diagnostics
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SupportSchoolDiagnosticsEnvelope'
+        '401':
+          $ref: components/responses/auth/Unauthorized.yaml
+        '403':
+          $ref: '#/components/responses/PlatformSupportForbidden'
+        '404':
+          $ref: components/responses/common/NotFound.yaml
+        '409':
+          $ref: '#/components/responses/PlatformSupportConflict'
+        '422':
+          $ref: components/responses/common/ValidationError.yaml
+  /api/v1/platform/support-audit-events:
+    get:
+      tags:
+        - Platform Support
+      summary: List minimized support audit events
+      operationId: listSupportAuditEvents
+      parameters:
+        - $ref: components/parameters/common/Page.yaml
+        - $ref: components/parameters/common/PerPage.yaml
+        - name: action
+          in: query
+          schema:
+            type: string
+            maxLength: 80
+        - name: outcome
+          in: query
+          schema:
+            type: string
+            enum:
+              - allowed
+              - denied
+              - validation_failed
+              - conflicted
+              - expired
+              - revoked
+        - name: correlation_id
+          in: query
+          schema:
+            type: string
+            maxLength: 120
+      responses:
+        '200':
+          description: Minimized support audit events
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SupportAuditEventPaginatedEnvelope'
+        '401':
+          $ref: components/responses/auth/Unauthorized.yaml
+        '403':
+          $ref: '#/components/responses/PlatformSupportForbidden'
+        '422':
+          $ref: components/responses/common/ValidationError.yaml
   /api/v1/class-sections:
     $ref: paths/class-sections/index.yaml
   /api/v1/class-sections/{classSectionId}:
@@ -292,6 +542,303 @@ components:
       type: http
       scheme: bearer
       bearerFormat: token
+  schemas:
+    PlatformSchoolSummary:
+      type: object
+      description: Minimized platform-visible school summary. Protected counts below 5 are suppressed and not derivable from related fields.
+      required:
+        - id
+        - name
+        - status
+        - indicators
+        - suppressed
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        status:
+          type: string
+          enum:
+            - active
+            - inactive
+        indicators:
+          type: object
+          additionalProperties:
+            type: string
+        suppressed:
+          type: array
+          items:
+            type: string
+    PlatformSchoolSummaryPaginatedEnvelope:
+      type: object
+      required:
+        - data
+        - meta
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/PlatformSchoolSummary'
+        meta:
+          type: object
+          required:
+            - page
+            - per_page
+            - total
+          properties:
+            page:
+              type: integer
+            per_page:
+              type: integer
+            total:
+              type: integer
+    PlatformReportingOverview:
+      type: object
+      required:
+        - health
+        - lifecycle
+        - suppressed
+      properties:
+        health:
+          type: object
+          additionalProperties:
+            type: string
+        lifecycle:
+          type: object
+          additionalProperties:
+            type: integer
+            minimum: 0
+        suppressed:
+          type: array
+          items:
+            type: string
+    PlatformReportingOverviewEnvelope:
+      type: object
+      required:
+        - data
+        - meta
+      properties:
+        data:
+          $ref: '#/components/schemas/PlatformReportingOverview'
+        meta:
+          type: object
+          additionalProperties: true
+    SupportAccessDecisionState:
+      type: string
+      enum:
+        - requested
+        - pending
+        - approved
+        - denied
+        - expired
+        - revoked
+    SupportAccessRequest:
+      type: object
+      additionalProperties: false
+      required:
+        - target_school_id
+        - reason_code
+        - purpose
+        - correlation_id
+      properties:
+        target_school_id:
+          type: string
+          format: uuid
+        reason_code:
+          type: string
+          minLength: 1
+          maxLength: 80
+        purpose:
+          type: string
+          minLength: 1
+          maxLength: 500
+        correlation_id:
+          type: string
+          minLength: 1
+          maxLength: 120
+    SupportAccessTransitionRequest:
+      type: object
+      additionalProperties: false
+      required:
+        - reason_code
+      properties:
+        reason_code:
+          type: string
+          minLength: 1
+          maxLength: 80
+    SupportAccessDecision:
+      type: object
+      required:
+        - id
+        - target_school_id
+        - state
+        - reason_code
+        - expires_at
+        - opt_in_state
+        - platform_approval_state
+      properties:
+        id:
+          type: string
+          format: uuid
+        target_school_id:
+          type: string
+          format: uuid
+        state:
+          $ref: '#/components/schemas/SupportAccessDecisionState'
+        reason_code:
+          type: string
+        purpose:
+          type: string
+        correlation_id:
+          type: string
+        expires_at:
+          type: string
+          format: date-time
+        opt_in_state:
+          type: string
+        platform_approval_state:
+          type: string
+    SupportAccessDecisionEnvelope:
+      type: object
+      required:
+        - data
+        - meta
+      properties:
+        data:
+          $ref: '#/components/schemas/SupportAccessDecision'
+        meta:
+          type: object
+          additionalProperties: true
+    SupportSchoolDiagnostics:
+      type: object
+      required:
+        - target_school_id
+        - support_access_id
+        - groups
+        - redacted_fields
+        - suppressed
+      properties:
+        target_school_id:
+          type: string
+          format: uuid
+        support_access_id:
+          type: string
+          format: uuid
+        groups:
+          type: array
+          items:
+            type: object
+            required:
+              - key
+              - state
+            properties:
+              key:
+                type: string
+              state:
+                type: string
+        redacted_fields:
+          type: array
+          items:
+            type: string
+        suppressed:
+          type: array
+          items:
+            type: string
+    SupportSchoolDiagnosticsEnvelope:
+      type: object
+      required:
+        - data
+        - meta
+      properties:
+        data:
+          $ref: '#/components/schemas/SupportSchoolDiagnostics'
+        meta:
+          type: object
+          additionalProperties: true
+    SupportAuditEvent:
+      type: object
+      required:
+        - id
+        - actor_user_id
+        - action
+        - outcome
+        - occurred_at
+      properties:
+        id:
+          type: string
+          format: uuid
+        actor_user_id:
+          type: string
+          format: uuid
+        target_school_id:
+          type:
+            - string
+            - 'null'
+          format: uuid
+        action:
+          type: string
+        outcome:
+          type: string
+        correlation_id:
+          type:
+            - string
+            - 'null'
+        reason_code:
+          type:
+            - string
+            - 'null'
+        metadata_summary:
+          type: object
+          additionalProperties: true
+        occurred_at:
+          type: string
+          format: date-time
+    SupportAuditEventPaginatedEnvelope:
+      type: object
+      required:
+        - data
+        - meta
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/SupportAuditEvent'
+        meta:
+          type: object
+          required:
+            - page
+            - per_page
+            - total
+          properties:
+            page:
+              type: integer
+            per_page:
+              type: integer
+            total:
+              type: integer
+  responses:
+    PlatformSupportForbidden:
+      description: Platform support access is forbidden because the authenticated actor lacks the required platform/support permission or approval gate.
+      content:
+        application/json:
+          schema:
+            $ref: components/schemas/common/ErrorEnvelope.yaml
+    PlatformSupportConflict:
+      description: Support access is stale, expired, revoked, mismatched, missing an approval gate, or concurrently changed.
+      content:
+        application/json:
+          schema:
+            $ref: components/schemas/common/ErrorEnvelope.yaml
+  parameters:
+    SupportAccessId:
+      name: supportAccessId
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
 x-notes:
   source_of_truth: schoolmaster-specs
   backend_repository: schoolmaster-backend
@@ -406,6 +953,14 @@ x-promoted-scope:
     - /api/v1/report-definitions/{reportDefinitionId}/activate
     - /api/v1/report-definitions/{reportDefinitionId}/deactivate
     - /api/v1/report-definitions/{reportDefinitionId}/restore
+    - /api/v1/platform/schools
+    - /api/v1/platform/reporting/overview
+    - /api/v1/platform/support-access
+    - /api/v1/platform/support-access/{supportAccessId}
+    - /api/v1/platform/support-access/{supportAccessId}/approve
+    - /api/v1/platform/support-access/{supportAccessId}/revoke
+    - /api/v1/platform/support/schools/{schoolId}/diagnostics
+    - /api/v1/platform/support-audit-events
     - /api/v1/class-sections
     - /api/v1/class-sections/{classSectionId}
     - /api/v1/class-sections/{classSectionId}/status
