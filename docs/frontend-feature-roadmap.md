@@ -255,7 +255,14 @@ authorization behavior before implementation.
 
 ### 12. Platform Support Access and Cross-School Oversight UI
 
-**Status**: Not specified.
+**Status**: Complete. Feature specification, quality checklist,
+implementation plan, research, data model, frontend contract, quickstart,
+tasks, runtime implementation, and verification evidence are complete in
+`specs/027-platform-support-ui/` and `schoolmaster-frontend`. Platform-only
+oversight, support access decision review, approval and revocation flows,
+redacted diagnostics, and support audit review are implemented for approved
+platform/support contracts with tenant-safe routing, stale-response
+protection, suppression preservation, and blocked unsupported actions.
 
 **Purpose**: Define the platform-facing frontend for minimized cross-school
 summaries, support drill-down, approval state visibility, redacted details, and
