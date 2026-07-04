@@ -199,6 +199,47 @@ Record implementation evidence in the frontend repository once available:
   file packaging, platform/support detail access, messaging, notification,
   billing, legal hold, anonymization, or purge behavior was added
 
+### Implementation Evidence - 2026-07-04
+
+- Frontend implementation added route-local advanced assessment services,
+  composables, components, pages, route module, and i18n namespace under
+  `src/contracts/assessments/`, `src/services/assessments/`,
+  `src/composables/assessments/`, `src/components/assessments/`,
+  `src/pages/assessments/`, `src/router/modules/assessments.js`, and
+  `src/i18n/modules/advanced-assessment.js`.
+- Contract review: `specs/api/openapi.yaml` contains the approved advanced
+  assessment operation IDs for questionnaire authoring, student responses,
+  review queue/detail, grading, and clean file download. The Redocly
+  platform mirror path resolves when validation is run from `specs/`.
+- Redocly command run:
+  `npx @redocly/cli lint aggregate@v1 schoolmaster-platform@v1`.
+  Result: pass from `specs/` working directory. Four existing
+  `no-unused-components` warnings remain for reporting contract components.
+- Focused unit tests run:
+  `npm run test:unit -- tests/advanced-assessment --run`.
+  Result: 23 test files passed, 27 tests passed.
+- Full unit tests run:
+  `npm run test:unit -- --run`.
+  Result: 298 test files passed, 507 tests passed.
+- Frontend build run:
+  `npm run build`.
+  Result: build passed. Existing warnings remain for Rolldown pure annotation
+  comments in `@vueuse/core` and a large bundle chunk.
+- Static audit run with `rg` over advanced assessment source and tests:
+  no direct Axios imports or calls outside services, no lowercase Element Plus
+  tags, no `v-html`, no inline preview control, no staged upload service, and
+  report-field filtering blocks raw answer and file-link fields. Sensitive
+  fixture keys appear only in assertions that verify they are dropped.
+- Playwright visual pass run against mocked authenticated data at 390px,
+  768px, and 1440px for authoring, student response, review queue, grading,
+  student result, and reporting routes. Result: 18 route/viewport checks
+  passed for rendered shell, no horizontal overflow, and non-cramped button
+  text. Screenshots were written to `/tmp/advanced-assessment-*.png`.
+- Responsive and keyboard pass: advanced assessment screens use existing
+  Tailwind responsive containers, grid/flex wrapping, native Element Plus form
+  controls, visible disabled states, and route-level status regions. A final
+  real-data browser UAT remains recommended before release.
+
 ## Out of Scope Verification
 
 Confirm implementation does not add:
