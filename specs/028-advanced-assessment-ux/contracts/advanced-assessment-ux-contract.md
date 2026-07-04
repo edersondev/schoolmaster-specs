@@ -48,7 +48,7 @@ truth for allowed advanced assessment behavior.
 |--------------|----------|
 | Advanced questionnaire authoring | Create/update approved advanced questions and render lifecycle lock state |
 | Student advanced response | Render assigned questions, local-only text drafts, final-submit file selection, validation, and submission state |
-| Assessment review queue | List authorized same-school response attempts with safe filters and scan/grading states |
+| Assessment review queue | List authorized same-school response attempts with documented filters and returned scan/grading states |
 | Response grading | Review eligible answers, download clean files, grade long-text/file-response answers, and choose zero/exempt for failed scans |
 | Student assessment result | Show own safe submission, grading, score, feedback summary, and file availability metadata |
 | Reporting summaries | Show aggregate-only advanced assessment report fields |
@@ -76,6 +76,9 @@ Service functions:
 Mapping requirements:
 
 - Submit only documented parameters and request fields.
+- For `listQuestionnaireResponses`, submit only documented server-side filters:
+  `questionnaire_id`, `learning_set_id`, and `grading_status` until OpenAPI
+  approves additional response-status or scan-status query parameters.
 - Use multipart only for final assessment submission where files are selected.
 - Parse paginated envelopes through shared pagination mappers.
 - Normalize validation, unauthorized, forbidden, tenant-mismatch, not-found,
@@ -191,6 +194,9 @@ Blocked:
 
 Allowed:
 
+- Authorized graders may view `long_text` answer content only inside approved
+  review and grading surfaces for same-school responses they are allowed to
+  grade.
 - Manual 0-100 grading for `long_text` answers.
 - Manual 0-100 grading for clean `file_response` answers.
 - Zero-score and exempt actions for authorized failed-scan file-response
@@ -270,10 +276,12 @@ responses.
 
 ## Sensitive Data Contract
 
-Visible UI, client diagnostics, validation labels, filenames, report columns,
-and automated test output must not expose:
+Client diagnostics, validation labels, filenames, student/result/report
+surfaces, guardian/platform/support views, and automated test output must not
+expose:
 
-- raw answer text where not explicitly student-visible
+- raw answer text outside authorized grading displays, student-visible
+  feedback, or another explicitly approved display surface
 - uploaded file contents
 - private storage paths
 - hidden answer keys

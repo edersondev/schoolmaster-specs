@@ -99,14 +99,17 @@ Before frontend implementation:
 - Sign in as an owning or assigned teacher, or same-school school
   administrator with assessment review authority.
 - Open the review queue.
-- Verify filters, response states, grading states, scan states, empty states,
-  and denied states.
+- Verify server-side filters are limited to documented contract fields
+  (`questionnaire_id`, `learning_set_id`, and `grading_status` in the current
+  contract), while returned response states, grading states, scan states, empty
+  states, and denied states display safely.
 - Open a clean file-response answer.
 - Verify download action is available and inline preview is absent.
 - Open pending, failed, unavailable, inactive, deleted, and unauthorized file
   states.
 - Verify download is hidden.
-- Grade long-text and clean file-response answers from 0 to 100.
+- Verify authorized graders can view long-text answer content in the grading
+  surface and grade long-text and clean file-response answers from 0 to 100.
 - For failed-scan file-response answers, verify only zero-score and exempt
   actions appear.
 - Verify stale/conflict grading feedback does not overwrite current state.
@@ -128,9 +131,9 @@ Before frontend implementation:
   and report results where advanced assessment fields are approved.
 - Verify only assessment counts, completion status, grading status, and score
   summaries are available.
-- Verify raw answer text, uploaded files, file links, private metadata,
-  storage paths, private grading notes, unsupported joins, arbitrary query
-  text, and cross-tenant references are blocked.
+- Verify raw answer text is blocked from reports, while uploaded files, file
+  links, private metadata, storage paths, private grading notes, unsupported
+  joins, arbitrary query text, and cross-tenant references are blocked.
 
 ### Stale Response and Diagnostics
 
@@ -140,10 +143,12 @@ Before frontend implementation:
   authentication, permissions, due date, scan state, or grading state before
   the response applies.
 - Verify stale responses do not overwrite current visible state.
-- Verify visible UI, diagnostics, validation labels, filenames, report
-  columns, and test output omit raw answer text, uploaded file contents,
-  private storage paths, hidden answer keys, private grading notes, scanner
-  internals, credentials, full payloads, and unauthorized identifiers.
+- Verify diagnostics, validation labels, filenames, student/result/report
+  surfaces, guardian/platform/support views, and test output omit raw answer
+  text outside authorized grading displays, student-visible feedback, or
+  another explicitly approved display surface; uploaded file contents, private
+  storage paths, hidden answer keys, private grading notes, scanner internals,
+  credentials, full payloads, and unauthorized identifiers remain omitted.
 
 ## Automated Verification Expectations
 

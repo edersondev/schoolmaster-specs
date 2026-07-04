@@ -136,8 +136,9 @@ state exists.
 **Purpose**: Teacher or school-administrator view of submitted advanced
 responses that require review or grading.
 
-**Fields**: `items`, `pagination`, `filters`, `sorting`, `loading`,
-`emptyState`, `feedbackState`, `staleRequestKey`.
+**Fields**: `items`, `pagination`, `filters`, `displayedScanStates`,
+`displayedResponseStates`, `sorting`, `loading`, `emptyState`,
+`feedbackState`, `staleRequestKey`.
 
 **Source**: `listQuestionnaireResponses`.
 
@@ -145,7 +146,10 @@ responses that require review or grading.
 
 - Request requires owning/assigned teacher authority or same-school
   school-administrator assessment review authority.
-- Filters and sorting use only documented contract fields.
+- Server-side filters use only documented contract fields. Current approved
+  filters are `questionnaire_id`, `learning_set_id`, and `grading_status`;
+  response status and scan status are displayed from returned data but are not
+  submitted as query parameters unless OpenAPI adds them.
 - Safe student identity fields may display where authorized.
 - Empty and no-filter-results are distinct from denied, validation, not-found,
   conflict, unavailable, and stale-response states.
@@ -163,7 +167,9 @@ answers.
 
 **Rules**:
 
-- `long_text` and clean `file_response` answers use manual 0-100 scoring.
+- Authorized graders may view `long_text` answer content in approved grading
+  surfaces, and `long_text` plus clean `file_response` answers use manual
+  0-100 scoring.
 - Failed-scan file-response answers expose only zero-score and exempt actions.
 - Pending, clean, unavailable, unauthorized, inactive, deleted, or stale file
   states do not expose failed-scan zero/exempt controls.

@@ -137,23 +137,23 @@
 
 ### Tests for User Story 3
 
-- [ ] T057 [P] [US3] Add review queue service mapper tests for response list pagination, filters, safe student identity, scan state, grading state, auto-gradable versus manual-answer distinction, denied states, and private-field exclusion in `tests/advanced-assessment/services/assessmentReviewQueueService.test.js`
+- [ ] T057 [P] [US3] Add review queue service mapper tests for response list pagination, documented filters only (`questionnaire_id`, `learning_set_id`, `grading_status`), safe student identity, returned scan state display, grading state, auto-gradable versus manual-answer distinction, denied states, and private-field exclusion in `tests/advanced-assessment/services/assessmentReviewQueueService.test.js`
 - [ ] T058 [P] [US3] Add review detail and clean file download service tests for `getQuestionnaireResponse`, `downloadQuestionnaireResponseFile`, clean download, scan-pending, scan-failed, unavailable-file, forbidden, not-found, and no inline preview in `tests/advanced-assessment/services/assessmentReviewDetailService.test.js`
 - [ ] T059 [P] [US3] Add grading service mapper tests for 0-100 scores, failed-scan zero/exempt actions, invalid scores, conflicts, stale state, forbidden state, and returned-state authority in `tests/advanced-assessment/services/assessmentGradingService.test.js`
-- [ ] T060 [P] [US3] Add review queue composable tests for filters, pagination, empty states, denied state, scan states, grading states, and stale responses in `tests/advanced-assessment/composables/useAssessmentReviewQueue.test.js`
-- [ ] T061 [P] [US3] Add manual grading composable tests for score entry, feedback summary, failed-scan controls, permission gates, conflict handling, and private-note exclusion in `tests/advanced-assessment/composables/useManualAssessmentGrading.test.js`
-- [ ] T062 [P] [US3] Add review and grading component tests for clean download only, pending/failed/unavailable file states, auto-gradable existing answers, manual advanced answers, zero/exempt actions, manual grading, and safe feedback in `tests/advanced-assessment/components/AssessmentReviewAndGrading.test.js`
+- [ ] T060 [P] [US3] Add review queue composable tests for documented server-side filters, pagination, empty states, denied state, returned scan state display, grading states, and stale responses in `tests/advanced-assessment/composables/useAssessmentReviewQueue.test.js`
+- [ ] T061 [P] [US3] Add manual grading composable tests for authorized long-text answer display, score entry, feedback summary, failed-scan controls, permission gates, conflict handling, and private-note exclusion in `tests/advanced-assessment/composables/useManualAssessmentGrading.test.js`
+- [ ] T062 [P] [US3] Add review and grading component tests for authorized long-text answer display, clean download only, pending/failed/unavailable file states, auto-gradable existing answers, manual advanced answers, zero/exempt actions, manual grading, and safe feedback in `tests/advanced-assessment/components/AssessmentReviewAndGrading.test.js`
 
 ### Implementation for User Story 3
 
-- [ ] T063 [P] [US3] Implement review queue service mapper in `src/services/assessments/assessmentReviewQueueService.js` and list state, filters, pagination, safe student identity mapping, and stale-response keys in `src/composables/assessments/useAssessmentReviewQueue.js`
+- [ ] T063 [P] [US3] Implement review queue service mapper with documented filters only in `src/services/assessments/assessmentReviewQueueService.js` and list state, returned scan state display, pagination, safe student identity mapping, and stale-response keys in `src/composables/assessments/useAssessmentReviewQueue.js`
 - [ ] T064 [P] [US3] Implement review detail and clean file download service mapper in `src/services/assessments/assessmentReviewDetailService.js` and review detail loading and file availability mapping in `src/composables/assessments/useAssessmentReviewDetail.js`
 - [ ] T065 [P] [US3] Implement grading service mapper in `src/services/assessments/assessmentGradingService.js` and manual grading state, 0-100 score validation, feedback summary, and conflict mapping in `src/composables/assessments/useManualAssessmentGrading.js`
 - [ ] T066 [P] [US3] Implement failed-scan zero/exempt action mapper in `src/contracts/assessments/assessmentGradingMapper.js`
-- [ ] T067 [P] [US3] Build assessment review queue filters and list in `src/components/assessments/AssessmentReviewQueue.vue`
+- [ ] T067 [P] [US3] Build assessment review queue documented filters and returned state list in `src/components/assessments/AssessmentReviewQueue.vue`
 - [ ] T068 [P] [US3] Build response detail panel with safe answer and scan state display in `src/components/assessments/AssessmentResponseDetail.vue`
 - [ ] T069 [P] [US3] Build clean answer-file download control without inline preview in `src/components/assessments/AnswerFileDownloadControl.vue`
-- [ ] T070 [P] [US3] Build manual grading form for long-text and clean file-response answers in `src/components/assessments/ManualAssessmentGradingForm.vue`
+- [ ] T070 [P] [US3] Build manual grading form with authorized long-text answer display and clean file-response answers in `src/components/assessments/ManualAssessmentGradingForm.vue`
 - [ ] T071 [P] [US3] Build failed-scan zero/exempt grading controls in `src/components/assessments/FailedScanGradingActions.vue`
 - [ ] T072 [US3] Build assessment review queue page composition in `src/pages/assessments/AssessmentReviewQueuePage.vue`
 - [ ] T073 [US3] Build assessment response grading page composition in `src/pages/assessments/AssessmentResponseGradingPage.vue`
@@ -272,11 +272,11 @@ Task: "T053 [US2] Build student submission readiness in src/components/assessmen
 
 ```bash
 # Launch US3 review and grading implementation tasks after tests:
-Task: "T063 [US3] Implement review queue service mapper in src/services/assessments/assessmentReviewQueueService.js and list state in src/composables/assessments/useAssessmentReviewQueue.js"
+Task: "T063 [US3] Implement review queue service mapper with documented filters only in src/services/assessments/assessmentReviewQueueService.js and list state in src/composables/assessments/useAssessmentReviewQueue.js"
 Task: "T064 [US3] Implement review detail and clean file download service mapper in src/services/assessments/assessmentReviewDetailService.js and file availability mapping in src/composables/assessments/useAssessmentReviewDetail.js"
 Task: "T065 [US3] Implement grading service mapper in src/services/assessments/assessmentGradingService.js and manual grading state in src/composables/assessments/useManualAssessmentGrading.js"
-Task: "T067 [US3] Build review queue in src/components/assessments/AssessmentReviewQueue.vue"
-Task: "T070 [US3] Build manual grading form in src/components/assessments/ManualAssessmentGradingForm.vue"
+Task: "T067 [US3] Build documented review queue filters in src/components/assessments/AssessmentReviewQueue.vue"
+Task: "T070 [US3] Build manual grading form with authorized long-text answer display in src/components/assessments/ManualAssessmentGradingForm.vue"
 Task: "T071 [US3] Build failed-scan grading controls in src/components/assessments/FailedScanGradingActions.vue"
 ```
 

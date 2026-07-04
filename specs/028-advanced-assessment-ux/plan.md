@@ -142,12 +142,14 @@ missing advanced assessment contracts.
   state.
 - File-response selector: one-file rule, allowed category/size display, safe
   filename feedback, no staged upload, and final-submit-only file payload.
-- Assessment review queue: authorized same-school response list, filters by
-  response/grading/scan state, safe student identity fields, empty states,
-  denied states, and stale-response guards.
-- Response grading view: long-text answer review, clean file download action,
-  manual 0-100 grading, student-visible feedback summary, failed-scan
-  zero/exempt controls, conflict handling, and no private note exposure.
+- Assessment review queue: authorized same-school response list, documented
+  server-side filters, returned response/grading/scan state display, safe
+  student identity fields, empty states, denied states, and stale-response
+  guards.
+- Response grading view: authorized long-text answer review, clean file
+  download action, manual 0-100 grading, student-visible feedback summary,
+  failed-scan zero/exempt controls, conflict handling, and no private note
+  exposure.
 - Student result view: own submission status, grading status, score summary,
   student-visible feedback summary, safe file availability metadata, pending
   or unavailable states, and no private grading details.
