@@ -277,18 +277,29 @@ revocation, and denied-access UI behavior before implementation.
 
 ### 13. Advanced Assessment Frontend UX
 
-**Status**: Not specified.
+**Status**: Complete. Feature specification, implementation plan, research,
+data model, frontend contract, quickstart, tasks, runtime implementation, and
+verification evidence are complete in
+`specs/028-advanced-assessment-ux/` and `schoolmaster-frontend`. Advanced
+questionnaire authoring, long-text and file-response submission, manual
+grading, student result visibility, and approved reporting summary surfaces
+are implemented for approved advanced assessment contracts with active-school
+authorization, scan-state handling, stale-response protection, diagnostics
+redaction, and blocked unsupported actions.
 
 **Purpose**: Define questionnaire authoring, long-text or file-response
 submission, manual grading, student result visibility, and related report
 surfaces if and when advanced assessment contracts are approved.
 
-**Why next**: The current assessment UI should remain narrow until the backend
-contract for advanced assessment types, grading, and file handling is stable.
+**Why next**: Advanced assessment UX now extends the mature teacher, student,
+reporting, and authorization patterns after the backend contract for advanced
+assessment types, grading, and file handling stabilized.
 
-**Contract and backend gate**: Approve question schemas, answer validation,
-file-response restrictions, malware-scan visibility, grading states, and
-student/report display behavior before frontend implementation.
+**Contract and backend gate**: Consume only approved advanced assessment
+operations and fields. Question schemas, answer validation, file-response
+restrictions, malware-scan visibility, grading states, and student/report
+display behavior must remain aligned with OpenAPI before further frontend
+changes.
 
 ## Scope Still Outside Frontend Roadmap
 
