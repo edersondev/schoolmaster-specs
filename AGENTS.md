@@ -63,5 +63,5 @@ When implementing or modifying features:
 - only then implementation repositories should change
 
 <!-- SPECKIT START -->
-Active implementation plan: `specs/027-platform-support-ui/plan.md`
+Active implementation plan: `specs/028-advanced-assessment-ux/plan.md`
 <!-- SPECKIT END -->
