@@ -2,12 +2,14 @@ type: object
 additionalProperties: false
 required:
   - name
-  - code
+  - cnpj
 properties:
   name:
     type: string
-  code:
+  cnpj:
     type: string
+    pattern: '^[0-9]{14}$'
+    description: Required unique Brazilian CNPJ without mask; must pass check-digit validation.
   contact_email:
     type: string
     format: email

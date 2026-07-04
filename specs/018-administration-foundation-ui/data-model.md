@@ -119,14 +119,16 @@ forms, service mappings, and relationships to approved OpenAPI records.
 
 ## School
 
-**Fields**: `id`, `name`, `code`, `status`, `contactEmail`, `contactPhone`,
-`addressSummary`.
+**Fields**: `id`, `name`, `cnpj`, `status`, `contactEmail`, `contactPhone`,
+`address`.
 
 ## SchoolCreateForm
 
-**Fields**: `name`, `code`, `contactEmail`, `contactPhone`, `addressSummary`.
+**Fields**: `name`, `cnpj`, `contactEmail`, `contactPhone`, `address`.
 
-**Rules**: Name and code required; email must be valid when supplied.
+**Rules**: Name and CNPJ are required. CNPJ is entered with mask
+`##.###.###/####-##`, sent without punctuation, and must be exactly 14 digits
+with valid Brazilian CNPJ check digits. Email must be valid when supplied.
 
 ## User
 

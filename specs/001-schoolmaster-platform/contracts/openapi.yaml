@@ -4939,7 +4939,7 @@ components:
       required:
         - id
         - name
-        - code
+        - cnpj
         - status
         - address
       properties:
@@ -4948,8 +4948,10 @@ components:
           format: uuid
         name:
           type: string
-        code:
+        cnpj:
           type: string
+          pattern: '^[0-9]{14}$'
+          description: Unmasked Brazilian CNPJ digits. UI may display as ##.###.###/####-##.
         status:
           $ref: '#/components/schemas/Status'
         contact_email:
@@ -5288,12 +5290,14 @@ components:
       additionalProperties: false
       required:
         - name
-        - code
+        - cnpj
       properties:
         name:
           type: string
-        code:
+        cnpj:
           type: string
+          pattern: '^[0-9]{14}$'
+          description: Required unique Brazilian CNPJ without mask; must pass check-digit validation.
         contact_email:
           type: string
           format: email

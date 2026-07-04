@@ -10,6 +10,27 @@
 
 ## Entities
 
+### School
+
+- **Purpose**: Platform-provisioned tenant root.
+- **Core fields**:
+  - `id` (UUID)
+  - `name`
+  - `cnpj`
+  - `status` (`active`, `inactive`)
+  - `contact_email`
+  - `contact_phone`
+  - `created_at`
+  - `updated_at`
+- **Validation rules**:
+  - `cnpj` is required, unique, stored without punctuation, exactly 14 digits,
+    and must pass Brazilian CNPJ check-digit validation
+  - masked CNPJ display such as `56.563.930/0001-08` is frontend-only
+  - school CNPJ is create-only in the current administration UI
+- **State transitions**:
+  - `active -> inactive` prevents future school-owned operations while
+    preserving historical tenant records
+
 ### User
 
 - **Purpose**: Authenticated identity for platform and school actors.

@@ -2,7 +2,7 @@ type: object
 required:
   - id
   - name
-  - code
+  - cnpj
   - status
   - address
 properties:
@@ -11,8 +11,10 @@ properties:
     format: uuid
   name:
     type: string
-  code:
+  cnpj:
     type: string
+    pattern: '^[0-9]{14}$'
+    description: Unmasked Brazilian CNPJ digits. UI may display as ##.###.###/####-##.
   status:
     $ref: ../common/Status.yaml
   contact_email:

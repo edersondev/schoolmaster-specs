@@ -124,6 +124,9 @@ advanced assessment review, tenant isolation.
   states, and list refresh.
 - [ ] Create approved administration resources with valid data and verify
   success state, validation mapping, and refreshed list state.
+- [ ] Create a school with CNPJ entered as `56.563.930/0001-08`; verify the
+  frontend sends unmasked digits, backend validates check digits and
+  uniqueness, and list/detail views display the masked CNPJ.
 - [ ] Submit invalid create forms and verify field-level validation with no
   malformed request accepted.
 - [ ] Open supported administration detail pages and update editable fields;
