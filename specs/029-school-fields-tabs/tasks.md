@@ -11,12 +11,12 @@
 
 **Purpose**: Establish contract, backend, and frontend work locations before story work begins.
 
-- [ ] T001 Create OpenAPI school lookup path directory in `schoolmaster-specs/api/paths/school-lookups/`
-- [ ] T002 Create OpenAPI school lookup schema directory in `schoolmaster-specs/api/components/schemas/school-lookups/`
-- [ ] T003 [P] Create backend school DTO directory in `schoolmaster-backend/app/DTOs/School/`
-- [ ] T004 [P] Create backend school service directory in `schoolmaster-backend/app/Services/School/`
-- [ ] T005 [P] Create frontend school module directories in `schoolmaster-frontend/src/modules/schools/`
-- [ ] T006 [P] Create frontend school unit test directory in `schoolmaster-frontend/tests/unit/schools/`
+- [X] T001 Create OpenAPI school lookup path directory in `schoolmaster-specs/api/paths/school-lookups/`
+- [X] T002 Create OpenAPI school lookup schema directory in `schoolmaster-specs/api/components/schemas/school-lookups/`
+- [X] T003 [P] Create backend school DTO directory in `schoolmaster-backend/app/DTOs/School/`
+- [X] T004 [P] Create backend school service directory in `schoolmaster-backend/app/Services/School/`
+- [X] T005 [P] Create frontend school module directories in `schoolmaster-frontend/src/modules/schools/`
+- [X] T006 [P] Create frontend school unit test directory in `schoolmaster-frontend/tests/unit/schools/`
 
 ---
 
@@ -26,32 +26,32 @@
 
 **Critical**: No user story work should begin until this phase is complete.
 
-- [ ] T007 Update school OpenAPI schemas to replace `cnpj` with `document`, add numeric `status`, required `address`, Basic fields, Institutional fields, Branding fields, and uniqueness descriptions in `schoolmaster-specs/api/components/schemas/schools/School.yaml`
-- [ ] T008 Update create request OpenAPI schema for JSON and multipart school creation, required tabs, legacy `cnpj` rejection, CNPJ validation, uniqueness rules, defaults, and logo file fields in `schoolmaster-specs/api/components/schemas/schools/SchoolCreateRequest.yaml`
-- [ ] T009 Update update request OpenAPI schema for JSON and multipart school update, read-only `document`, required address, uniqueness rules, defaulted fields, and no optimistic-locking requirement in `schoolmaster-specs/api/components/schemas/schools/SchoolUpdateRequest.yaml`
-- [ ] T010 [P] Add Institutional lookup option schema in `schoolmaster-specs/api/components/schemas/school-lookups/SchoolLookupOption.yaml`
-- [ ] T011 [P] Add Institutional lookup list response schema in `schoolmaster-specs/api/components/schemas/school-lookups/SchoolLookupOptionList.yaml`
-- [ ] T012 Add Institutional lookup path refs to `/api/v1/school-lookups/*` in `schoolmaster-specs/api/openapi.yaml`
-- [ ] T013 [P] Add administrative type lookup operation in `schoolmaster-specs/api/paths/school-lookups/administrative-types.yaml`
-- [ ] T014 [P] Add legal nature lookup operation in `schoolmaster-specs/api/paths/school-lookups/legal-natures.yaml`
-- [ ] T015 [P] Add management type lookup operation in `schoolmaster-specs/api/paths/school-lookups/management-types.yaml`
-- [ ] T016 [P] Add pedagogical approach lookup operation in `schoolmaster-specs/api/paths/school-lookups/pedagogical-approaches.yaml`
-- [ ] T017 [P] Add education level lookup operation in `schoolmaster-specs/api/paths/school-lookups/education-levels.yaml`
-- [ ] T018 [P] Add modality lookup operation in `schoolmaster-specs/api/paths/school-lookups/modalities.yaml`
-- [ ] T019 Update school create/update path content types and validation responses for JSON and multipart requests in `schoolmaster-specs/api/paths/schools/index.yaml`
-- [ ] T020 Update school detail/update path content types, read-only `document`, conflict non-scope notes, and validation responses in `schoolmaster-specs/api/paths/schools/school.yaml`
-- [ ] T021 Add or update backend migration for school profile columns, unique indexes for `inep_code`, `document`, and normalized email, address requirement, institutional references, branding colors, and `logo_path` in `schoolmaster-backend/database/migrations/`
-- [ ] T022 [P] Add Institutional lookup migration in `schoolmaster-backend/database/migrations/`
-- [ ] T023 [P] Add Institutional lookup seed data from `docs/school_new_fields.md` in `schoolmaster-backend/database/seeders/SchoolInstitutionalLookupSeeder.php`
-- [ ] T024 Update backend `School` model fillable/casts/relations for profile, address, institutional, branding, soft-deleted uniqueness checks, and normalized email in `schoolmaster-backend/app/Models/School.php`
-- [ ] T025 [P] Add Institutional lookup model in `schoolmaster-backend/app/Models/SchoolInstitutionalLookup.php`
-- [ ] T026 Add shared school profile DTO covering Basic, Address, Institutional, Branding, and logo file input in `schoolmaster-backend/app/DTOs/School/SchoolProfileData.php`
-- [ ] T027 Add shared school logo storage service with MIME, size, filename sanitization, replacement, and cleanup behavior in `schoolmaster-backend/app/Services/School/SchoolLogoService.php`
-- [ ] T028 Add shared school profile service shell for create/update orchestration and no optimistic-locking changes in `schoolmaster-backend/app/Services/School/SchoolProfileService.php`
-- [ ] T029 Update school authorization policy to preserve existing school administration and tenant-root rules for create, detail, update, logo upload, and lookup operations in `schoolmaster-backend/app/Policies/SchoolPolicy.php`
-- [ ] T030 [P] Add frontend school API types for Basic, Address, Institutional, Branding, lookup options, field errors, and form mode in `schoolmaster-frontend/src/modules/schools/types/school.ts`
-- [ ] T031 [P] Add frontend school API service shell for JSON/multipart create/update and lookup operations in `schoolmaster-frontend/src/modules/schools/services/schoolService.ts`
-- [ ] T032 [P] Add frontend tab-to-field error mapping utility in `schoolmaster-frontend/src/modules/schools/utils/schoolTabErrors.ts`
+- [X] T007 Update school OpenAPI schemas to replace `cnpj` with `document`, add numeric `status`, required `address`, Basic fields, Institutional fields, Branding fields, and uniqueness descriptions in `schoolmaster-specs/api/components/schemas/schools/School.yaml`
+- [X] T008 Update create request OpenAPI schema for JSON and multipart school creation, required tabs, legacy `cnpj` rejection, CNPJ validation, uniqueness rules, defaults, and logo file fields in `schoolmaster-specs/api/components/schemas/schools/SchoolCreateRequest.yaml`
+- [X] T009 Update update request OpenAPI schema for JSON and multipart school update, read-only `document`, required address, uniqueness rules, defaulted fields, and no optimistic-locking requirement in `schoolmaster-specs/api/components/schemas/schools/SchoolUpdateRequest.yaml`
+- [X] T010 [P] Add Institutional lookup option schema in `schoolmaster-specs/api/components/schemas/school-lookups/SchoolLookupOption.yaml`
+- [X] T011 [P] Add Institutional lookup list response schema in `schoolmaster-specs/api/components/schemas/school-lookups/SchoolLookupOptionList.yaml`
+- [X] T012 Add Institutional lookup path refs to `/api/v1/school-lookups/*` in `schoolmaster-specs/api/openapi.yaml`
+- [X] T013 [P] Add administrative type lookup operation in `schoolmaster-specs/api/paths/school-lookups/administrative-types.yaml`
+- [X] T014 [P] Add legal nature lookup operation in `schoolmaster-specs/api/paths/school-lookups/legal-natures.yaml`
+- [X] T015 [P] Add management type lookup operation in `schoolmaster-specs/api/paths/school-lookups/management-types.yaml`
+- [X] T016 [P] Add pedagogical approach lookup operation in `schoolmaster-specs/api/paths/school-lookups/pedagogical-approaches.yaml`
+- [X] T017 [P] Add education level lookup operation in `schoolmaster-specs/api/paths/school-lookups/education-levels.yaml`
+- [X] T018 [P] Add modality lookup operation in `schoolmaster-specs/api/paths/school-lookups/modalities.yaml`
+- [X] T019 Update school create/update path content types and validation responses for JSON and multipart requests in `schoolmaster-specs/api/paths/schools/index.yaml`
+- [X] T020 Update school detail/update path content types, read-only `document`, conflict non-scope notes, and validation responses in `schoolmaster-specs/api/paths/schools/school.yaml`
+- [X] T021 Add or update backend migration for school profile columns, unique indexes for `inep_code`, `document`, and normalized email, address requirement, institutional references, branding colors, and `logo_path` in `schoolmaster-backend/database/migrations/`
+- [X] T022 [P] Add Institutional lookup migration in `schoolmaster-backend/database/migrations/`
+- [X] T023 [P] Add Institutional lookup seed data from `docs/school_new_fields.md` in `schoolmaster-backend/database/seeders/SchoolInstitutionalLookupSeeder.php`
+- [X] T024 Update backend `School` model fillable/casts/relations for profile, address, institutional, branding, soft-deleted uniqueness checks, and normalized email in `schoolmaster-backend/app/Models/School.php`
+- [X] T025 [P] Add Institutional lookup model in `schoolmaster-backend/app/Models/SchoolInstitutionalLookup.php`
+- [X] T026 Add shared school profile DTO covering Basic, Address, Institutional, Branding, and logo file input in `schoolmaster-backend/app/DTOs/School/SchoolProfileData.php`
+- [X] T027 Add shared school logo storage service with MIME, size, filename sanitization, replacement, and cleanup behavior in `schoolmaster-backend/app/Services/School/SchoolLogoService.php`
+- [X] T028 Add shared school profile service shell for create/update orchestration and no optimistic-locking changes in `schoolmaster-backend/app/Services/School/SchoolProfileService.php`
+- [X] T029 Update school authorization policy to preserve existing school administration and tenant-root rules for create, detail, update, logo upload, and lookup operations in `schoolmaster-backend/app/Policies/SchoolPolicy.php`
+- [X] T030 [P] Add frontend school API types for Basic, Address, Institutional, Branding, lookup options, field errors, and form mode in `schoolmaster-frontend/src/modules/schools/types/school.ts`
+- [X] T031 [P] Add frontend school API service shell for JSON/multipart create/update and lookup operations in `schoolmaster-frontend/src/modules/schools/services/schoolService.ts`
+- [X] T032 [P] Add frontend tab-to-field error mapping utility in `schoolmaster-frontend/src/modules/schools/utils/schoolTabErrors.ts`
 
 **Checkpoint**: Foundation ready. User story implementation can now begin.
 
@@ -65,27 +65,27 @@
 
 ### Tests for User Story 1
 
-- [ ] T033 [P] [US1] Run Redocly validation for create school required fields, JSON request, multipart `logo_file`, lookup refs, defaults, and legacy `cnpj` rejection against `schoolmaster-specs/api/openapi.yaml` and record create-contract evidence in `schoolmaster-specs/specs/029-school-fields-tabs/quickstart.md`
-- [ ] T034 [P] [US1] Add backend feature tests for successful create with all tabs, no-logo create, logo create, required Address, required Institutional fields, numeric status, CNPJ check digits, duplicate INEP/document/email including soft-deleted records, and case-insensitive email uniqueness in `schoolmaster-backend/tests/Feature/School/SchoolCreateTest.php`
-- [ ] T035 [P] [US1] Add backend unit tests for logo validation, storage, MIME rejection, SVG rejection, executable rejection, and 2 MB limit in `schoolmaster-backend/tests/Unit/School/SchoolLogoServiceTest.php`
-- [ ] T036 [P] [US1] Add frontend service tests for create JSON payloads, multipart payloads, default colors, numeric status, lookup requests, and validation error mapping in `schoolmaster-frontend/tests/unit/schools/schoolService.create.spec.ts`
-- [ ] T037 [P] [US1] Add frontend form/composable tests for create tabs, required field feedback on inactive tabs, value preservation, Element Plus `ElColorPicker`, logo validation display, and stale lookup response handling in `schoolmaster-frontend/tests/unit/schools/SchoolCreateForm.spec.ts`
+- [X] T033 [P] [US1] Run Redocly validation for create school required fields, JSON request, multipart `logo_file`, lookup refs, defaults, and legacy `cnpj` rejection against `schoolmaster-specs/api/openapi.yaml` and record create-contract evidence in `schoolmaster-specs/specs/029-school-fields-tabs/quickstart.md`
+- [X] T034 [P] [US1] Add backend feature tests for successful create with all tabs, no-logo create, logo create, required Address, required Institutional fields, numeric status, CNPJ check digits, duplicate INEP/document/email including soft-deleted records, and case-insensitive email uniqueness in `schoolmaster-backend/tests/Feature/School/SchoolCreateTest.php`
+- [X] T035 [P] [US1] Add backend unit tests for logo validation, storage, MIME rejection, SVG rejection, executable rejection, and 2 MB limit in `schoolmaster-backend/tests/Unit/School/SchoolLogoServiceTest.php`
+- [X] T036 [P] [US1] Add frontend service tests for create JSON payloads, multipart payloads, default colors, numeric status, lookup requests, and validation error mapping in `schoolmaster-frontend/tests/unit/schools/schoolService.create.spec.ts`
+- [X] T037 [P] [US1] Add frontend form/composable tests for create tabs, required field feedback on inactive tabs, value preservation, Element Plus `ElColorPicker`, logo validation display, and stale lookup response handling in `schoolmaster-frontend/tests/unit/schools/SchoolCreateForm.spec.ts`
 
 ### Implementation for User Story 1
 
-- [ ] T038 [US1] Implement backend create request validation for Basic, required Address, Institutional, Branding colors, logo file, unique identity fields, case-insensitive email, soft-deleted uniqueness scope, CNPJ check digits, numeric status, and legacy `cnpj` rejection in `schoolmaster-backend/app/Http/Requests/Api/V1/SchoolCreateRequest.php`
-- [ ] T039 [US1] Implement school creation persistence for profile fields, required address, institutional references, branding defaults, optional logo file, tenant-root behavior, and normalized email in `schoolmaster-backend/app/Services/School/SchoolProfileService.php`
-- [ ] T040 [US1] Implement create response output for Basic, Address, Institutional, Branding, `document`, numeric `status`, and `logo_path` in `schoolmaster-backend/app/Http/Resources/SchoolResource.php`
-- [ ] T041 [US1] Wire create route/controller to Form Request, Policy, DTO, service, resource, JSON, and multipart behavior in `schoolmaster-backend/app/Http/Controllers/Api/V1/SchoolController.php`
-- [ ] T042 [US1] Implement Institutional lookup controller actions that return full seeded option lists in `schoolmaster-backend/app/Http/Controllers/Api/V1/SchoolLookupController.php`
-- [ ] T043 [US1] Register Institutional lookup routes under `/api/v1/school-lookups/*` in `schoolmaster-backend/routes/api.php`
-- [ ] T044 [US1] Implement frontend school create/update service methods for JSON create, multipart create with `logo_file`, lookup loading, and documented error normalization in `schoolmaster-frontend/src/modules/schools/services/schoolService.ts`
-- [ ] T045 [US1] Implement route-local school form composable for create mode, tab state, defaults, dirty tracking, field errors, stale response guards, and selected logo file in `schoolmaster-frontend/src/modules/schools/composables/useSchoolForm.ts`
-- [ ] T046 [US1] Implement Basic tab fields for `inep_code`, numeric `status`, `name`, `trade_name`, `legal_name`, `document`, `email`, `phone`, `website`, and `description` in `schoolmaster-frontend/src/modules/schools/components/SchoolBasicFields.vue`
-- [ ] T047 [US1] Implement required Address tab fields using current address field names and numeric-only rules in `schoolmaster-frontend/src/modules/schools/components/SchoolAddressFields.vue`
-- [ ] T048 [US1] Implement Institutional tab lookup loading, single-select fields, multi-select fields, full option unavailable state, timezone default, and language default in `schoolmaster-frontend/src/modules/schools/components/SchoolInstitutionalFields.vue`
-- [ ] T049 [US1] Implement Branding tab logo selector, current/no-logo state, validation feedback, and Element Plus `ElColorPicker` controls for `primary_color` and `secondary_color` without alpha in `schoolmaster-frontend/src/modules/schools/components/SchoolBrandingFields.vue`
-- [ ] T050 [US1] Implement create route/page that assembles tabs, validation summary, inactive-tab error indicators, submit handling, loading/denied/not-found states, and value preservation in `schoolmaster-frontend/src/modules/schools/routes/SchoolCreatePage.vue`
+- [X] T038 [US1] Implement backend create request validation for Basic, required Address, Institutional, Branding colors, logo file, unique identity fields, case-insensitive email, soft-deleted uniqueness scope, CNPJ check digits, numeric status, and legacy `cnpj` rejection in `schoolmaster-backend/app/Http/Requests/Api/V1/SchoolCreateRequest.php`
+- [X] T039 [US1] Implement school creation persistence for profile fields, required address, institutional references, branding defaults, optional logo file, tenant-root behavior, and normalized email in `schoolmaster-backend/app/Services/School/SchoolProfileService.php`
+- [X] T040 [US1] Implement create response output for Basic, Address, Institutional, Branding, `document`, numeric `status`, and `logo_path` in `schoolmaster-backend/app/Http/Resources/SchoolResource.php`
+- [X] T041 [US1] Wire create route/controller to Form Request, Policy, DTO, service, resource, JSON, and multipart behavior in `schoolmaster-backend/app/Http/Controllers/Api/V1/SchoolController.php`
+- [X] T042 [US1] Implement Institutional lookup controller actions that return full seeded option lists in `schoolmaster-backend/app/Http/Controllers/Api/V1/SchoolLookupController.php`
+- [X] T043 [US1] Register Institutional lookup routes under `/api/v1/school-lookups/*` in `schoolmaster-backend/routes/api.php`
+- [X] T044 [US1] Implement frontend school create/update service methods for JSON create, multipart create with `logo_file`, lookup loading, and documented error normalization in `schoolmaster-frontend/src/modules/schools/services/schoolService.ts`
+- [X] T045 [US1] Implement route-local school form composable for create mode, tab state, defaults, dirty tracking, field errors, stale response guards, and selected logo file in `schoolmaster-frontend/src/modules/schools/composables/useSchoolForm.ts`
+- [X] T046 [US1] Implement Basic tab fields for `inep_code`, numeric `status`, `name`, `trade_name`, `legal_name`, `document`, `email`, `phone`, `website`, and `description` in `schoolmaster-frontend/src/modules/schools/components/SchoolBasicFields.vue`
+- [X] T047 [US1] Implement required Address tab fields using current address field names and numeric-only rules in `schoolmaster-frontend/src/modules/schools/components/SchoolAddressFields.vue`
+- [X] T048 [US1] Implement Institutional tab lookup loading, single-select fields, multi-select fields, full option unavailable state, timezone default, and language default in `schoolmaster-frontend/src/modules/schools/components/SchoolInstitutionalFields.vue`
+- [X] T049 [US1] Implement Branding tab logo selector, current/no-logo state, validation feedback, and Element Plus `ElColorPicker` controls for `primary_color` and `secondary_color` without alpha in `schoolmaster-frontend/src/modules/schools/components/SchoolBrandingFields.vue`
+- [X] T050 [US1] Implement create route/page that assembles tabs, validation summary, inactive-tab error indicators, submit handling, loading/denied/not-found states, and value preservation in `schoolmaster-frontend/src/modules/schools/routes/SchoolCreatePage.vue`
 
 **Checkpoint**: User Story 1 is independently testable as the MVP.
 
@@ -99,20 +99,20 @@
 
 ### Tests for User Story 2
 
-- [ ] T051 [P] [US2] Run Redocly validation for update school read-only `document`, required address, JSON/multipart update, no-new-logo preservation, logo replacement, and unchanged optimistic-locking behavior against `schoolmaster-specs/api/openapi.yaml` and record update-contract evidence in `schoolmaster-specs/specs/029-school-fields-tabs/quickstart.md`
-- [ ] T052 [P] [US2] Add backend feature tests for edit with all tabs, changed `document` rejection, omitted/incomplete address rejection, no-new-logo preservation, logo replacement with old-logo cleanup, duplicate identity rejection, and existing simultaneous edit behavior in `schoolmaster-backend/tests/Feature/School/SchoolUpdateTest.php`
-- [ ] T053 [P] [US2] Add frontend service tests for edit load, JSON update, multipart update, read-only document omission, no-new-logo payload, replacement payload, and backend validation preservation in `schoolmaster-frontend/tests/unit/schools/schoolService.update.spec.ts`
-- [ ] T054 [P] [US2] Add frontend edit form tests for read-only document display, incomplete address blocking, inactive-tab errors, unsaved-change route guard, stale save ignore, and value preservation in `schoolmaster-frontend/tests/unit/schools/SchoolEditForm.spec.ts`
+- [X] T051 [P] [US2] Run Redocly validation for update school read-only `document`, required address, JSON/multipart update, no-new-logo preservation, logo replacement, and unchanged optimistic-locking behavior against `schoolmaster-specs/api/openapi.yaml` and record update-contract evidence in `schoolmaster-specs/specs/029-school-fields-tabs/quickstart.md`
+- [X] T052 [P] [US2] Add backend feature tests for edit with all tabs, changed `document` rejection, omitted/incomplete address rejection, no-new-logo preservation, logo replacement with old-logo cleanup, duplicate identity rejection, and existing simultaneous edit behavior in `schoolmaster-backend/tests/Feature/School/SchoolUpdateTest.php`
+- [X] T053 [P] [US2] Add frontend service tests for edit load, JSON update, multipart update, read-only document omission, no-new-logo payload, replacement payload, and backend validation preservation in `schoolmaster-frontend/tests/unit/schools/schoolService.update.spec.ts`
+- [X] T054 [P] [US2] Add frontend edit form tests for read-only document display, incomplete address blocking, inactive-tab errors, unsaved-change route guard, stale save ignore, and value preservation in `schoolmaster-frontend/tests/unit/schools/SchoolEditForm.spec.ts`
 
 ### Implementation for User Story 2
 
-- [ ] T055 [US2] Implement backend update request validation for read-only `document`, required address on every edit, editable Basic fields, Institutional fields, Branding colors, logo file, uniqueness excluding current school, case-insensitive email, soft-deleted uniqueness scope, numeric status, and legacy `cnpj` rejection in `schoolmaster-backend/app/Http/Requests/Api/V1/SchoolUpdateRequest.php`
-- [ ] T056 [US2] Implement backend update persistence for editable fields, required address repair, institutional references, color defaults, no-new-logo preservation, logo replacement, old-logo cleanup after successful storage, and existing update conflict behavior in `schoolmaster-backend/app/Services/School/SchoolProfileService.php`
-- [ ] T057 [US2] Update backend resource/detail behavior so edit load returns all Basic, Address, Institutional, Branding, `document`, numeric status, and current `logo_path` fields in `schoolmaster-backend/app/Http/Resources/SchoolResource.php`
-- [ ] T058 [US2] Wire detail/update controller behavior to policy checks, update Form Request, service update method, resource output, JSON requests, multipart requests, and documented error responses in `schoolmaster-backend/app/Http/Controllers/Api/V1/SchoolController.php`
-- [ ] T059 [US2] Implement frontend edit load and submit mapping with read-only `document`, address completion checks, no-new-logo preservation, logo replacement, and stale save ignore in `schoolmaster-frontend/src/modules/schools/composables/useSchoolForm.ts`
-- [ ] T060 [US2] Implement edit route/page that reuses the tab components, renders read-only document, handles incomplete address saves, displays current logo, and preserves values on errors in `schoolmaster-frontend/src/modules/schools/routes/SchoolEditPage.vue`
-- [ ] T061 [US2] Register or update frontend school create/edit routes and route guards for dirty state, permission denied, not-found, tenant mismatch, and school context changes in `schoolmaster-frontend/src/modules/schools/routes/index.ts`
+- [X] T055 [US2] Implement backend update request validation for read-only `document`, required address on every edit, editable Basic fields, Institutional fields, Branding colors, logo file, uniqueness excluding current school, case-insensitive email, soft-deleted uniqueness scope, numeric status, and legacy `cnpj` rejection in `schoolmaster-backend/app/Http/Requests/Api/V1/SchoolUpdateRequest.php`
+- [X] T056 [US2] Implement backend update persistence for editable fields, required address repair, institutional references, color defaults, no-new-logo preservation, logo replacement, old-logo cleanup after successful storage, and existing update conflict behavior in `schoolmaster-backend/app/Services/School/SchoolProfileService.php`
+- [X] T057 [US2] Update backend resource/detail behavior so edit load returns all Basic, Address, Institutional, Branding, `document`, numeric status, and current `logo_path` fields in `schoolmaster-backend/app/Http/Resources/SchoolResource.php`
+- [X] T058 [US2] Wire detail/update controller behavior to policy checks, update Form Request, service update method, resource output, JSON requests, multipart requests, and documented error responses in `schoolmaster-backend/app/Http/Controllers/Api/V1/SchoolController.php`
+- [X] T059 [US2] Implement frontend edit load and submit mapping with read-only `document`, address completion checks, no-new-logo preservation, logo replacement, and stale save ignore in `schoolmaster-frontend/src/modules/schools/composables/useSchoolForm.ts`
+- [X] T060 [US2] Implement edit route/page that reuses the tab components, renders read-only document, handles incomplete address saves, displays current logo, and preserves values on errors in `schoolmaster-frontend/src/modules/schools/routes/SchoolEditPage.vue`
+- [X] T061 [US2] Register or update frontend school create/edit routes and route guards for dirty state, permission denied, not-found, tenant mismatch, and school context changes in `schoolmaster-frontend/src/modules/schools/routes/index.ts`
 
 **Checkpoint**: User Stories 1 and 2 both work independently.
 
@@ -126,19 +126,19 @@
 
 ### Tests for User Story 3
 
-- [ ] T062 [P] [US3] Run Redocly contract validation and capture output for school create/update/read, lookup endpoints, multipart upload, validation errors, and no remaining `cnpj` schema in `schoolmaster-specs/specs/029-school-fields-tabs/quickstart.md`
-- [ ] T063 [P] [US3] Add backend contract/resource shape tests proving create, detail, update, and list responses match OpenAPI field names and exclude `cnpj` in `schoolmaster-backend/tests/Feature/School/SchoolContractTest.php`
-- [ ] T064 [P] [US3] Add frontend contract mapping tests proving services submit only documented fields, never submit `cnpj`, never submit string statuses, and never hardcode Institutional labels in `schoolmaster-frontend/tests/unit/schools/schoolContractMapping.spec.ts`
+- [X] T062 [P] [US3] Run Redocly contract validation and capture output for school create/update/read, lookup endpoints, multipart upload, validation errors, and no remaining `cnpj` schema in `schoolmaster-specs/specs/029-school-fields-tabs/quickstart.md`
+- [X] T063 [P] [US3] Add backend contract/resource shape tests proving create, detail, update, and list responses match OpenAPI field names and exclude `cnpj` in `schoolmaster-backend/tests/Feature/School/SchoolContractTest.php`
+- [X] T064 [P] [US3] Add frontend contract mapping tests proving services submit only documented fields, never submit `cnpj`, never submit string statuses, and never hardcode Institutional labels in `schoolmaster-frontend/tests/unit/schools/schoolContractMapping.spec.ts`
 
 ### Implementation for User Story 3
 
-- [ ] T065 [US3] Update OpenAPI aggregate metadata and tags for active school fields tabs contract in `schoolmaster-specs/api/openapi.yaml`
-- [ ] T066 [US3] Document coordinated OpenAPI/backend/frontend merge and release gates for the breaking `/api/v1` school contract in `schoolmaster-specs/specs/029-school-fields-tabs/quickstart.md`
-- [ ] T067 [US3] Remove or replace all remaining `cnpj` references in school OpenAPI paths and schemas in `schoolmaster-specs/api/paths/schools/`
-- [ ] T068 [US3] Remove or replace all remaining `cnpj` references in school OpenAPI component schemas in `schoolmaster-specs/api/components/schemas/schools/`
-- [ ] T069 [US3] Update feature quickstart evidence checklist with actual OpenAPI, PHPUnit, Vitest, manual validation, and coordinated rollout gate outputs in `schoolmaster-specs/specs/029-school-fields-tabs/quickstart.md`
-- [ ] T070 [US3] Confirm no backend code path still accepts legacy `cnpj`, string status, nullable address, frontend-hardcoded lookup labels, or undocumented logo fields in `schoolmaster-backend/app/`
-- [ ] T071 [US3] Confirm no frontend code path still submits legacy `cnpj`, string status, nullable address, frontend-hardcoded lookup labels, or undocumented logo fields in `schoolmaster-frontend/src/modules/schools/`
+- [X] T065 [US3] Update OpenAPI aggregate metadata and tags for active school fields tabs contract in `schoolmaster-specs/api/openapi.yaml`
+- [X] T066 [US3] Document coordinated OpenAPI/backend/frontend merge and release gates for the breaking `/api/v1` school contract in `schoolmaster-specs/specs/029-school-fields-tabs/quickstart.md`
+- [X] T067 [US3] Remove or replace all remaining `cnpj` references in school OpenAPI paths and schemas in `schoolmaster-specs/api/paths/schools/`
+- [X] T068 [US3] Remove or replace all remaining `cnpj` references in school OpenAPI component schemas in `schoolmaster-specs/api/components/schemas/schools/`
+- [X] T069 [US3] Update feature quickstart evidence checklist with actual OpenAPI, PHPUnit, Vitest, manual validation, and coordinated rollout gate outputs in `schoolmaster-specs/specs/029-school-fields-tabs/quickstart.md`
+- [X] T070 [US3] Confirm no backend code path still accepts legacy `cnpj`, string status, nullable address, frontend-hardcoded lookup labels, or undocumented logo fields in `schoolmaster-backend/app/`
+- [X] T071 [US3] Confirm no frontend code path still submits legacy `cnpj`, string status, nullable address, frontend-hardcoded lookup labels, or undocumented logo fields in `schoolmaster-frontend/src/modules/schools/`
 
 **Checkpoint**: All user stories are independently functional and contract-aligned.
 
@@ -148,14 +148,14 @@
 
 **Purpose**: Final verification, documentation, and release readiness across repositories.
 
-- [ ] T072 [P] Run OpenAPI lint and resolve any school contract issues in `schoolmaster-specs/api/openapi.yaml`
-- [ ] T073 [P] Run backend PHPUnit school test suite and resolve failures in `schoolmaster-backend/tests/Feature/School/`
-- [ ] T074 [P] Run frontend Vitest school test suite and resolve failures in `schoolmaster-frontend/tests/unit/schools/`
-- [ ] T075 [P] Capture manual desktop and mobile screenshots or notes for create, edit, validation, lookup, and logo upload flows in `schoolmaster-specs/specs/029-school-fields-tabs/quickstart.md`
-- [ ] T076 Review tenant isolation, authorization denial, private storage path redaction, upload sanitization, and cross-tenant existence leakage across `schoolmaster-backend/app/`
-- [ ] T077 Review frontend responsive layout, keyboard operation, inactive-tab error discoverability, dirty-state guard, and text fit across `schoolmaster-frontend/src/modules/schools/`
-- [ ] T078 Update implementation notes and any changed task evidence in `schoolmaster-specs/specs/029-school-fields-tabs/tasks.md`
-- [ ] T079 Time a representative authorized-admin school create flow and record whether all required Basic, Address, and Institutional fields can be completed in under 5 minutes in `schoolmaster-specs/specs/029-school-fields-tabs/quickstart.md`
+- [X] T072 [P] Run OpenAPI lint and resolve any school contract issues in `schoolmaster-specs/api/openapi.yaml`
+- [X] T073 [P] Run backend PHPUnit school test suite and resolve failures in `schoolmaster-backend/tests/Feature/School/`
+- [X] T074 [P] Run frontend Vitest school test suite and resolve failures in `schoolmaster-frontend/tests/unit/schools/`
+- [X] T075 [P] Capture manual desktop and mobile screenshots or notes for create, edit, validation, lookup, and logo upload flows in `schoolmaster-specs/specs/029-school-fields-tabs/quickstart.md`
+- [X] T076 Review tenant isolation, authorization denial, private storage path redaction, upload sanitization, and cross-tenant existence leakage across `schoolmaster-backend/app/`
+- [X] T077 Review frontend responsive layout, keyboard operation, inactive-tab error discoverability, dirty-state guard, and text fit across `schoolmaster-frontend/src/modules/schools/`
+- [X] T078 Update implementation notes and any changed task evidence in `schoolmaster-specs/specs/029-school-fields-tabs/tasks.md`
+- [X] T079 Time a representative authorized-admin school create flow and record whether all required Basic, Address, and Institutional fields can be completed in under 5 minutes in `schoolmaster-specs/specs/029-school-fields-tabs/quickstart.md`
 - [ ] T080 Run a representative administrator field-location check and record whether at least 90% of participants locate required school profile fields without assistance in `schoolmaster-specs/specs/029-school-fields-tabs/quickstart.md`
 
 ---

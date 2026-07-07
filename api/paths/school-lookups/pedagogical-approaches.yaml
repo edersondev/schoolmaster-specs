@@ -1,0 +1,16 @@
+get:
+  tags:
+    - School Lookups
+  summary: List school pedagogical approach options
+  operationId: listSchoolPedagogicalApproaches
+  responses:
+    '200':
+      description: Full pedagogical approach option list
+      content:
+        application/json:
+          schema:
+            $ref: ../../components/schemas/school-lookups/SchoolLookupOptionList.yaml
+    '401':
+      $ref: ../../components/responses/auth/Unauthorized.yaml
+    '403':
+      $ref: ../../components/responses/common/Forbidden.yaml

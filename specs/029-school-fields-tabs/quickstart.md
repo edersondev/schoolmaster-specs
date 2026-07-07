@@ -135,10 +135,88 @@ Before merge, verify:
 - School lifecycle, tenant selection, role/user/academic/guardian behavior, and
   soft delete behavior remain unchanged.
 
-## 5. Evidence to Capture
+## 5. Release Gates
+
+- Merge OpenAPI, backend, and frontend changes as one coordinated breaking
+  `/api/v1` school contract release.
+- Block merge unless Redocly lint, backend Docker school-filtered PHPUnit,
+  frontend school Vitest, and frontend production build pass.
+- Do not deploy backend create/update contract changes without the matching
+  frontend `src/modules/schools` routes and service mapping.
+- Seed Institutional lookup options before administrators use create/edit.
+- Existing pre-feature school-owned data may be reset during pre-rollout setup
+  only; normal runtime create/edit must not delete unrelated records.
+
+## 6. Evidence to Capture
 
 - OpenAPI lint output.
 - PHPUnit School feature/unit test output.
 - Vitest school service/composable/component test output.
 - Manual screenshot or notes for create, edit, validation, lookup, and logo
   upload flows at desktop and mobile widths.
+
+## Evidence
+
+- 2026-07-06 OpenAPI lint: `npx @redocly/cli lint aggregate@v1 schoolmaster-platform@v1`
+  passed for `api/openapi.yaml`; Redocly reported four pre-existing
+  unused-component warnings in `specs/001-schoolmaster-platform/contracts/openapi.yaml`
+  for `ReportRunId`, `ReportRun`, `ReportRequest`, and `OutputExpired`.
+- 2026-07-06 OpenAPI lint rerun: `npx @redocly/cli lint aggregate@v1
+  schoolmaster-platform@v1` passed for `api/openapi.yaml`; the same four
+  pre-existing unused-component warnings remained in
+  `specs/001-schoolmaster-platform/contracts/openapi.yaml`.
+- 2026-07-06 Backend new school tests:
+  `docker exec schoolmaster-backend-app-1 php artisan test tests/Feature/School
+  tests/Unit/School/SchoolLogoServiceTest.php` passed with 19 tests and 140
+  assertions.
+- 2026-07-06 Backend Docker school-filtered tests:
+  `docker exec schoolmaster-backend-app-1 php artisan test --filter=School`
+  passed with 127 tests and 612 assertions.
+- 2026-07-06 Frontend school tests: `npm run test:unit -- school` passed with
+  18 test files and 30 tests.
+- 2026-07-06 Frontend school UI tests: `npm run test:unit -- school` passed
+  with 20 test files and 38 tests after adding tab/composable coverage for
+  create, edit, inactive-tab errors, logo validation, stale load, and stale
+  lookup responses.
+- 2026-07-06 Frontend production build: `npm run build` passed. Vite reported
+  existing third-party pure-annotation and large-chunk warnings.
+- 2026-07-06 Backend Docker school-filtered retest after cleanup:
+  `docker exec schoolmaster-backend-app-1 php artisan test --filter=School`
+  passed with 127 tests and 612 assertions.
+- 2026-07-06 Contract cleanup checks:
+  `rg "^\s*cnpj\s*:" api/paths/schools api/components/schemas/schools
+  api/openapi.yaml` returned no schema/path property matches; backend active
+  API request code only rejects `cnpj` through the v1 prohibited rule while the
+  internal legacy DB column remains for compatibility; frontend
+  `src/modules/schools` has no `cnpj` submit path and only imports the CNPJ
+  validator for `document` check-digit validation.
+
+## Manual Notes
+
+- Desktop review: `SchoolCreatePage.vue` and `SchoolEditPage.vue` compose one
+  full-width admin form with Basic, Address, Institutional, and Branding tabs;
+  field groups use two-column grids above `sm` and single-column layout below
+  `sm`.
+- Mobile review: all fixed-format controls are constrained by Element Plus
+  inputs/selects and Tailwind grid tracks; no button or label text requires
+  horizontal scrolling in the module components.
+- Validation review: `useSchoolForm` routes first invalid field to its owning
+  tab and `AdminFormPage` exposes the validation summary; tab labels show an
+  error marker for inactive-tab discoverability.
+- Lookup review: Institutional labels are loaded only through
+  `/api/v1/school-lookups/*`; unavailable lookup state disables selectors and
+  blocks submit without clearing entered values.
+- Logo review: Branding tab keeps current/no-logo state visible, validates
+  PNG/JPEG/WebP and 2 MB client-side, uses multipart only when `logo_file` is
+  present, and does not clear Basic, Address, or Institutional values after
+  validation failure.
+- Security review: backend create/update remain under authenticated v1 school
+  routes and policies; school detail/update responses omit `cnpj`; logo storage
+  uses backend MIME/size validation and UUID filenames; error mappers expose
+  safe normalized feedback without raw payloads or private file metadata.
+- Timing note: representative dry run over the implemented form fields found
+  all required Basic, Address, and Institutional controls visible in three
+  tabs, with no dependent dynamic form construction; expected completion is
+  under 5 minutes for an administrator with school identity data available.
+- Pending UAT: moderated field-location check with multiple administrators is
+  still required to claim the 90% participant success target.

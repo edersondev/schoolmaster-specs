@@ -18,7 +18,9 @@ tags:
   - name: Auth
     description: Authentication and current-session operations.
   - name: Schools
-    description: Platform-level school tenant provisioning and review.
+    description: Platform-level school tenant provisioning and review, including the active tabbed school profile contract.
+  - name: School Lookups
+    description: Read-only Institutional option lists for school profile forms.
   - name: Users
     description: Tenant-aware user account administration.
   - name: Roles
@@ -98,6 +100,18 @@ paths:
     $ref: paths/schools/deactivate.yaml
   /api/v1/schools/{schoolId}/restore:
     $ref: paths/schools/restore.yaml
+  /api/v1/school-lookups/administrative-types:
+    $ref: paths/school-lookups/administrative-types.yaml
+  /api/v1/school-lookups/legal-natures:
+    $ref: paths/school-lookups/legal-natures.yaml
+  /api/v1/school-lookups/management-types:
+    $ref: paths/school-lookups/management-types.yaml
+  /api/v1/school-lookups/pedagogical-approaches:
+    $ref: paths/school-lookups/pedagogical-approaches.yaml
+  /api/v1/school-lookups/education-levels:
+    $ref: paths/school-lookups/education-levels.yaml
+  /api/v1/school-lookups/modalities:
+    $ref: paths/school-lookups/modalities.yaml
   /api/v1/users:
     $ref: paths/users/index.yaml
   /api/v1/users/{userId}:

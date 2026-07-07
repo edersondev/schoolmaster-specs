@@ -22,7 +22,13 @@ get:
 patch:
   tags:
     - Schools
-  summary: Update school profile or operational status
+  summary: Update school profile tabs without changing document
+  description: >
+    Accepts JSON for normal updates and multipart/form-data when replacing
+    logo_file. Address and Institutional fields remain required on every edit.
+    document is read-only after create; changed document or legacy cnpj payloads
+    are rejected. This operation preserves existing simultaneous edit behavior
+    and does not add an optimistic-locking precondition.
   operationId: updateSchool
   parameters:
     - $ref: ../../components/parameters/schools/SchoolId.yaml
@@ -30,6 +36,9 @@ patch:
     required: true
     content:
       application/json:
+        schema:
+          $ref: ../../components/schemas/schools/SchoolUpdateRequest.yaml
+      multipart/form-data:
         schema:
           $ref: ../../components/schemas/schools/SchoolUpdateRequest.yaml
   responses:
