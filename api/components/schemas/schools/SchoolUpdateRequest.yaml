@@ -1,16 +1,90 @@
 type: object
 additionalProperties: false
+required:
+  - address
+  - administrative_type_id
+  - legal_nature_id
+  - management_type_id
+  - pedagogical_approach_id
+  - education_level_ids
+  - modality_ids
 properties:
+  inep_code:
+    type: string
+    pattern: '^[0-9]{8}$'
+    description: Unique INEP school code. Uniqueness excludes the current school but includes inactive and soft-deleted schools.
+  status:
+    type: integer
+    enum:
+      - 1
+      - 0
   name:
     type: string
-  status:
-    $ref: ../common/Status.yaml
-  contact_email:
+  trade_name:
+    type:
+      - string
+      - 'null'
+  legal_name:
+    type:
+      - string
+      - 'null'
+  document:
+    type: string
+    readOnly: true
+    description: Document is immutable after create. Update requests that include a changed document or legacy cnpj payload are rejected.
+  email:
     type: string
     format: email
-  contact_phone:
-    type: string
+    description: Unique school email. Uniqueness is case-insensitive, excludes the current school, and includes inactive and soft-deleted schools.
+  phone:
+    type:
+      - string
+      - 'null'
+    pattern: '^[0-9]*$'
+  website:
+    type:
+      - string
+      - 'null'
+    format: uri
+  description:
+    type:
+      - string
+      - 'null'
   address:
-    oneOf:
-      - $ref: ../addresses/AddressInput.yaml
-      - type: 'null'
+    $ref: ../addresses/AddressInput.yaml
+  administrative_type_id:
+    type: integer
+  legal_nature_id:
+    type: integer
+  management_type_id:
+    type: integer
+  pedagogical_approach_id:
+    type: integer
+  education_level_ids:
+    type: array
+    minItems: 1
+    items:
+      type: integer
+  modality_ids:
+    type: array
+    minItems: 1
+    items:
+      type: integer
+  timezone:
+    type: string
+    default: America/Sao_Paulo
+  language:
+    type: string
+    default: pt-BR
+  primary_color:
+    type: string
+    pattern: '^#[0-9A-Fa-f]{6}$'
+    default: '#1D4ED8'
+  secondary_color:
+    type: string
+    pattern: '^#[0-9A-Fa-f]{6}$'
+    default: '#F59E0B'
+  logo_file:
+    type: string
+    format: binary
+    description: Optional replacement PNG, JPEG, or WebP logo file up to 2 MB. Only valid in multipart/form-data requests. Omission preserves the current logo.

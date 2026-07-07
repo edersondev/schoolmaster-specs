@@ -29,12 +29,20 @@ get:
 post:
   tags:
     - Schools
-  summary: Create a school tenant
+  summary: Create a school tenant with Basic, Address, Institutional, and Branding fields
+  description: >
+    Accepts JSON for no-logo creation and multipart/form-data when logo_file is
+    submitted. Legacy cnpj fields are rejected; document is the canonical CNPJ
+    payload field. INEP code, document, and email uniqueness checks include
+    inactive and soft-deleted schools, with email compared case-insensitively.
   operationId: createSchool
   requestBody:
     required: true
     content:
       application/json:
+        schema:
+          $ref: ../../components/schemas/schools/SchoolCreateRequest.yaml
+      multipart/form-data:
         schema:
           $ref: ../../components/schemas/schools/SchoolCreateRequest.yaml
   responses:

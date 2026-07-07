@@ -1,0 +1,19 @@
+type: object
+additionalProperties: false
+required:
+  - id
+  - label
+properties:
+  id:
+    type: integer
+    description: Stable numeric lookup identifier seeded from the approved school field source.
+  label:
+    type: string
+  status:
+    type: integer
+    enum:
+      - 1
+      - 0
+    default: 1
+  sort_order:
+    type: integer

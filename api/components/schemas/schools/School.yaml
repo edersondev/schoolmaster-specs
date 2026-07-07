@@ -1,32 +1,106 @@
 type: object
+additionalProperties: false
 required:
   - id
-  - name
-  - cnpj
+  - inep_code
   - status
+  - name
+  - document
+  - email
   - address
+  - administrative_type_id
+  - legal_nature_id
+  - management_type_id
+  - pedagogical_approach_id
+  - education_level_ids
+  - modality_ids
+  - timezone
+  - language
+  - logo_path
+  - primary_color
+  - secondary_color
 properties:
   id:
     type: string
     format: uuid
+  inep_code:
+    type: string
+    pattern: '^[0-9]{8}$'
+    description: Required unique INEP school code. Uniqueness includes inactive and soft-deleted schools.
+  status:
+    type: integer
+    enum:
+      - 1
+      - 0
+    description: Numeric school status. 1 is active, 0 is inactive.
   name:
     type: string
-  cnpj:
-    type: string
-    pattern: '^[0-9]{14}$'
-    description: Unmasked Brazilian CNPJ digits. UI may display as ##.###.###/####-##.
-  status:
-    $ref: ../common/Status.yaml
-  contact_email:
+  trade_name:
     type:
       - string
       - 'null'
+  legal_name:
+    type:
+      - string
+      - 'null'
+  document:
+    type: string
+    pattern: '^[0-9]{14}$'
+    description: Required unique Brazilian CNPJ digits with valid check digits. Replaces cnpj and is read-only after create. Uniqueness includes inactive and soft-deleted schools.
+  email:
+    type: string
     format: email
-  contact_phone:
+    description: Required unique school email. Uniqueness is case-insensitive and includes inactive and soft-deleted schools.
+  phone:
+    type:
+      - string
+      - 'null'
+    pattern: '^[0-9]*$'
+  website:
+    type:
+      - string
+      - 'null'
+    format: uri
+  description:
     type:
       - string
       - 'null'
   address:
-    oneOf:
-      - $ref: ../addresses/Address.yaml
-      - type: 'null'
+    $ref: ../addresses/Address.yaml
+  administrative_type_id:
+    type: integer
+  legal_nature_id:
+    type: integer
+  management_type_id:
+    type: integer
+  pedagogical_approach_id:
+    type: integer
+  education_level_ids:
+    type: array
+    minItems: 1
+    items:
+      type: integer
+  modality_ids:
+    type: array
+    minItems: 1
+    items:
+      type: integer
+  timezone:
+    type: string
+    default: America/Sao_Paulo
+  language:
+    type: string
+    default: pt-BR
+  logo_path:
+    type:
+      - string
+      - 'null'
+    description: Backend-managed logo path or reference. Private storage internals are not exposed.
+  primary_color:
+    type: string
+    pattern: '^#[0-9A-Fa-f]{6}$'
+    default: '#1D4ED8'
+  secondary_color:
+    type: string
+    pattern: '^#[0-9A-Fa-f]{6}$'
+    default: '#F59E0B'
