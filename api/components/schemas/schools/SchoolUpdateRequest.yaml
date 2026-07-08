@@ -20,14 +20,17 @@ properties:
       - 0
   name:
     type: string
+    maxLength: 255
   trade_name:
     type:
       - string
       - 'null'
+    maxLength: 255
   legal_name:
     type:
       - string
       - 'null'
+    maxLength: 255
   document:
     type: string
     readOnly: true
@@ -35,6 +38,7 @@ properties:
   email:
     type: string
     format: email
+    maxLength: 100
     description: Unique school email. Uniqueness is case-insensitive, excludes the current school, and includes inactive and soft-deleted schools.
   phone:
     type:
@@ -46,10 +50,12 @@ properties:
       - string
       - 'null'
     format: uri
+    maxLength: 100
   description:
     type:
       - string
       - 'null'
+    maxLength: 500
   address:
     $ref: ../addresses/AddressInput.yaml
   administrative_type_id:
