@@ -9,12 +9,13 @@ addressable record. In this slice, the only approved owner is `School`.
 
 - `id`: UUID public identifier.
 - `street`: Required string.
-- `number`: Required string containing digits only.
+- `number`: Required digit-only API string that must fit unsigned integer
+  storage.
 - `complement`: Optional nullable string.
 - `neighborhood`: Required string.
 - `city`: Required string.
-- `state`: Required string.
-- `zip_code`: Required string containing digits only.
+- `state`: Required string, maximum 4 characters.
+- `zip_code`: Required string containing digits only, maximum 12 characters.
 - `country`: Optional nullable string; remains absent/null when omitted.
 - `school_id`: Required tenant column for school-owned address rows in this
   slice. It stores the owning school's internal identifier and is used for
@@ -38,6 +39,10 @@ addressable record. In this slice, the only approved owner is `School`.
   required when an address object is submitted.
 - `number` and `zip_code` accept digits only; letters, spaces, punctuation, and
   symbols are rejected.
+- `number` must fit unsigned integer storage; API responses still expose it as
+  a string for compatibility.
+- `state` is limited to 4 characters and `zip_code` is limited to 12
+  characters.
 - `complement` and `country` are optional.
 - Unknown address fields are rejected.
 - Legacy `address_summary` is rejected immediately after the structured

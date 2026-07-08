@@ -77,12 +77,12 @@ must be case-insensitive.
 | Field | Required | Rules |
 |-------|----------|-------|
 | `address.street` | Yes | String |
-| `address.number` | Yes | Digits-only string |
-| `address.complement` | No | String or null |
+| `address.number` | Yes | Digits-only string that fits unsigned integer storage |
+| `address.complement` | No | String or null, maximum 255 characters |
 | `address.neighborhood` | Yes | String |
 | `address.city` | Yes | String |
-| `address.state` | Yes | String |
-| `address.zip_code` | Yes | Digits-only string |
+| `address.state` | Yes | String, maximum 4 characters |
+| `address.zip_code` | Yes | Digits-only string, maximum 12 characters |
 | `address.country` | No | String or null |
 
 ### Institutional Fields

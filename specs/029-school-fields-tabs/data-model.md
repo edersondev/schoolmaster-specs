@@ -64,12 +64,13 @@ session context, and school-owned records.
 **Fields**:
 
 - `street`: Required string.
-- `number`: Required digits-only string.
-- `complement`: Optional string.
+- `number`: Required digit-only API string that must fit unsigned integer
+  storage.
+- `complement`: Optional string, maximum 255 characters.
 - `neighborhood`: Required string.
 - `city`: Required string.
-- `state`: Required string.
-- `zipCode`: Required digits-only string.
+- `state`: Required string, maximum 4 characters.
+- `zipCode`: Required digits-only string, maximum 12 characters.
 - `country`: Optional string.
 
 **Rules**:

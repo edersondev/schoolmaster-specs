@@ -92,7 +92,8 @@ preserves current school management permissions and response envelopes.
 ## Decision: Represent Number and Zip Code as Digit-Only Strings
 
 The API contract should represent `number` and `zip_code` as strings with a
-digits-only constraint.
+digits-only constraint. Backend storage may use narrower physical types when
+the response remains compatible with the documented API string shape.
 
 **Rationale**: The user requires these values to accept only numbers. Strings
 with numeric patterns preserve leading zeros, avoid integer range issues, and
@@ -100,8 +101,8 @@ still allow validation to reject letters, spaces, and punctuation.
 
 **Alternatives considered**:
 
-- Integer fields: rejected because zip codes and address numbers can contain
-  leading zeros and should not be used for arithmetic.
+- Integer API fields: rejected because zip codes and address numbers can
+  contain leading zeros and should not be used for arithmetic by consumers.
 - Free-text strings: rejected because they do not enforce the clarified
   numeric-only requirement.
 

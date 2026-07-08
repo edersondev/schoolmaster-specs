@@ -275,6 +275,7 @@ Task: "T049 Add migrated response shape feature tests"
 - Keep contract work before backend exposure.
 - Do not create standalone address endpoints.
 - Do not approve non-school address owners in this slice.
-- Keep `number` and `zip_code` as digit-only strings, not integers.
+- Keep public API `number` and `zip_code` as digit-only strings, even if
+  storage uses narrower physical types.
 - Treat omitted `address` and explicit `address: null` differently.
 - Development data reset allows dropping legacy summaries without preservation.

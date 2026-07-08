@@ -56,6 +56,7 @@ Address:
     number:
       type: string
       pattern: '^[0-9]+$'
+      maxLength: 10
     complement:
       type:
         - string
@@ -66,9 +67,11 @@ Address:
       type: string
     state:
       type: string
+      maxLength: 4
     zip_code:
       type: string
       pattern: '^[0-9]+$'
+      maxLength: 12
     country:
       type:
         - string
@@ -76,7 +79,9 @@ Address:
 ```
 
 Request schemas may use an input variant without `id` but must preserve the
-same required and optional address fields.
+same required and optional address fields. The public API keeps `number` and
+`zip_code` as digit-only strings; backend storage may use narrower physical
+types as long as responses preserve the documented string shape.
 
 ## School Schema Changes
 

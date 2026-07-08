@@ -17,19 +17,24 @@ properties:
   number:
     type: string
     pattern: '^[0-9]+$'
+    maxLength: 10
+    description: Digit-only address number. API returns a string, while storage uses unsigned integer.
   complement:
     type:
       - string
       - 'null'
+    maxLength: 255
   neighborhood:
     type: string
   city:
     type: string
   state:
     type: string
+    maxLength: 4
   zip_code:
     type: string
     pattern: '^[0-9]+$'
+    maxLength: 12
   country:
     type:
       - string
