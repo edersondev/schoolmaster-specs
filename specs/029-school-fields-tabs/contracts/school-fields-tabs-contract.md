@@ -156,7 +156,8 @@ needed by the frontend:
 - `modality_ids`
 - `timezone`
 - `language`
-- `logo_path` or equivalent documented returned logo reference
+- `logo_path`
+- `logo_url`
 - `primary_color`
 - `secondary_color`
 

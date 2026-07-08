@@ -142,7 +142,7 @@ Product, frontend, and backend teams use one synchronized school contract that d
 - **FR-008**: The Institutional group MUST require administrative type, legal nature, management type, pedagogical approach, at least one education level, and at least one modality.
 - **FR-009**: The Institutional group MUST use numeric integer IDs from the documented lookup option sets for administrative type, legal nature, management type, pedagogical approach, education levels, and modalities.
 - **FR-010**: The system MUST default blank timezone to `America/Sao_Paulo` and blank language to `pt-BR`.
-- **FR-011**: The Branding group MUST include logo file upload behavior, `logo_path` or equivalent returned logo reference, `primary_color`, and `secondary_color`.
+- **FR-011**: The Branding group MUST include logo file upload behavior, backend-managed `logo_path`, browser-ready `logo_url`, `primary_color`, and `secondary_color`.
 - **FR-012**: The Branding group MUST create a school with no logo when no logo file is supplied, store a submitted valid logo through documented upload behavior, delete the old logo file after successful replacement, and default blank primary color to `#1D4ED8` and blank secondary color to `#F59E0B`.
 - **FR-012a**: The frontend MUST render `primary_color` and `secondary_color` with Element Plus `ElColorPicker` controls configured for non-alpha `#RRGGBB` hex values.
 - **FR-013**: The system MUST preserve entered values across tabs when validation fails, authorization changes, or a recoverable submit error occurs.

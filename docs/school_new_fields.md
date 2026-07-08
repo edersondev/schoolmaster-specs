@@ -62,9 +62,9 @@ Branding
 
    Field              Required    Description
   ━━━━━━━━━━━━━━━━━  ━━━━━━━━━━  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-   logo_path                no    Logo file/path; sent as null when blank.
+   logo_path                no    Backend-managed logo file/path; sent as null when blank.
+   logo_url                 no    Browser-ready logo URL returned by backend; null when blank.
   ─────────────────  ──────────  ──────────────────────────────────────────
    primary_color            no    Main brand color, default #1D4ED8.
   ─────────────────  ──────────  ──────────────────────────────────────────
    secondary_color          no    Secondary brand color, default #F59E0B.
-

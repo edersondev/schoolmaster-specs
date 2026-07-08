@@ -17,6 +17,7 @@ required:
   - timezone
   - language
   - logo_path
+  - logo_url
   - primary_color
   - secondary_color
 properties:
@@ -102,6 +103,12 @@ properties:
       - string
       - 'null'
     description: Backend-managed logo path or reference. Private storage internals are not exposed.
+  logo_url:
+    type:
+      - string
+      - 'null'
+    format: uri
+    description: Browser-ready URL for rendering the stored school logo. Null when no logo is stored.
   primary_color:
     type: string
     pattern: '^#[0-9A-Fa-f]{6}$'
