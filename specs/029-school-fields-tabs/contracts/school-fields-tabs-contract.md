@@ -12,6 +12,7 @@ The feature includes:
 - `cnpj` to `document` field rename.
 - Numeric school status values.
 - Required Address group.
+- Authenticated CEP lookup for Address prefill.
 - Institutional lookup/reference option operations.
 - Branding colors and logo upload/replacement behavior.
 - Tabbed frontend form grouping and validation routing.
@@ -33,6 +34,7 @@ The feature excludes:
 | `createSchool` | `POST /api/v1/schools` | School create with JSON payload or multipart payload when `logo_file` is present |
 | `getSchool` | `GET /api/v1/schools/{school}` | School edit load/detail with expanded School shape |
 | `updateSchool` | `PATCH /api/v1/schools/{school}` | School edit with JSON payload or multipart payload when `logo_file` is present; `document` immutable |
+| `getAddressLookupByZipCode` | `GET /api/v1/address-lookups/{zipCode}` | Authenticated ViaCEP lookup for Address tab prefill; no data persistence |
 | `listSchoolAdministrativeTypes` | `GET /api/v1/school-lookups/administrative-types` | Institutional administrative type options |
 | `listSchoolLegalNatures` | `GET /api/v1/school-lookups/legal-natures` | Institutional legal nature options |
 | `listSchoolManagementTypes` | `GET /api/v1/school-lookups/management-types` | Institutional management type options |
@@ -95,6 +97,17 @@ must be case-insensitive.
 | `modality_ids` | Yes | Non-empty array of approved modality IDs |
 | `timezone` | No | Defaults to `America/Sao_Paulo` |
 | `language` | No | Defaults to `pt-BR` |
+
+### Address Lookup Contract
+
+`GET /api/v1/address-lookups/{zipCode}` accepts masked or unmasked Brazilian
+CEP values, requires authentication but not resolved school context, and
+returns normalized ViaCEP data in the standard success envelope. Successful
+lookups may be cached for 24 hours. Invalid CEP format returns field-level
+validation for `zip_code`; a valid missing CEP returns not found; ViaCEP
+timeout, connection failure, invalid upstream response, or upstream server
+failure returns `temporary_unavailable`. The operation must not create or
+update persisted address records.
 
 ### Branding Fields
 

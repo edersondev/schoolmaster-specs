@@ -1,0 +1,38 @@
+get:
+  tags:
+    - Address Lookups
+  summary: Lookup Brazilian address by CEP
+  description: Returns normalized address fields from ViaCEP for form prefill. This operation does not persist address data.
+  operationId: getAddressLookupByZipCode
+  parameters:
+    - name: zipCode
+      in: path
+      required: true
+      schema:
+        type: string
+        pattern: '^[0-9]{5}-?[0-9]{3}$'
+      description: Brazilian CEP with or without mask.
+  responses:
+    '200':
+      description: Address found
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: ../../components/schemas/common/SuccessEnvelope.yaml
+              - type: object
+                properties:
+                  data:
+                    $ref: ../../components/schemas/addresses/PostalAddressLookup.yaml
+    '401':
+      $ref: ../../components/responses/auth/Unauthorized.yaml
+    '404':
+      $ref: ../../components/responses/common/NotFound.yaml
+    '422':
+      $ref: ../../components/responses/common/ValidationError.yaml
+    '503':
+      description: ViaCEP lookup is temporarily unavailable
+      content:
+        application/json:
+          schema:
+            $ref: ../../components/schemas/common/ErrorEnvelope.yaml

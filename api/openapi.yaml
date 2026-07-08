@@ -21,6 +21,8 @@ tags:
     description: Platform-level school tenant provisioning and review, including the active tabbed school profile contract.
   - name: School Lookups
     description: Read-only Institutional option lists for school profile forms.
+  - name: Address Lookups
+    description: Authenticated external CEP lookup helpers for address form prefill.
   - name: Users
     description: Tenant-aware user account administration.
   - name: Roles
@@ -112,6 +114,8 @@ paths:
     $ref: paths/school-lookups/education-levels.yaml
   /api/v1/school-lookups/modalities:
     $ref: paths/school-lookups/modalities.yaml
+  /api/v1/address-lookups/{zipCode}:
+    $ref: paths/address-lookups/address-lookup.yaml
   /api/v1/users:
     $ref: paths/users/index.yaml
   /api/v1/users/{userId}:

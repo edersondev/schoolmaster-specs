@@ -1,0 +1,77 @@
+type: object
+additionalProperties: false
+required:
+  - zip_code
+  - formatted_zip_code
+  - street
+  - complement
+  - neighborhood
+  - city
+  - state
+  - state_name
+  - region
+  - ibge_code
+  - gia_code
+  - area_code
+  - siafi_code
+  - country
+  - source
+properties:
+  zip_code:
+    type: string
+    pattern: '^[0-9]{8}$'
+  formatted_zip_code:
+    type: string
+    pattern: '^[0-9]{5}-[0-9]{3}$'
+  street:
+    type:
+      - string
+      - 'null'
+  complement:
+    type:
+      - string
+      - 'null'
+  neighborhood:
+    type:
+      - string
+      - 'null'
+  city:
+    type:
+      - string
+      - 'null'
+  state:
+    type:
+      - string
+      - 'null'
+  state_name:
+    type:
+      - string
+      - 'null'
+  region:
+    type:
+      - string
+      - 'null'
+  ibge_code:
+    type:
+      - string
+      - 'null'
+  gia_code:
+    type:
+      - string
+      - 'null'
+  area_code:
+    type:
+      - string
+      - 'null'
+  siafi_code:
+    type:
+      - string
+      - 'null'
+  country:
+    type: string
+    enum:
+      - BR
+  source:
+    type: string
+    enum:
+      - viacep
