@@ -42,9 +42,9 @@
 - [X] T020 Add school list filter service shell for authorized Eloquent query composition in `schoolmaster-backend/app/Services/School/SchoolListFilterService.php`
 - [X] T021 Update school list request validation shell for single-value filters, numeric status, lookup IDs, and normalized code fields in `schoolmaster-backend/app/Http/Requests/Api/V1/SchoolListRequest.php`
 - [X] T022 Update school list controller to route validated filters through the filter service and existing resource pagination in `schoolmaster-backend/app/Http/Controllers/Api/V1/SchoolController.php`
-- [ ] T023 [P] Add frontend school list filter types and query parameter names in `schoolmaster-frontend/src/modules/schools/types/schoolListFilters.ts`
-- [ ] T024 [P] Add frontend school list service shell for documented query serialization in `schoolmaster-frontend/src/modules/schools/services/schoolListService.ts`
-- [ ] T025 [P] Add frontend route-query filter composable shell in `schoolmaster-frontend/src/modules/schools/composables/useSchoolListFilters.ts`
+- [X] T023 [P] Add frontend school list filter query names and parsing rules in `schoolmaster-frontend/src/composables/admin-system/useAdminListQuery.js`
+- [X] T024 [P] Extend frontend school list service query serialization for documented filter names in `schoolmaster-frontend/src/services/admin-system/administration-service.js`
+- [X] T025 [P] Extend frontend school list reset/query helpers for school filters in `schoolmaster-frontend/src/composables/admin-system/useAdministrationResourceList.js`
 
 **Checkpoint**: Foundation ready. User story implementation can now begin.
 
@@ -62,8 +62,8 @@
 - [X] T027 [P] [US1] Add backend feature tests for status exact filtering, INEP exact filtering, document exact filtering, and no `cnpj` alias in `schoolmaster-backend/tests/Feature/School/SchoolListIdentityFiltersTest.php`
 - [X] T028 [P] [US1] Add backend feature tests for name, email, city, and state contains matching with case and accent normalization in `schoolmaster-backend/tests/Feature/School/SchoolListTextFiltersTest.php`
 - [X] T029 [P] [US1] Add backend feature tests for combined identity/contact/location filters using AND semantics and authorized visibility in `schoolmaster-backend/tests/Feature/School/SchoolListCombinedFiltersTest.php`
-- [ ] T030 [P] [US1] Add frontend service tests for status, INEP, document, name, email, city, and state query serialization with no `cnpj` parameter in `schoolmaster-frontend/tests/unit/schools/schoolListService.filters.spec.ts`
-- [ ] T031 [P] [US1] Add frontend list filter composable tests for applying, clearing, and restoring identity/contact/location filters from URL query state in `schoolmaster-frontend/tests/unit/schools/useSchoolListFilters.spec.ts`
+- [X] T030 [P] [US1] Add frontend service tests for status, INEP, document, name, email, city, and state query serialization with no `cnpj` parameter in `schoolmaster-frontend/tests/unit/admin-system/administration/services/schools-list-filters.spec.js`
+- [X] T031 [P] [US1] Add frontend list query tests for applying, clearing, and restoring identity/contact/location filters from URL query state in `schoolmaster-frontend/tests/unit/admin-system/administration/composables/useAdminListQuery.school-filters.spec.js`
 
 ### Implementation for User Story 1
 
@@ -72,10 +72,10 @@
 - [X] T034 [US1] Implement backend case-insensitive and accent-insensitive contains matching for name, email, city, and state filters in `schoolmaster-backend/app/Services/School/SchoolListFilterService.php`
 - [X] T035 [US1] Implement backend validation for unsupported status, malformed code filters, and rejected `cnpj` query input in `schoolmaster-backend/app/Http/Requests/Api/V1/SchoolListRequest.php`
 - [X] T036 [US1] Wire list controller to preserve existing pagination, sorting, authorization, resource output, and validation envelopes while applying identity/contact/location filters in `schoolmaster-backend/app/Http/Controllers/Api/V1/SchoolController.php`
-- [ ] T037 [US1] Implement frontend service serialization for status, INEP, document, name, email, city, and state filters in `schoolmaster-frontend/src/modules/schools/services/schoolListService.ts`
-- [ ] T038 [US1] Implement frontend URL query synchronization for identity/contact/location filters, clear-one, clear-all, and page reset in `schoolmaster-frontend/src/modules/schools/composables/useSchoolListFilters.ts`
-- [ ] T039 [US1] Implement frontend filter controls for status, INEP code, CNPJ label mapped to `document`, name, email, city, state, and clear actions in `schoolmaster-frontend/src/modules/schools/components/SchoolListFilters.vue`
-- [ ] T040 [US1] Integrate identity/contact/location filters into the Schools list route while preserving loading, validation, empty, denied, and pagination states in `schoolmaster-frontend/src/modules/schools/routes/SchoolListPage.vue`
+- [X] T037 [US1] Implement frontend service serialization for status, INEP, document, name, email, city, and state filters in `schoolmaster-frontend/src/services/admin-system/administration-service.js`
+- [X] T038 [US1] Implement frontend URL query synchronization for identity/contact/location filters, clear-one, clear-all, and page reset in `schoolmaster-frontend/src/composables/admin-system/useAdminListQuery.js`
+- [X] T039 [US1] Implement frontend filter controls for status, INEP code, CNPJ label mapped to `document`, name, email, city, state, and clear actions in `schoolmaster-frontend/src/components/admin-system/schools/SchoolFilters.vue`
+- [X] T040 [US1] Integrate identity/contact/location filters into the live Schools list route while preserving loading, validation, empty, denied, and pagination states in `schoolmaster-frontend/src/pages/admin-system/schools/SchoolsListPage.vue`
 
 **Checkpoint**: User Story 1 is independently testable as the MVP.
 
@@ -91,17 +91,17 @@
 
 - [X] T041 [P] [US2] Run Redocly validation for administrative type, legal nature, management type, and pedagogical approach filter parameters in `schoolmaster-specs/api/openapi.yaml`
 - [X] T042 [P] [US2] Add backend feature tests for institutional exact filtering, approved lookup validation, one-value-per-filter rejection, and AND semantics with identity filters in `schoolmaster-backend/tests/Feature/School/SchoolListInstitutionalFiltersTest.php`
-- [ ] T043 [P] [US2] Add frontend service tests for institutional query serialization and single-value controls in `schoolmaster-frontend/tests/unit/schools/schoolListService.institutional.spec.ts`
-- [ ] T044 [P] [US2] Add frontend component tests for lookup option loading, unavailable lookup state, invalid URL lookup feedback, and clearing institutional filters in `schoolmaster-frontend/tests/unit/schools/SchoolListInstitutionalFilters.spec.ts`
+- [X] T043 [P] [US2] Add frontend service tests for institutional query serialization and single-value controls in `schoolmaster-frontend/tests/unit/admin-system/administration/services/schools-list-institutional-filters.spec.js`
+- [X] T044 [P] [US2] Add frontend component tests for lookup option loading, unavailable lookup state, invalid URL lookup feedback, and clearing institutional filters in `schoolmaster-frontend/tests/unit/admin-system/administration/components/SchoolFilters.institutional.spec.js`
 
 ### Implementation for User Story 2
 
 - [X] T045 [US2] Implement backend validation for administrative type, legal nature, management type, and pedagogical approach single-value lookup filters in `schoolmaster-backend/app/Http/Requests/Api/V1/SchoolListRequest.php`
 - [X] T046 [US2] Implement backend exact institutional filtering against school reference fields in `schoolmaster-backend/app/Services/School/SchoolListFilterService.php`
 - [X] T047 [US2] Ensure institutional filters never bypass existing school list authorization or tenant visibility in `schoolmaster-backend/app/Policies/SchoolPolicy.php`
-- [ ] T048 [US2] Implement frontend institutional option loading for school list filters using approved lookup sources in `schoolmaster-frontend/src/modules/schools/services/schoolLookupService.ts`
-- [ ] T049 [US2] Implement frontend single-value administrative type, legal nature, management type, and pedagogical approach filter controls in `schoolmaster-frontend/src/modules/schools/components/SchoolListFilters.vue`
-- [ ] T050 [US2] Implement frontend unavailable lookup and invalid URL lookup feedback without applying hidden institutional filters in `schoolmaster-frontend/src/modules/schools/composables/useSchoolListFilters.ts`
+- [X] T048 [US2] Implement frontend institutional option loading for school list filters using approved lookup sources in `schoolmaster-frontend/src/modules/schools/services/schoolService.js`
+- [X] T049 [US2] Implement frontend single-value administrative type, legal nature, management type, and pedagogical approach filter controls in `schoolmaster-frontend/src/components/admin-system/schools/SchoolFilters.vue`
+- [X] T050 [US2] Implement frontend unavailable lookup and invalid URL lookup feedback without applying hidden institutional filters in `schoolmaster-frontend/src/pages/admin-system/schools/SchoolsListPage.vue`
 
 **Checkpoint**: User Stories 1 and 2 both work independently.
 
@@ -116,17 +116,17 @@
 ### Tests for User Story 3
 
 - [X] T051 [P] [US3] Add backend feature tests for filtered pagination shape, filtered page metadata, sorted filtered results, no-result paginated responses, unauthorized visibility, and forbidden responses in `schoolmaster-backend/tests/Feature/School/SchoolListBehaviorPreservationTest.php`
-- [ ] T052 [P] [US3] Add frontend route tests for page reset on filter changes, sort preservation, refresh initialization, shared URL initialization, empty state, and clear-all behavior in `schoolmaster-frontend/tests/unit/schools/SchoolListRouteState.spec.ts`
-- [ ] T053 [P] [US3] Add frontend contract mapping tests proving list filters submit only documented query names and preserve existing paginated response handling in `schoolmaster-frontend/tests/unit/schools/schoolListContractMapping.spec.ts`
+- [X] T052 [P] [US3] Add frontend route tests for page reset on filter changes, sort preservation, refresh initialization, shared URL initialization, empty state, and clear-all behavior in `schoolmaster-frontend/tests/unit/admin-system/administration/pages/SchoolsListPage.filters.spec.js`
+- [X] T053 [P] [US3] Add frontend contract mapping tests proving list filters submit only documented query names and preserve existing paginated response handling in `schoolmaster-frontend/tests/unit/admin-system/administration/contracts/schools-list-filters.contract.spec.js`
 
 ### Implementation for User Story 3
 
 - [X] T054 [US3] Ensure backend list filtering composes after existing authorization, tenant visibility, and lifecycle visibility, then applies sorting, pagination, and page metadata to the filtered result set in `schoolmaster-backend/app/Services/School/SchoolListFilterService.php`
 - [X] T055 [US3] Ensure backend list responses keep existing paginated success envelope, School resource shape, validation error envelope, unauthorized response, and forbidden response in `schoolmaster-backend/app/Http/Resources/SchoolResource.php`
-- [ ] T056 [US3] Implement frontend page reset on filter changes and sort preservation in `schoolmaster-frontend/src/modules/schools/composables/useSchoolListFilters.ts`
-- [ ] T057 [US3] Implement frontend initialization from bookmarked/shared filtered URLs and validation feedback for manipulated URL values in `schoolmaster-frontend/src/modules/schools/routes/SchoolListPage.vue`
-- [ ] T058 [US3] Implement frontend empty result state that preserves active URL filters and provides clear filters action in `schoolmaster-frontend/src/modules/schools/components/SchoolListEmptyState.vue`
-- [ ] T059 [US3] Update frontend list route actions to preserve existing row actions, pagination controls, loading state, denied state, and not-found behavior while filters are active in `schoolmaster-frontend/src/modules/schools/routes/SchoolListPage.vue`
+- [X] T056 [US3] Implement frontend page reset on filter changes and sort preservation in `schoolmaster-frontend/src/composables/admin-system/useAdminListQuery.js`
+- [X] T057 [US3] Implement frontend initialization from bookmarked/shared filtered URLs and validation feedback for manipulated URL values in `schoolmaster-frontend/src/pages/admin-system/schools/SchoolsListPage.vue`
+- [X] T058 [US3] Implement frontend filtered-empty result state that preserves active URL filters and provides clear filters action through `schoolmaster-frontend/src/components/ui/admin/AdminFeedbackState.vue`
+- [X] T059 [US3] Update frontend list route actions to preserve existing row actions, pagination controls, loading state, denied state, and not-found behavior while filters are active in `schoolmaster-frontend/src/pages/admin-system/schools/SchoolsListPage.vue`
 
 **Checkpoint**: All user stories are independently functional and contract-aligned.
 
@@ -138,10 +138,10 @@
 
 - [X] T060 [P] Run OpenAPI lint and record output in `schoolmaster-specs/specs/030-school-list-filters/quickstart.md`
 - [X] T061 [P] Run backend PHPUnit school list filter tests and record output in `schoolmaster-specs/specs/030-school-list-filters/quickstart.md`
-- [ ] T062 [P] Run frontend Vitest school list tests and record output in `schoolmaster-specs/specs/030-school-list-filters/quickstart.md`
-- [ ] T063 [P] Run frontend production build and record output in `schoolmaster-specs/specs/030-school-list-filters/quickstart.md`
+- [X] T062 [P] Run frontend Vitest school list tests and record output in `schoolmaster-specs/specs/030-school-list-filters/quickstart.md`
+- [X] T063 [P] Run frontend production build and record output in `schoolmaster-specs/specs/030-school-list-filters/quickstart.md`
 - [X] T064 Review backend tenant isolation, validation errors, status handling, lookup handling, and cross-tenant existence leakage for list filters in `schoolmaster-backend/app/Services/School/SchoolListFilterService.php`
-- [ ] T065 Review frontend responsive layout, keyboard flow, filter clearing, query-string behavior, and text fit for filter controls in `schoolmaster-frontend/src/modules/schools/components/SchoolListFilters.vue`
+- [X] T065 Review frontend responsive layout, keyboard flow, filter clearing, query-string behavior, and text fit for filter controls in `schoolmaster-frontend/src/components/admin-system/schools/SchoolFilters.vue`
 - [X] T066 Update implementation evidence, manual notes, and release gate status in `schoolmaster-specs/specs/030-school-list-filters/quickstart.md`
 - [X] T067 Verify no backend, frontend, or OpenAPI path submits or documents a `cnpj` query parameter for school list filtering in `schoolmaster-specs/specs/030-school-list-filters/quickstart.md`
 - [ ] T068 Run a representative 100-record Schools list filter timing check and record whether any single requested filter reduces to the intended result set in under 10 seconds in `schoolmaster-specs/specs/030-school-list-filters/quickstart.md`
@@ -197,12 +197,12 @@ Task T026: Redocly validation for identity/contact/location filter parameters
 Task T027: Backend exact identifier filter tests
 Task T028: Backend normalized text filter tests
 Task T030: Frontend service query serialization tests
-Task T031: Frontend route-query composable tests
+Task T031: Frontend admin route-query tests
 
 # Frontend implementation can proceed after query serialization types are stable:
-Task T037: schoolListService.ts
-Task T038: useSchoolListFilters.ts
-Task T039: SchoolListFilters.vue
+Task T037: administration-service.js list parameter serialization
+Task T038: useAdminListQuery.js
+Task T039: SchoolFilters.vue
 ```
 
 ## Parallel Example: User Story 2
@@ -217,8 +217,8 @@ Task T044: Frontend institutional filter component tests
 # Backend and frontend implementation can proceed after lookup names are stable:
 Task T045: SchoolListRequest.php
 Task T046: SchoolListFilterService.php
-Task T048: schoolLookupService.ts
-Task T049: SchoolListFilters.vue
+Task T048: modules/schools/services/schoolService.js lookup loading
+Task T049: SchoolFilters.vue
 ```
 
 ## Parallel Example: User Story 3
@@ -230,9 +230,9 @@ Task T052: Frontend route state tests
 Task T053: Frontend contract mapping tests
 
 # UI behavior can be implemented while backend response shape remains unchanged:
-Task T056: useSchoolListFilters.ts
-Task T057: SchoolListPage.vue
-Task T058: SchoolListEmptyState.vue
+Task T056: useAdminListQuery.js
+Task T057: SchoolsListPage.vue
+Task T058: AdminFeedbackState.vue filtered-empty integration
 ```
 
 ---

@@ -8,7 +8,8 @@ filtering across `schoolmaster-specs`, `schoolmaster-backend`, and
 
 ## 1. Specification Repository
 
-1. Confirm active feature is `specs/030-school-list-filters`.
+1. Confirm active feature is `specs/specs/030-school-list-filters` in
+   `.specify/feature.json`.
 2. Update OpenAPI before implementation:
    - `GET /api/v1/schools` documents query filters for `status`,
      `inep_code`, `document`, `name`, `email`, `city`, `state`,
@@ -70,6 +71,14 @@ php artisan test --filter=School
 
 Implement frontend after backend contract behavior is available or mocked from
 the approved OpenAPI shape.
+
+Implementation should extend the live JavaScript admin-system list stack:
+`src/pages/admin-system/schools/SchoolsListPage.vue`,
+`src/components/admin-system/schools/SchoolFilters.vue`,
+`src/composables/admin-system/useAdminListQuery.js`,
+`src/composables/admin-system/useAdministrationResourceList.js`, and
+`src/services/admin-system/administration-service.js`. Do not create a parallel
+unused Schools list route.
 
 Manual checks:
 
@@ -174,10 +183,50 @@ Backend review notes:
 - Existing paginated envelope, School resource shape, validation envelope,
   unauthorized response, and forbidden response behavior are preserved.
 
+Frontend Vitest:
+
+```text
+$ npm run test:unit -- school
+
+Test Files: 30 passed (30)
+Tests: 73 passed (73)
+```
+
+Frontend production build:
+
+```text
+$ npm run build
+
+vite v8.0.16 building client environment for production...
+✓ 2089 modules transformed.
+✓ built in 1.38s
+
+Warnings: existing Rolldown INVALID_ANNOTATION warnings from
+node_modules/@vueuse/core pure comments and existing chunk-size warning for the
+main bundle.
+```
+
+Frontend review notes:
+
+- Schools list filters now serialize `status`, `inep_code`, `document`,
+  `name`, `email`, `city`, `state`, `administrative_type_id`,
+  `legal_nature_id`, `management_type_id`, and
+  `pedagogical_approach_id`.
+- No frontend list code serializes a `cnpj` query parameter; the UI label CNPJ
+  maps to the canonical `document` query key.
+- Active filters are parsed from and serialized back to the URL query string.
+  Filter changes reset `page` to 1 and preserve allowed school list sort
+  values.
+- Institutional lookup options load from the approved school lookup service.
+  Invalid or unavailable institutional URL filters show warning feedback and
+  are not submitted as hidden list filters.
+- The existing filtered-empty state preserves active filters and provides the
+  existing clear-filters action.
+- Responsive/keyboard review covered the Tailwind grid layout, Element Plus
+  labeled form controls, clearable filter inputs/selects, reset action, and
+  text fit for the added controls.
+
 Pending evidence:
 
-- Frontend Vitest school list filter coverage.
-- Frontend production build.
-- Manual frontend URL query persistence, empty-state, and clear behavior notes.
 - Representative 100-record timing check.
 - Representative administrator filter-location check.

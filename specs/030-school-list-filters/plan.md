@@ -48,8 +48,10 @@ tests.
   relationships.
 - PASS: Frontend design uses Vue 3 Composition API, Vue Router query state,
   existing Pinia shell/session state only, Axios service modules, Tailwind CSS,
-  feature-local school list components/composables, and service-isolated API
-  access.
+  existing admin-system list page/filter/query components, and service-isolated
+  API access. The active Schools list route currently uses
+  `src/pages/admin-system/schools/SchoolsListPage.vue`; implementation must
+  extend that live route instead of creating a parallel unused list route.
 - PASS: MySQL remains authoritative; School remains the tenant root; filters
   reduce only the already-authorized result set; no new cross-tenant path is
   introduced; soft-delete and lifecycle behavior are unchanged.
@@ -97,15 +99,15 @@ tests/
 
 # schoolmaster-frontend (Vue 3 SPA)
 src/
-├── modules/schools/
-│   ├── components/
-│   ├── composables/
-│   ├── routes/
-│   ├── services/
-│   └── types/
-├── router/
+├── components/admin-system/schools/
+├── composables/admin-system/
+├── modules/schools/              # existing create/edit form + lookup helpers
+├── pages/admin-system/schools/
+├── services/admin-system/
+├── router/modules/
 └── stores/
 tests/
+├── unit/admin-system/administration/
 └── unit/schools/
 
 # schoolmaster-specs
@@ -119,7 +121,11 @@ specs/030-school-list-filters/
 **Structure Decision**: Keep the specifications repository as the source of
 truth for the query-filter contract and design artifacts. Backend and frontend
 implementations must use the shared `030-school-list-filters` feature
-identifier and consume only documented query parameter names.
+identifier and consume only documented query parameter names. Frontend list
+implementation extends the current JavaScript admin-system list stack
+(`SchoolsListPage.vue`, `SchoolFilters.vue`, `useAdminListQuery.js`, and
+`services/admin-system/schools.js`) so filter controls are wired to the route
+already registered as `schoolsList`.
 
 ## Phase 0: Research
 
