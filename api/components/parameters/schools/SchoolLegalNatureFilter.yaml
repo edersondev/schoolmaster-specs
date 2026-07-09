@@ -1,0 +1,6 @@
+name: legal_nature_id
+in: query
+description: Filter schools by one approved legal nature option identifier.
+schema:
+  type: integer
+  minimum: 1

@@ -1,0 +1,7 @@
+name: email
+in: query
+description: Filter schools whose email contains this text, ignoring casing and accent marks.
+schema:
+  type: string
+  minLength: 1
+  maxLength: 255

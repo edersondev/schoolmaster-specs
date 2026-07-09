@@ -1,0 +1,6 @@
+name: pedagogical_approach_id
+in: query
+description: Filter schools by one approved pedagogical approach option identifier.
+schema:
+  type: integer
+  minimum: 1

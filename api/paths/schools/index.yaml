@@ -6,8 +6,18 @@ get:
   parameters:
     - $ref: ../../components/parameters/common/Page.yaml
     - $ref: ../../components/parameters/common/PerPage.yaml
-    - $ref: ../../components/parameters/common/StatusFilter.yaml
     - $ref: ../../components/parameters/common/Sort.yaml
+    - $ref: ../../components/parameters/schools/SchoolStatusFilter.yaml
+    - $ref: ../../components/parameters/schools/SchoolInepCodeFilter.yaml
+    - $ref: ../../components/parameters/schools/SchoolDocumentFilter.yaml
+    - $ref: ../../components/parameters/schools/SchoolNameFilter.yaml
+    - $ref: ../../components/parameters/schools/SchoolEmailFilter.yaml
+    - $ref: ../../components/parameters/schools/SchoolCityFilter.yaml
+    - $ref: ../../components/parameters/schools/SchoolStateFilter.yaml
+    - $ref: ../../components/parameters/schools/SchoolAdministrativeTypeFilter.yaml
+    - $ref: ../../components/parameters/schools/SchoolLegalNatureFilter.yaml
+    - $ref: ../../components/parameters/schools/SchoolManagementTypeFilter.yaml
+    - $ref: ../../components/parameters/schools/SchoolPedagogicalApproachFilter.yaml
   responses:
     '200':
       description: School collection
@@ -26,6 +36,8 @@ get:
       $ref: ../../components/responses/auth/Unauthorized.yaml
     '403':
       $ref: ../../components/responses/common/Forbidden.yaml
+    '422':
+      $ref: ../../components/responses/common/ValidationError.yaml
 post:
   tags:
     - Schools

@@ -131,3 +131,53 @@ Before merge, verify:
 - Vitest school list service/composable/component test output.
 - Manual notes for URL query persistence, no-results state, clear behavior,
   and tenant/authorization checks.
+
+## 7. Implementation Evidence
+
+Captured on 2026-07-09 for the specification and backend portions.
+
+OpenAPI lint:
+
+```text
+$ npx @redocly/cli lint aggregate@v1 schoolmaster-platform@v1
+api/openapi.yaml: validated
+specs/001-schoolmaster-platform/contracts/openapi.yaml: validated
+Result: valid with 4 pre-existing unused-component warnings in the platform contract.
+```
+
+Backend PHPUnit:
+
+```text
+$ docker exec schoolmaster-backend-app-1 php artisan test --compact \
+  tests/Feature/School/SchoolListIdentityFiltersTest.php \
+  tests/Feature/School/SchoolListTextFiltersTest.php \
+  tests/Feature/School/SchoolListCombinedFiltersTest.php \
+  tests/Feature/School/SchoolListInstitutionalFiltersTest.php \
+  tests/Feature/School/SchoolListBehaviorPreservationTest.php
+
+Tests: 12 passed (52 assertions)
+```
+
+Backend review notes:
+
+- Filters are validated by `SchoolListRequest` before service execution.
+- `cnpj` is not accepted as a school list query parameter; `document` remains
+  the only list-filter contract field for CNPJ/document matching.
+- Filtering starts after existing platform `schools.view` authorization and
+  narrows the existing School query before sorting and pagination.
+- Status and institutional filters are single-value exact filters; lookup IDs
+  must exist as active approved lookup options for the correct group.
+- INEP and document inputs are trimmed and normalized to digits before exact
+  comparison.
+- Name, email, city, and state use case-insensitive and accent-insensitive
+  contains matching under the configured MySQL `utf8mb4_unicode_ci` collation.
+- Existing paginated envelope, School resource shape, validation envelope,
+  unauthorized response, and forbidden response behavior are preserved.
+
+Pending evidence:
+
+- Frontend Vitest school list filter coverage.
+- Frontend production build.
+- Manual frontend URL query persistence, empty-state, and clear behavior notes.
+- Representative 100-record timing check.
+- Representative administrator filter-location check.
