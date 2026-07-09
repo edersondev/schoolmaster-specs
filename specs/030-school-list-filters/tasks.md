@@ -115,13 +115,13 @@
 
 ### Tests for User Story 3
 
-- [ ] T051 [P] [US3] Add backend feature tests for filtered pagination shape, sorted filtered results, no-result paginated responses, unauthorized visibility, and forbidden responses in `schoolmaster-backend/tests/Feature/School/SchoolListBehaviorPreservationTest.php`
+- [ ] T051 [P] [US3] Add backend feature tests for filtered pagination shape, filtered page metadata, sorted filtered results, no-result paginated responses, unauthorized visibility, and forbidden responses in `schoolmaster-backend/tests/Feature/School/SchoolListBehaviorPreservationTest.php`
 - [ ] T052 [P] [US3] Add frontend route tests for page reset on filter changes, sort preservation, refresh initialization, shared URL initialization, empty state, and clear-all behavior in `schoolmaster-frontend/tests/unit/schools/SchoolListRouteState.spec.ts`
 - [ ] T053 [P] [US3] Add frontend contract mapping tests proving list filters submit only documented query names and preserve existing paginated response handling in `schoolmaster-frontend/tests/unit/schools/schoolListContractMapping.spec.ts`
 
 ### Implementation for User Story 3
 
-- [ ] T054 [US3] Ensure backend list filtering composes after existing authorization, tenant visibility, lifecycle visibility, pagination, and sorting constraints in `schoolmaster-backend/app/Services/School/SchoolListFilterService.php`
+- [ ] T054 [US3] Ensure backend list filtering composes after existing authorization, tenant visibility, and lifecycle visibility, then applies sorting, pagination, and page metadata to the filtered result set in `schoolmaster-backend/app/Services/School/SchoolListFilterService.php`
 - [ ] T055 [US3] Ensure backend list responses keep existing paginated success envelope, School resource shape, validation error envelope, unauthorized response, and forbidden response in `schoolmaster-backend/app/Http/Resources/SchoolResource.php`
 - [ ] T056 [US3] Implement frontend page reset on filter changes and sort preservation in `schoolmaster-frontend/src/modules/schools/composables/useSchoolListFilters.ts`
 - [ ] T057 [US3] Implement frontend initialization from bookmarked/shared filtered URLs and validation feedback for manipulated URL values in `schoolmaster-frontend/src/modules/schools/routes/SchoolListPage.vue`

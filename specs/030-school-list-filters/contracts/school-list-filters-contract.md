@@ -69,6 +69,9 @@ frontend may label the control as CNPJ, but this feature does not introduce a
 - Applying or changing any filter resets pagination to page 1.
 - Applying or changing filters preserves active sort unless the user changes
   sort.
+- Backend filtering is applied after authorization, tenant visibility, and
+  lifecycle visibility, and before sorting, pagination, and page metadata are
+  calculated.
 - Broad, exact, or manipulated filters must never return schools outside the
   requester's authorized visibility.
 
@@ -149,8 +152,8 @@ Backend repository:
 - PHPUnit verifies case-insensitive and accent-insensitive text matching.
 - PHPUnit verifies invalid status and lookup values return validation errors.
 - PHPUnit verifies filters preserve authorization and tenant visibility.
-- PHPUnit verifies pagination resets are driven by request parameters and
-  response shape remains unchanged.
+- PHPUnit verifies pagination and page metadata are calculated from the
+  filtered result set while response shape remains unchanged.
 
 Frontend repository:
 
