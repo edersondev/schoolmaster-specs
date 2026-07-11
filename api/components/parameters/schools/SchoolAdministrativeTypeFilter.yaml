@@ -1,0 +1,6 @@
+name: administrative_type_id
+in: query
+description: Filter schools by one approved administrative type option identifier.
+schema:
+  type: integer
+  minimum: 1

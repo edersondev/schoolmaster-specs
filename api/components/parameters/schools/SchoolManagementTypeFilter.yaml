@@ -1,0 +1,6 @@
+name: management_type_id
+in: query
+description: Filter schools by one approved management type option identifier.
+schema:
+  type: integer
+  minimum: 1

@@ -1,0 +1,6 @@
+name: status
+in: query
+description: Filter schools by one numeric lifecycle status value. `1` means active and `0` means inactive.
+schema:
+  type: integer
+  enum: [1, 0]

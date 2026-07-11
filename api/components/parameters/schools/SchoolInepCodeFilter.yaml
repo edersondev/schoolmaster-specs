@@ -1,0 +1,8 @@
+name: inep_code
+in: query
+description: Filter schools by exact INEP code after trimming and removing punctuation from the submitted value.
+schema:
+  type: string
+  minLength: 1
+  maxLength: 32
+  example: '35000012'

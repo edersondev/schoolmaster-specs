@@ -63,5 +63,5 @@ When implementing or modifying features:
 - only then implementation repositories should change
 
 <!-- SPECKIT START -->
-Active implementation plan: `specs/029-school-fields-tabs/plan.md`
+Active implementation plan: `specs/030-school-list-filters/plan.md`
 <!-- SPECKIT END -->
