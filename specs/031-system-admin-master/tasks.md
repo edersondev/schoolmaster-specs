@@ -86,35 +86,41 @@ boundary, and frontend route guard foundation are ready for user story work.
 ## Phase 3: User Story 1 - Access Every Authorized Workspace (Priority: P1) MVP
 
 **Goal**: System Administrator can open every released protected route and
-perform protected actions without explicit feature-specific permissions, while
-non-permission prerequisites still block access.
+perform read-only protected actions without explicit feature-specific
+permissions, while non-permission prerequisites still block access. Write and
+lifecycle actions remain blocked until the audit-marker prerequisite in US3 is
+complete.
 
 **Independent Test**: Sign in as System Administrator with no extra
 feature-specific permissions and verify protected navigation, direct route
-access, and protected actions are allowed unless a tenant target, subject
-target, account/session state, release state, or safety prerequisite is missing.
+access, and read-only protected actions are allowed unless a tenant target,
+subject target, account/session state, release state, or safety prerequisite is
+missing. Verify write and lifecycle actions remain blocked until US3 audit
+evidence is available.
 
 ### Tests for User Story 1
 
 - [ ] T030 [P] [US1] Add OpenAPI lint expectation for master-access authorization wording across protected operation groups in `specs/031-system-admin-master/quickstart.md`
-- [ ] T031 [P] [US1] Add backend feature tests proving System Administrator can call every released protected operation group listed in `api/openapi.yaml` without feature-specific permissions in `schoolmaster-backend/tests/Feature/SystemAdminMasterAccess/ProtectedOperationMasterAccessTest.php`
+- [ ] T031 [P] [US1] Add backend feature tests proving System Administrator can call every released protected read-only operation group listed in `api/openapi.yaml` without feature-specific permissions and that protected writes/lifecycle actions remain blocked until master-access audit evidence is available in `schoolmaster-backend/tests/Feature/SystemAdminMasterAccess/ProtectedOperationMasterAccessTest.php`
 - [ ] T032 [P] [US1] Add backend feature tests proving limited non-System Administrator users without required permissions still receive documented permission denial for every released protected operation group in `schoolmaster-backend/tests/Feature/SystemAdminMasterAccess/LimitedRolePermissionDenialTest.php`
 - [ ] T033 [P] [US1] Add frontend route tests proving System Administrator can open every released protected route group inventoried in T003 after session resolution in `schoolmaster-frontend/tests/unit/system-admin-master/router/systemAdminRouteAccess.spec.js`
-- [ ] T034 [P] [US1] Add frontend visibility tests proving every released protected navigation destination and route action is visible to System Administrator and still hidden for limited users in `schoolmaster-frontend/tests/unit/system-admin-master/navigation/systemAdminNavigationVisibility.spec.js`
+- [ ] T034 [P] [US1] Add frontend visibility tests proving every released protected navigation destination and read-only route action is visible to System Administrator, while write/lifecycle actions remain unavailable until the audit-marker prerequisite is complete and remain hidden for limited users in `schoolmaster-frontend/tests/unit/system-admin-master/navigation/systemAdminNavigationVisibility.spec.js`
 
 ### Implementation for User Story 1
 
 - [ ] T035 [US1] Update protected operation authorization notes for System Administrator master access in `api/openapi.yaml`
 - [ ] T036 [US1] Apply master-access authorization wording to users, roles, permissions, schools, academics, guardians, reports, platform support, classroom, teacher, student, and assessment path descriptions listed in `api/openapi.yaml`
-- [ ] T037 [US1] Wire System Administrator permission override into every backend policy entry point inventoried in T004 while preserving non-permission gates in `schoolmaster-backend/app/Policies/Concerns/AuthorizesSystemAdministrator.php`
-- [ ] T038 [US1] Wire System Administrator permission override into shared backend service authorization checks used outside policies in `schoolmaster-backend/app/Services/Auth/SystemAdministratorAccess.php`
+- [ ] T037 [US1] Wire System Administrator permission override into every backend policy entry point inventoried in T004 for read-only operations while preserving non-permission gates and blocking writes/lifecycle actions until T062-T064 are complete in `schoolmaster-backend/app/Policies/Concerns/AuthorizesSystemAdministrator.php`
+- [ ] T038 [US1] Wire System Administrator permission override into shared backend service authorization checks used outside policies for read-only operations and enforce the audit-evidence prerequisite before allowing writes/lifecycle actions in `schoolmaster-backend/app/Services/Auth/SystemAdministratorAccess.php`
 - [ ] T039 [US1] Update backend current-user or session resource output to expose enough role context for frontend master-access evaluation in `schoolmaster-backend/app/Http/Resources/Auth/CurrentUserResource.php`
 - [ ] T040 [US1] Update frontend session store mapping for System Administrator master-access status in `schoolmaster-frontend/src/stores/auth.store.js`
 - [ ] T041 [US1] Update frontend route guard direct navigation behavior for System Administrator protected routes in `schoolmaster-frontend/src/router/guards/authorization.js`
-- [ ] T042 [US1] Update frontend admin, platform, reporting, teacher, student, guardian, and assessment navigation visibility to honor master-access status in `schoolmaster-frontend/src/router/index.js`
+- [ ] T042 [US1] Update frontend admin, platform, reporting, teacher, student, guardian, and assessment navigation visibility to honor master-access status for routes and read-only actions while keeping write/lifecycle actions unavailable until the audit-marker prerequisite is complete in `schoolmaster-frontend/src/router/index.js`
 - [ ] T043 [US1] Document protected route and operation allow evidence for System Administrator and limited-role denial evidence in `specs/031-system-admin-master/quickstart.md`
 
-**Checkpoint**: User Story 1 is independently testable as the MVP.
+**Checkpoint**: User Story 1 is independently testable as a read-only MVP;
+protected writes and lifecycle actions remain blocked until the US3 audit
+prerequisite is complete.
 
 ---
 
@@ -178,7 +184,7 @@ is unchanged.
 - [ ] T063 [US3] Record master-access audit evidence for System Administrator writes and lifecycle actions in `schoolmaster-backend/app/Services/Audit/AuditLogger.php`
 - [ ] T064 [US3] Propagate selected school context and selected subject context into master-access audit metadata in `schoolmaster-backend/app/Services/Audit/AuditContext.php`
 - [ ] T065 [US3] Preserve selected subject-context enforcement for identity-owned self-service plus approval workflow, support opt-in, explicit confirmation, file safety, closed-period, and other business gate checks around master access in `schoolmaster-backend/app/Services/Auth/SystemAdministratorAccess.php`
-- [ ] T066 [US3] Update frontend feedback mapping so non-permission prerequisite denials remain distinct for System Administrator in `schoolmaster-frontend/src/services/error-mapper.js`
+- [ ] T066 [US3] Update frontend feedback mapping and write/lifecycle action availability so audit-gated actions become available only after master-access audit evidence is configured, while non-permission prerequisite denials remain distinct for System Administrator in `schoolmaster-frontend/src/services/error-mapper.js`
 - [ ] T067 [US3] Update frontend subject-context guard for identity-owned self-service routes under System Administrator access in `schoolmaster-frontend/src/router/guards/subjectContext.js`
 - [ ] T068 [US3] Document audit evidence, safety-gate denial, read-audit boundary, and selected-subject context validation in `specs/031-system-admin-master/quickstart.md`
 
@@ -282,16 +288,20 @@ Task: "T060 [P] [US3] Add frontend non-permission state tests in schoolmaster-fr
 1. Complete Phase 1 setup.
 2. Complete Phase 2 foundation.
 3. Complete Phase 3 / US1.
-4. Validate that System Administrator can access protected route and operation
-   groups without explicit feature permissions, while limited roles remain
-   denied.
-5. Stop for review before expanding tenant-context and audit behavior.
+4. Validate that System Administrator can access protected routes and read-only
+   operation groups without explicit feature permissions, while limited roles
+   remain denied.
+5. Verify protected writes and lifecycle actions remain blocked until the US3
+   audit-marker prerequisite is complete, then stop for review before expanding
+   tenant-context behavior.
 
 ### Incremental Delivery
 
-1. US1: master permission-check override and protected route/operation access.
+1. US1: master permission-check override and protected route/read-only
+   operation access; writes and lifecycle actions remain audit-gated.
 2. US2: any-active-school selection and selected-school tenant isolation.
-3. US3: master-access audit markers and business safety gate preservation.
+3. US3: master-access audit markers, release of audit-gated writes and
+   lifecycle actions, and business safety gate preservation.
 4. Polish: full contract/backend/frontend verification and manual evidence.
 
 ### Parallel Team Strategy
