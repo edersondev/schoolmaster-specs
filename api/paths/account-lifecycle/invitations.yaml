@@ -8,6 +8,7 @@ post:
     secrets. Creating a new invitation supersedes prior unused invitations for
     the same user and scope.
   operationId: createAccountInvitation
+  x-system-administrator-master-access: true
   parameters:
     - $ref: ../../components/parameters/schools/TenantContext.yaml
   requestBody:

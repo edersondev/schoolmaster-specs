@@ -3,6 +3,7 @@ get:
     - Academic Years
   summary: List academic years for a school
   operationId: listAcademicYears
+  x-system-administrator-master-access: true
   parameters:
     - $ref: ../../components/parameters/schools/TenantContext.yaml
     - $ref: ../../components/parameters/common/Page.yaml
@@ -31,6 +32,7 @@ post:
     - Academic Years
   summary: Create an academic year for the resolved school
   operationId: createAcademicYear
+  x-system-administrator-master-access: true
   parameters:
     - $ref: ../../components/parameters/schools/TenantContext.yaml
   requestBody:

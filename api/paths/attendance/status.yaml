@@ -3,6 +3,7 @@ patch:
     - Attendance
   summary: Activate or deactivate an attendance record
   operationId: updateAttendanceStatus
+  x-system-administrator-master-access: true
   parameters:
     - $ref: ../../components/parameters/schools/TenantContext.yaml
     - $ref: ../../components/parameters/attendance/AttendanceId.yaml

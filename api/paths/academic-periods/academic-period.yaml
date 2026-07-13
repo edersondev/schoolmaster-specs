@@ -3,6 +3,7 @@ get:
     - Academic Periods
   summary: Retrieve an academic period
   operationId: getAcademicPeriod
+  x-system-administrator-master-access: true
   parameters:
     - $ref: ../../components/parameters/schools/TenantContext.yaml
     - $ref: ../../components/parameters/academics/AcademicPeriodId.yaml
@@ -29,6 +30,7 @@ patch:
     - Academic Periods
   summary: Update documented academic period fields
   operationId: updateAcademicPeriod
+  x-system-administrator-master-access: true
   parameters:
     - $ref: ../../components/parameters/schools/TenantContext.yaml
     - $ref: ../../components/parameters/academics/AcademicPeriodId.yaml
@@ -65,6 +67,7 @@ delete:
     - Academic Periods
   summary: Soft delete an academic period
   operationId: deleteAcademicPeriod
+  x-system-administrator-master-access: true
   parameters:
     - $ref: ../../components/parameters/schools/TenantContext.yaml
     - $ref: ../../components/parameters/academics/AcademicPeriodId.yaml

@@ -3,6 +3,7 @@ get:
     - School Lookups
   summary: List school education level options
   operationId: listSchoolEducationLevels
+  x-system-administrator-master-access: true
   responses:
     '200':
       description: Full education level option list

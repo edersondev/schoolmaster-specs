@@ -31,13 +31,13 @@ is deferred to a separate feature and this task list changes no frontend files.
 **Purpose**: Confirm affected contracts, implementation targets, and evidence
 locations before shared authorization work starts.
 
-- [ ] T001 Review current System Administrator, permission, tenant, support, and self-service authorization language and record contradictions in `specs/031-system-admin-master/quickstart.md`
-- [ ] T002 [P] Inventory protected OpenAPI operations requiring master-access notes in `api/openapi.yaml` and record the operation groups in `specs/031-system-admin-master/quickstart.md`
-- [ ] T003 [P] Record the deferred frontend route, navigation, and action-visibility handoff with no frontend repository changes in `specs/031-system-admin-master/quickstart.md`
-- [ ] T004 [P] Inventory backend authorization policy and permission-check entry points requiring centralized master-access treatment and record entry points in `specs/031-system-admin-master/quickstart.md`
-- [ ] T005 [P] Record backend fixture requirements for System Administrator, limited role, active school, inactive school, actor-owned student, active guardian link, and audit evidence in `specs/031-system-admin-master/quickstart.md`
-- [ ] T006 [P] Record the reusable zero-permission System Administrator fixture design following existing helpers in `specs/031-system-admin-master/quickstart.md`
-- [ ] T007 [P] Confirm Redocly and PHPUnit commands and evidence capture locations in `specs/031-system-admin-master/quickstart.md`
+- [X] T001 Review current System Administrator, permission, tenant, support, and self-service authorization language and record contradictions in `specs/031-system-admin-master/quickstart.md`
+- [X] T002 [P] Inventory protected OpenAPI operations requiring master-access notes in `api/openapi.yaml` and record the operation groups in `specs/031-system-admin-master/quickstart.md`
+- [X] T003 [P] Record the deferred frontend route, navigation, and action-visibility handoff with no frontend repository changes in `specs/031-system-admin-master/quickstart.md`
+- [X] T004 [P] Inventory backend authorization policy and permission-check entry points requiring centralized master-access treatment and record entry points in `specs/031-system-admin-master/quickstart.md`
+- [X] T005 [P] Record backend fixture requirements for System Administrator, limited role, active school, inactive school, actor-owned student, active guardian link, and audit evidence in `specs/031-system-admin-master/quickstart.md`
+- [X] T006 [P] Record the reusable zero-permission System Administrator fixture design following existing helpers in `specs/031-system-admin-master/quickstart.md`
+- [X] T007 [P] Confirm Redocly and PHPUnit commands and evidence capture locations in `specs/031-system-admin-master/quickstart.md`
 
 ---
 
@@ -50,34 +50,34 @@ note before establishing the Laravel authorization foundation.
 
 ### Foundational Contract and Documentation Tasks
 
-- [ ] T008 Update System Administrator master-access rule and remove contradictory no-bypass wording in `docs/security.md`
-- [ ] T009 Update tenant selection, any-active-school access, selected-school scoping, and platform-wide exception rules in `docs/multi-tenant.md`
-- [ ] T010 [P] Document the deferred frontend handoff without changing frontend behavior in `specs/031-system-admin-master/quickstart.md`
-- [ ] T011 [P] Update backend policy and authorization guidance for System Administrator master access in `docs/backend-guidelines.md`
-- [ ] T012 Add canonical System Administrator authorization language to `api/openapi.yaml`, apply it to every protected operation under `api/paths/`, explicitly document all platform-wide exceptions, and mirror it in `specs/001-schoolmaster-platform/contracts/openapi.yaml` before any backend behavior changes
-- [ ] T013 Update common forbidden response examples to distinguish permission denial from tenant-context denial in `api/components/responses/common/AdministrationForbidden.yaml`
-- [ ] T014 Update classroom or module-specific forbidden response examples to preserve non-permission prerequisite denials in `api/components/responses/classroom/ClassroomRosterForbidden.yaml`
-- [ ] T015 Update administration foundation permission matrix notes for System Administrator master access in `specs/018-administration-foundation-ui/contracts/administration-foundation-ui-contract.md`
-- [ ] T016 [P] Update administration lifecycle UI authorization notes for System Administrator master access in `specs/020-administration-lifecycle-ui/contracts/administration-lifecycle-ui-contract.md`
-- [ ] T017 [P] Update platform support UI permission-gate notes for System Administrator master access without bypassing support approval gates in `specs/027-platform-support-ui/contracts/platform-support-ui-contract.md`
-- [ ] T018 [P] Update student self-service notes to preserve actor-owned profile authorization and explicitly exclude impersonation or inferred subject selection in `specs/024-student-self-service-ui/contracts/student-self-service-ui-contract.md`
-- [ ] T019 [P] Update guardian self-service notes to preserve active guardian-link authorization and explicitly exclude impersonation or inferred subject selection in `specs/025-guardian-self-service-ui/contracts/guardian-self-service-ui-contract.md`
+- [X] T008 Update System Administrator master-access rule and remove contradictory no-bypass wording in `docs/security.md`
+- [X] T009 Update tenant selection, any-active-school access, selected-school scoping, and platform-wide exception rules in `docs/multi-tenant.md`
+- [X] T010 [P] Document the deferred frontend handoff without changing frontend behavior in `specs/031-system-admin-master/quickstart.md`
+- [X] T011 [P] Update backend policy and authorization guidance for System Administrator master access in `docs/backend-guidelines.md`
+- [X] T012 Add canonical System Administrator authorization language to `api/openapi.yaml`, apply it to every protected operation under `api/paths/`, explicitly document all platform-wide exceptions, and mirror it in `specs/001-schoolmaster-platform/contracts/openapi.yaml` before any backend behavior changes
+- [X] T013 Update common forbidden response examples to distinguish permission denial from tenant-context denial in `api/components/responses/common/AdministrationForbidden.yaml`
+- [X] T014 Update classroom or module-specific forbidden response examples to preserve non-permission prerequisite denials in `api/components/responses/classroom/ClassroomRosterForbidden.yaml`
+- [X] T015 Update administration foundation permission matrix notes for System Administrator master access in `specs/018-administration-foundation-ui/contracts/administration-foundation-ui-contract.md`
+- [X] T016 [P] Update administration lifecycle UI authorization notes for System Administrator master access in `specs/020-administration-lifecycle-ui/contracts/administration-lifecycle-ui-contract.md`
+- [X] T017 [P] Update platform support UI permission-gate notes for System Administrator master access without bypassing support approval gates in `specs/027-platform-support-ui/contracts/platform-support-ui-contract.md`
+- [X] T018 [P] Update student self-service notes to preserve actor-owned profile authorization and explicitly exclude impersonation or inferred subject selection in `specs/024-student-self-service-ui/contracts/student-self-service-ui-contract.md`
+- [X] T019 [P] Update guardian self-service notes to preserve active guardian-link authorization and explicitly exclude impersonation or inferred subject selection in `specs/025-guardian-self-service-ui/contracts/guardian-self-service-ui-contract.md`
 
 ### Foundational Backend Tasks
 
-- [ ] T020 [P] Add reusable System Administrator and limited-user fixtures through existing helpers in `schoolmaster-backend/tests/TestCase.php`
-- [ ] T021 [P] Add unit coverage for exact active platform-role detection and permission override boundaries in `schoolmaster-backend/tests/Unit/Models/UserSystemAdministratorAccessTest.php`
-- [ ] T022 Add `isSystemAdministrator()` and permission-only override semantics to the existing `hasPermission()` and `hasSchoolPermission()` boundary in `schoolmaster-backend/app/Models/User.php`
-- [ ] T023 Inventory policy preconditions that assume every school-authorized actor has a fixed `users.school_id` and record required tenant/owner-preserving updates for `schoolmaster-backend/app/Policies/ScopePolicy.php`, `schoolmaster-backend/app/Policies/AccountLifecyclePolicy.php`, `schoolmaster-backend/app/Policies/AcademicRecordPolicy.php`, `schoolmaster-backend/app/Policies/AcademicRecordImportPolicy.php`, `schoolmaster-backend/app/Policies/AssessmentPolicy.php`, `schoolmaster-backend/app/Policies/LearningSetPolicy.php`, `schoolmaster-backend/app/Policies/QuestionnairePolicy.php`, `schoolmaster-backend/app/Policies/TeacherContentItemPolicy.php`, and `schoolmaster-backend/app/Policies/TeacherWorkflowPolicy.php` in `specs/031-system-admin-master/quickstart.md`
-- [ ] T024 Preserve tenant context, actor ownership, guardian links, account/session state, school state, release state, approval, and safety gates around the permission-only override in the concrete policy and service files inventoried in `specs/031-system-admin-master/quickstart.md`
+- [X] T020 [P] Add reusable System Administrator and limited-user fixtures through existing helpers in `schoolmaster-backend/tests/TestCase.php`
+- [X] T021 [P] Add unit coverage for exact active platform-role detection and permission override boundaries in `schoolmaster-backend/tests/Unit/Models/UserSystemAdministratorAccessTest.php`
+- [X] T022 Add `isSystemAdministrator()` and permission-only override semantics to the existing `hasPermission()` and `hasSchoolPermission()` boundary in `schoolmaster-backend/app/Models/User.php`
+- [X] T023 Inventory policy preconditions that assume every school-authorized actor has a fixed `users.school_id` and record required tenant/owner-preserving updates for `schoolmaster-backend/app/Policies/ScopePolicy.php`, `schoolmaster-backend/app/Policies/AccountLifecyclePolicy.php`, `schoolmaster-backend/app/Policies/AcademicRecordPolicy.php`, `schoolmaster-backend/app/Policies/AcademicRecordImportPolicy.php`, `schoolmaster-backend/app/Policies/AssessmentPolicy.php`, `schoolmaster-backend/app/Policies/LearningSetPolicy.php`, `schoolmaster-backend/app/Policies/QuestionnairePolicy.php`, `schoolmaster-backend/app/Policies/TeacherContentItemPolicy.php`, and `schoolmaster-backend/app/Policies/TeacherWorkflowPolicy.php` in `specs/031-system-admin-master/quickstart.md`
+- [X] T024 Preserve tenant context, actor ownership, guardian links, account/session state, school state, release state, approval, and safety gates around the permission-only override in the concrete policy and service files inventoried in `specs/031-system-admin-master/quickstart.md`
 
 ### Deferred Frontend Tasks
 
-- [ ] T025 Record as deferred: frontend route guard coverage belongs to a separate frontend implementation feature in `specs/031-system-admin-master/quickstart.md`
-- [ ] T026 Record as deferred: frontend navigation/action visibility coverage belongs to a separate frontend implementation feature in `specs/031-system-admin-master/quickstart.md`
-- [ ] T027 Record as deferred: frontend route guard implementation is outside this backend slice in `specs/031-system-admin-master/quickstart.md`
-- [ ] T028 Verify the existing authenticated-session roles collection already exposes the active platform `System Administrator` role without a new response field in `schoolmaster-backend/tests/Feature/CurrentUserApiTest.php`
-- [ ] T029 Record as deferred: frontend navigation helper implementation is outside this backend slice in `specs/031-system-admin-master/quickstart.md`
+- [X] T025 Record as deferred: frontend route guard coverage belongs to a separate frontend implementation feature in `specs/031-system-admin-master/quickstart.md`
+- [X] T026 Record as deferred: frontend navigation/action visibility coverage belongs to a separate frontend implementation feature in `specs/031-system-admin-master/quickstart.md`
+- [X] T027 Record as deferred: frontend route guard implementation is outside this backend slice in `specs/031-system-admin-master/quickstart.md`
+- [X] T028 Verify the existing authenticated-session roles collection already exposes the active platform `System Administrator` role without a new response field in `schoolmaster-backend/tests/Feature/CurrentUserApiTest.php`
+- [X] T029 Record as deferred: frontend navigation helper implementation is outside this backend slice in `specs/031-system-admin-master/quickstart.md`
 
 **Checkpoint**: Shared documentation and every affected OpenAPI operation are
 updated before the backend override boundary is implemented.
@@ -98,23 +98,23 @@ prerequisites are missing. State-changing behavior is verified in US3.
 
 ### Tests for User Story 1
 
-- [ ] T030 [P] [US1] Add OpenAPI lint expectation for master-access authorization wording across protected operation groups in `specs/031-system-admin-master/quickstart.md`
-- [ ] T031 [P] [US1] Add backend feature tests proving System Administrator can call every released protected read-only operation group listed in `api/openapi.yaml` without feature-specific permissions in `schoolmaster-backend/tests/Feature/SystemAdminMasterAccess/ProtectedOperationMasterAccessTest.php`
-- [ ] T032 [P] [US1] Add backend feature tests proving limited non-System Administrator users without required permissions still receive documented permission denial for every released protected operation group in `schoolmaster-backend/tests/Feature/SystemAdminMasterAccess/LimitedRolePermissionDenialTest.php`
-- [ ] T033 [P] [US1] Add authenticated-session tests proving the existing role collection identifies System Administrator without a response schema change in `schoolmaster-backend/tests/Feature/CurrentUserApiTest.php`
-- [ ] T034 [P] [US1] Add backend tests proving actor-owned student access and active guardian-link rules remain enforced without inferred impersonation in `schoolmaster-backend/tests/Feature/SystemAdminMasterAccess/IdentityOwnedSelfServiceBoundaryTest.php`
+- [X] T030 [P] [US1] Add OpenAPI lint expectation for master-access authorization wording across protected operation groups in `specs/031-system-admin-master/quickstart.md`
+- [X] T031 [P] [US1] Add backend feature tests proving System Administrator can call every released protected read-only operation group listed in `api/openapi.yaml` without feature-specific permissions in `schoolmaster-backend/tests/Feature/SystemAdminMasterAccess/ProtectedOperationMasterAccessTest.php`
+- [X] T032 [P] [US1] Add backend feature tests proving limited non-System Administrator users without required permissions still receive documented permission denial for every released protected operation group in `schoolmaster-backend/tests/Feature/SystemAdminMasterAccess/LimitedRolePermissionDenialTest.php`
+- [X] T033 [P] [US1] Add authenticated-session tests proving the existing role collection identifies System Administrator without a response schema change in `schoolmaster-backend/tests/Feature/CurrentUserApiTest.php`
+- [X] T034 [P] [US1] Add backend tests proving actor-owned student access and active guardian-link rules remain enforced without inferred impersonation in `schoolmaster-backend/tests/Feature/SystemAdminMasterAccess/IdentityOwnedSelfServiceBoundaryTest.php`
 
 ### Implementation for User Story 1
 
-- [ ] T035 [US1] Verify T012 applied the canonical authorization note to every protected operation group in `api/openapi.yaml` before backend behavior changed and record the operation IDs in `specs/031-system-admin-master/quickstart.md`
-- [ ] T036 [US1] Verify users, roles, permissions, schools, academics, guardians, reports, platform support, classroom, teacher, student, and assessment path descriptions use the canonical language under `api/paths/`
-- [ ] T037 [US1] Apply the `User` permission override and the tenant/owner-preserving policy updates inventoried in T004 and T023 to the concrete `schoolmaster-backend/app/Policies/` files recorded in `specs/031-system-admin-master/quickstart.md`
-- [ ] T038 [US1] Replace remaining direct service permission decisions inventoried in T004 with delegation to `User::hasPermission()` or `User::hasSchoolPermission()` while preserving service business gates in the concrete files under `schoolmaster-backend/app/Services/`
-- [ ] T039 [US1] Verify `AuthSessionResource` already exposes the active platform role through existing fields and make no response change in `schoolmaster-backend/app/Http/Resources/AuthSessionResource.php`
-- [ ] T040 [US1] Record as deferred: frontend session-store mapping is outside this backend slice in `specs/031-system-admin-master/quickstart.md`
-- [ ] T041 [US1] Preserve actor-owned student access in `schoolmaster-backend/app/Services/Concerns/AuthorizesStudentSelfView.php` and active guardian-link resolution in `schoolmaster-backend/app/Services/GuardianSelfService/GuardianAccessResolver.php`
-- [ ] T042 [US1] Add backend safety-gate regression coverage for approval, confirmation, support opt-in, file safety, and closed-period checks in `schoolmaster-backend/tests/Feature/SystemAdminMasterAccess/NonPermissionSafetyGateTest.php`
-- [ ] T043 [US1] Document protected route and operation allow evidence for System Administrator and limited-role denial evidence in `specs/031-system-admin-master/quickstart.md`
+- [X] T035 [US1] Verify T012 applied the canonical authorization note to every protected operation group in `api/openapi.yaml` before backend behavior changed and record the operation IDs in `specs/031-system-admin-master/quickstart.md`
+- [X] T036 [US1] Verify users, roles, permissions, schools, academics, guardians, reports, platform support, classroom, teacher, student, and assessment path descriptions use the canonical language under `api/paths/`
+- [X] T037 [US1] Apply the `User` permission override and the tenant/owner-preserving policy updates inventoried in T004 and T023 to the concrete `schoolmaster-backend/app/Policies/` files recorded in `specs/031-system-admin-master/quickstart.md`
+- [X] T038 [US1] Replace remaining direct service permission decisions inventoried in T004 with delegation to `User::hasPermission()` or `User::hasSchoolPermission()` while preserving service business gates in the concrete files under `schoolmaster-backend/app/Services/`
+- [X] T039 [US1] Verify `AuthSessionResource` already exposes the active platform role through existing fields and make no response change in `schoolmaster-backend/app/Http/Resources/AuthSessionResource.php`
+- [X] T040 [US1] Record as deferred: frontend session-store mapping is outside this backend slice in `specs/031-system-admin-master/quickstart.md`
+- [X] T041 [US1] Preserve actor-owned student access in `schoolmaster-backend/app/Services/Concerns/AuthorizesStudentSelfView.php` and active guardian-link resolution in `schoolmaster-backend/app/Services/GuardianSelfService/GuardianAccessResolver.php`
+- [X] T042 [US1] Add backend safety-gate regression coverage for approval, confirmation, support opt-in, file safety, and closed-period checks in `schoolmaster-backend/tests/Feature/SystemAdminMasterAccess/NonPermissionSafetyGateTest.php`
+- [X] T043 [US1] Document protected route and operation allow evidence for System Administrator and limited-role denial evidence in `specs/031-system-admin-master/quickstart.md`
 
 **Checkpoint**: User Story 1 is independently testable as a read-only MVP;
 state-changing coverage and required audit evidence are delivered in US3.
@@ -134,22 +134,22 @@ data loads.
 
 ### Tests for User Story 2
 
-- [ ] T044 [P] [US2] Add backend feature tests proving System Administrator may select any active school context and is blocked from inactive or missing school context in `schoolmaster-backend/tests/Feature/SystemAdminMasterAccess/SchoolContextSelectionTest.php`
-- [ ] T045 [P] [US2] Add backend tenant isolation tests proving school-scoped System Administrator operations return only selected-school data and never unscoped cross-school data in `schoolmaster-backend/tests/Feature/SystemAdminMasterAccess/SchoolScopedTenantIsolationTest.php`
-- [ ] T046 [P] [US2] Add backend platform-wide operation tests proving any cross-school output is allowed only for documented platform-wide operations in `schoolmaster-backend/tests/Feature/SystemAdminMasterAccess/PlatformWideOperationScopeTest.php`
-- [ ] T047 [P] [US2] Add backend tests proving missing, unknown, and inactive `X-School-Id` values fail before school-owned lookup in `schoolmaster-backend/tests/Feature/SystemAdminMasterAccess/SchoolContextDenialTest.php`
-- [ ] T048 [P] [US2] Add backend regression coverage across existing module tenant guards in `schoolmaster-backend/tests/Feature/SystemAdminMasterAccess/ModuleTenantBoundaryTest.php`
+- [X] T044 [P] [US2] Add backend feature tests proving System Administrator may select any active school context and is blocked from inactive or missing school context in `schoolmaster-backend/tests/Feature/SystemAdminMasterAccess/SchoolContextSelectionTest.php`
+- [X] T045 [P] [US2] Add backend tenant isolation tests proving school-scoped System Administrator operations return only selected-school data and never unscoped cross-school data in `schoolmaster-backend/tests/Feature/SystemAdminMasterAccess/SchoolScopedTenantIsolationTest.php`
+- [X] T046 [P] [US2] Add backend platform-wide operation tests proving any cross-school output is allowed only for documented platform-wide operations in `schoolmaster-backend/tests/Feature/SystemAdminMasterAccess/PlatformWideOperationScopeTest.php`
+- [X] T047 [P] [US2] Add backend tests proving missing, unknown, and inactive `X-School-Id` values fail before school-owned lookup in `schoolmaster-backend/tests/Feature/SystemAdminMasterAccess/SchoolContextDenialTest.php`
+- [X] T048 [P] [US2] Add backend regression coverage across existing module tenant guards in `schoolmaster-backend/tests/Feature/SystemAdminMasterAccess/ModuleTenantBoundaryTest.php`
 
 ### Implementation for User Story 2
 
-- [ ] T049 [US2] Preserve and, only where tests require, update active-school selection for platform System Administrator in `schoolmaster-backend/app/Services/TenantContextResolver.php` and missing-context enforcement in `schoolmaster-backend/app/Services/TenantContextService.php`
-- [ ] T050 [US2] Preserve active-school validation and inactive-school denial for System Administrator in `schoolmaster-backend/app/Http/Middleware/ResolveSchoolContext.php`
-- [ ] T051 [US2] Enforce selected-school scoping through existing boundaries in `schoolmaster-backend/app/Services/Concerns/AssertsSchoolTenantScope.php`, `schoolmaster-backend/app/Services/Concerns/AssertsAdministrationTenantScope.php`, `schoolmaster-backend/app/Services/Concerns/AssertsStudentEnrollmentTenantScope.php`, `schoolmaster-backend/app/Services/ClassroomRoster/SchoolContextGuard.php`, `schoolmaster-backend/app/Services/TeacherWorkflow/SchoolContextGuard.php`, `schoolmaster-backend/app/Services/Reports/ReportTenantContextService.php`, and `schoolmaster-backend/app/Services/Assessment/AssessmentTenantScopeService.php`
-- [ ] T052 [US2] Verify the platform-wide exceptions and selected-school scoping documented by T012 in `api/openapi.yaml` against tenant-isolation test evidence
-- [ ] T053 [US2] Record as deferred: frontend active-school selection is outside this backend slice in `specs/031-system-admin-master/quickstart.md`
-- [ ] T054 [US2] Verify backend school-context middleware blocks school-owned operations until active context resolves in `schoolmaster-backend/app/Http/Middleware/ResolveSchoolContext.php`
-- [ ] T055 [US2] Record as deferred: frontend stale-data cleanup is outside this backend slice in `specs/031-system-admin-master/quickstart.md`
-- [ ] T056 [US2] Document any-active-school selection, inactive-school denial, selected-school isolation, and context-switch evidence in `specs/031-system-admin-master/quickstart.md`
+- [X] T049 [US2] Preserve and, only where tests require, update active-school selection for platform System Administrator in `schoolmaster-backend/app/Services/TenantContextResolver.php` and missing-context enforcement in `schoolmaster-backend/app/Services/TenantContextService.php`
+- [X] T050 [US2] Preserve active-school validation and inactive-school denial for System Administrator in `schoolmaster-backend/app/Http/Middleware/ResolveSchoolContext.php`
+- [X] T051 [US2] Enforce selected-school scoping through existing boundaries in `schoolmaster-backend/app/Services/Concerns/AssertsSchoolTenantScope.php`, `schoolmaster-backend/app/Services/Concerns/AssertsAdministrationTenantScope.php`, `schoolmaster-backend/app/Services/Concerns/AssertsStudentEnrollmentTenantScope.php`, `schoolmaster-backend/app/Services/ClassroomRoster/SchoolContextGuard.php`, `schoolmaster-backend/app/Services/TeacherWorkflow/SchoolContextGuard.php`, `schoolmaster-backend/app/Services/Reports/ReportTenantContextService.php`, and `schoolmaster-backend/app/Services/Assessment/AssessmentTenantScopeService.php`
+- [X] T052 [US2] Verify the platform-wide exceptions and selected-school scoping documented by T012 in `api/openapi.yaml` against tenant-isolation test evidence
+- [X] T053 [US2] Record as deferred: frontend active-school selection is outside this backend slice in `specs/031-system-admin-master/quickstart.md`
+- [X] T054 [US2] Verify backend school-context middleware blocks school-owned operations until active context resolves in `schoolmaster-backend/app/Http/Middleware/ResolveSchoolContext.php`
+- [X] T055 [US2] Record as deferred: frontend stale-data cleanup is outside this backend slice in `specs/031-system-admin-master/quickstart.md`
+- [X] T056 [US2] Document any-active-school selection, inactive-school denial, selected-school isolation, and context-switch evidence in `specs/031-system-admin-master/quickstart.md`
 
 **Checkpoint**: User Story 2 is independently testable for school selection,
 tenant isolation, and platform-wide exception boundaries.
@@ -169,21 +169,21 @@ is unchanged.
 
 ### Tests for User Story 3
 
-- [ ] T057 [P] [US3] Add data-driven allow and audit tests for every state-changing protected operation group inventoried in T002, including create, update, delete, restore, activate, deactivate, import, retry, cancel, approve, and revoke, in `schoolmaster-backend/tests/Feature/SystemAdminMasterAccess/MasterAccessAuditEvidenceTest.php`
-- [ ] T058 [P] [US3] Add backend tests proving read-only System Administrator list/detail operations do not create new master-access audit evidence unless the existing operation already audits reads in `schoolmaster-backend/tests/Feature/SystemAdminMasterAccess/MasterAccessReadAuditBoundaryTest.php`
-- [ ] T059 [P] [US3] Add backend tests proving actor-owned student and active guardian-link rules plus approval workflows, support opt-ins, confirmations, file safety, closed-period checks, and other safety gates still block System Administrator when prerequisites are unmet in `schoolmaster-backend/tests/Feature/SystemAdminMasterAccess/MasterAccessSafetyGateTest.php`
-- [ ] T060 [P] [US3] Add backend tests proving tenant, identity-ownership, approval, safety, validation, and permission denials remain distinct in `schoolmaster-backend/tests/Feature/SystemAdminMasterAccess/MasterAccessDenialEnvelopeTest.php`
-- [ ] T061 [P] [US3] Add deterministic contract assertions for the canonical audit marker and non-permission prerequisite language in `schoolmaster-backend/tests/Feature/SystemAdminMasterAccess/MasterAccessContractDocumentationTest.php`
+- [X] T057 [P] [US3] Add data-driven allow and audit tests for every state-changing protected operation group inventoried in T002, including create, update, delete, restore, activate, deactivate, import, retry, cancel, approve, and revoke, in `schoolmaster-backend/tests/Feature/SystemAdminMasterAccess/MasterAccessAuditEvidenceTest.php`
+- [X] T058 [P] [US3] Add backend tests proving read-only System Administrator list/detail operations do not create new master-access audit evidence unless the existing operation already audits reads in `schoolmaster-backend/tests/Feature/SystemAdminMasterAccess/MasterAccessReadAuditBoundaryTest.php`
+- [X] T059 [P] [US3] Add backend tests proving actor-owned student and active guardian-link rules plus approval workflows, support opt-ins, confirmations, file safety, closed-period checks, and other safety gates still block System Administrator when prerequisites are unmet in `schoolmaster-backend/tests/Feature/SystemAdminMasterAccess/MasterAccessSafetyGateTest.php`
+- [X] T060 [P] [US3] Add backend tests proving tenant, identity-ownership, approval, safety, validation, and permission denials remain distinct in `schoolmaster-backend/tests/Feature/SystemAdminMasterAccess/MasterAccessDenialEnvelopeTest.php`
+- [X] T061 [P] [US3] Add deterministic contract assertions for the canonical audit marker and non-permission prerequisite language in `schoolmaster-backend/tests/Feature/SystemAdminMasterAccess/MasterAccessContractDocumentationTest.php`
 
 ### Implementation for User Story 3
 
-- [ ] T062 [US3] Add an explicit optional master-access flag to `schoolmaster-backend/app/DTOs/AuditEventData.php` and serialize it as tenant-safe `master_access_used` metadata in `schoolmaster-backend/app/Services/AuditEventService.php`
-- [ ] T063 [US3] Propagate the marker through generic audit adapters in `schoolmaster-backend/app/Services/AccountLifecycle/AccountLifecycleAuditService.php`, `schoolmaster-backend/app/Services/ClassroomRoster/RosterAuditLogger.php`, `schoolmaster-backend/app/Services/GuardianSelfService/GuardianAuditService.php`, `schoolmaster-backend/app/Services/TeacherWorkflow/TeacherWorkflowAuditLogger.php`, and services under `schoolmaster-backend/app/Services/AdministrationLifecycle/`
-- [ ] T064 [US3] Propagate the same canonical marker through `schoolmaster-backend/app/Services/Assessment/AssessmentAuditService.php`, `schoolmaster-backend/app/Services/Reports/ReportAuditService.php`, and `schoolmaster-backend/app/Services/PlatformSupport/PlatformSupportAuditService.php`, preserving each existing store and first-class tenant fields
-- [ ] T065 [US3] Wire the marker into every state-changing audit writer inventoried in T003 and preserve actor-owned self-service plus approval and safety gates in the concrete files recorded in `specs/031-system-admin-master/quickstart.md`
-- [ ] T066 [US3] Add audit context tests proving actor, action, target, outcome, timestamp, and selected school are recorded without cross-tenant leakage in `schoolmaster-backend/tests/Feature/SystemAdminMasterAccess/MasterAccessAuditContextTest.php`
-- [ ] T067 [US3] Record as deferred: frontend error mapping and route adoption are outside this backend slice in `specs/031-system-admin-master/quickstart.md`
-- [ ] T068 [US3] Document audit evidence, safety-gate denial, read-audit boundary, actor-owned student denial, and guardian-link validation in `specs/031-system-admin-master/quickstart.md`
+- [X] T062 [US3] Add an explicit optional master-access flag to `schoolmaster-backend/app/DTOs/AuditEventData.php` and serialize it as tenant-safe `master_access_used` metadata in `schoolmaster-backend/app/Services/AuditEventService.php`
+- [X] T063 [US3] Propagate the marker through generic audit adapters in `schoolmaster-backend/app/Services/AccountLifecycle/AccountLifecycleAuditService.php`, `schoolmaster-backend/app/Services/ClassroomRoster/RosterAuditLogger.php`, `schoolmaster-backend/app/Services/GuardianSelfService/GuardianAuditService.php`, `schoolmaster-backend/app/Services/TeacherWorkflow/TeacherWorkflowAuditLogger.php`, and services under `schoolmaster-backend/app/Services/AdministrationLifecycle/`
+- [X] T064 [US3] Propagate the same canonical marker through `schoolmaster-backend/app/Services/Assessment/AssessmentAuditService.php`, `schoolmaster-backend/app/Services/Reports/ReportAuditService.php`, and `schoolmaster-backend/app/Services/PlatformSupport/PlatformSupportAuditService.php`, preserving each existing store and first-class tenant fields
+- [X] T065 [US3] Wire the marker into every state-changing audit writer inventoried in T003 and preserve actor-owned self-service plus approval and safety gates in the concrete files recorded in `specs/031-system-admin-master/quickstart.md`
+- [X] T066 [US3] Add audit context tests proving actor, action, target, outcome, timestamp, and selected school are recorded without cross-tenant leakage in `schoolmaster-backend/tests/Feature/SystemAdminMasterAccess/MasterAccessAuditContextTest.php`
+- [X] T067 [US3] Record as deferred: frontend error mapping and route adoption are outside this backend slice in `specs/031-system-admin-master/quickstart.md`
+- [X] T068 [US3] Document audit evidence, safety-gate denial, read-audit boundary, actor-owned student denial, and guardian-link validation in `specs/031-system-admin-master/quickstart.md`
 
 **Checkpoint**: User Story 3 is independently testable for audit evidence and
 non-permission gate preservation.
@@ -195,15 +195,15 @@ non-permission gate preservation.
 **Purpose**: Full-flow verification, documentation cleanup, contract linting,
 and delivery evidence across all stories.
 
-- [ ] T069 [P] Run `npx @redocly/cli lint aggregate@v1 schoolmaster-platform@v1` from the specs repository and record both results in `specs/031-system-admin-master/quickstart.md`
-- [ ] T070 [P] Run backend PHPUnit suite for System Administrator master access and record result in `specs/031-system-admin-master/quickstart.md`
-- [ ] T071 [P] Run focused backend unit tests for master-role detection, policy override boundaries, and audit metadata and record results in `specs/031-system-admin-master/quickstart.md`
-- [ ] T072 [P] Review `docs/security.md`, `docs/multi-tenant.md`, affected feature specs, and affected contracts for contradictory no-bypass language and record result in `specs/031-system-admin-master/quickstart.md`
-- [ ] T073 [P] Review OpenAPI protected operations for consistent permission-denial, tenant-context, identity-ownership, and platform-wide language in `api/openapi.yaml`
-- [ ] T074 [P] Review backend implementation for direct permission checks that bypass centralized System Administrator master-access behavior and record findings in `specs/031-system-admin-master/quickstart.md`
-- [ ] T075 [P] Verify no frontend repository files changed and record the deferred frontend handoff in `specs/031-system-admin-master/quickstart.md`
-- [ ] T076 Verify quickstart scenarios for protected backend access, any-active-school selection, selected-school scoping, identity-owned self-service denial, safety gates, and audit markers in `specs/031-system-admin-master/quickstart.md`
-- [ ] T077 Update final implementation evidence and remaining known limitations in `specs/031-system-admin-master/quickstart.md`
+- [X] T069 [P] Run `npx @redocly/cli lint aggregate@v1 schoolmaster-platform@v1` from the specs repository and record both results in `specs/031-system-admin-master/quickstart.md`
+- [X] T070 [P] Run backend PHPUnit suite for System Administrator master access and record result in `specs/031-system-admin-master/quickstart.md`
+- [X] T071 [P] Run focused backend unit tests for master-role detection, policy override boundaries, and audit metadata and record results in `specs/031-system-admin-master/quickstart.md`
+- [X] T072 [P] Review `docs/security.md`, `docs/multi-tenant.md`, affected feature specs, and affected contracts for contradictory no-bypass language and record result in `specs/031-system-admin-master/quickstart.md`
+- [X] T073 [P] Review OpenAPI protected operations for consistent permission-denial, tenant-context, identity-ownership, and platform-wide language in `api/openapi.yaml`
+- [X] T074 [P] Review backend implementation for direct permission checks that bypass centralized System Administrator master-access behavior and record findings in `specs/031-system-admin-master/quickstart.md`
+- [X] T075 [P] Verify no frontend repository files changed and record the deferred frontend handoff in `specs/031-system-admin-master/quickstart.md`
+- [X] T076 Verify quickstart scenarios for protected backend access, any-active-school selection, selected-school scoping, identity-owned self-service denial, safety gates, and audit markers in `specs/031-system-admin-master/quickstart.md`
+- [X] T077 Update final implementation evidence and remaining known limitations in `specs/031-system-admin-master/quickstart.md`
 
 ---
 

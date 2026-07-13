@@ -3,6 +3,7 @@ get:
     - Attendance
   summary: List attendance records in permitted scope
   operationId: listAttendance
+  x-system-administrator-master-access: true
   parameters:
     - $ref: ../../components/parameters/schools/TenantContext.yaml
     - $ref: ../../components/parameters/common/Page.yaml
@@ -32,6 +33,7 @@ post:
     - Attendance
   summary: Record attendance for a student in an academic period
   operationId: createAttendance
+  x-system-administrator-master-access: true
   parameters:
     - $ref: ../../components/parameters/schools/TenantContext.yaml
   requestBody:

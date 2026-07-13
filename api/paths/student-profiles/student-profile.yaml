@@ -3,6 +3,7 @@ get:
     - Student Profiles
   summary: Retrieve a same-school student profile
   operationId: getStudentProfile
+  x-system-administrator-master-access: true
   parameters:
     - $ref: ../../components/parameters/schools/TenantContext.yaml
     - $ref: ../../components/parameters/student-profiles/StudentProfileId.yaml

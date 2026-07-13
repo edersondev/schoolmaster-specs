@@ -3,6 +3,7 @@ get:
     - Attendance
   summary: List attendance records for the authenticated student
   operationId: listStudentAttendance
+  x-system-administrator-master-access: true
   parameters:
     - $ref: ../../components/parameters/schools/TenantContext.yaml
     - $ref: ../../components/parameters/academics/AcademicPeriodFilter.yaml

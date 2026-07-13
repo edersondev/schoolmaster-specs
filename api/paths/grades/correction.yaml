@@ -6,6 +6,7 @@ patch:
     Preserves original values, current values, actor, timestamp, and correction
     history. Closed-period corrections are school-administrator-only.
   operationId: correctGrade
+  x-system-administrator-master-access: true
   parameters:
     - $ref: ../../components/parameters/schools/TenantContext.yaml
     - $ref: ../../components/parameters/grades/GradeId.yaml

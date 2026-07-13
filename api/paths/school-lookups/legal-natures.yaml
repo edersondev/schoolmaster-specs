@@ -3,6 +3,7 @@ get:
     - School Lookups
   summary: List school legal nature options
   operationId: listSchoolLegalNatures
+  x-system-administrator-master-access: true
   responses:
     '200':
       description: Full legal nature option list

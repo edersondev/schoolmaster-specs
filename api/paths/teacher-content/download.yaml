@@ -7,6 +7,7 @@ get:
     allowed active lifecycle state. Successful and denied attempts are audited
     with tenant-safe metadata only.
   operationId: downloadTeacherContent
+  x-system-administrator-master-access: true
   parameters:
     - $ref: ../../components/parameters/schools/TenantContext.yaml
     - $ref: ../../components/parameters/teacher-content/ContentItemId.yaml

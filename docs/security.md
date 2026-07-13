@@ -42,8 +42,16 @@ before backend and frontend implementation diverge.
 - Platform-scoped roles may grant platform capabilities only.
 - School-scoped roles may grant school capabilities only and are effective only
   within the resolved active school tenant.
-- System administrator access does not bypass school-scoped authorization unless
-  a platform override is explicitly documented and tested.
+- An active platform-scoped role named exactly `System Administrator` satisfies
+  every feature-specific permission check for released protected operations.
+- System Administrator master access does not bypass authentication, account or
+  session state, active tenant resolution, tenant isolation, actor ownership,
+  guardian links, lifecycle state, approvals, confirmations, support opt-ins,
+  file safety, closed-period rules, or other business controls.
+- Every System Administrator write or lifecycle action records tenant-safe
+  `master_access_used: true` audit evidence through the operation's existing
+  audit pipeline. Read-only access does not create new audit evidence solely
+  because the master role was evaluated.
 
 ## Upload Security
 

@@ -3,6 +3,7 @@ post:
     - Academic Years
   summary: Apply one lifecycle action to selected academic years
   operationId: bulkLifecycleAcademicYears
+  x-system-administrator-master-access: true
   parameters:
     - $ref: ../../components/parameters/schools/TenantContext.yaml
   requestBody:

@@ -3,6 +3,7 @@ post:
     - Guardians
   summary: Deactivate a guardian
   operationId: deactivateGuardian
+  x-system-administrator-master-access: true
   parameters:
     - $ref: ../../components/parameters/schools/TenantContext.yaml
     - $ref: ../../components/parameters/guardians/GuardianId.yaml

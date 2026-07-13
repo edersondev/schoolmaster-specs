@@ -8,6 +8,22 @@ info:
 servers:
   - url: /
     description: API origin; promoted paths include the /api/v1 version prefix
+x-system-administrator-master-access:
+  role:
+    name: System Administrator
+    scope: platform
+    status: active
+  semantics: >-
+    Operations marked x-system-administrator-master-access true treat the
+    authenticated actor as satisfying feature-specific permission checks.
+    Authentication, active account and session, resolved school context,
+    tenant isolation, actor ownership, guardian links, lifecycle state,
+    approval, confirmation, support opt-in, file safety, closed-period, and
+    other business gates remain enforceable.
+  audit: >-
+    Writes and lifecycle actions record tenant-safe master_access_used true
+    through their existing audit pipeline. Reads do not gain a new audit event
+    solely because the master role was evaluated.
 security:
   - bearerAuth: []
 tags:
@@ -94,6 +110,7 @@ paths:
         - Auth
       summary: Return the authenticated user, resolved tenant, roles, and permissions
       operationId: getCurrentUser
+      x-system-administrator-master-access: true
       parameters:
         - $ref: '#/components/parameters/TenantContext'
       responses:
@@ -119,6 +136,7 @@ paths:
       summary: Revoke the current bearer token
       description: Revokes continued access for the bearer token used on the request. Already expired, revoked, inactive-user, or inactive-school tokens return the token rejection envelope.
       operationId: logout
+      x-system-administrator-master-access: true
       responses:
         '200':
           description: Logout succeeded and the current bearer token was revoked
@@ -140,6 +158,7 @@ paths:
       summary: Create or replace an account invitation
       description: Creates a 7-day single-use invitation for an eligible platform or same-school user. The response never exposes reusable invitation token secrets. Creating a new invitation supersedes prior unused invitations for the same user and scope.
       operationId: createAccountInvitation
+      x-system-administrator-master-access: true
       parameters:
         - $ref: '#/components/parameters/TenantContext'
       requestBody:
@@ -175,6 +194,7 @@ paths:
       summary: Resend or replace an invitation
       description: Requests new email delivery metadata for an existing pending invitation and rotates the single-use token. Resends are limited to 3 sends or resends per user and scope within 24 hours.
       operationId: resendAccountInvitation
+      x-system-administrator-master-access: true
       parameters:
         - $ref: '#/components/parameters/TenantContext'
         - $ref: '#/components/parameters/InvitationToken'
@@ -300,6 +320,7 @@ paths:
         - Account Lifecycle
       summary: Review account lock state
       operationId: getAccountLock
+      x-system-administrator-master-access: true
       parameters:
         - $ref: '#/components/parameters/TenantContext'
         - $ref: '#/components/parameters/UserId'
@@ -327,6 +348,7 @@ paths:
       summary: Administratively lock an account
       description: Administrative locks remain active until an authorized unlock or recovery action clears them and revoke all active bearer tokens for the affected user.
       operationId: lockAccount
+      x-system-administrator-master-access: true
       parameters:
         - $ref: '#/components/parameters/TenantContext'
         - $ref: '#/components/parameters/UserId'
@@ -363,6 +385,7 @@ paths:
         - Account Lifecycle
       summary: Unlock or clear administrative account lock
       operationId: unlockAccount
+      x-system-administrator-master-access: true
       parameters:
         - $ref: '#/components/parameters/TenantContext'
         - $ref: '#/components/parameters/UserId'
@@ -393,6 +416,7 @@ paths:
       summary: Recover or reactivate an eligible account
       description: Reactivation validates user lifecycle state, school lifecycle state, active role assignments, password setup state, lock state, and tenant or platform scope before authentication may resume.
       operationId: reactivateAccount
+      x-system-administrator-master-access: true
       parameters:
         - $ref: '#/components/parameters/TenantContext'
         - $ref: '#/components/parameters/UserId'
@@ -430,6 +454,7 @@ paths:
         - Schools
       summary: List schools visible to the requester
       operationId: listSchools
+      x-system-administrator-master-access: true
       parameters:
         - $ref: '#/components/parameters/Page'
         - $ref: '#/components/parameters/PerPage'
@@ -458,6 +483,7 @@ paths:
         - Schools
       summary: Create a school tenant
       operationId: createSchool
+      x-system-administrator-master-access: true
       requestBody:
         required: true
         content:
@@ -488,6 +514,7 @@ paths:
         - Schools
       summary: Review one school tenant
       operationId: getSchool
+      x-system-administrator-master-access: true
       parameters:
         - $ref: '#/components/parameters/SchoolId'
       responses:
@@ -509,6 +536,7 @@ paths:
         - Schools
       summary: Update school profile or operational status
       operationId: updateSchool
+      x-system-administrator-master-access: true
       parameters:
         - $ref: '#/components/parameters/SchoolId'
       requestBody:
@@ -540,6 +568,7 @@ paths:
         - Schools
       summary: Soft delete a school tenant
       operationId: deleteSchool
+      x-system-administrator-master-access: true
       parameters:
         - $ref: '#/components/parameters/SchoolId'
       requestBody:
@@ -576,6 +605,7 @@ paths:
         - Schools
       summary: Activate a school tenant
       operationId: activateSchool
+      x-system-administrator-master-access: true
       parameters:
         - $ref: '#/components/parameters/SchoolId'
       requestBody:
@@ -612,6 +642,7 @@ paths:
         - Schools
       summary: Deactivate a school tenant
       operationId: deactivateSchool
+      x-system-administrator-master-access: true
       parameters:
         - $ref: '#/components/parameters/SchoolId'
       requestBody:
@@ -648,6 +679,7 @@ paths:
         - Schools
       summary: Restore a soft-deleted school tenant
       operationId: restoreSchool
+      x-system-administrator-master-access: true
       parameters:
         - $ref: '#/components/parameters/SchoolId'
       requestBody:
@@ -684,6 +716,7 @@ paths:
         - Users
       summary: List users in permitted scope
       operationId: listUsers
+      x-system-administrator-master-access: true
       parameters:
         - $ref: '#/components/parameters/TenantContext'
         - $ref: '#/components/parameters/Page'
@@ -711,6 +744,7 @@ paths:
         - Users
       summary: Create a user inside the permitted scope
       operationId: createUser
+      x-system-administrator-master-access: true
       parameters:
         - $ref: '#/components/parameters/TenantContext'
       requestBody:
@@ -741,6 +775,7 @@ paths:
         - Users
       summary: Retrieve a user in permitted scope
       operationId: getUser
+      x-system-administrator-master-access: true
       parameters:
         - $ref: '#/components/parameters/TenantContext'
         - $ref: '#/components/parameters/UserId'
@@ -767,6 +802,7 @@ paths:
         - Users
       summary: Update documented user fields
       operationId: updateUser
+      x-system-administrator-master-access: true
       parameters:
         - $ref: '#/components/parameters/TenantContext'
         - $ref: '#/components/parameters/UserId'
@@ -803,6 +839,7 @@ paths:
         - Users
       summary: Soft delete a user
       operationId: deleteUser
+      x-system-administrator-master-access: true
       parameters:
         - $ref: '#/components/parameters/TenantContext'
         - $ref: '#/components/parameters/UserId'
@@ -840,6 +877,7 @@ paths:
         - Users
       summary: Activate a user
       operationId: activateUser
+      x-system-administrator-master-access: true
       parameters:
         - $ref: '#/components/parameters/TenantContext'
         - $ref: '#/components/parameters/UserId'
@@ -877,6 +915,7 @@ paths:
         - Users
       summary: Deactivate a user
       operationId: deactivateUser
+      x-system-administrator-master-access: true
       parameters:
         - $ref: '#/components/parameters/TenantContext'
         - $ref: '#/components/parameters/UserId'
@@ -914,6 +953,7 @@ paths:
         - Users
       summary: Restore a soft-deleted user
       operationId: restoreUser
+      x-system-administrator-master-access: true
       parameters:
         - $ref: '#/components/parameters/TenantContext'
         - $ref: '#/components/parameters/UserId'
@@ -951,6 +991,7 @@ paths:
         - Users
       summary: Apply one lifecycle action to selected users
       operationId: bulkLifecycleUsers
+      x-system-administrator-master-access: true
       parameters:
         - $ref: '#/components/parameters/TenantContext'
       requestBody:
@@ -985,6 +1026,7 @@ paths:
         - Roles
       summary: List roles in permitted scope with inherited permissions
       operationId: listRoles
+      x-system-administrator-master-access: true
       parameters:
         - $ref: '#/components/parameters/TenantContext'
         - $ref: '#/components/parameters/Page'
@@ -1013,6 +1055,7 @@ paths:
         - Roles
       summary: Create a scoped role
       operationId: createRole
+      x-system-administrator-master-access: true
       parameters:
         - $ref: '#/components/parameters/TenantContext'
       requestBody:
@@ -1041,6 +1084,7 @@ paths:
         - Roles
       summary: Retrieve a role in permitted scope
       operationId: getRole
+      x-system-administrator-master-access: true
       parameters:
         - $ref: '#/components/parameters/TenantContext'
         - $ref: '#/components/parameters/RoleId'
@@ -1067,6 +1111,7 @@ paths:
         - Roles
       summary: Update documented role fields
       operationId: updateRole
+      x-system-administrator-master-access: true
       parameters:
         - $ref: '#/components/parameters/TenantContext'
         - $ref: '#/components/parameters/RoleId'
@@ -1103,6 +1148,7 @@ paths:
         - Roles
       summary: Soft delete a role
       operationId: deleteRole
+      x-system-administrator-master-access: true
       parameters:
         - $ref: '#/components/parameters/TenantContext'
         - $ref: '#/components/parameters/RoleId'
@@ -1140,6 +1186,7 @@ paths:
         - Roles
       summary: Activate a role
       operationId: activateRole
+      x-system-administrator-master-access: true
       parameters:
         - $ref: '#/components/parameters/TenantContext'
         - $ref: '#/components/parameters/RoleId'
@@ -1177,6 +1224,7 @@ paths:
         - Roles
       summary: Deactivate a role
       operationId: deactivateRole
+      x-system-administrator-master-access: true
       parameters:
         - $ref: '#/components/parameters/TenantContext'
         - $ref: '#/components/parameters/RoleId'
@@ -1214,6 +1262,7 @@ paths:
         - Roles
       summary: Restore a soft-deleted role
       operationId: restoreRole
+      x-system-administrator-master-access: true
       parameters:
         - $ref: '#/components/parameters/TenantContext'
         - $ref: '#/components/parameters/RoleId'
@@ -1251,6 +1300,7 @@ paths:
         - Roles
       summary: Apply one lifecycle action to selected roles
       operationId: bulkLifecycleRoles
+      x-system-administrator-master-access: true
       parameters:
         - $ref: '#/components/parameters/TenantContext'
       requestBody:
@@ -1285,6 +1335,7 @@ paths:
         - Permissions
       summary: List permission definitions available to the requester
       operationId: listPermissions
+      x-system-administrator-master-access: true
       parameters:
         - $ref: '#/components/parameters/TenantContext'
         - $ref: '#/components/parameters/Page'
@@ -1313,6 +1364,7 @@ paths:
         - Academic Years
       summary: List academic years for a school
       operationId: listAcademicYears
+      x-system-administrator-master-access: true
       parameters:
         - $ref: '#/components/parameters/TenantContext'
         - $ref: '#/components/parameters/Page'
@@ -1341,6 +1393,7 @@ paths:
         - Academic Years
       summary: Create an academic year for the resolved school
       operationId: createAcademicYear
+      x-system-administrator-master-access: true
       parameters:
         - $ref: '#/components/parameters/TenantContext'
       requestBody:
@@ -1369,6 +1422,7 @@ paths:
         - Academic Years
       summary: Retrieve an academic year
       operationId: getAcademicYear
+      x-system-administrator-master-access: true
       parameters:
         - $ref: '#/components/parameters/TenantContext'
         - $ref: '#/components/parameters/AcademicYearId'
@@ -1395,6 +1449,7 @@ paths:
         - Academic Years
       summary: Update documented academic year fields
       operationId: updateAcademicYear
+      x-system-administrator-master-access: true
       parameters:
         - $ref: '#/components/parameters/TenantContext'
         - $ref: '#/components/parameters/AcademicYearId'
@@ -1431,6 +1486,7 @@ paths:
         - Academic Years
       summary: Soft delete an academic year
       operationId: deleteAcademicYear
+      x-system-administrator-master-access: true
       parameters:
         - $ref: '#/components/parameters/TenantContext'
         - $ref: '#/components/parameters/AcademicYearId'
@@ -1468,6 +1524,7 @@ paths:
         - Academic Years
       summary: Activate an academic year
       operationId: activateAcademicYear
+      x-system-administrator-master-access: true
       parameters:
         - $ref: '#/components/parameters/TenantContext'
         - $ref: '#/components/parameters/AcademicYearId'
@@ -1505,6 +1562,7 @@ paths:
         - Academic Years
       summary: Deactivate an academic year
       operationId: deactivateAcademicYear
+      x-system-administrator-master-access: true
       parameters:
         - $ref: '#/components/parameters/TenantContext'
         - $ref: '#/components/parameters/AcademicYearId'
@@ -1542,6 +1600,7 @@ paths:
         - Academic Years
       summary: Restore a soft-deleted academic year
       operationId: restoreAcademicYear
+      x-system-administrator-master-access: true
       parameters:
         - $ref: '#/components/parameters/TenantContext'
         - $ref: '#/components/parameters/AcademicYearId'
@@ -1579,6 +1638,7 @@ paths:
         - Academic Years
       summary: Apply one lifecycle action to selected academic years
       operationId: bulkLifecycleAcademicYears
+      x-system-administrator-master-access: true
       parameters:
         - $ref: '#/components/parameters/TenantContext'
       requestBody:
@@ -1613,6 +1673,7 @@ paths:
         - Academic Periods
       summary: List academic periods for a school
       operationId: listAcademicPeriods
+      x-system-administrator-master-access: true
       parameters:
         - $ref: '#/components/parameters/TenantContext'
         - $ref: '#/components/parameters/Page'
@@ -1646,6 +1707,7 @@ paths:
         - Academic Periods
       summary: Create an academic period inside an academic year
       operationId: createAcademicPeriod
+      x-system-administrator-master-access: true
       parameters:
         - $ref: '#/components/parameters/TenantContext'
       requestBody:
@@ -1674,6 +1736,7 @@ paths:
         - Academic Periods
       summary: Retrieve an academic period
       operationId: getAcademicPeriod
+      x-system-administrator-master-access: true
       parameters:
         - $ref: '#/components/parameters/TenantContext'
         - $ref: '#/components/parameters/AcademicPeriodId'
@@ -1700,6 +1763,7 @@ paths:
         - Academic Periods
       summary: Update documented academic period fields
       operationId: updateAcademicPeriod
+      x-system-administrator-master-access: true
       parameters:
         - $ref: '#/components/parameters/TenantContext'
         - $ref: '#/components/parameters/AcademicPeriodId'
@@ -1736,6 +1800,7 @@ paths:
         - Academic Periods
       summary: Soft delete an academic period
       operationId: deleteAcademicPeriod
+      x-system-administrator-master-access: true
       parameters:
         - $ref: '#/components/parameters/TenantContext'
         - $ref: '#/components/parameters/AcademicPeriodId'
@@ -1773,6 +1838,7 @@ paths:
         - Academic Periods
       summary: Activate an academic period
       operationId: activateAcademicPeriod
+      x-system-administrator-master-access: true
       parameters:
         - $ref: '#/components/parameters/TenantContext'
         - $ref: '#/components/parameters/AcademicPeriodId'
@@ -1810,6 +1876,7 @@ paths:
         - Academic Periods
       summary: Deactivate an academic period
       operationId: deactivateAcademicPeriod
+      x-system-administrator-master-access: true
       parameters:
         - $ref: '#/components/parameters/TenantContext'
         - $ref: '#/components/parameters/AcademicPeriodId'
@@ -1847,6 +1914,7 @@ paths:
         - Academic Periods
       summary: Restore a soft-deleted academic period
       operationId: restoreAcademicPeriod
+      x-system-administrator-master-access: true
       parameters:
         - $ref: '#/components/parameters/TenantContext'
         - $ref: '#/components/parameters/AcademicPeriodId'
@@ -1884,6 +1952,7 @@ paths:
         - Academic Periods
       summary: Apply one lifecycle action to selected academic periods
       operationId: bulkLifecycleAcademicPeriods
+      x-system-administrator-master-access: true
       parameters:
         - $ref: '#/components/parameters/TenantContext'
       requestBody:
@@ -1918,6 +1987,7 @@ paths:
         - Guardians
       summary: List guardians for a school
       operationId: listGuardians
+      x-system-administrator-master-access: true
       parameters:
         - $ref: '#/components/parameters/TenantContext'
         - $ref: '#/components/parameters/Page'
@@ -1946,6 +2016,7 @@ paths:
         - Guardians
       summary: Create or maintain a guardian record
       operationId: createGuardian
+      x-system-administrator-master-access: true
       parameters:
         - $ref: '#/components/parameters/TenantContext'
       requestBody:
@@ -1974,6 +2045,7 @@ paths:
         - Guardians
       summary: Retrieve a guardian
       operationId: getGuardian
+      x-system-administrator-master-access: true
       parameters:
         - $ref: '#/components/parameters/TenantContext'
         - $ref: '#/components/parameters/GuardianId'
@@ -2000,6 +2072,7 @@ paths:
         - Guardians
       summary: Update documented guardian fields
       operationId: updateGuardian
+      x-system-administrator-master-access: true
       parameters:
         - $ref: '#/components/parameters/TenantContext'
         - $ref: '#/components/parameters/GuardianId'
@@ -2036,6 +2109,7 @@ paths:
         - Guardians
       summary: Soft delete a guardian
       operationId: deleteGuardian
+      x-system-administrator-master-access: true
       parameters:
         - $ref: '#/components/parameters/TenantContext'
         - $ref: '#/components/parameters/GuardianId'
@@ -2074,6 +2148,7 @@ paths:
       summary: Link a guardian record to an authenticated user account
       description: Creates the same-school guardian-user link required before a user can act as a guardian in guardian self-service. This operation is school-admin only and does not grant student visibility without active guardian-student associations.
       operationId: createGuardianUserLink
+      x-system-administrator-master-access: true
       parameters:
         - $ref: '#/components/parameters/TenantContext'
         - $ref: '#/components/parameters/GuardianId'
@@ -2112,6 +2187,7 @@ paths:
       summary: Deactivate a guardian-user link
       description: Deactivates a same-school guardian-user link and immediately removes guardian self-service proof for that linked user and guardian record.
       operationId: deactivateGuardianUserLink
+      x-system-administrator-master-access: true
       parameters:
         - $ref: '#/components/parameters/TenantContext'
         - $ref: '#/components/parameters/GuardianId'
@@ -2150,6 +2226,7 @@ paths:
         - Guardians
       summary: Activate a guardian
       operationId: activateGuardian
+      x-system-administrator-master-access: true
       parameters:
         - $ref: '#/components/parameters/TenantContext'
         - $ref: '#/components/parameters/GuardianId'
@@ -2187,6 +2264,7 @@ paths:
         - Guardians
       summary: Deactivate a guardian
       operationId: deactivateGuardian
+      x-system-administrator-master-access: true
       parameters:
         - $ref: '#/components/parameters/TenantContext'
         - $ref: '#/components/parameters/GuardianId'
@@ -2224,6 +2302,7 @@ paths:
         - Guardians
       summary: Restore a soft-deleted guardian
       operationId: restoreGuardian
+      x-system-administrator-master-access: true
       parameters:
         - $ref: '#/components/parameters/TenantContext'
         - $ref: '#/components/parameters/GuardianId'
@@ -2261,6 +2340,7 @@ paths:
         - Guardians
       summary: Apply one lifecycle action to selected guardians
       operationId: bulkLifecycleGuardians
+      x-system-administrator-master-access: true
       parameters:
         - $ref: '#/components/parameters/TenantContext'
       requestBody:
@@ -2296,6 +2376,7 @@ paths:
       summary: List students visible to the authenticated guardian
       description: Returns only active same-school student profiles associated with the authenticated guardian through an active guardian-user link and active school-approved guardian-student association.
       operationId: listGuardianStudents
+      x-system-administrator-master-access: true
       parameters:
         - $ref: '#/components/parameters/TenantContext'
         - $ref: '#/components/parameters/Page'
@@ -2327,6 +2408,7 @@ paths:
       summary: Retrieve a guardian-visible student summary
       description: Returns the limited profile and enrollment summary for a permitted active student. Missing, unassociated, inactive, or cross-tenant target students return the same not-found envelope.
       operationId: getGuardianStudent
+      x-system-administrator-master-access: true
       parameters:
         - $ref: '#/components/parameters/TenantContext'
         - $ref: '#/components/parameters/StudentProfileId'
@@ -2357,6 +2439,7 @@ paths:
       summary: Retrieve guardian-visible academic summary
       description: Returns summary-only academic information for one permitted student and one explicit same-school academic period. Detailed grade rows, attendance rows, correction history, teacher content, questionnaire answers, and reports are not exposed.
       operationId: getGuardianStudentAcademics
+      x-system-administrator-master-access: true
       parameters:
         - $ref: '#/components/parameters/TenantContext'
         - $ref: '#/components/parameters/StudentProfileId'
@@ -2388,6 +2471,7 @@ paths:
       summary: Retrieve guardian-visible contact information
       description: Returns only the authenticated guardian's own contact fields, school-approved relationship label, and the student's primary school-approved contact details. Other guardian records, non-primary contacts, emergency handling details, and school-only notes are hidden.
       operationId: getGuardianStudentContacts
+      x-system-administrator-master-access: true
       parameters:
         - $ref: '#/components/parameters/TenantContext'
         - $ref: '#/components/parameters/StudentProfileId'
@@ -2417,6 +2501,7 @@ paths:
         - Student Profiles
       summary: List student profiles in the resolved school context
       operationId: listStudentProfiles
+      x-system-administrator-master-access: true
       parameters:
         - $ref: '#/components/parameters/TenantContext'
         - $ref: '#/components/parameters/Page'
@@ -2449,6 +2534,7 @@ paths:
         - Student Profiles
       summary: Create a same-school student profile
       operationId: createStudentProfile
+      x-system-administrator-master-access: true
       parameters:
         - $ref: '#/components/parameters/TenantContext'
       requestBody:
@@ -2483,6 +2569,7 @@ paths:
         - Student Profiles
       summary: Retrieve a same-school student profile
       operationId: getStudentProfile
+      x-system-administrator-master-access: true
       parameters:
         - $ref: '#/components/parameters/TenantContext'
         - $ref: '#/components/parameters/StudentProfileId'
@@ -2510,6 +2597,7 @@ paths:
         - Student Profiles
       summary: Update a non-transfer student profile lifecycle status
       operationId: updateStudentProfileStatus
+      x-system-administrator-master-access: true
       parameters:
         - $ref: '#/components/parameters/TenantContext'
         - $ref: '#/components/parameters/StudentProfileId'
@@ -2547,6 +2635,7 @@ paths:
         - Student Profiles
       summary: Record a source-school student transfer
       operationId: transferStudentProfile
+      x-system-administrator-master-access: true
       parameters:
         - $ref: '#/components/parameters/TenantContext'
         - $ref: '#/components/parameters/StudentProfileId'
@@ -2584,6 +2673,7 @@ paths:
         - Teacher Content
       summary: List tenant-scoped teacher content items
       operationId: listTeacherContent
+      x-system-administrator-master-access: true
       parameters:
         - $ref: '#/components/parameters/TenantContext'
         - $ref: '#/components/parameters/Page'
@@ -2613,6 +2703,7 @@ paths:
         - Teacher Content
       summary: Create a tenant-scoped teacher content item
       operationId: createTeacherContent
+      x-system-administrator-master-access: true
       parameters:
         - $ref: '#/components/parameters/TenantContext'
       requestBody:
@@ -2645,6 +2736,7 @@ paths:
         - Teacher Content
       summary: Retrieve a tenant-scoped teacher content item
       operationId: getTeacherContent
+      x-system-administrator-master-access: true
       parameters:
         - $ref: '#/components/parameters/TenantContext'
         - $ref: '#/components/parameters/ContentItemId'
@@ -2672,6 +2764,7 @@ paths:
       summary: Update editable metadata for a teacher content item
       description: Only documented editable fields may change. Historical student-facing meaning changes are rejected after use by a published or assigned learning set.
       operationId: updateTeacherContent
+      x-system-administrator-master-access: true
       parameters:
         - $ref: '#/components/parameters/TenantContext'
         - $ref: '#/components/parameters/ContentItemId'
@@ -2708,6 +2801,7 @@ paths:
         - Teacher Content
       summary: Soft-delete a teacher content item
       operationId: deleteTeacherContent
+      x-system-administrator-master-access: true
       parameters:
         - $ref: '#/components/parameters/TenantContext'
         - $ref: '#/components/parameters/ContentItemId'
@@ -2738,6 +2832,7 @@ paths:
       summary: Activate or deactivate a teacher content item
       description: Only `active` and `inactive` are accepted in this transition endpoint. Delete and restore use dedicated operations. Activation validates current tenant, dependency, scan, and student-visibility rules.
       operationId: updateTeacherContentStatus
+      x-system-administrator-master-access: true
       parameters:
         - $ref: '#/components/parameters/TenantContext'
         - $ref: '#/components/parameters/ContentItemId'
@@ -2776,6 +2871,7 @@ paths:
       summary: Restore a deleted teacher content item
       description: Restores the record to `inactive`. A separate status transition is required before active or student-facing use.
       operationId: restoreTeacherContent
+      x-system-administrator-master-access: true
       parameters:
         - $ref: '#/components/parameters/TenantContext'
         - $ref: '#/components/parameters/ContentItemId'
@@ -2812,6 +2908,7 @@ paths:
       summary: Request authorized download metadata for a teacher content item
       description: Download access requires clean scan status, same-school authority, and an allowed active lifecycle state. Successful and denied attempts are audited with tenant-safe metadata only.
       operationId: downloadTeacherContent
+      x-system-administrator-master-access: true
       parameters:
         - $ref: '#/components/parameters/TenantContext'
         - $ref: '#/components/parameters/ContentItemId'
@@ -2841,6 +2938,7 @@ paths:
         - Questionnaires
       summary: List tenant-scoped questionnaires
       operationId: listQuestionnaires
+      x-system-administrator-master-access: true
       parameters:
         - $ref: '#/components/parameters/TenantContext'
         - $ref: '#/components/parameters/Page'
@@ -2870,6 +2968,7 @@ paths:
         - Questionnaires
       summary: Create a questionnaire with v1 supported question types
       operationId: createQuestionnaire
+      x-system-administrator-master-access: true
       parameters:
         - $ref: '#/components/parameters/TenantContext'
       requestBody:
@@ -2902,6 +3001,7 @@ paths:
         - Questionnaires
       summary: Retrieve a tenant-scoped questionnaire
       operationId: getQuestionnaire
+      x-system-administrator-master-access: true
       parameters:
         - $ref: '#/components/parameters/TenantContext'
         - $ref: '#/components/parameters/QuestionnaireId'
@@ -2929,6 +3029,7 @@ paths:
       summary: Update editable questionnaire fields
       description: Edits that change historical student-facing meaning after use by a published or assigned learning set are rejected in v1.
       operationId: updateQuestionnaire
+      x-system-administrator-master-access: true
       parameters:
         - $ref: '#/components/parameters/TenantContext'
         - $ref: '#/components/parameters/QuestionnaireId'
@@ -2965,6 +3066,7 @@ paths:
         - Questionnaires
       summary: Soft-delete a questionnaire
       operationId: deleteQuestionnaire
+      x-system-administrator-master-access: true
       parameters:
         - $ref: '#/components/parameters/TenantContext'
         - $ref: '#/components/parameters/QuestionnaireId'
@@ -2994,6 +3096,7 @@ paths:
         - Questionnaires
       summary: Activate or deactivate a questionnaire
       operationId: updateQuestionnaireStatus
+      x-system-administrator-master-access: true
       parameters:
         - $ref: '#/components/parameters/TenantContext'
         - $ref: '#/components/parameters/QuestionnaireId'
@@ -3031,6 +3134,7 @@ paths:
         - Questionnaires
       summary: Restore a deleted questionnaire
       operationId: restoreQuestionnaire
+      x-system-administrator-master-access: true
       parameters:
         - $ref: '#/components/parameters/TenantContext'
         - $ref: '#/components/parameters/QuestionnaireId'
@@ -3066,6 +3170,7 @@ paths:
         - Assessment Responses
       summary: Submit one assigned questionnaire response attempt as the authenticated student
       operationId: submitStudentQuestionnaireResponse
+      x-system-administrator-master-access: true
       parameters:
         - $ref: '#/components/parameters/TenantContext'
       requestBody:
@@ -3103,6 +3208,7 @@ paths:
         - Assessment Responses
       summary: Retrieve the authenticated student's own questionnaire response
       operationId: getStudentQuestionnaireResponse
+      x-system-administrator-master-access: true
       parameters:
         - $ref: '#/components/parameters/TenantContext'
         - $ref: '#/components/parameters/ResponseAttemptId'
@@ -3130,6 +3236,7 @@ paths:
         - Assessment Responses
       summary: List same-school questionnaire response attempts for teacher or administrator review
       operationId: listQuestionnaireResponses
+      x-system-administrator-master-access: true
       parameters:
         - $ref: '#/components/parameters/TenantContext'
         - $ref: '#/components/parameters/Page'
@@ -3174,6 +3281,7 @@ paths:
         - Assessment Responses
       summary: Retrieve one same-school questionnaire response for authorized review
       operationId: getQuestionnaireResponse
+      x-system-administrator-master-access: true
       parameters:
         - $ref: '#/components/parameters/TenantContext'
         - $ref: '#/components/parameters/ResponseAttemptId'
@@ -3201,6 +3309,7 @@ paths:
         - Assessment Responses
       summary: Grade advanced questionnaire response answers
       operationId: gradeQuestionnaireResponse
+      x-system-administrator-master-access: true
       parameters:
         - $ref: '#/components/parameters/TenantContext'
         - $ref: '#/components/parameters/ResponseAttemptId'
@@ -3238,6 +3347,7 @@ paths:
         - Assessment Responses
       summary: Download a clean answer file for authorized assessment review
       operationId: downloadQuestionnaireResponseFile
+      x-system-administrator-master-access: true
       parameters:
         - $ref: '#/components/parameters/TenantContext'
         - $ref: '#/components/parameters/ResponseAttemptId'
@@ -3268,6 +3378,7 @@ paths:
         - Learning Sets
       summary: List tenant-scoped learning sets
       operationId: listLearningSets
+      x-system-administrator-master-access: true
       parameters:
         - $ref: '#/components/parameters/TenantContext'
         - $ref: '#/components/parameters/Page'
@@ -3297,6 +3408,7 @@ paths:
         - Learning Sets
       summary: Create a learning set with ordered entries and direct student assignments
       operationId: createLearningSet
+      x-system-administrator-master-access: true
       parameters:
         - $ref: '#/components/parameters/TenantContext'
       requestBody:
@@ -3329,6 +3441,7 @@ paths:
         - Learning Sets
       summary: Retrieve a tenant-scoped learning set
       operationId: getLearningSet
+      x-system-administrator-master-access: true
       parameters:
         - $ref: '#/components/parameters/TenantContext'
         - $ref: '#/components/parameters/LearningSetId'
@@ -3356,6 +3469,7 @@ paths:
       summary: Update editable learning-set fields
       description: New writes use roster-aware assignment scope. Legacy direct selected-student assignments remain readable only where already present.
       operationId: updateLearningSet
+      x-system-administrator-master-access: true
       parameters:
         - $ref: '#/components/parameters/TenantContext'
         - $ref: '#/components/parameters/LearningSetId'
@@ -3392,6 +3506,7 @@ paths:
         - Learning Sets
       summary: Soft-delete a learning set
       operationId: deleteLearningSet
+      x-system-administrator-master-access: true
       parameters:
         - $ref: '#/components/parameters/TenantContext'
         - $ref: '#/components/parameters/LearningSetId'
@@ -3421,6 +3536,7 @@ paths:
         - Learning Sets
       summary: Activate or deactivate a learning set
       operationId: updateLearningSetStatus
+      x-system-administrator-master-access: true
       parameters:
         - $ref: '#/components/parameters/TenantContext'
         - $ref: '#/components/parameters/LearningSetId'
@@ -3458,6 +3574,7 @@ paths:
         - Learning Sets
       summary: Restore a deleted learning set
       operationId: restoreLearningSet
+      x-system-administrator-master-access: true
       parameters:
         - $ref: '#/components/parameters/TenantContext'
         - $ref: '#/components/parameters/LearningSetId'
@@ -3493,6 +3610,7 @@ paths:
         - Grades
       summary: List grade records in permitted scope
       operationId: listGrades
+      x-system-administrator-master-access: true
       parameters:
         - $ref: '#/components/parameters/TenantContext'
         - $ref: '#/components/parameters/Page'
@@ -3522,6 +3640,7 @@ paths:
         - Grades
       summary: Record a grade for a student in an academic period
       operationId: createGrade
+      x-system-administrator-master-access: true
       parameters:
         - $ref: '#/components/parameters/TenantContext'
       requestBody:
@@ -3554,6 +3673,7 @@ paths:
         - Grades
       summary: Retrieve a grade record in permitted scope
       operationId: getGrade
+      x-system-administrator-master-access: true
       parameters:
         - $ref: '#/components/parameters/TenantContext'
         - $ref: '#/components/parameters/GradeId'
@@ -3580,6 +3700,7 @@ paths:
         - Grades
       summary: Soft-delete a grade record
       operationId: deleteGrade
+      x-system-administrator-master-access: true
       parameters:
         - $ref: '#/components/parameters/TenantContext'
         - $ref: '#/components/parameters/GradeId'
@@ -3610,6 +3731,7 @@ paths:
       summary: Correct a grade record with a required reason
       description: Preserves original values, current values, actor, timestamp, and correction history. Closed-period corrections are school-administrator-only.
       operationId: correctGrade
+      x-system-administrator-master-access: true
       parameters:
         - $ref: '#/components/parameters/TenantContext'
         - $ref: '#/components/parameters/GradeId'
@@ -3647,6 +3769,7 @@ paths:
         - Grades
       summary: Activate or deactivate a grade record
       operationId: updateGradeStatus
+      x-system-administrator-master-access: true
       parameters:
         - $ref: '#/components/parameters/TenantContext'
         - $ref: '#/components/parameters/GradeId'
@@ -3684,6 +3807,7 @@ paths:
         - Grades
       summary: Restore a deleted grade record
       operationId: restoreGrade
+      x-system-administrator-master-access: true
       parameters:
         - $ref: '#/components/parameters/TenantContext'
         - $ref: '#/components/parameters/GradeId'
@@ -3720,6 +3844,7 @@ paths:
       summary: Submit a create-only JSON grade import
       description: Only school administrators may import grades. Imports are limited to JSON payloads, a maximum of 500 rows, and all-or-nothing validation.
       operationId: importGrades
+      x-system-administrator-master-access: true
       parameters:
         - $ref: '#/components/parameters/TenantContext'
       requestBody:
@@ -3754,6 +3879,7 @@ paths:
         - Attendance
       summary: List attendance records in permitted scope
       operationId: listAttendance
+      x-system-administrator-master-access: true
       parameters:
         - $ref: '#/components/parameters/TenantContext'
         - $ref: '#/components/parameters/Page'
@@ -3783,6 +3909,7 @@ paths:
         - Attendance
       summary: Record attendance for a student in an academic period
       operationId: createAttendance
+      x-system-administrator-master-access: true
       parameters:
         - $ref: '#/components/parameters/TenantContext'
       requestBody:
@@ -3815,6 +3942,7 @@ paths:
         - Attendance
       summary: Retrieve an attendance record in permitted scope
       operationId: getAttendance
+      x-system-administrator-master-access: true
       parameters:
         - $ref: '#/components/parameters/TenantContext'
         - $ref: '#/components/parameters/AttendanceId'
@@ -3841,6 +3969,7 @@ paths:
         - Attendance
       summary: Soft-delete an attendance record
       operationId: deleteAttendance
+      x-system-administrator-master-access: true
       parameters:
         - $ref: '#/components/parameters/TenantContext'
         - $ref: '#/components/parameters/AttendanceId'
@@ -3871,6 +4000,7 @@ paths:
       summary: Correct an attendance record with a required reason
       description: Preserves original values, current values, actor, timestamp, and correction history. Closed-period corrections are school-administrator-only.
       operationId: correctAttendance
+      x-system-administrator-master-access: true
       parameters:
         - $ref: '#/components/parameters/TenantContext'
         - $ref: '#/components/parameters/AttendanceId'
@@ -3908,6 +4038,7 @@ paths:
         - Attendance
       summary: Activate or deactivate an attendance record
       operationId: updateAttendanceStatus
+      x-system-administrator-master-access: true
       parameters:
         - $ref: '#/components/parameters/TenantContext'
         - $ref: '#/components/parameters/AttendanceId'
@@ -3945,6 +4076,7 @@ paths:
         - Attendance
       summary: Restore a deleted attendance record
       operationId: restoreAttendance
+      x-system-administrator-master-access: true
       parameters:
         - $ref: '#/components/parameters/TenantContext'
         - $ref: '#/components/parameters/AttendanceId'
@@ -3981,6 +4113,7 @@ paths:
       summary: Submit a create-only JSON attendance import
       description: Only school administrators may import attendance. Imports are limited to JSON payloads, a maximum of 500 rows, and all-or-nothing validation.
       operationId: importAttendance
+      x-system-administrator-master-access: true
       parameters:
         - $ref: '#/components/parameters/TenantContext'
       requestBody:
@@ -4015,6 +4148,7 @@ paths:
         - Learning Sets
       summary: List learning sets assigned to the authenticated student
       operationId: listStudentLearningSets
+      x-system-administrator-master-access: true
       parameters:
         - $ref: '#/components/parameters/TenantContext'
         - $ref: '#/components/parameters/AcademicPeriodFilterRequired'
@@ -4046,6 +4180,7 @@ paths:
         - Teacher Content
       summary: Download assigned teacher content for the authenticated student
       operationId: downloadStudentTeacherContent
+      x-system-administrator-master-access: true
       parameters:
         - $ref: '#/components/parameters/TenantContext'
         - $ref: '#/components/parameters/ContentItemId'
@@ -4071,6 +4206,7 @@ paths:
         - Grades
       summary: List grade records for the authenticated student
       operationId: listStudentGrades
+      x-system-administrator-master-access: true
       parameters:
         - $ref: '#/components/parameters/TenantContext'
         - $ref: '#/components/parameters/AcademicPeriodFilter'
@@ -4102,6 +4238,7 @@ paths:
         - Attendance
       summary: List attendance records for the authenticated student
       operationId: listStudentAttendance
+      x-system-administrator-master-access: true
       parameters:
         - $ref: '#/components/parameters/TenantContext'
         - $ref: '#/components/parameters/AcademicPeriodFilter'
@@ -4158,6 +4295,7 @@ paths:
       summary: List school-owned class sections
       description: Returns only ClassSection/Roster records in the resolved active school context. Supports pagination plus academicPeriodId and status filters only; include expansion, sort behavior, and other filters are rejected.
       operationId: listClassSections
+      x-system-administrator-master-access: true
       parameters:
         - $ref: '#/components/parameters/TenantContext'
         - $ref: '#/components/parameters/Page'
@@ -4183,6 +4321,7 @@ paths:
       summary: Create a school-owned class section
       description: Creates an active ClassSection/Roster for the resolved school and active compatible academic period. Code is unique per school and academic period; names may repeat. Creation as inactive, unsupported metadata fields, cross-tenant references, and duplicate codes are rejected.
       operationId: createClassSection
+      x-system-administrator-master-access: true
       parameters:
         - $ref: '#/components/parameters/TenantContext'
       requestBody:
@@ -4212,6 +4351,7 @@ paths:
         - Class Sections
       summary: Get a school-owned class section
       operationId: getClassSection
+      x-system-administrator-master-access: true
       parameters:
         - $ref: '#/components/parameters/TenantContext'
         - $ref: '#/components/parameters/ClassSectionId'
@@ -4234,6 +4374,7 @@ paths:
       summary: Update class-section metadata
       description: Updates documented code, name, and structured course/classroom/section/group metadata only. Status changes use the status operation; inactive reactivation is not supported in v1.
       operationId: updateClassSection
+      x-system-administrator-master-access: true
       parameters:
         - $ref: '#/components/parameters/TenantContext'
         - $ref: '#/components/parameters/ClassSectionId'
@@ -4267,6 +4408,7 @@ paths:
       summary: Inactivate a class section
       description: Inactivates an active ClassSection/Roster only when no active roster memberships or active teacher assignments exist. A reason and today-or-past effective date inside the academic period are required. Reactivation is not supported in v1.
       operationId: updateClassSectionStatus
+      x-system-administrator-master-access: true
       parameters:
         - $ref: '#/components/parameters/TenantContext'
         - $ref: '#/components/parameters/ClassSectionId'
@@ -4300,6 +4442,7 @@ paths:
       summary: List roster memberships
       description: Returns school-scoped membership history for the target class section. Supports pagination plus academicPeriodId and status filters only.
       operationId: listClassSectionMemberships
+      x-system-administrator-master-access: true
       parameters:
         - $ref: '#/components/parameters/TenantContext'
         - $ref: '#/components/parameters/ClassSectionId'
@@ -4328,6 +4471,7 @@ paths:
       summary: Add roster memberships as an all-or-nothing batch
       description: Adds up to 100 active same-school student profiles to the roster. Every student must be active, not deleted or transferred, and have active same-school enrollment covering the explicit effective start date. Any invalid member rejects the whole request without partial changes.
       operationId: batchAddClassSectionMemberships
+      x-system-administrator-master-access: true
       parameters:
         - $ref: '#/components/parameters/TenantContext'
         - $ref: '#/components/parameters/ClassSectionId'
@@ -4360,6 +4504,7 @@ paths:
       summary: End roster memberships as an all-or-nothing batch
       description: Ends up to 100 active memberships. A reason and today-or-past effective end date inside the academic period are required; the end date must be on or after each membership effective start date. Any invalid membership rejects the whole request.
       operationId: batchEndClassSectionMemberships
+      x-system-administrator-master-access: true
       parameters:
         - $ref: '#/components/parameters/TenantContext'
         - $ref: '#/components/parameters/ClassSectionId'
@@ -4393,6 +4538,7 @@ paths:
       summary: List teacher assignments
       description: School administrators can list same-school teacher assignments. Teachers can list only their own active assignments. Supports pagination plus academicPeriodId and status filters only.
       operationId: listTeacherAssignments
+      x-system-administrator-master-access: true
       parameters:
         - $ref: '#/components/parameters/TenantContext'
         - $ref: '#/components/parameters/Page'
@@ -4418,6 +4564,7 @@ paths:
       summary: Create a teacher assignment
       description: Assigns an active same-school teacher-compatible user to an active class section for an active compatible academic period. The teacher-compatible role must be active on the explicit effective start date. Duplicate active assignments are rejected.
       operationId: createTeacherAssignment
+      x-system-administrator-master-access: true
       parameters:
         - $ref: '#/components/parameters/TenantContext'
       requestBody:
@@ -4448,6 +4595,7 @@ paths:
       summary: Get a teacher assignment
       description: School administrators can read same-school assignment details. Teachers can retrieve only their own active assignment detail.
       operationId: getTeacherAssignment
+      x-system-administrator-master-access: true
       parameters:
         - $ref: '#/components/parameters/TenantContext'
         - $ref: '#/components/parameters/TeacherAssignmentId'
@@ -4471,6 +4619,7 @@ paths:
       summary: Deactivate a teacher assignment
       description: Deactivates an active teacher assignment. A reason and today-or-past effective end date inside the academic period are required; the end date must be on or after the assignment effective start date.
       operationId: updateTeacherAssignmentStatus
+      x-system-administrator-master-access: true
       parameters:
         - $ref: '#/components/parameters/TenantContext'
         - $ref: '#/components/parameters/TeacherAssignmentId'
@@ -4504,6 +4653,7 @@ paths:
       summary: List minimized platform school summaries
       description: Returns platform-wide school operational summaries with documented filters, pagination, sorting, small-count suppression, and no school-owned detail records.
       operationId: listPlatformSchoolSummaries
+      x-system-administrator-master-access: true
       parameters:
         - $ref: '#/components/parameters/Page'
         - $ref: '#/components/parameters/PerPage'
@@ -4541,6 +4691,7 @@ paths:
       summary: Get cross-school reporting overview
       description: Returns approved aggregate reporting health and lifecycle indicators without raw report outputs, generated files, or school-owned detail records.
       operationId: getPlatformReportingOverview
+      x-system-administrator-master-access: true
       parameters:
         - $ref: '#/components/parameters/Page'
         - $ref: '#/components/parameters/PerPage'
@@ -4565,6 +4716,7 @@ paths:
       summary: Request target-school support access
       description: Creates or evaluates a minimized support access decision for exactly one target school using documented reason, purpose, correlation metadata, and target-school opt-in state.
       operationId: requestSupportAccess
+      x-system-administrator-master-access: true
       requestBody:
         required: true
         content:
@@ -4592,6 +4744,7 @@ paths:
         - Platform Support
       summary: Get support access decision detail
       operationId: getSupportAccessDecision
+      x-system-administrator-master-access: true
       parameters:
         - $ref: '#/components/parameters/SupportAccessId'
       responses:
@@ -4614,6 +4767,7 @@ paths:
       summary: Approve support access
       description: Records internal platform approval only when the matching target-school opt-in and support decision gates are valid.
       operationId: approveSupportAccess
+      x-system-administrator-master-access: true
       parameters:
         - $ref: '#/components/parameters/SupportAccessId'
       requestBody:
@@ -4645,6 +4799,7 @@ paths:
         - Platform Support
       summary: Revoke support access
       operationId: revokeSupportAccess
+      x-system-administrator-master-access: true
       parameters:
         - $ref: '#/components/parameters/SupportAccessId'
       requestBody:
@@ -4677,6 +4832,7 @@ paths:
       summary: Get redacted support diagnostics for one school
       description: Returns redacted read-only diagnostics for one target school only when target-school opt-in and internal platform approval gates are valid and no older than 24 hours.
       operationId: getSupportSchoolDiagnostics
+      x-system-administrator-master-access: true
       parameters:
         - $ref: '#/components/parameters/SchoolId'
         - name: support_access_id
@@ -4708,6 +4864,7 @@ paths:
         - Platform Support
       summary: List minimized support audit events
       operationId: listSupportAuditEvents
+      x-system-administrator-master-access: true
       parameters:
         - $ref: '#/components/parameters/Page'
         - $ref: '#/components/parameters/PerPage'

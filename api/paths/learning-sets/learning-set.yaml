@@ -3,6 +3,7 @@ get:
     - Learning Sets
   summary: Retrieve a tenant-scoped learning set
   operationId: getLearningSet
+  x-system-administrator-master-access: true
   parameters:
     - $ref: ../../components/parameters/schools/TenantContext.yaml
     - $ref: ../../components/parameters/learning-sets/LearningSetId.yaml
@@ -32,6 +33,7 @@ patch:
     New writes use roster-aware assignment scope. Legacy direct selected-student
     assignments remain readable only where already present.
   operationId: updateLearningSet
+  x-system-administrator-master-access: true
   parameters:
     - $ref: ../../components/parameters/schools/TenantContext.yaml
     - $ref: ../../components/parameters/learning-sets/LearningSetId.yaml
@@ -68,6 +70,7 @@ delete:
     - Learning Sets
   summary: Soft-delete a learning set
   operationId: deleteLearningSet
+  x-system-administrator-master-access: true
   parameters:
     - $ref: ../../components/parameters/schools/TenantContext.yaml
     - $ref: ../../components/parameters/learning-sets/LearningSetId.yaml

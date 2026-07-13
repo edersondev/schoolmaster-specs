@@ -8,6 +8,7 @@ get:
     school-approved contact details. Other guardian records, non-primary
     contacts, emergency handling details, and school-only notes are hidden.
   operationId: getGuardianStudentContacts
+  x-system-administrator-master-access: true
   parameters:
     - $ref: ../../../components/parameters/schools/TenantContext.yaml
     - $ref: ../../../components/parameters/student-profiles/StudentProfileId.yaml

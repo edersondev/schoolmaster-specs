@@ -3,6 +3,7 @@ delete:
     - Reports
   summary: Soft-delete a report run from default report lists
   operationId: deleteReport
+  x-system-administrator-master-access: true
   parameters:
     - $ref: ../../components/parameters/schools/TenantContext.yaml
     - $ref: ../../components/parameters/reports/ReportRunId.yaml

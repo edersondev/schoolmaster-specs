@@ -3,6 +3,7 @@ patch:
     - Grades
   summary: Activate or deactivate a grade record
   operationId: updateGradeStatus
+  x-system-administrator-master-access: true
   parameters:
     - $ref: ../../components/parameters/schools/TenantContext.yaml
     - $ref: ../../components/parameters/grades/GradeId.yaml

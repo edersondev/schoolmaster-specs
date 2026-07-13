@@ -3,6 +3,7 @@ post:
     - Reports
   summary: Restore a soft-deleted report run
   operationId: restoreReport
+  x-system-administrator-master-access: true
   parameters:
     - $ref: ../../components/parameters/schools/TenantContext.yaml
     - $ref: ../../components/parameters/reports/ReportRunId.yaml

@@ -3,6 +3,7 @@ get:
     - Users
   summary: Retrieve a user in permitted scope
   operationId: getUser
+  x-system-administrator-master-access: true
   parameters:
     - $ref: ../../components/parameters/schools/TenantContext.yaml
     - $ref: ../../components/parameters/users/UserId.yaml
@@ -29,6 +30,7 @@ patch:
     - Users
   summary: Update documented user fields
   operationId: updateUser
+  x-system-administrator-master-access: true
   parameters:
     - $ref: ../../components/parameters/schools/TenantContext.yaml
     - $ref: ../../components/parameters/users/UserId.yaml
@@ -65,6 +67,7 @@ delete:
     - Users
   summary: Soft delete a user
   operationId: deleteUser
+  x-system-administrator-master-access: true
   parameters:
     - $ref: ../../components/parameters/schools/TenantContext.yaml
     - $ref: ../../components/parameters/users/UserId.yaml

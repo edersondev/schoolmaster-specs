@@ -6,6 +6,7 @@ post:
     Deactivates a same-school guardian-user link and immediately removes
     guardian self-service proof for that linked user and guardian record.
   operationId: deactivateGuardianUserLink
+  x-system-administrator-master-access: true
   parameters:
     - $ref: ../../components/parameters/schools/TenantContext.yaml
     - $ref: ../../components/parameters/guardians/GuardianId.yaml

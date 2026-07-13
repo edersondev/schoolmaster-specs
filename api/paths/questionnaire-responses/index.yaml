@@ -3,6 +3,7 @@ get:
     - Assessment Responses
   summary: List same-school questionnaire response attempts for teacher or administrator review
   operationId: listQuestionnaireResponses
+  x-system-administrator-master-access: true
   parameters:
     - $ref: ../../components/parameters/schools/TenantContext.yaml
     - $ref: ../../components/parameters/common/Page.yaml

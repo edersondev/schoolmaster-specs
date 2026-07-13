@@ -3,6 +3,7 @@ post:
     - Users
   summary: Activate a user
   operationId: activateUser
+  x-system-administrator-master-access: true
   parameters:
     - $ref: ../../components/parameters/schools/TenantContext.yaml
     - $ref: ../../components/parameters/users/UserId.yaml

@@ -3,6 +3,7 @@ post:
     - Grades
   summary: Restore a deleted grade record
   operationId: restoreGrade
+  x-system-administrator-master-access: true
   parameters:
     - $ref: ../../components/parameters/schools/TenantContext.yaml
     - $ref: ../../components/parameters/grades/GradeId.yaml

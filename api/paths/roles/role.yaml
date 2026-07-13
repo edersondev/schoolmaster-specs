@@ -3,6 +3,7 @@ get:
     - Roles
   summary: Retrieve a role in permitted scope
   operationId: getRole
+  x-system-administrator-master-access: true
   parameters:
     - $ref: ../../components/parameters/schools/TenantContext.yaml
     - $ref: ../../components/parameters/access/RoleId.yaml
@@ -29,6 +30,7 @@ patch:
     - Roles
   summary: Update documented role fields
   operationId: updateRole
+  x-system-administrator-master-access: true
   parameters:
     - $ref: ../../components/parameters/schools/TenantContext.yaml
     - $ref: ../../components/parameters/access/RoleId.yaml
@@ -65,6 +67,7 @@ delete:
     - Roles
   summary: Soft delete a role
   operationId: deleteRole
+  x-system-administrator-master-access: true
   parameters:
     - $ref: ../../components/parameters/schools/TenantContext.yaml
     - $ref: ../../components/parameters/access/RoleId.yaml

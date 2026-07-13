@@ -3,6 +3,7 @@ get:
     - Academic Years
   summary: Retrieve an academic year
   operationId: getAcademicYear
+  x-system-administrator-master-access: true
   parameters:
     - $ref: ../../components/parameters/schools/TenantContext.yaml
     - $ref: ../../components/parameters/academics/AcademicYearId.yaml
@@ -29,6 +30,7 @@ patch:
     - Academic Years
   summary: Update documented academic year fields
   operationId: updateAcademicYear
+  x-system-administrator-master-access: true
   parameters:
     - $ref: ../../components/parameters/schools/TenantContext.yaml
     - $ref: ../../components/parameters/academics/AcademicYearId.yaml
@@ -65,6 +67,7 @@ delete:
     - Academic Years
   summary: Soft delete an academic year
   operationId: deleteAcademicYear
+  x-system-administrator-master-access: true
   parameters:
     - $ref: ../../components/parameters/schools/TenantContext.yaml
     - $ref: ../../components/parameters/academics/AcademicYearId.yaml

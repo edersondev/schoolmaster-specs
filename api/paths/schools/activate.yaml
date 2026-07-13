@@ -3,6 +3,7 @@ post:
     - Schools
   summary: Activate a school tenant
   operationId: activateSchool
+  x-system-administrator-master-access: true
   parameters:
     - $ref: ../../components/parameters/schools/SchoolId.yaml
   requestBody:

@@ -3,6 +3,7 @@ post:
     - Reports
   summary: Cancel a requested or generating report run
   operationId: cancelReport
+  x-system-administrator-master-access: true
   parameters:
     - $ref: ../../components/parameters/schools/TenantContext.yaml
     - $ref: ../../components/parameters/reports/ReportRunId.yaml

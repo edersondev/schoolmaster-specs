@@ -3,6 +3,7 @@ get:
     - Grades
   summary: List grade records for the authenticated student
   operationId: listStudentGrades
+  x-system-administrator-master-access: true
   parameters:
     - $ref: ../../components/parameters/schools/TenantContext.yaml
     - $ref: ../../components/parameters/academics/AcademicPeriodFilter.yaml

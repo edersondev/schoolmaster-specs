@@ -3,6 +3,7 @@ post:
     - Reports
   summary: Deactivate an active custom report definition
   operationId: deactivateReportDefinition
+  x-system-administrator-master-access: true
   parameters:
     - $ref: ../../components/parameters/schools/TenantContext.yaml
     - name: reportDefinitionId

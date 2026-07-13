@@ -3,6 +3,7 @@ post:
     - Learning Sets
   summary: Restore a deleted learning set
   operationId: restoreLearningSet
+  x-system-administrator-master-access: true
   parameters:
     - $ref: ../../components/parameters/schools/TenantContext.yaml
     - $ref: ../../components/parameters/learning-sets/LearningSetId.yaml

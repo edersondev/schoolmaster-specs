@@ -7,6 +7,7 @@ post:
     role assignments, password setup state, lock state, and tenant or platform
     scope before authentication may resume.
   operationId: reactivateAccount
+  x-system-administrator-master-access: true
   parameters:
     - $ref: ../../components/parameters/schools/TenantContext.yaml
     - $ref: ../../components/parameters/users/UserId.yaml

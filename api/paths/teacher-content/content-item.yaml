@@ -3,6 +3,7 @@ get:
     - Teacher Content
   summary: Retrieve a tenant-scoped teacher content item
   operationId: getTeacherContent
+  x-system-administrator-master-access: true
   parameters:
     - $ref: ../../components/parameters/schools/TenantContext.yaml
     - $ref: ../../components/parameters/teacher-content/ContentItemId.yaml
@@ -33,6 +34,7 @@ patch:
     meaning changes are rejected after use by a published or assigned learning
     set.
   operationId: updateTeacherContent
+  x-system-administrator-master-access: true
   parameters:
     - $ref: ../../components/parameters/schools/TenantContext.yaml
     - $ref: ../../components/parameters/teacher-content/ContentItemId.yaml
@@ -69,6 +71,7 @@ delete:
     - Teacher Content
   summary: Soft-delete a teacher content item
   operationId: deleteTeacherContent
+  x-system-administrator-master-access: true
   parameters:
     - $ref: ../../components/parameters/schools/TenantContext.yaml
     - $ref: ../../components/parameters/teacher-content/ContentItemId.yaml

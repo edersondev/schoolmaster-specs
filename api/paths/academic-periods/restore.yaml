@@ -3,6 +3,7 @@ post:
     - Academic Periods
   summary: Restore a soft-deleted academic period
   operationId: restoreAcademicPeriod
+  x-system-administrator-master-access: true
   parameters:
     - $ref: ../../components/parameters/schools/TenantContext.yaml
     - $ref: ../../components/parameters/academics/AcademicPeriodId.yaml

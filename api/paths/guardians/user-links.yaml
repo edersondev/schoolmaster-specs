@@ -8,6 +8,7 @@ post:
     and does not grant student visibility without active guardian-student
     associations.
   operationId: createGuardianUserLink
+  x-system-administrator-master-access: true
   parameters:
     - $ref: ../../components/parameters/schools/TenantContext.yaml
     - $ref: ../../components/parameters/guardians/GuardianId.yaml

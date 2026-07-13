@@ -7,6 +7,7 @@ patch:
     effective end date inside the academic period are required; the end date
     must be on or after the assignment effective start date.
   operationId: updateTeacherAssignmentStatus
+  x-system-administrator-master-access: true
   parameters:
     - $ref: ../../components/parameters/schools/TenantContext.yaml
     - $ref: ../../components/parameters/teacher-assignments/TeacherAssignmentId.yaml

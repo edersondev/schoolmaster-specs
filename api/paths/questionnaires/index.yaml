@@ -3,6 +3,7 @@ get:
     - Questionnaires
   summary: List tenant-scoped questionnaires
   operationId: listQuestionnaires
+  x-system-administrator-master-access: true
   parameters:
     - $ref: ../../components/parameters/schools/TenantContext.yaml
     - $ref: ../../components/parameters/common/Page.yaml
@@ -32,6 +33,7 @@ post:
     - Questionnaires
   summary: Create a questionnaire with v1 supported question types
   operationId: createQuestionnaire
+  x-system-administrator-master-access: true
   parameters:
     - $ref: ../../components/parameters/schools/TenantContext.yaml
   requestBody:

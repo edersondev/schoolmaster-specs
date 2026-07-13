@@ -3,6 +3,7 @@ post:
     - Reports
   summary: Activate a valid draft or inactive custom report definition
   operationId: activateReportDefinition
+  x-system-administrator-master-access: true
   parameters:
     - $ref: ../../components/parameters/schools/TenantContext.yaml
     - name: reportDefinitionId

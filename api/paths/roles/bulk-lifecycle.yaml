@@ -3,6 +3,7 @@ post:
     - Roles
   summary: Apply one lifecycle action to selected roles
   operationId: bulkLifecycleRoles
+  x-system-administrator-master-access: true
   parameters:
     - $ref: ../../components/parameters/schools/TenantContext.yaml
   requestBody:

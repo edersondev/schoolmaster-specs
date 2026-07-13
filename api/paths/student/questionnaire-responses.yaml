@@ -7,6 +7,7 @@ post:
     questionnaire. Long-text answers are plain text. File-response uploads are
     private and unavailable until scan status is clean.
   operationId: submitStudentQuestionnaireResponse
+  x-system-administrator-master-access: true
   parameters:
     - $ref: ../../components/parameters/schools/TenantContext.yaml
   requestBody:

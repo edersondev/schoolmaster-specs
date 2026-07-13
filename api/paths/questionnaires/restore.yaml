@@ -3,6 +3,7 @@ post:
     - Questionnaires
   summary: Restore a deleted questionnaire
   operationId: restoreQuestionnaire
+  x-system-administrator-master-access: true
   parameters:
     - $ref: ../../components/parameters/schools/TenantContext.yaml
     - $ref: ../../components/parameters/questionnaires/QuestionnaireId.yaml

@@ -3,6 +3,7 @@ post:
     - Student Profiles
   summary: Record a source-school student transfer
   operationId: transferStudentProfile
+  x-system-administrator-master-access: true
   parameters:
     - $ref: ../../components/parameters/schools/TenantContext.yaml
     - $ref: ../../components/parameters/student-profiles/StudentProfileId.yaml

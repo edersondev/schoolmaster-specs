@@ -3,6 +3,7 @@ get:
     - Auth
   summary: Return the authenticated user, resolved tenant, roles, and permissions
   operationId: getCurrentUser
+  x-system-administrator-master-access: true
   parameters:
     - $ref: ../../components/parameters/schools/TenantContext.yaml
   responses:

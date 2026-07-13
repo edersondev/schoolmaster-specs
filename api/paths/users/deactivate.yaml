@@ -3,6 +3,7 @@ post:
     - Users
   summary: Deactivate a user
   operationId: deactivateUser
+  x-system-administrator-master-access: true
   parameters:
     - $ref: ../../components/parameters/schools/TenantContext.yaml
     - $ref: ../../components/parameters/users/UserId.yaml

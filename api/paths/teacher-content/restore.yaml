@@ -6,6 +6,7 @@ post:
     Restores the record to `inactive`. A separate status transition is required
     before active or student-facing use.
   operationId: restoreTeacherContent
+  x-system-administrator-master-access: true
   parameters:
     - $ref: ../../components/parameters/schools/TenantContext.yaml
     - $ref: ../../components/parameters/teacher-content/ContentItemId.yaml

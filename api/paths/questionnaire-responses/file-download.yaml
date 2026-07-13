@@ -3,6 +3,7 @@ get:
     - Assessment Responses
   summary: Download a clean answer file for authorized assessment review
   operationId: downloadQuestionnaireResponseFile
+  x-system-administrator-master-access: true
   parameters:
     - $ref: ../../components/parameters/schools/TenantContext.yaml
     - name: responseAttemptId

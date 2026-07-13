@@ -7,6 +7,7 @@ post:
     rotates the single-use token. Resends are limited to 3 sends or resends per
     user and scope within 24 hours.
   operationId: resendAccountInvitation
+  x-system-administrator-master-access: true
   parameters:
     - $ref: ../../components/parameters/schools/TenantContext.yaml
     - $ref: ../../components/parameters/account-lifecycle/InvitationToken.yaml

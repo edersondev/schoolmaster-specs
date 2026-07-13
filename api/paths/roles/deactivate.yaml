@@ -3,6 +3,7 @@ post:
     - Roles
   summary: Deactivate a role
   operationId: deactivateRole
+  x-system-administrator-master-access: true
   parameters:
     - $ref: ../../components/parameters/schools/TenantContext.yaml
     - $ref: ../../components/parameters/access/RoleId.yaml
