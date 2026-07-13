@@ -4,8 +4,9 @@
 
 - Feature spec exists at `specs/031-system-admin-master/spec.md`.
 - OpenAPI remains source of truth for protected operation authorization notes.
-- Backend and frontend implementations use feature identifier
-  `031-system-admin-master`.
+- Backend implementation uses feature identifier `031-system-admin-master`.
+- Frontend implementation is deferred and no frontend repository changes are
+  part of this run.
 
 ## Specification and Contract Validation
 
@@ -34,12 +35,12 @@ consistent System Administrator master-access language.
 
 1. Add or update centralized authorization behavior so System Administrator
    satisfies feature-specific permission checks.
-2. Preserve account/session, tenant-context, subject-context, school-state,
+2. Preserve account/session, tenant-context, actor-ownership, guardian-link, school-state,
    release-state, approval workflow, and safety-gate checks.
 3. Verify school-scoped operations require selected active school context and
    return only selected-school data.
-4. Verify identity-owned self-service operations require selected subject
-   context.
+4. Verify identity-owned self-service operations retain actor-owned student and
+   active guardian-link authorization without impersonation.
 5. Record master-access audit evidence for System Administrator writes and
    lifecycle actions.
 6. Run backend tests:
@@ -52,25 +53,13 @@ Expected result: System Administrator allow cases pass, tenant/subject/safety
 gate denials still pass, audit-marker assertions pass, and non-System
 Administrator denial behavior remains unchanged.
 
-## Frontend Validation
+## Deferred Frontend Validation
 
-1. Update centralized route guard and visibility helpers so System
-   Administrator satisfies protected route permission metadata.
-2. Preserve missing school-context and missing subject-context states.
-3. Confirm released protected navigation destinations and actions are visible
-   to System Administrator after session context resolves.
-4. Confirm school-scoped pages clear stale data when school context changes.
-5. Confirm identity-owned self-service pages do not load data until subject
-   context is selected.
-6. Run frontend tests:
-
-```bash
-npm test
-```
-
-Expected result: System Administrator route/navigation tests pass, context
-gating tests pass, and non-System Administrator permission-denial tests remain
-unchanged.
+1. Make no frontend repository changes in this backend implementation run.
+2. Verify the existing authenticated-session roles collection exposes the
+   active platform `System Administrator` role without a response schema change.
+3. Record route guard, navigation, and action visibility adoption as a separate
+   frontend feature.
 
 ## Manual Review Scenarios
 
@@ -80,10 +69,9 @@ unchanged.
   selected-school data appears.
 - Switch to another active school and confirm stale school-owned data clears
   before the new school's data loads.
-- Open a released self-service route without selected subject context and
-  confirm the subject-context state appears.
-- Select the required subject context and confirm the self-service route loads
-  only that subject's data.
+- Call student and guardian identity-owned self-service operations as System
+  Administrator and confirm existing actor-owned profile or guardian-link rules
+  deny access without leaking another subject's data.
 - Attempt a workflow blocked by approval, confirmation, support opt-in, file
   scan, or closed-period safety state and confirm the safety gate still blocks
   the action.
@@ -94,6 +82,6 @@ unchanged.
 
 - OpenAPI lint output.
 - Backend authorization and audit test output.
-- Frontend route guard, navigation, and context-gating test output.
+- Current-session role-context regression output and deferred frontend handoff.
 - Short notes showing non-System Administrator denial behavior was not
   broadened.

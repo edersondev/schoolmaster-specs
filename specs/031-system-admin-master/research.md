@@ -10,21 +10,21 @@ for every other role.
 
 **Alternatives considered**: Assigning every permission to the role was
 rejected because future permissions could be missed. Granting only platform
-routes was rejected because the requested role must access school-scoped and
-self-service routes too.
+operations was rejected because the requested role must access protected
+school-scoped operations too.
 
-## Decision: Keep tenant and subject context gates outside the override
+## Decision: Keep tenant and identity-ownership gates outside the override
 
 **Rationale**: Permission checks answer whether the actor may perform a class
-of action. Tenant and subject context answer which school or person-specific
-record is being targeted. Keeping those gates separate lets System
-Administrator access everything intentionally without loading unscoped school
-or self-service data.
+of action. Tenant context identifies the target school. Identity-owned student
+and guardian operations instead use the authenticated actor's profile or active
+guardian link. Keeping those gates separate prevents unscoped school data and
+subject impersonation.
 
 **Alternatives considered**: Allowing unscoped school-owned reads was rejected
-because it breaks tenant isolation. Loading self-service pages as the signed-in
-System Administrator was rejected because self-service pages are identity-owned
-and need an explicit selected subject.
+because it breaks tenant isolation. Inventing a subject-selection header or
+impersonation rule was rejected because no approved OpenAPI transport or
+authorization semantics exist for it.
 
 ## Decision: Allow System Administrator to select any active school
 
@@ -78,7 +78,7 @@ because the user explicitly named System Administrator as the master role.
 **Rationale**: The feature changes authorization decisions, not resource
 schemas. Existing success envelopes should remain stable. Forbidden responses
 caused only by missing feature-specific permissions must not apply to System
-Administrator, but tenant-context, subject-context, account-state,
+Administrator, but tenant-context, identity-ownership, guardian-link, account-state,
 school-state, safety-gate, and release-state denials must remain distinct.
 
 **Alternatives considered**: Adding new success fields was rejected because
@@ -86,14 +86,13 @@ clients do not need resource-shape changes. Collapsing all blocked states into
 one denial was rejected because users and tests need to distinguish missing
 context from authorization failure.
 
-## Decision: Verify through contract, backend, and frontend tests
+## Decision: Verify this slice through contract and backend tests
 
-**Rationale**: The rule affects the shared API contract, backend
-authorization, audit evidence, frontend route guards, navigation visibility,
-and tenant/subject gating. Redocly/OpenAPI lint verifies documented
-authorization notes, PHPUnit verifies backend behavior, and Vitest verifies
-frontend access behavior.
+**Rationale**: This implementation slice affects the shared API contract,
+backend authorization, audit evidence, tenant isolation, and identity-owned
+self-service gates. Redocly/OpenAPI lint verifies documented authorization
+notes and PHPUnit verifies backend behavior. Frontend adoption is deferred.
 
 **Alternatives considered**: Manual-only verification was rejected because this
-is a platform-wide authorization change. Backend-only verification was rejected
-because frontend route guards could still hide or deny System Administrator.
+is a platform-wide authorization change. Mixing frontend implementation into
+this run was rejected because the user limited the current work to backend.

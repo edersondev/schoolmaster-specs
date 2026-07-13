@@ -2,8 +2,8 @@
 
 **Feature Branch**: `031-system-admin-master`
 **Created**: 2026-07-13
-**Status**: Draft
-**Input**: User description: "Update specs and contracts so the System Administrator role is the master user role. A System Administrator must have access to every frontend route and every backend operation in the app, across platform-scoped and school-scoped areas, without requiring explicit per-feature permissions. For school-scoped resources, System Administrator access must still use a resolved school context when the operation needs a tenant target, but authorization must not be denied only because school-scoped permissions are missing. Update security rules, administration specs, route guard expectations, OpenAPI authorization notes, and test expectations to document and verify this global override behavior. Keep tenant isolation intact: System Administrator may select or operate within any permitted school context, but responses must remain scoped to the selected tenant unless the operation is explicitly platform-wide."
+**Status**: Ready for Backend Implementation
+**Input**: User description: "Update specs and contracts so the System Administrator role is the master user role. For this implementation slice, update the shared specifications and OpenAPI contract, then implement and verify every protected backend operation. System Administrator access satisfies feature-specific permission checks without bypassing authentication, account state, tenant context, subject ownership, approval workflows, or safety gates. Frontend route and navigation adoption is a separate follow-up implementation."
 
 ## Clarifications
 
@@ -12,44 +12,47 @@
 - Q: Which schools may a System Administrator select for school-scoped work? → A: Any active school.
 - Q: Which System Administrator actions require explicit master-access audit marking? → A: All writes and lifecycle actions.
 - Q: Does master access bypass approval workflows and safety gates? → A: Permission checks only; approval workflows and safety gates still apply.
-- Q: How does master access apply to identity-owned self-service routes? → A: Released self-service routes are accessible, but identity-owned pages require selected subject context.
+- Q: How does this backend slice apply to identity-owned self-service operations? → A: It does not add impersonation or subject selection. Existing actor-owned student access and active guardian-link rules remain enforced; a future contract must define any master-user subject-selection transport before broader access is implemented.
+- Q: Which implementation repository is delivered by this feature run? → A: The shared specification/OpenAPI prerequisites and Laravel backend only; frontend route, navigation, and action visibility are deferred to a separate follow-up.
+- Q: How is the existing master role identified? → A: An active platform-scoped role whose name is exactly `System Administrator`; no new role identifier or response field is introduced.
 
 ## User Scenarios & Testing *(mandatory)*
 
-### User Story 1 - Access Every Authorized Workspace (Priority: P1)
+### User Story 1 - Access Protected Backend Reads (Priority: P1)
 
-A System Administrator can open any application workspace, page, or action that
-is otherwise protected by feature-specific permissions, without needing each
-individual permission assigned to their role. Released self-service routes are
-included when a required student, guardian, user, or other subject context is
-selected.
+A System Administrator can call any released read-only backend operation that
+is otherwise protected by feature-specific permissions without needing each
+permission assigned to the role. State-changing operations are completed with
+the audit requirements in User Story 3. Identity-owned self-service operations
+remain bound to their existing actor-owned profile or active guardian-link
+authorization.
 
 **Why this priority**: The master user role is intended to unblock platform
 operations, emergency administration, onboarding, and support workflows without
 duplicating every permission across the role.
 
 **Independent Test**: Sign in as a System Administrator with no extra
-feature-specific permissions and verify protected navigation, direct route
-access, and protected actions that require feature permissions are available.
+feature-specific permissions and verify every released protected read operation
+group allows the request when its non-permission prerequisites pass.
 
 **Acceptance Scenarios**:
 
 1. **Given** an authenticated System Administrator has no explicit permission
-   for a protected route, **When** they open that route directly, **Then** route
-   access is allowed unless the route requires a missing tenant target,
-   missing subject context, inactive account, expired session, or other
-   non-permission prerequisite.
-2. **Given** an authenticated System Administrator opens the application
-   navigation, **When** protected destinations are evaluated, **Then** every
-   destination is visible except destinations blocked by unfinished feature
-   release state, missing tenant target, inactive account, or session failure.
-3. **Given** an authenticated System Administrator performs a protected action,
+   for a protected operation, **When** they call that operation, **Then** access
+   is allowed unless a tenant target, actor-owned profile or guardian link,
+   active account, valid session, resource state, approval, or safety
+   prerequisite is missing.
+2. **Given** an authenticated System Administrator requests the current session,
+   **When** the existing session response is returned, **Then** its existing
+   role collection identifies the active platform `System Administrator` role
+   without adding a response field.
+3. **Given** an authenticated System Administrator performs a protected read,
    **When** the action is checked for feature-specific permissions, **Then** the
    System Administrator override satisfies the permission check.
-4. **Given** a released self-service route displays identity-owned student,
-   guardian, user, or other subject data, **When** a System Administrator opens
-   it without a selected subject context, **Then** the route shows the required
-   subject-context state instead of loading another user's self-service data.
+4. **Given** a released self-service operation returns identity-owned student
+   or guardian data, **When** a System Administrator calls it without the
+   existing actor-owned profile or active guardian link, **Then** access is
+   denied without loading another user's self-service data.
 
 ---
 
@@ -78,9 +81,9 @@ school context.
    list, view, create, update, or run lifecycle actions for school-owned
    resources, **Then** authorization is allowed and returned data is scoped to
    the selected school.
-3. **Given** a System Administrator switches school context, **When** the
-   current page reloads or refreshes data, **Then** previous school-owned data
-   is cleared and only the newly selected school's data is shown.
+3. **Given** a System Administrator changes the `X-School-Id` context, **When**
+   the next school-scoped request is made, **Then** it returns only the newly
+   resolved school's data and never reuses the previous tenant scope.
 
 ---
 
@@ -123,9 +126,10 @@ boundaries consistently.
   bypass account lifecycle restrictions.
 - A school-scoped operation has no selected or resolved school context; the
   operation remains blocked until a tenant target is available.
-- A self-service route has no selected subject context; the route remains
-  blocked until a student, guardian, user, or other required subject target is
-  selected.
+- An identity-owned self-service operation is called by System Administrator;
+  existing actor-owned profile or active guardian-link authorization remains
+  enforced because this feature defines no impersonation or subject-selection
+  transport.
 - A selected school is inactive, missing, or unavailable; school-owned
   operations remain blocked by school state even though permissions are
   satisfied.
@@ -154,17 +158,17 @@ boundaries consistently.
   protected route behavior, tenant-context validation, and regression tests must
   recognize System Administrator as the master user role while preserving
   non-permission prerequisites.
-- **Frontend repository impact**: Route guards, navigation visibility, action
-  visibility, tenant-context gating, denied states, and regression tests must
-  treat System Administrator as satisfying all feature-specific permission
-  checks.
+- **Frontend repository impact**: Deferred. A separate follow-up must apply the
+  published role and authorization rule to route guards, navigation visibility,
+  action visibility, and frontend regression tests. This implementation run
+  must not modify the frontend repository.
 - **Specification or contract repository impact**: Security documentation,
   multi-tenant rules, affected feature specifications, shared contract notes,
   and operation authorization notes must be updated to make the override
   explicit and remove contradictory "no implicit bypass" language.
 - **Delivery ownership and sequencing**: Specification and contract updates lead
-  first, followed by backend authorization behavior, then frontend route and
-  navigation behavior, with test evidence captured for each affected surface.
+  first, followed by backend authorization and audit behavior. Frontend adoption
+  follows as a separately planned implementation.
 
 ### API Contract Impact
 
@@ -179,7 +183,7 @@ boundaries consistently.
   can tell permission denial from missing tenant context.
 - **Authentication/authorization impact**: System Administrator satisfies every
   feature-specific permission requirement. Authentication, active-account,
-  account-lock, session-validity, tenant-context, subject-context,
+  account-lock, session-validity, tenant-context, identity-ownership,
   school-state, and feature release prerequisites still apply. Approval
   workflows and business safety gates also still apply.
 - **Compatibility impact**: Authorization behavior changes for System
@@ -205,8 +209,8 @@ boundaries consistently.
 
 - **FR-001**: System MUST define System Administrator as the master user role
   for authorization decisions.
-- **FR-002**: System MUST allow a System Administrator to access protected
-  frontend routes without requiring route-specific permissions.
+- **FR-002**: System MUST identify the master role as an active platform-scoped
+  role named exactly `System Administrator`.
 - **FR-003**: System MUST allow a System Administrator to perform protected
   backend operations without requiring operation-specific permissions.
 - **FR-004**: System MUST allow a System Administrator to select any active
@@ -215,20 +219,20 @@ boundaries consistently.
 - **FR-005**: System MUST keep school-owned responses scoped to the selected or
   resolved school context unless the operation is explicitly platform-wide.
 - **FR-006**: System MUST keep authentication, active-account, lockout,
-  session-validity, tenant-context, subject-context, school-state, and
+  session-validity, tenant-context, identity-ownership, school-state, and
   feature-release prerequisites enforceable for System Administrator.
 - **FR-007**: System MUST preserve existing permission-denial behavior for all
   non-System Administrator roles.
 - **FR-008**: System MUST update security rules and tenant rules to state that
   System Administrator master access supersedes feature-specific permission
   checks but does not supersede tenant isolation.
-- **FR-009**: System MUST update route guard expectations so System
-  Administrator sees and can open protected navigation destinations while
-  preserving tenant-context gates.
+- **FR-009**: System MUST expose the existing System Administrator role context
+  through the existing authenticated-session role collection without adding a
+  new response field.
 - **FR-010**: System MUST update operation authorization notes so protected
   operations identify System Administrator as an allowed master role.
 - **FR-011**: System MUST update test expectations to include System
-  Administrator allow cases for protected routes and operations, plus tenant
+  Administrator allow cases for protected backend operations, plus tenant
   isolation checks for school-scoped data.
 - **FR-012**: System MUST ensure forbidden responses caused only by missing
   feature-specific permissions are not returned to System Administrator.
@@ -243,9 +247,9 @@ boundaries consistently.
 - **FR-016**: System MUST enforce approval workflows, explicit confirmations,
   support opt-in requirements, file safety gates, closed-period safety checks,
   and other business controls for System Administrator.
-- **FR-017**: System MUST allow System Administrator to access released
-  identity-owned self-service routes only after the required student, guardian,
-  user, or other subject context is selected.
+- **FR-017**: System MUST preserve existing actor-owned student-profile and
+  active guardian-link authorization for identity-owned self-service operations;
+  this feature MUST NOT introduce impersonation or infer a selected subject.
 
 ### Key Entities
 
@@ -257,9 +261,6 @@ boundaries consistently.
   roles.
 - **Resolved School Context**: Selected or otherwise confirmed school tenant
   target used to scope school-owned operations.
-- **Selected Subject Context**: Selected student, guardian, user, or other
-  person-specific target required before loading identity-owned self-service
-  data through master access.
 - **Platform-Wide Operation**: Documented operation that intentionally spans
   multiple schools or platform resources and is not limited to one selected
   school.
@@ -270,14 +271,14 @@ boundaries consistently.
 
 ### Measurable Outcomes
 
-- **SC-001**: In authorization regression checks, 100% of protected route and
-  operation groups include a System Administrator allow case.
+- **SC-001**: In authorization regression checks, 100% of released protected
+  backend operation groups include a System Administrator allow case.
 - **SC-002**: In tenant isolation checks, 100% of school-scoped System
   Administrator operations return only records for the selected school unless
   documented as platform-wide.
-- **SC-003**: In route visibility checks, a System Administrator can see and
-  open 100% of released protected navigation destinations after any required
-  school or subject context is resolved.
+- **SC-003**: In authenticated-session checks, 100% of System Administrator
+  sessions expose the active platform master role through the existing role
+  collection without a response schema change.
 - **SC-004**: In negative authorization checks, 100% of non-System
   Administrator roles without required permissions continue to receive the
   documented denial behavior.
@@ -291,11 +292,13 @@ boundaries consistently.
 
 - "System Administrator" refers to the existing platform role intended to act
   as the product master user.
-- Master access applies to released and approved application routes and
-  operations, not unfinished or intentionally hidden features.
+- Master access applies to released and approved backend operations, not
+  unfinished or intentionally hidden features.
+- Frontend route, navigation, and action visibility adoption is deferred to a
+  separately planned follow-up and is not part of this implementation run.
 - Master access satisfies permission checks only; it does not bypass
   authentication, account status, lockout, session validity, tenant context,
-  subject context, or resource lifecycle state.
+  identity ownership, guardian-link state, or resource lifecycle state.
 - Master access does not bypass approval workflows, explicit confirmations,
   support opt-in requirements, file safety gates, closed-period safety checks,
   or other business controls.

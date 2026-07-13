@@ -2,7 +2,7 @@
 
 This feature introduces no new tenant root and no new business resource
 schema. It clarifies authorization entities, contexts, and audit evidence used
-by existing backend and frontend workflows.
+by existing backend workflows.
 
 ## SystemAdministrator
 
@@ -11,20 +11,18 @@ checks.
 
 **Key Attributes**:
 
-- `role`: Canonical System Administrator role identifier.
+- `role`: Existing active platform-scoped role named exactly `System Administrator`.
 - `accountState`: Active, inactive, locked, or other existing account state.
 - `sessionState`: Valid, expired, revoked, or otherwise rejected session state.
 - `availableSchoolContexts`: Active schools available for selection.
 - `selectedSchoolContext`: Active school selected for school-owned work, when
   required.
-- `selectedSubjectContext`: Student, guardian, user, or other subject selected
-  for identity-owned self-service work, when required.
 
 **Rules**:
 
 - Satisfies every feature-specific permission check.
 - Does not bypass authentication, account state, session validity, lockout,
-  school state, release state, tenant context, subject context, approval
+  school state, release state, tenant context, actor ownership, guardian links, approval
   workflows, explicit confirmations, support opt-ins, file safety gates,
   closed-period safety checks, or other business controls.
 - May select any active school as the resolved school context.
@@ -72,28 +70,6 @@ operation for non-System Administrator roles.
 - Switching school context clears stale school-owned data before new data is
   loaded.
 
-## SelectedSubjectContext
-
-**Purpose**: Person-specific target required before System Administrator opens
-identity-owned self-service data.
-
-**Key Attributes**:
-
-- `subjectId`: Public identifier for the selected student, guardian, user, or
-  other subject.
-- `subjectType`: Student, guardian, user, or other documented self-service
-  subject type.
-- `schoolContext`: School context when the subject belongs to school-owned
-  data.
-
-**Rules**:
-
-- Required before identity-owned self-service routes load protected data.
-- Must be compatible with the current tenant context when the subject is
-  school-owned.
-- Prevents loading another user's self-service data without explicit subject
-  selection.
-
 ## PlatformWideOperation
 
 **Purpose**: Documented operation that intentionally spans more than one school
@@ -125,7 +101,6 @@ for a write or lifecycle action.
 - `targetType`: Resource type affected.
 - `targetId`: Public identifier of affected resource where available.
 - `schoolContext`: Selected school context when the target is school-owned.
-- `subjectContext`: Selected subject context when the target is identity-owned.
 - `masterAccessUsed`: True for covered actions.
 - `occurredAt`: Existing audit timestamp.
 - `outcome`: Success, failure, conflict, denied by non-permission prerequisite,
@@ -147,8 +122,9 @@ for a write or lifecycle action.
   selected; school-owned data loads only after selection.
 - **School Context A -> School Context B**: School-owned data from A is cleared
   before B's data is loaded.
-- **No Subject Context -> Subject Context Selected**: Identity-owned
-  self-service data loads only after subject selection.
+- **Identity-Owned Self-Service Request -> Existing Ownership Evaluation**:
+  Actor-owned student profile or active guardian-link rules remain enforced;
+  no subject-selection transition is introduced.
 - **Permission Check -> Master Override**: Feature-specific permission is
   treated as satisfied for System Administrator.
 - **Write/Lifecycle Action -> Audit Evidence Recorded**: Master-access marker
