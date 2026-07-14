@@ -16,6 +16,8 @@ change.
 
 The frontend consumes the existing authenticated-session role collection. It
 does not require a new boolean, permission, endpoint, or response field.
+Role-derived master access is exposed only after the session store reaches its
+authenticated state. Explicit permissions retain their existing behavior.
 
 ## Route and Visibility Contract
 
@@ -36,6 +38,12 @@ does not require a new boolean, permission, endpoint, or response field.
 3. A stale response associated with the prior school must not repopulate the
    new school context.
 4. Platform-wide views remain governed by their published platform-wide scope.
+
+The session store owns a monotonically increasing school-context generation.
+Concurrent older selection responses are ignored. The shared
+`useSchoolContextSwitch` composable runs registered school-owned state resetters
+before asking the existing current-session operation to resolve the selected
+school.
 
 ## Feedback Contract
 

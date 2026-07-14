@@ -24,6 +24,23 @@
 7. Clear school-owned state before loading against a changed school context and
    reject stale prior-context responses.
 
+## Released Surface Inventory
+
+| Surface | Released destinations or actions | Permission/context boundary |
+|---|---|---|
+| Administration shell | Dashboard plus school, user, role, permission, academic-year, academic-period, guardian, student-profile, class-section, and teacher-assignment list/detail/create/edit routes | Route metadata permissions; school context retained where declared; 11 approved sidebar destinations and approved quick actions use authenticated store permission codes. |
+| Teacher workflow | Content, questionnaire, learning-set, grade, attendance, administrative observation, academic-record, and import routes/actions | `teacherWorkflowRoutes` metadata and `hasCapability`; active school, release gates, closed-period correction, and other workflow prerequisites remain separate. |
+| Advanced assessment | Authoring, student response, review, grading, student result, reporting, and download actions | `useAdvancedAssessmentAccess`; active school, actor/student ownership, scan, due-date, and safety gates remain separate. |
+| Reporting | History, catalog, run detail, definitions, definition detail, lifecycle, and download actions | `useReportingAccess`; active school, lifecycle, output availability, and closed/expired output states remain separate. |
+| Platform support | Oversight, decisions, decision detail, diagnostics, audit, approval, revocation, and drill-down actions | `usePlatformSupportAccess`; platform-wide scope remains independent of selected school, while support approval/access/revocation states remain separate. |
+| Identity-owned self-service | Student workspace and guardian workspace routes | Explicitly excluded from master override. Existing student-profile ownership, guardian-link, academic-period, and subject context remain required. |
+
+Shared review confirmed all permission-bearing route metadata enters
+`authGuards`, administration navigation and quick actions receive
+`sessionStore.permissionCodes`, and local workspace gates use
+`sessionStore.hasPermission` or the exact shared role predicate. No local
+`System Administrator` name checks remain outside the auth session contract.
+
 ## Focused Verification
 
 Run from `schoolmaster-frontend`:
@@ -65,3 +82,28 @@ Confirm the focused tests cover:
   groups were covered.
 - Confirmation that no endpoint, response schema, OpenAPI, or client-side audit
   change was made.
+
+## Implementation Evidence
+
+Implementation completed on 2026-07-14:
+
+- Exact active platform role name is `System Administrator`; prior loose aliases
+  are not accepted.
+- Role-derived wildcard permission satisfaction is unavailable until session
+  status is authenticated. Limited-role behavior remains unchanged.
+- School context switching clears active school, student profile, academic
+  period, and registered school-owned state before loading. Generation checks
+  ignore stale earlier selection responses.
+- Student and guardian self-service contexts remain actor/profile/link-bound;
+  selected subject context is never inferred from master role.
+- Existing auth, administration, reporting, platform-support, assessment, and
+  self-service error mappers retain prerequisite-specific states.
+- Direct Axios scan of `src/components`, `src/pages`, and `src/router`: PASS,
+  no matches.
+- Client-side audit boundary: PASS; state-changing actions continue to use only
+  existing submitters and backend audit behavior.
+- Targeted ESLint and Prettier checks: PASS.
+- Focused System Administrator Vitest suite: PASS, 13 files and 20 tests.
+- Full frontend Vitest regression suite: PASS, 326 files and 594 tests.
+- Production build: PASS, 2,089 modules transformed. Existing dependency pure-
+  annotation and large-chunk warnings remain non-blocking.
