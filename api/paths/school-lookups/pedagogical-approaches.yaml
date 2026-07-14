@@ -3,6 +3,7 @@ get:
     - School Lookups
   summary: List school pedagogical approach options
   operationId: listSchoolPedagogicalApproaches
+  x-system-administrator-master-access: true
   responses:
     '200':
       description: Full pedagogical approach option list

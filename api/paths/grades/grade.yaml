@@ -3,6 +3,7 @@ get:
     - Grades
   summary: Retrieve a grade record in permitted scope
   operationId: getGrade
+  x-system-administrator-master-access: true
   parameters:
     - $ref: ../../components/parameters/schools/TenantContext.yaml
     - $ref: ../../components/parameters/grades/GradeId.yaml
@@ -29,6 +30,7 @@ delete:
     - Grades
   summary: Soft-delete a grade record
   operationId: deleteGrade
+  x-system-administrator-master-access: true
   parameters:
     - $ref: ../../components/parameters/schools/TenantContext.yaml
     - $ref: ../../components/parameters/grades/GradeId.yaml

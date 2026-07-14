@@ -3,6 +3,7 @@ get:
     - Attendance
   summary: Retrieve an attendance record in permitted scope
   operationId: getAttendance
+  x-system-administrator-master-access: true
   parameters:
     - $ref: ../../components/parameters/schools/TenantContext.yaml
     - $ref: ../../components/parameters/attendance/AttendanceId.yaml
@@ -29,6 +30,7 @@ delete:
     - Attendance
   summary: Soft-delete an attendance record
   operationId: deleteAttendance
+  x-system-administrator-master-access: true
   parameters:
     - $ref: ../../components/parameters/schools/TenantContext.yaml
     - $ref: ../../components/parameters/attendance/AttendanceId.yaml

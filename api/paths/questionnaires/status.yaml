@@ -3,6 +3,7 @@ patch:
     - Questionnaires
   summary: Activate or deactivate a questionnaire
   operationId: updateQuestionnaireStatus
+  x-system-administrator-master-access: true
   parameters:
     - $ref: ../../components/parameters/schools/TenantContext.yaml
     - $ref: ../../components/parameters/questionnaires/QuestionnaireId.yaml

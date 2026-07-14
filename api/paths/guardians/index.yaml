@@ -3,6 +3,7 @@ get:
     - Guardians
   summary: List guardians for a school
   operationId: listGuardians
+  x-system-administrator-master-access: true
   parameters:
     - $ref: ../../components/parameters/schools/TenantContext.yaml
     - $ref: ../../components/parameters/common/Page.yaml
@@ -31,6 +32,7 @@ post:
     - Guardians
   summary: Create or maintain a guardian record
   operationId: createGuardian
+  x-system-administrator-master-access: true
   parameters:
     - $ref: ../../components/parameters/schools/TenantContext.yaml
   requestBody:

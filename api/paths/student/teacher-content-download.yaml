@@ -3,6 +3,7 @@ get:
     - Teacher Content
   summary: Download assigned teacher content for the authenticated student
   operationId: downloadStudentTeacherContent
+  x-system-administrator-master-access: true
   parameters:
     - $ref: ../../components/parameters/schools/TenantContext.yaml
     - $ref: ../../components/parameters/teacher-content/ContentItemId.yaml

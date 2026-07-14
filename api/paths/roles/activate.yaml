@@ -3,6 +3,7 @@ post:
     - Roles
   summary: Activate a role
   operationId: activateRole
+  x-system-administrator-master-access: true
   parameters:
     - $ref: ../../components/parameters/schools/TenantContext.yaml
     - $ref: ../../components/parameters/access/RoleId.yaml

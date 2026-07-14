@@ -3,6 +3,7 @@ patch:
     - Learning Sets
   summary: Activate or deactivate a learning set
   operationId: updateLearningSetStatus
+  x-system-administrator-master-access: true
   parameters:
     - $ref: ../../components/parameters/schools/TenantContext.yaml
     - $ref: ../../components/parameters/learning-sets/LearningSetId.yaml

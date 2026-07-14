@@ -3,6 +3,7 @@ get:
     - Schools
   summary: List schools visible to the requester
   operationId: listSchools
+  x-system-administrator-master-access: true
   parameters:
     - $ref: ../../components/parameters/common/Page.yaml
     - $ref: ../../components/parameters/common/PerPage.yaml
@@ -48,6 +49,7 @@ post:
     payload field. INEP code, document, and email uniqueness checks include
     inactive and soft-deleted schools, with email compared case-insensitively.
   operationId: createSchool
+  x-system-administrator-master-access: true
   requestBody:
     required: true
     content:

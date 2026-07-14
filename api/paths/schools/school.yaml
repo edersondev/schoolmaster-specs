@@ -3,6 +3,7 @@ get:
     - Schools
   summary: Review one school tenant
   operationId: getSchool
+  x-system-administrator-master-access: true
   parameters:
     - $ref: ../../components/parameters/schools/SchoolId.yaml
   responses:
@@ -30,6 +31,7 @@ patch:
     are rejected. This operation preserves existing simultaneous edit behavior
     and does not add an optimistic-locking precondition.
   operationId: updateSchool
+  x-system-administrator-master-access: true
   parameters:
     - $ref: ../../components/parameters/schools/SchoolId.yaml
   requestBody:
@@ -66,6 +68,7 @@ delete:
     - Schools
   summary: Soft delete a school tenant
   operationId: deleteSchool
+  x-system-administrator-master-access: true
   parameters:
     - $ref: ../../components/parameters/schools/SchoolId.yaml
   requestBody:

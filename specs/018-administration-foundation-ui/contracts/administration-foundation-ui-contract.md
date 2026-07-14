@@ -67,6 +67,13 @@ lifecycle, guardian user links, and student management remain blocked.
 Every permission listed for a surface is required for frontend visibility and
 route access. Backend authorization remains authoritative.
 
+System Administrator exception: the existing authenticated-session role
+collection identifies the active platform `System Administrator` role. That
+role satisfies every listed feature-specific permission check. Active session,
+required school context, tenant isolation, validation, and other
+non-permission gates remain authoritative. Frontend adoption of this rule is
+deferred to a separate implementation feature.
+
 ## List Query Contract
 
 - URL query is source of truth for approved list state.
@@ -151,7 +158,8 @@ route access. Backend authorization remains authoritative.
   cross route boundaries.
 - Confirmed school change clears tenant-owned data, requests, lookups, and
   drafts before new-school data renders.
-- Platform access never implies school-owned access.
+- System Administrator may resolve any active school for school-owned work, but
+  tenant-owned data remains limited to the resolved school.
 
 ## Feedback and Privacy Contract
 

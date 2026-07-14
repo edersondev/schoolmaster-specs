@@ -3,6 +3,7 @@ get:
     - Teacher Content
   summary: List tenant-scoped teacher content items
   operationId: listTeacherContent
+  x-system-administrator-master-access: true
   parameters:
     - $ref: ../../components/parameters/schools/TenantContext.yaml
     - $ref: ../../components/parameters/common/Page.yaml
@@ -32,6 +33,7 @@ post:
     - Teacher Content
   summary: Create a tenant-scoped teacher content item
   operationId: createTeacherContent
+  x-system-administrator-master-access: true
   parameters:
     - $ref: ../../components/parameters/schools/TenantContext.yaml
   requestBody:

@@ -2,7 +2,9 @@ description: >-
   Classroom roster access is forbidden because tenant context is missing,
   inactive, or outside permitted scope, or because the authenticated actor lacks
   school-administrator permission or teacher own-active-assignment read
-  permission in an otherwise valid school context.
+  permission in an otherwise valid school context. An active platform System
+  Administrator satisfies feature-specific roster permission checks only after
+  valid active school context resolves.
 content:
   application/json:
     schema:
@@ -15,7 +17,7 @@ content:
             code: tenant_mismatch
             message: Tenant context is missing, inactive, or outside permitted scope.
       insufficientPermission:
-        summary: Scope is valid but the actor lacks roster permission
+        summary: Non-System Administrator scope is valid but roster permission is missing
         value:
           error:
             code: forbidden
@@ -26,3 +28,9 @@ content:
           error:
             code: forbidden
             message: Teachers may read only their own active assignments.
+      systemAdministratorTenantDenied:
+        summary: Master permission is satisfied but tenant context is invalid
+        value:
+          error:
+            code: tenant_mismatch
+            message: Tenant context is missing, inactive, or outside permitted scope.

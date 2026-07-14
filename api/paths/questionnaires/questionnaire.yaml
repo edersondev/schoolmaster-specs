@@ -3,6 +3,7 @@ get:
     - Questionnaires
   summary: Retrieve a tenant-scoped questionnaire
   operationId: getQuestionnaire
+  x-system-administrator-master-access: true
   parameters:
     - $ref: ../../components/parameters/schools/TenantContext.yaml
     - $ref: ../../components/parameters/questionnaires/QuestionnaireId.yaml
@@ -32,6 +33,7 @@ patch:
     Edits that change historical student-facing meaning after use by a published
     or assigned learning set are rejected in v1.
   operationId: updateQuestionnaire
+  x-system-administrator-master-access: true
   parameters:
     - $ref: ../../components/parameters/schools/TenantContext.yaml
     - $ref: ../../components/parameters/questionnaires/QuestionnaireId.yaml
@@ -68,6 +70,7 @@ delete:
     - Questionnaires
   summary: Soft-delete a questionnaire
   operationId: deleteQuestionnaire
+  x-system-administrator-master-access: true
   parameters:
     - $ref: ../../components/parameters/schools/TenantContext.yaml
     - $ref: ../../components/parameters/questionnaires/QuestionnaireId.yaml

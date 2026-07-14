@@ -3,6 +3,7 @@ post:
     - Academic Years
   summary: Restore a soft-deleted academic year
   operationId: restoreAcademicYear
+  x-system-administrator-master-access: true
   parameters:
     - $ref: ../../components/parameters/schools/TenantContext.yaml
     - $ref: ../../components/parameters/academics/AcademicYearId.yaml

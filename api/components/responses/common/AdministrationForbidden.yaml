@@ -1,7 +1,9 @@
 description: >-
   Administration lifecycle access is forbidden because the tenant context is
   missing, inactive, or outside permitted scope, or because the authenticated
-  user lacks the required platform or school administration permission.
+  user lacks the required platform or school administration permission. An
+  active platform System Administrator satisfies the permission requirement,
+  but tenant-context and other non-permission failures remain forbidden.
 content:
   application/json:
     schema:
@@ -14,8 +16,14 @@ content:
             code: tenant_mismatch
             message: Tenant context is missing, inactive, or outside permitted scope.
       insufficientPermission:
-        summary: Scope is valid but the actor lacks administration lifecycle permission
+        summary: Non-System Administrator scope is valid but permission is missing
         value:
           error:
             code: forbidden
             message: The authenticated user lacks permission for this action.
+      systemAdministratorTenantDenied:
+        summary: Master permission is satisfied but tenant context is invalid
+        value:
+          error:
+            code: tenant_mismatch
+            message: Tenant context is missing, inactive, or outside permitted scope.

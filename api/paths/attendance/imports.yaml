@@ -6,6 +6,7 @@ post:
     Only school administrators may import attendance. Imports are limited to
     JSON payloads, a maximum of 500 rows, and all-or-nothing validation.
   operationId: importAttendance
+  x-system-administrator-master-access: true
   parameters:
     - $ref: ../../components/parameters/schools/TenantContext.yaml
   requestBody:

@@ -3,6 +3,7 @@ get:
     - Reports
   summary: List report requests for the resolved school
   operationId: listReports
+  x-system-administrator-master-access: true
   parameters:
     - $ref: ../../components/parameters/schools/TenantContext.yaml
     - $ref: ../../components/parameters/common/Page.yaml
@@ -55,6 +56,7 @@ post:
     - Reports
   summary: Request a tenant-scoped built-in or custom report
   operationId: requestReport
+  x-system-administrator-master-access: true
   parameters:
     - $ref: ../../components/parameters/schools/TenantContext.yaml
   requestBody:

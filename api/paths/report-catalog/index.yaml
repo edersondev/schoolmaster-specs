@@ -3,6 +3,7 @@ get:
     - Reports
   summary: Retrieve the approved report catalog for the resolved school
   operationId: getReportCatalog
+  x-system-administrator-master-access: true
   parameters:
     - $ref: ../../components/parameters/schools/TenantContext.yaml
   responses:

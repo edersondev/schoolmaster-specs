@@ -3,6 +3,7 @@ post:
     - Guardians
   summary: Restore a soft-deleted guardian
   operationId: restoreGuardian
+  x-system-administrator-master-access: true
   parameters:
     - $ref: ../../components/parameters/schools/TenantContext.yaml
     - $ref: ../../components/parameters/guardians/GuardianId.yaml

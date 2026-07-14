@@ -8,6 +8,7 @@ get:
     correction history, teacher content, questionnaire answers, and reports are
     not exposed.
   operationId: getGuardianStudentAcademics
+  x-system-administrator-master-access: true
   parameters:
     - $ref: ../../../components/parameters/schools/TenantContext.yaml
     - $ref: ../../../components/parameters/student-profiles/StudentProfileId.yaml

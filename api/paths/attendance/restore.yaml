@@ -3,6 +3,7 @@ post:
     - Attendance
   summary: Restore a deleted attendance record
   operationId: restoreAttendance
+  x-system-administrator-master-access: true
   parameters:
     - $ref: ../../components/parameters/schools/TenantContext.yaml
     - $ref: ../../components/parameters/attendance/AttendanceId.yaml

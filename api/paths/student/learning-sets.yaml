@@ -3,6 +3,7 @@ get:
     - Learning Sets
   summary: List learning sets assigned to the authenticated student
   operationId: listStudentLearningSets
+  x-system-administrator-master-access: true
   parameters:
     - $ref: ../../components/parameters/schools/TenantContext.yaml
     - $ref: ../../components/parameters/academics/AcademicPeriodFilterRequired.yaml

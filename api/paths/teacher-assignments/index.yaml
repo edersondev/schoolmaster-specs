@@ -7,6 +7,7 @@ get:
     list only their own active assignments. Supports pagination plus
     academicPeriodId and status filters only.
   operationId: listTeacherAssignments
+  x-system-administrator-master-access: true
   parameters:
     - $ref: ../../components/parameters/schools/TenantContext.yaml
     - $ref: ../../components/parameters/common/Page.yaml
@@ -36,6 +37,7 @@ post:
     role must be active on the explicit effective start date. Duplicate active
     assignments are rejected.
   operationId: createTeacherAssignment
+  x-system-administrator-master-access: true
   parameters:
     - $ref: ../../components/parameters/schools/TenantContext.yaml
   requestBody:

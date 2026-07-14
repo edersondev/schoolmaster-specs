@@ -6,6 +6,7 @@ get:
     School administrators can read same-school assignment details. Teachers can
     retrieve only their own active assignment detail.
   operationId: getTeacherAssignment
+  x-system-administrator-master-access: true
   parameters:
     - $ref: ../../components/parameters/schools/TenantContext.yaml
     - $ref: ../../components/parameters/teacher-assignments/TeacherAssignmentId.yaml

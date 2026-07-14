@@ -3,6 +3,7 @@ get:
     - Grades
   summary: List grade records in permitted scope
   operationId: listGrades
+  x-system-administrator-master-access: true
   parameters:
     - $ref: ../../components/parameters/schools/TenantContext.yaml
     - $ref: ../../components/parameters/common/Page.yaml
@@ -32,6 +33,7 @@ post:
     - Grades
   summary: Record a grade for a student in an academic period
   operationId: createGrade
+  x-system-administrator-master-access: true
   parameters:
     - $ref: ../../components/parameters/schools/TenantContext.yaml
   requestBody:

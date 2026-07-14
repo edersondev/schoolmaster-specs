@@ -3,6 +3,7 @@ patch:
     - Student Profiles
   summary: Update a non-transfer student profile lifecycle status
   operationId: updateStudentProfileStatus
+  x-system-administrator-master-access: true
   parameters:
     - $ref: ../../components/parameters/schools/TenantContext.yaml
     - $ref: ../../components/parameters/student-profiles/StudentProfileId.yaml

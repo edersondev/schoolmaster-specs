@@ -4,6 +4,7 @@ get:
   summary: Lookup Brazilian address by CEP
   description: Returns normalized address fields from ViaCEP for form prefill. This operation does not persist address data.
   operationId: getAddressLookupByZipCode
+  x-system-administrator-master-access: true
   parameters:
     - name: zipCode
       in: path

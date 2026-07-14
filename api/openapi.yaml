@@ -14,6 +14,22 @@ info:
 servers:
   - url: /
     description: API origin; promoted paths include the /api/v1 version prefix
+x-system-administrator-master-access:
+  role:
+    name: System Administrator
+    scope: platform
+    status: active
+  semantics: >-
+    Operations marked x-system-administrator-master-access true treat the
+    authenticated actor as satisfying feature-specific permission checks.
+    Authentication, active account and session, resolved school context,
+    tenant isolation, actor ownership, guardian links, lifecycle state,
+    approval, confirmation, support opt-in, file safety, closed-period, and
+    other business gates remain enforceable.
+  audit: >-
+    Writes and lifecycle actions record tenant-safe master_access_used true
+    through their existing audit pipeline. Reads do not gain a new audit event
+    solely because the master role was evaluated.
 tags:
   - name: Auth
     description: Authentication and current-session operations.
@@ -299,6 +315,7 @@ paths:
       summary: List minimized platform school summaries
       description: Returns platform-wide school operational summaries with documented filters, pagination, sorting, small-count suppression, and no school-owned detail records.
       operationId: listPlatformSchoolSummaries
+      x-system-administrator-master-access: true
       parameters:
         - $ref: components/parameters/common/Page.yaml
         - $ref: components/parameters/common/PerPage.yaml
@@ -336,6 +353,7 @@ paths:
       summary: Get cross-school reporting overview
       description: Returns approved aggregate reporting health and lifecycle indicators without raw report outputs, generated files, or school-owned detail records.
       operationId: getPlatformReportingOverview
+      x-system-administrator-master-access: true
       parameters:
         - $ref: components/parameters/common/Page.yaml
         - $ref: components/parameters/common/PerPage.yaml
@@ -360,6 +378,7 @@ paths:
       summary: Request target-school support access
       description: Creates or evaluates a minimized support access decision for exactly one target school using documented reason, purpose, correlation metadata, and target-school opt-in state.
       operationId: requestSupportAccess
+      x-system-administrator-master-access: true
       requestBody:
         required: true
         content:
@@ -387,6 +406,7 @@ paths:
         - Platform Support
       summary: Get support access decision detail
       operationId: getSupportAccessDecision
+      x-system-administrator-master-access: true
       parameters:
         - $ref: '#/components/parameters/SupportAccessId'
       responses:
@@ -409,6 +429,7 @@ paths:
       summary: Approve support access
       description: Records internal platform approval only when the matching target-school opt-in and support decision gates are valid.
       operationId: approveSupportAccess
+      x-system-administrator-master-access: true
       parameters:
         - $ref: '#/components/parameters/SupportAccessId'
       requestBody:
@@ -440,6 +461,7 @@ paths:
         - Platform Support
       summary: Revoke support access
       operationId: revokeSupportAccess
+      x-system-administrator-master-access: true
       parameters:
         - $ref: '#/components/parameters/SupportAccessId'
       requestBody:
@@ -472,6 +494,7 @@ paths:
       summary: Get redacted support diagnostics for one school
       description: Returns redacted read-only diagnostics for one target school only when target-school opt-in and internal platform approval gates are valid and no older than 24 hours.
       operationId: getSupportSchoolDiagnostics
+      x-system-administrator-master-access: true
       parameters:
         - $ref: components/parameters/schools/SchoolId.yaml
         - name: support_access_id
@@ -503,6 +526,7 @@ paths:
         - Platform Support
       summary: List minimized support audit events
       operationId: listSupportAuditEvents
+      x-system-administrator-master-access: true
       parameters:
         - $ref: components/parameters/common/Page.yaml
         - $ref: components/parameters/common/PerPage.yaml

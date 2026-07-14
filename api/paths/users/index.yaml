@@ -3,6 +3,7 @@ get:
     - Users
   summary: List users in permitted scope
   operationId: listUsers
+  x-system-administrator-master-access: true
   parameters:
     - $ref: ../../components/parameters/schools/TenantContext.yaml
     - $ref: ../../components/parameters/common/Page.yaml
@@ -30,6 +31,7 @@ post:
     - Users
   summary: Create a user inside the permitted scope
   operationId: createUser
+  x-system-administrator-master-access: true
   parameters:
     - $ref: ../../components/parameters/schools/TenantContext.yaml
   requestBody:

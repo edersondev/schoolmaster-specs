@@ -3,6 +3,7 @@ get:
     - Assessment Responses
   summary: Retrieve the authenticated student's own questionnaire response
   operationId: getStudentQuestionnaireResponse
+  x-system-administrator-master-access: true
   parameters:
     - $ref: ../../components/parameters/schools/TenantContext.yaml
     - name: responseAttemptId

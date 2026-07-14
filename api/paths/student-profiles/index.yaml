@@ -3,6 +3,7 @@ get:
     - Student Profiles
   summary: List student profiles in the resolved school context
   operationId: listStudentProfiles
+  x-system-administrator-master-access: true
   parameters:
     - $ref: ../../components/parameters/schools/TenantContext.yaml
     - $ref: ../../components/parameters/common/Page.yaml
@@ -35,6 +36,7 @@ post:
     - Student Profiles
   summary: Create a same-school student profile
   operationId: createStudentProfile
+  x-system-administrator-master-access: true
   parameters:
     - $ref: ../../components/parameters/schools/TenantContext.yaml
   requestBody:

@@ -3,6 +3,7 @@ get:
     - Learning Sets
   summary: List tenant-scoped learning sets
   operationId: listLearningSets
+  x-system-administrator-master-access: true
   parameters:
     - $ref: ../../components/parameters/schools/TenantContext.yaml
     - $ref: ../../components/parameters/common/Page.yaml
@@ -32,6 +33,7 @@ post:
     - Learning Sets
   summary: Create a learning set with ordered entries and direct student assignments
   operationId: createLearningSet
+  x-system-administrator-master-access: true
   parameters:
     - $ref: ../../components/parameters/schools/TenantContext.yaml
   requestBody:

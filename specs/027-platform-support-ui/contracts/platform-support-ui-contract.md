@@ -104,6 +104,12 @@ decision, unavailable diagnostics, or stale response.
 
 ## Capability Gates
 
+System Administrator satisfies the feature-specific platform/support
+permission checks listed below. Target-school opt-in, internal approval,
+target-school match, expiry, revocation, correlation, and other support safety
+gates remain mandatory. State-changing support actions record
+`master_access_used: true`. Frontend adoption is deferred.
+
 - No platform support data request before authenticated active actor state is
   confirmed.
 - No platform school summaries without operational oversight permission.

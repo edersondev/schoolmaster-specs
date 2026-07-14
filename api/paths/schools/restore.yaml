@@ -3,6 +3,7 @@ post:
     - Schools
   summary: Restore a soft-deleted school tenant
   operationId: restoreSchool
+  x-system-administrator-master-access: true
   parameters:
     - $ref: ../../components/parameters/schools/SchoolId.yaml
   requestBody:

@@ -46,16 +46,20 @@ This follows [ADR 004](../decisions/004-use-tenant-by-column.md).
 - Teachers may read only their own active teacher assignments where OpenAPI
   documents that visibility; this does not grant roster membership, class
   section, or other teacher assignment visibility.
-- Platform administration remains separate from school-owned roster access and
-  is not an implicit bypass.
+- System Administrator may select any active school through the documented
+  tenant-context mechanism. This satisfies permission checks only; roster
+  lookup, tenant ownership, lifecycle, and response scoping remain bound to the
+  resolved school.
 
 ## Platform Access
 
-- System administrators operate at platform scope for provisioning and
-  reviewing school tenants.
-- Platform access is not an implicit bypass for school-scoped module actions.
-  Any cross-tenant override must be explicitly documented in the specification,
-  OpenAPI contract, authorization policy, and regression tests.
+- System administrators operate at platform scope and may resolve any active
+  school through `X-School-Id` for school-scoped work.
+- The master role satisfies feature-specific school permission checks only
+  after active tenant context resolves. Queries, validation, authorization,
+  persistence, audit, and response shaping remain selected-school scoped.
+- Cross-school output is allowed only for operations explicitly documented as
+  platform-wide in the specification and OpenAPI contract.
 
 ## Shared and Tenant-Owned Resources
 
@@ -81,8 +85,9 @@ This follows [ADR 004](../decisions/004-use-tenant-by-column.md).
   scope is owner or creator bound, not school-wide.
 - School administrators may manage same-school teacher workflow records only
   inside an active permitted school context.
-- Platform administration is not an implicit bypass for teacher workflow
-  downloads, corrections, imports, deletes, restores, or lifecycle changes.
+- System Administrator satisfies teacher-workflow permission checks inside a
+  resolved active school, while tenant ownership, file safety, historical
+  meaning, closed-period, validation, and lifecycle rules remain enforceable.
 - Cross-tenant not-found and tenant-mismatch behavior must avoid revealing
   another school's record existence through validation, authorization, download,
   import, or correction responses.

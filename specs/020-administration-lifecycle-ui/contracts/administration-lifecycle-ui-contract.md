@@ -103,6 +103,13 @@ post-action refresh, and selectors: `listSchools`, `listUsers`, `listRoles`,
 Every permission listed for a surface is required for frontend visibility and
 route access. Backend authorization remains authoritative.
 
+System Administrator exception: the active platform `System Administrator`
+role satisfies the listed feature-specific permission checks. Authentication,
+active tenant context, tenant isolation, lifecycle dependencies, confirmation,
+validation, and audit requirements remain enforceable. Each System
+Administrator update or lifecycle action must record
+`master_access_used: true`. Frontend adoption is deferred.
+
 ## Update Contract
 
 - Update forms submit only documented non-status request fields.

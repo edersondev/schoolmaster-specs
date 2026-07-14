@@ -7,6 +7,7 @@ get:
     context. Supports pagination plus academicPeriodId and status filters only;
     include expansion, sort behavior, and other filters are rejected.
   operationId: listClassSections
+  x-system-administrator-master-access: true
   parameters:
     - $ref: ../../components/parameters/schools/TenantContext.yaml
     - $ref: ../../components/parameters/common/Page.yaml
@@ -36,6 +37,7 @@ post:
     names may repeat. Creation as inactive, unsupported metadata fields,
     cross-tenant references, and duplicate codes are rejected.
   operationId: createClassSection
+  x-system-administrator-master-access: true
   parameters:
     - $ref: ../../components/parameters/schools/TenantContext.yaml
   requestBody:

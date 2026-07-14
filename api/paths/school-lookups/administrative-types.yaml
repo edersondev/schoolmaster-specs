@@ -3,6 +3,7 @@ get:
     - School Lookups
   summary: List school administrative type options
   operationId: listSchoolAdministrativeTypes
+  x-system-administrator-master-access: true
   responses:
     '200':
       description: Full administrative type option list

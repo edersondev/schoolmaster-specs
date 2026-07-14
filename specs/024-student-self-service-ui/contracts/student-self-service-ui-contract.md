@@ -74,6 +74,11 @@ missing current period, denial, unavailable content, validation, or not-found.
 
 ## Capability Gates
 
+System Administrator master access does not create student impersonation or a
+selected-subject transport. These identity-owned operations continue to require
+the authenticated actor's active linked student profile. A missing actor-owned
+profile remains a non-permission denial.
+
 - No student data request before active school is confirmed.
 - No student data request before active linked student profile is confirmed.
 - No assigned learning-set request before current active academic period is

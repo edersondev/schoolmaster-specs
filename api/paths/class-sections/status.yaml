@@ -8,6 +8,7 @@ patch:
     effective date inside the academic period are required. Reactivation is not
     supported in v1.
   operationId: updateClassSectionStatus
+  x-system-administrator-master-access: true
   parameters:
     - $ref: ../../components/parameters/schools/TenantContext.yaml
     - $ref: ../../components/parameters/classroom/ClassSectionId.yaml

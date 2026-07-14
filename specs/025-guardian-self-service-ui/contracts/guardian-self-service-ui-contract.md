@@ -77,6 +77,11 @@ tenant-mismatch, validation, not-found, or temporary-unavailable responses.
 
 ## Capability Gates
 
+System Administrator master access does not create guardian impersonation or
+infer a guardian/student relationship. These identity-owned operations continue
+to require the authenticated actor's active guardian-user link and approved
+guardian-student association. Missing links remain non-permission denials.
+
 - No guardian data request before active school is confirmed.
 - No no-guardian-link state unless approved session or access behavior safely
   identifies a missing guardian-user link.

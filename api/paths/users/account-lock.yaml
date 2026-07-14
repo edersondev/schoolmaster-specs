@@ -3,6 +3,7 @@ get:
     - Account Lifecycle
   summary: Review account lock state
   operationId: getAccountLock
+  x-system-administrator-master-access: true
   parameters:
     - $ref: ../../components/parameters/schools/TenantContext.yaml
     - $ref: ../../components/parameters/users/UserId.yaml
@@ -33,6 +34,7 @@ post:
     action clears them and revoke all active bearer tokens for the affected
     user.
   operationId: lockAccount
+  x-system-administrator-master-access: true
   parameters:
     - $ref: ../../components/parameters/schools/TenantContext.yaml
     - $ref: ../../components/parameters/users/UserId.yaml
@@ -69,6 +71,7 @@ delete:
     - Account Lifecycle
   summary: Unlock or clear administrative account lock
   operationId: unlockAccount
+  x-system-administrator-master-access: true
   parameters:
     - $ref: ../../components/parameters/schools/TenantContext.yaml
     - $ref: ../../components/parameters/users/UserId.yaml

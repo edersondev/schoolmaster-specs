@@ -3,6 +3,7 @@ get:
     - School Lookups
   summary: List school modality options
   operationId: listSchoolModalities
+  x-system-administrator-master-access: true
   responses:
     '200':
       description: Full modality option list

@@ -3,6 +3,7 @@ get:
     - Assessment Responses
   summary: Retrieve one same-school questionnaire response for authorized review
   operationId: getQuestionnaireResponse
+  x-system-administrator-master-access: true
   parameters:
     - $ref: ../../components/parameters/schools/TenantContext.yaml
     - name: responseAttemptId

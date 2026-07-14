@@ -3,6 +3,7 @@ post:
     - Assessment Responses
   summary: Grade advanced questionnaire response answers
   operationId: gradeQuestionnaireResponse
+  x-system-administrator-master-access: true
   parameters:
     - $ref: ../../components/parameters/schools/TenantContext.yaml
     - name: responseAttemptId

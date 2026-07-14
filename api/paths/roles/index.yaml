@@ -3,6 +3,7 @@ get:
     - Roles
   summary: List roles in permitted scope with inherited permissions
   operationId: listRoles
+  x-system-administrator-master-access: true
   parameters:
     - $ref: ../../components/parameters/schools/TenantContext.yaml
     - $ref: ../../components/parameters/common/Page.yaml
@@ -31,6 +32,7 @@ post:
     - Roles
   summary: Create a scoped role
   operationId: createRole
+  x-system-administrator-master-access: true
   parameters:
     - $ref: ../../components/parameters/schools/TenantContext.yaml
   requestBody:

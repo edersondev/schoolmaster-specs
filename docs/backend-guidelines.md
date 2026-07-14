@@ -30,8 +30,16 @@ module-specific business logic runs.
 - Use Laravel-native authentication mechanisms aligned to the published
   OpenAPI contract.
 - Keep platform-scope and school-scope authorization paths explicit.
-- Do not grant system administrators an implicit bypass for school-scoped
-  module actions.
+- Identify System Administrator only through the existing active
+  platform-scoped role named exactly `System Administrator`.
+- Centralize the permission-only override in `User::hasPermission()` and
+  `User::hasSchoolPermission()`. Do not use `Gate::before`, because policies and
+  services must still evaluate tenant, ownership, lifecycle, approval, and
+  safety gates.
+- For school-owned operations, resolve active `X-School-Id` context before the
+  override is useful and keep every query and response selected-school scoped.
+- Record `master_access_used: true` through existing audit pipelines for System
+  Administrator writes and lifecycle actions.
 - Expose role and permission information through API resources only as defined
   by the contract.
 

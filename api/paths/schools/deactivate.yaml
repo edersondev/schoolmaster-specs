@@ -3,6 +3,7 @@ post:
     - Schools
   summary: Deactivate a school tenant
   operationId: deactivateSchool
+  x-system-administrator-master-access: true
   parameters:
     - $ref: ../../components/parameters/schools/SchoolId.yaml
   requestBody:

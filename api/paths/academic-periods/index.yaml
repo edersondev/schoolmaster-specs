@@ -3,6 +3,7 @@ get:
     - Academic Periods
   summary: List academic periods for a school
   operationId: listAcademicPeriods
+  x-system-administrator-master-access: true
   parameters:
     - $ref: ../../components/parameters/schools/TenantContext.yaml
     - $ref: ../../components/parameters/common/Page.yaml
@@ -36,6 +37,7 @@ post:
     - Academic Periods
   summary: Create an academic period inside an academic year
   operationId: createAcademicPeriod
+  x-system-administrator-master-access: true
   parameters:
     - $ref: ../../components/parameters/schools/TenantContext.yaml
   requestBody:

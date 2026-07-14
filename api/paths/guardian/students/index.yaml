@@ -7,6 +7,7 @@ get:
     authenticated guardian through an active guardian-user link and active
     school-approved guardian-student association.
   operationId: listGuardianStudents
+  x-system-administrator-master-access: true
   parameters:
     - $ref: ../../../components/parameters/schools/TenantContext.yaml
     - $ref: ../../../components/parameters/common/Page.yaml

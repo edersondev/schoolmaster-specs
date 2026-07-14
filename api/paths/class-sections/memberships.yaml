@@ -6,6 +6,7 @@ get:
     Returns school-scoped membership history for the target class section.
     Supports pagination plus academicPeriodId and status filters only.
   operationId: listClassSectionMemberships
+  x-system-administrator-master-access: true
   parameters:
     - $ref: ../../components/parameters/schools/TenantContext.yaml
     - $ref: ../../components/parameters/classroom/ClassSectionId.yaml
@@ -38,6 +39,7 @@ post:
     same-school enrollment covering the explicit effective start date. Any
     invalid member rejects the whole request without partial changes.
   operationId: batchAddClassSectionMemberships
+  x-system-administrator-master-access: true
   parameters:
     - $ref: ../../components/parameters/schools/TenantContext.yaml
     - $ref: ../../components/parameters/classroom/ClassSectionId.yaml
@@ -74,6 +76,7 @@ patch:
     after each membership effective start date. Any invalid membership rejects
     the whole request.
   operationId: batchEndClassSectionMemberships
+  x-system-administrator-master-access: true
   parameters:
     - $ref: ../../components/parameters/schools/TenantContext.yaml
     - $ref: ../../components/parameters/classroom/ClassSectionId.yaml

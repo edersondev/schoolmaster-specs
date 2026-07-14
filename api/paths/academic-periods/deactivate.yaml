@@ -3,6 +3,7 @@ post:
     - Academic Periods
   summary: Deactivate an academic period
   operationId: deactivateAcademicPeriod
+  x-system-administrator-master-access: true
   parameters:
     - $ref: ../../components/parameters/schools/TenantContext.yaml
     - $ref: ../../components/parameters/academics/AcademicPeriodId.yaml

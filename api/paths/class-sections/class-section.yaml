@@ -3,6 +3,7 @@ get:
     - Class Sections
   summary: Get a school-owned class section
   operationId: getClassSection
+  x-system-administrator-master-access: true
   parameters:
     - $ref: ../../components/parameters/schools/TenantContext.yaml
     - $ref: ../../components/parameters/classroom/ClassSectionId.yaml
@@ -28,6 +29,7 @@ patch:
     metadata only. Status changes use the status operation; inactive
     reactivation is not supported in v1.
   operationId: updateClassSection
+  x-system-administrator-master-access: true
   parameters:
     - $ref: ../../components/parameters/schools/TenantContext.yaml
     - $ref: ../../components/parameters/classroom/ClassSectionId.yaml

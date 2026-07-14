@@ -3,6 +3,7 @@ get:
     - Guardians
   summary: Retrieve a guardian
   operationId: getGuardian
+  x-system-administrator-master-access: true
   parameters:
     - $ref: ../../components/parameters/schools/TenantContext.yaml
     - $ref: ../../components/parameters/guardians/GuardianId.yaml
@@ -29,6 +30,7 @@ patch:
     - Guardians
   summary: Update documented guardian fields
   operationId: updateGuardian
+  x-system-administrator-master-access: true
   parameters:
     - $ref: ../../components/parameters/schools/TenantContext.yaml
     - $ref: ../../components/parameters/guardians/GuardianId.yaml
@@ -65,6 +67,7 @@ delete:
     - Guardians
   summary: Soft delete a guardian
   operationId: deleteGuardian
+  x-system-administrator-master-access: true
   parameters:
     - $ref: ../../components/parameters/schools/TenantContext.yaml
     - $ref: ../../components/parameters/guardians/GuardianId.yaml
