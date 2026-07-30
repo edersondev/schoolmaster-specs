@@ -3,6 +3,7 @@ required:
   - token
   - token_expires_at
   - user
+  - resolved_school
   - roles
   - permissions
 properties:
