@@ -217,10 +217,12 @@ Expected results:
   assertions in the application container.
 - Backend lifecycle regression: updated `SchoolDetailUpdateTest` to use the
   model's numeric active-status constant; its 3 tests and 9 assertions passed.
-- Backend full regression: with the PHPUnit process configured for 512 MB, 476
-  tests passed with 2,385 assertions and no feature regression. One unrelated
-  baseline failure remains: `StudentProfileTransferDestinationTest` receives
-  the existing `403` where it expects `200`.
+- Backend transfer regression: active destination-school authorization now uses
+  the model's numeric status constant. The destination test passed 2 tests with
+  6 assertions, including School Administrator and System Administrator paths;
+  the complete transfer slice passed 7 tests with 21 assertions.
+- Backend full regression: with the PHPUnit process configured for 512 MB, all
+  478 tests passed with 2,390 assertions.
 - Frontend focused regression: school-context, auth, System Administrator, and
   lifecycle suites passed at their checkpoints. The requested-route guard now
   permits a contextless System Administrator to reach the platform School
