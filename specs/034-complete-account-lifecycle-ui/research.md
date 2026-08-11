@@ -22,7 +22,10 @@ The administrator then explicitly calls `createAccountInvitation`.
 
 **Rationale**: This preserves current clients, the clarified two-step UX, and
 the existing safe invitation endpoint. Invitation failure leaves a retryable
-persisted user.
+persisted user. The create flow stores only that user's non-secret UUID in route
+intent; navigation or reload restores the invitation phase only after an
+authorized tenant-scoped re-fetch confirms the same invited user, never from
+draft or route-supplied user details.
 
 **Alternatives considered**: Changing every create to invited was rejected as
 breaking; adding invitation-by-user endpoint was rejected because existing

@@ -87,7 +87,8 @@ schoolmaster-specs/
 │       ├── users/user.yaml
 │       ├── users/account-lock.yaml
 │       ├── users/account-reactivation.yaml
-│       └── account-lifecycle/invitations.yaml
+│       ├── account-lifecycle/invitations.yaml
+│       └── account-lifecycle/invitations-setup.yaml
 ├── specs/001-schoolmaster-platform/contracts/openapi.yaml
 ├── specs/008-account-lifecycle-workflows/
 ├── specs/021-account-lifecycle-ui/
@@ -153,7 +154,7 @@ repository remains JavaScript rather than introducing a TypeScript island.
 
 | Surface | Single responsibility | Inputs / outputs |
 |---|---|---|
-| `CreateUserPage.vue` | Compose editing and persisted invitation phases | Session/context in; create/invite events and navigation out |
+| `CreateUserPage.vue` | Compose editing and refresh-safe persisted invitation phases | Route/session/context in; create/invite events and navigation out |
 | `UserDetailPage.vue` | Compose authorized detail lifecycle surfaces | Route/session/target in; reload callback out |
 | `UserInvitationPanel.vue` | Render explicit invitation action and safe result | User/result/pending/error in; `create`/`retry` out |
 | `AccountLockPanel.vue` | Render safe lock loading/empty/current state | Lock/loading/error in; no mutation |
@@ -173,7 +174,8 @@ repository remains JavaScript rather than introducing a TypeScript island.
   do not expand shared status schemas used by other resources.
 - Document `invited` list filtering, invited-to-active setup ownership,
   platform-only versus exact-school `listUsers`/`getUser` lookup, self-target
-  denial, tenant-before-target ordering, and unchanged resend block.
+  denial, tenant-before-target ordering, invitation creation and completion
+  semantics, and unchanged resend block in both modular invitation paths.
 - Synchronize aggregate OpenAPI, Feature 008 backend rules, Feature 021 UI rules,
   and Feature 034 contract before backend changes.
 
@@ -253,9 +255,11 @@ repository remains JavaScript rather than introducing a TypeScript island.
   onboarding flow. Retain returned mapped user and replace editable form with a
   persisted-user summary and explicit invitation action; do not auto-invite or
   auto-navigate to list.
-- Store only the non-secret created user UUID in route intent if refresh-safe
-  recovery is implemented; re-fetch under current tenant before restoring the
-  invitation phase. Never rebuild target data from draft fields.
+- Store only the non-secret created user UUID in route intent. On navigation or
+  reload, re-fetch that UUID under the current authorized tenant before
+  restoring the invitation phase; fail closed when authorization, tenant,
+  target, or invited-state validation fails. Never rebuild target data from
+  draft fields or route-supplied user details.
 - `useAccountInvitation` builds the documented request from persisted user,
   passes exact school header, omits request `delivery_metadata`, renders only
   `status`, `expires_at`, `delivery_channel`, and `delivery_requested_at`,

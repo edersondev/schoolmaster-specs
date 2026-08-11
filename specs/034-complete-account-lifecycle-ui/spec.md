@@ -212,6 +212,7 @@ while invitation creation remains usable for authorized actors.
   - `createUser` - `POST /api/v1/users`
   - `getUser` - `GET /api/v1/users/{userId}`
   - `createAccountInvitation` - `POST /api/v1/account-invitations`
+  - `completeAccountInvitation` - `POST /api/v1/account-invitations/{invitationToken}/complete`
   - `getAccountLock` - `GET /api/v1/users/{userId}/account-lock`
   - `lockAccount` - `POST /api/v1/users/{userId}/account-lock`
   - `unlockAccount` - `DELETE /api/v1/users/{userId}/account-lock`
@@ -296,7 +297,11 @@ while invitation creation remains usable for authorized actors.
 - **FR-010**: After user creation succeeds, the create flow MUST show an explicit
   invitation action to an authorized administrator and MUST allow that action
   without re-entering the persisted user's identity, roles, scope, or school
-  context.
+  context. The flow MUST preserve only the non-secret persisted-user UUID in
+  route intent and, after navigation or reload, MUST restore invitation
+  eligibility only by re-fetching that UUID under the current authorized tenant
+  context; it MUST NOT reconstruct the target from draft or route-supplied user
+  details.
 - **FR-011**: User creation and invitation creation MUST remain distinguishable
   outcomes; invitation failure MUST NOT report or imply that a successfully
   persisted user was not created.
@@ -400,6 +405,9 @@ while invitation creation remains usable for authorized actors.
 - **SC-004**: A newly created eligible user can be invited in the same
   create-user journey without re-entering user data, and invitation failure is
   reported separately from user creation in 100% of covered failure cases.
+  Automated reload coverage proves UUID route intent restores the same target
+  only after an authorized tenant-scoped re-fetch and never creates a second
+  user or falls back to draft data.
 - **SC-005**: Security verification finds zero administrator resend requests,
   reusable invitation tokens, permission payloads, tenant-private details, or
   submitted plaintext reasons in post-submit feedback, diagnostics, logs, or

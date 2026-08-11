@@ -1,7 +1,8 @@
 # Data Model: Complete Administrator Account Lifecycle UI
 
-No new user table or frontend persistence is introduced. One permission index
-changes; remaining entities are existing records or transient UI state.
+No new user table or browser storage is introduced. One permission index
+changes; remaining entities are existing records, UUID-only route intent, or
+transient UI state.
 
 ## User Account Setup
 
@@ -61,6 +62,13 @@ State contains persisted target, pending/error state, request context generation
 and administrator-visible invitation `status`, `expiresAt`, `deliveryChannel`,
 and `deliveryRequestedAt`. It contains no lifecycle token, request
 `delivery_metadata`, delivery secret, or other delivery diagnostic.
+
+After creation, route intent contains only the persisted target UUID. A page
+mount or reload treats that UUID as untrusted lookup intent, selects the current
+authorized tenant mode, and re-fetches the target before restoring
+`persisted-invited`. Missing authority, tenant mismatch, unknown target, or a
+non-invited target fails closed. Draft fields and route-supplied user details
+never reconstruct invitation state.
 
 ## Account Lock View and Action Draft
 

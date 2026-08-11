@@ -74,7 +74,9 @@ Implementation checklist:
 4. Persist invitation-ready user first; freeze draft; expose explicit invitation.
 5. Render only invitation `status`, `expires_at`, `delivery_channel`, and
    `delivery_requested_at`; never send request `delivery_metadata`.
-6. Keep failure retryable for same persisted user; never expose resend/token.
+6. Keep failure retryable for the same persisted user across navigation/reload
+   by retaining UUID-only route intent and requiring an authorized tenant-scoped
+   re-fetch; never rebuild from draft data or expose resend/token.
 7. Abort/ignore stale loads/actions/invitations and refresh user plus lock.
 
 Run from `schoolmaster-frontend`:

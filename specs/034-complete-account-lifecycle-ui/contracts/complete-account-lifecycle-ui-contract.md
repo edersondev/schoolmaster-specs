@@ -13,6 +13,7 @@ Frontend must not enable lifecycle actions against older backend behavior.
 | `createUser` | `POST /api/v1/users` | Persist school user in invitation mode |
 | `getUser` | `GET /api/v1/users/{userId}` | Load target in platform-only or exact-school mode |
 | `createAccountInvitation` | `POST /api/v1/account-invitations` | Explicitly create invitation from persisted user |
+| `completeAccountInvitation` | `POST /api/v1/account-invitations/{invitationToken}/complete` | Sole invited-to-active setup transition; guest regression scope |
 | `getAccountLock` | `GET /api/v1/users/{userId}/account-lock` | Load authorized lock state |
 | `lockAccount` | `POST /api/v1/users/{userId}/account-lock` | Lock with required reason |
 | `unlockAccount` | `DELETE /api/v1/users/{userId}/account-lock` | Unlock with no body |
@@ -87,6 +88,9 @@ activated through generic lifecycle actions.
 - Raw scoped permission objects and exact active role drive visibility.
 - Every request captures identity/permission/target/school generation.
 - Context change aborts/invalidates result and follow-up refresh.
+- Create-flow route intent contains only the persisted-user UUID; navigation or
+  reload restores invitation state only after an authorized tenant-scoped
+  `getUser` re-fetch confirms the same invited target.
 - FR-026/SC-011 responsive and keyboard/dialog behavior is automated at 390,
   768, and 1440 pixels across Chromium, Firefox, and WebKit.
 - No reusable token, permission payload, tenant-private error data, or submitted
