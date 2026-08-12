@@ -197,7 +197,7 @@
   existing invitation service without adding an endpoint or request field.
 - [X] T082 Run Redocly lint/bundle drift checks, Pint, focused lifecycle tests,
   and the full backend suite; record review-fix evidence in `quickstart.md`.
-- [ ] T083 Commit and push the specs/backend fixes, reply to all three PR review
+- [X] T083 Commit and push the specs/backend fixes, reply to all three PR review
   comments with validation evidence, and resolve their threads.
 
 ---

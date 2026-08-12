@@ -288,3 +288,6 @@ claimed by this implementation run.
   aggregate contracts with the same 9 unrelated assessment `$defs` warnings.
   A fresh temporary bundle is byte-for-byte identical to the committed aggregate
   contract.
+- Specs/OpenAPI expansion was pushed in `4a64718`; backend fixes were pushed to
+  PR #20 in `b3e8540`. Each inline review comment received its concrete fix and
+  test evidence through GitHub MCP, and all three review threads were resolved.
