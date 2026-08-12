@@ -140,6 +140,12 @@ administrator then explicitly invokes `createAccountInvitation` for that
 persisted target, so creation and delivery remain separate retryable outcomes.
 Only successful invitation setup may activate the invited user.
 
+Platform onboarding is the documented exception to separate persistence:
+because `createUser` is school-only, an authorized platform invitation may
+atomically provision the missing platform-owned invited user and invitation
+after validating active platform roles. Existing platform invited users remain
+retryable targets. School invitation requests never provision from draft data.
+
 **Alternatives considered**:
 
 - Automatically invite during user creation: rejected because persistence and

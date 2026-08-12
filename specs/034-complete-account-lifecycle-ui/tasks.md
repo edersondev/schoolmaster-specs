@@ -184,6 +184,24 @@
 
 ---
 
+## Phase 8: PR Review Reconciliation
+
+- [X] T078 Update Feature 008/034 and modular/aggregate OpenAPI to document
+  atomic missing-platform-invitee provisioning while preserving school
+  persisted-target-only invitation behavior.
+- [X] T079 Add regressions for shared invited-user activation denial, platform
+  role updates, atomic platform invitee provisioning, and school draft denial.
+- [X] T080 Implement shared lifecycle invited-state rejection and scope-aware
+  platform role resolution in the Laravel administration lifecycle services.
+- [X] T081 Implement transaction-safe platform invitee provisioning in the
+  existing invitation service without adding an endpoint or request field.
+- [X] T082 Run Redocly lint/bundle drift checks, Pint, focused lifecycle tests,
+  and the full backend suite; record review-fix evidence in `quickstart.md`.
+- [ ] T083 Commit and push the specs/backend fixes, reply to all three PR review
+  comments with validation evidence, and resolve their threads.
+
+---
+
 ## Dependencies and Execution Order
 
 ### Phase Dependencies

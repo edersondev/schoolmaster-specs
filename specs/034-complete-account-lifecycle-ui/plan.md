@@ -186,8 +186,10 @@ repository remains JavaScript rather than introducing a TypeScript island.
   `status=invited`, preserving school, roles, generated unusable password, and
   normal `201 User` output without invitation side effects.
 - Keep create-user school tenancy and `users.manage` authorization unchanged.
-  Platform user lifecycle actions remain supported for existing platform users;
-  this feature does not invent platform user creation through `createUser`.
+  Because no platform `createUser` workflow exists, permit the existing
+  platform invitation operation to atomically provision a missing platform-owned
+  invited user after validating platform authority and roles. School invitation
+  remains a separate create-then-invite sequence with a persisted target.
 - Ensure generic update/activation/reactivation rules cannot transition invited
   users to active; only successful invitation setup may do so.
 - Replace permission code-only uniqueness with `(code, scope)`, update seeder

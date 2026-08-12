@@ -20,6 +20,12 @@ Invitation mode creates `status=invited` without invitation/token/delivery.
 Only successful invitation setup changes invited to active. Generic update,
 activation, recovery, and reactivation reject invited users.
 
+For platform scope only, `createAccountInvitation` may atomically create the
+missing platform-owned invited user and invitation because `createUser` remains
+school-only. That user has `schoolId=null`, an unusable generated password, and
+only validated active platform roles. School invitation requests never create a
+user from draft data.
+
 ## Scoped Permission
 
 | Field | Type | Rules |

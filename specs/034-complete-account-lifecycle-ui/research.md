@@ -32,6 +32,12 @@ breaking; adding invitation-by-user endpoint was rejected because existing
 creation works once the persisted state is eligible; automatic invite was
 rejected because it combines outcomes and can send unintended email.
 
+**Platform exception**: `createUser` remains school-only. For platform scope,
+the existing invitation operation atomically provisions a missing platform-owned
+invited user and invitation after validating active platform roles. This avoids
+an undocumented platform create endpoint while preserving separate persistence
+for the school UI workflow.
+
 ## Decision 3: Define user-specific invited status
 
 **Decision**: Add `UserStatus` with `active`, `inactive`, `invited`; keep shared

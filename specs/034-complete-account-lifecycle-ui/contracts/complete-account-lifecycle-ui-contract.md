@@ -36,8 +36,11 @@ Response remains `201` success envelope containing `User`. `User.status` uses
 
 ## Invitation Contract
 
-Invitation request uses persisted `scope`, `school_id`, `full_name`, `email`,
-and `role_ids`; it omits `delivery_metadata` and `user_id`. Administrator UI
+Invitation request uses `scope`, `school_id`, `full_name`, `email`, and
+`role_ids`; it omits `delivery_metadata` and `user_id`. School scope requires an
+eligible persisted invited target. Platform scope may atomically provision a
+missing platform-owned invited user with validated active platform roles because
+no platform `createUser` operation exists. Administrator UI
 renders only `status`, `expires_at`, `delivery_channel`, and
 `delivery_requested_at`; documented identifiers may remain service data but are
 not rendered as delivery diagnostics. Failure does not roll back the persisted
@@ -101,16 +104,17 @@ activated through generic lifecycle actions.
 ## Compatibility and Exclusions
 
 Default user creation is preserved. Frontend invitation mode deploys only after
-contract/backend. No new endpoint, package, global store, automatic invitation,
-admin resend, platform user creation expansion, or soft-delete restoration is
-approved here.
+contract/backend. No new endpoint, package, global store, automatic school
+invitation, admin resend, general platform user-creation endpoint, or soft-delete
+restoration is approved here.
 
 ## Implementation Reconciliation — 2026-08-12
 
 - Modular and aggregate OpenAPI lint successfully; a fresh aggregate bundle is
   byte-for-byte identical to the committed platform contract.
-- Laravel requires an eligible persisted `invited` target for invitation
-  creation and never creates a user from invitation draft data.
+- Laravel requires an eligible persisted `invited` target for school invitation
+  creation. Platform invitation may atomically provision a missing
+  platform-owned invited user; it never creates a school user from draft data.
 - Default/active and invitation user creation, setup-only activation, composite
   scoped permissions, exact System Administrator access, Policy-before-lookup,
   self denial, and platform/exact-school lookup behavior match this contract.

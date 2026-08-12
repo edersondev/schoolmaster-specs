@@ -53,6 +53,10 @@ The backend implementation exposes only the account lifecycle routes below, each
 - `User.status` uses user-specific `active`, `inactive`, or `invited` values.
   Only successful `completeAccountInvitation` processing may activate an
   invited user.
+- `createAccountInvitation` requires a persisted invited user for school scope.
+  For platform scope only, it may atomically provision a missing platform-owned
+  invited user with validated active platform roles and create the invitation;
+  the endpoint remains the sole platform onboarding creation path in this slice.
 - Administrative lifecycle operations require active
   `account_lifecycle.manage` matching target scope, or exact active platform
   System Administrator master access for the permission check only.

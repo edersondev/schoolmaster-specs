@@ -13,6 +13,13 @@
 - Q: What should actors without account lifecycle authority see? → A: Hide invitation, lock-state, and lifecycle-action sections and send no lifecycle requests.
 - Q: How should the feature resolve backend blockers that make create-then-invite and scoped lifecycle authorization impossible? → A: Expand Feature 034 across contracts, backend, and frontend; add invitation-ready user creation while preserving the active default, provision scoped permissions, deny self-actions, and enforce tenant-safe lookup before activating the UI.
 
+### Session 2026-08-12 — PR review reconciliation
+
+- Q: How should a new platform invitee be provisioned when `createUser` remains
+  school-only? → A: Permit `createAccountInvitation` in platform scope to
+  atomically create the missing platform-owned invited user with validated
+  platform roles; preserve the persisted-target-only rule for school scope.
+
 ## User Scenarios & Testing *(mandatory)*
 
 ### User Story 1 - Manage an eligible account (Priority: P1)
@@ -366,6 +373,14 @@ while invitation creation remains usable for authorized actors.
   school header, and query only platform-owned users. Lifecycle sections MUST
   still require matching `account_lifecycle.manage` or master access, and neither
   mode may fall back to the other.
+- **FR-028**: Platform invitation creation MAY atomically provision a missing
+  platform-owned invited user with no school ownership, an unusable generated
+  password, and validated active platform roles. The user and invitation MUST
+  commit or roll back together. School invitation creation MUST continue to
+  reject unsaved draft targets.
+- **FR-029**: Shared administration lifecycle activation MUST reject invited
+  users, and platform user updates containing `role_ids` MUST resolve only
+  active platform-scoped roles with `school_id` null.
 
 ### Key Entities
 

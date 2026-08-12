@@ -267,3 +267,24 @@ stale root-shell Playwright expectations described above need their owning
 feature reconciled, and the five-administrator moderated UAT plus representative
 human accessibility review remain genuinely pending. No human evidence is
 claimed by this implementation run.
+
+## PR Review Reconciliation — 2026-08-12
+
+- Expanded Feature 008/034 and OpenAPI before backend changes: school
+  invitations still require a persisted invited user, while platform invitation
+  atomically provisions a missing platform-owned invited user because no
+  platform `createUser` operation exists.
+- Shared administration lifecycle transition rules now reject activation of an
+  invited user, so `POST /api/v1/users/{id}/activate` cannot bypass password
+  setup.
+- Platform user `role_ids` updates now accept only active platform roles with no
+  school ownership; school roles remain invalid in platform mode.
+- Focused red/green review regression: the three new cases initially failed for
+  the reported reasons; after the fixes, 13 tests and 42 assertions passed.
+- Broader account-lifecycle plus user administration regression: 50 tests and
+  199 assertions passed.
+- Full configured-MySQL Laravel suite: 506 tests and 2,471 assertions passed.
+- Pint passed after ordering one test import. Redocly lint passed for modular and
+  aggregate contracts with the same 9 unrelated assessment `$defs` warnings.
+  A fresh temporary bundle is byte-for-byte identical to the committed aggregate
+  contract.

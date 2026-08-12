@@ -242,6 +242,9 @@
   - omitted or `active` preserves existing active-user creation
   - `invitation` persists exactly one invited user without invitation, token, or
     delivery side effects
+  - a platform invitation may atomically create the missing platform-owned
+    invited user because no platform `createUser` operation exists; school
+    invitations still require the separately persisted same-school target
   - only successful invitation setup changes invited to active
   - generic update, activation, recovery, and reactivation reject invited users
 
