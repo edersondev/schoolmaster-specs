@@ -20,7 +20,7 @@ properties:
     type: string
     format: email
   status:
-    $ref: ../common/Status.yaml
+    $ref: UserStatus.yaml
   roles:
     type: array
     items:

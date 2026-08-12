@@ -175,8 +175,14 @@ mismatch without exposing hidden tenant or role details.
   context.
 - Platform account administration and school user administration remain
   separate.
-- Frontend visibility for admin actions remains blocked until implementation
-  confirms approved permission codes or session capability flags.
+- Frontend visibility derives from active raw `account_lifecycle.manage`
+  permission matching target scope, or exact active platform System
+  Administrator master access for the permission check only.
+- Tenant, target-state, self-action, and other non-permission prerequisites
+  remain mandatory for master actors.
+- Unauthorized, missing-context, mismatched-context, and self-target views do
+  not mount invitation, lock-state, or lifecycle-action sections and issue no
+  lifecycle requests.
 - Backend authorization remains authoritative when client state is stale.
 - Token-proven invitation setup and password reset completion must not require
   an authenticated session and must not mix current signed-in permissions with

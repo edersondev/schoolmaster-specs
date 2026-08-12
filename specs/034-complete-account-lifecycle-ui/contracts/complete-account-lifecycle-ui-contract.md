@@ -104,3 +104,18 @@ Default user creation is preserved. Frontend invitation mode deploys only after
 contract/backend. No new endpoint, package, global store, automatic invitation,
 admin resend, platform user creation expansion, or soft-delete restoration is
 approved here.
+
+## Implementation Reconciliation — 2026-08-12
+
+- Modular and aggregate OpenAPI lint successfully; a fresh aggregate bundle is
+  byte-for-byte identical to the committed platform contract.
+- Laravel requires an eligible persisted `invited` target for invitation
+  creation and never creates a user from invitation draft data.
+- Default/active and invitation user creation, setup-only activation, composite
+  scoped permissions, exact System Administrator access, Policy-before-lookup,
+  self denial, and platform/exact-school lookup behavior match this contract.
+- Vue sends only documented service requests, chooses one user lookup mode,
+  unmounts denied lifecycle sections, invalidates stale work, and exposes no
+  administrator resend or token-dependent route.
+- No Feature 008, Feature 021, Feature 034, OpenAPI, backend, or frontend request
+  shape drift was found in the final review.

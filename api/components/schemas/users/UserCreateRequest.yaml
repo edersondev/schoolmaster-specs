@@ -1,9 +1,20 @@
 type: object
+additionalProperties: false
 required:
   - full_name
   - email
   - role_ids
 properties:
+  account_setup_mode:
+    type: string
+    description: >-
+      Controls initial account state. Omitted or active preserves active-user
+      creation. Invitation persists an invited user without creating an
+      invitation, lifecycle token, or delivery request.
+    enum:
+      - active
+      - invitation
+    default: active
   school_id:
     type: string
     format: uuid

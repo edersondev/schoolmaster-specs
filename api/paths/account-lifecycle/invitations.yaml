@@ -3,10 +3,13 @@ post:
     - Account Lifecycle
   summary: Create or replace an account invitation
   description: >-
-    Creates a 7-day single-use invitation for an eligible platform or
-    same-school user. The response never exposes reusable invitation token
-    secrets. Creating a new invitation supersedes prior unused invitations for
-    the same user and scope.
+    Creates a 7-day single-use invitation for an eligible persisted invited
+    platform or same-school user. User creation and invitation creation are
+    separate operations. Requires matching active account_lifecycle.manage or
+    exact System Administrator master access for the permission check; tenant
+    authorization precedes scoped target lookup. The response never exposes
+    reusable invitation token secrets. Creating a new invitation supersedes
+    prior unused invitations for the same user and scope.
   operationId: createAccountInvitation
   x-system-administrator-master-access: true
   parameters:

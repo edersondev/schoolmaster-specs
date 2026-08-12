@@ -8,29 +8,17 @@ info:
 servers:
   - url: /
     description: API origin; promoted paths include the /api/v1 version prefix
-x-system-administrator-master-access:
-  role:
-    name: System Administrator
-    scope: platform
-    status: active
-  semantics: >-
-    Operations marked x-system-administrator-master-access true treat the
-    authenticated actor as satisfying feature-specific permission checks.
-    Authentication, active account and session, resolved school context,
-    tenant isolation, actor ownership, guardian links, lifecycle state,
-    approval, confirmation, support opt-in, file safety, closed-period, and
-    other business gates remain enforceable.
-  audit: >-
-    Writes and lifecycle actions record tenant-safe master_access_used true
-    through their existing audit pipeline. Reads do not gain a new audit event
-    solely because the master role was evaluated.
 security:
   - bearerAuth: []
 tags:
   - name: Auth
     description: Authentication and current-session operations.
   - name: Schools
-    description: Platform-level school tenant provisioning and review.
+    description: Platform-level school tenant provisioning and review, including the active tabbed school profile contract.
+  - name: School Lookups
+    description: Read-only Institutional option lists for school profile forms.
+  - name: Address Lookups
+    description: Authenticated external CEP lookup helpers for address form prefill.
   - name: Users
     description: Tenant-aware user account administration.
   - name: Roles
@@ -156,7 +144,7 @@ paths:
       tags:
         - Account Lifecycle
       summary: Create or replace an account invitation
-      description: Creates a 7-day single-use invitation for an eligible platform or same-school user. The response never exposes reusable invitation token secrets. Creating a new invitation supersedes prior unused invitations for the same user and scope.
+      description: Creates a 7-day single-use invitation for an eligible persisted invited platform or same-school user. User creation and invitation creation are separate operations. Requires matching active account_lifecycle.manage or exact System Administrator master access for the permission check; tenant authorization precedes scoped target lookup. The response never exposes reusable invitation token secrets. Creating a new invitation supersedes prior unused invitations for the same user and scope.
       operationId: createAccountInvitation
       x-system-administrator-master-access: true
       parameters:
@@ -225,7 +213,7 @@ paths:
       tags:
         - Account Lifecycle
       summary: Complete invitation and initial password setup
-      description: Completes first password setup with a valid unexpired single-use invitation token. Failed completion attempts revoke the invitation after 5 failures per invitation, account, or IP within 15 minutes.
+      description: Completes first password setup with a valid unexpired single-use invitation token. Failed completion attempts revoke the invitation after 5 failures per invitation, account, or IP within 15 minutes. Successful completion is the sole operation that transitions an invited user to active.
       operationId: completeAccountInvitation
       security: []
       parameters:
@@ -319,6 +307,7 @@ paths:
       tags:
         - Account Lifecycle
       summary: Review account lock state
+      description: Requires active account_lifecycle.manage matching target scope, or exact System Administrator master access for the permission check. Tenant context and actor authority are resolved before scoped target lookup. Self-target, unknown, and out-of-scope review never exposes protected lock state.
       operationId: getAccountLock
       x-system-administrator-master-access: true
       parameters:
@@ -346,7 +335,7 @@ paths:
       tags:
         - Account Lifecycle
       summary: Administratively lock an account
-      description: Administrative locks remain active until an authorized unlock or recovery action clears them and revoke all active bearer tokens for the affected user.
+      description: Administrative locks remain active until an authorized unlock or recovery action clears them and revoke all active bearer tokens for the affected user. Authorization requires matching active account_lifecycle.manage or exact System Administrator master access, while tenant, self-target, state, and other business gates remain mandatory. Tenant authorization precedes scoped target lookup.
       operationId: lockAccount
       x-system-administrator-master-access: true
       parameters:
@@ -384,6 +373,7 @@ paths:
       tags:
         - Account Lifecycle
       summary: Unlock or clear administrative account lock
+      description: Requires matching active account_lifecycle.manage or exact System Administrator master access. Tenant authorization precedes target lookup; self-target and out-of-scope operations are denied without disclosing target existence. Unlock sends no request body.
       operationId: unlockAccount
       x-system-administrator-master-access: true
       parameters:
@@ -414,7 +404,7 @@ paths:
       tags:
         - Account Lifecycle
       summary: Recover or reactivate an eligible account
-      description: Reactivation validates user lifecycle state, school lifecycle state, active role assignments, password setup state, lock state, and tenant or platform scope before authentication may resume.
+      description: Reactivation validates user lifecycle state, school lifecycle state, active role assignments, password setup state, lock state, and tenant or platform scope before authentication may resume. Matching active account_lifecycle.manage or exact System Administrator master access is required, but master access does not bypass tenant, self-target, or state gates. Tenant authorization precedes scoped target lookup. Invited users cannot be activated by this operation.
       operationId: reactivateAccount
       x-system-administrator-master-access: true
       parameters:
@@ -458,8 +448,18 @@ paths:
       parameters:
         - $ref: '#/components/parameters/Page'
         - $ref: '#/components/parameters/PerPage'
-        - $ref: '#/components/parameters/StatusFilter'
         - $ref: '#/components/parameters/Sort'
+        - $ref: '#/components/parameters/SchoolStatusFilter'
+        - $ref: '#/components/parameters/SchoolInepCodeFilter'
+        - $ref: '#/components/parameters/SchoolDocumentFilter'
+        - $ref: '#/components/parameters/SchoolNameFilter'
+        - $ref: '#/components/parameters/SchoolEmailFilter'
+        - $ref: '#/components/parameters/SchoolCityFilter'
+        - $ref: '#/components/parameters/SchoolStateFilter'
+        - $ref: '#/components/parameters/SchoolAdministrativeTypeFilter'
+        - $ref: '#/components/parameters/SchoolLegalNatureFilter'
+        - $ref: '#/components/parameters/SchoolManagementTypeFilter'
+        - $ref: '#/components/parameters/SchoolPedagogicalApproachFilter'
       responses:
         '200':
           description: School collection
@@ -478,16 +478,23 @@ paths:
           $ref: '#/components/responses/Unauthorized'
         '403':
           $ref: '#/components/responses/Forbidden'
+        '422':
+          $ref: '#/components/responses/ValidationError'
     post:
       tags:
         - Schools
-      summary: Create a school tenant
+      summary: Create a school tenant with Basic, Address, Institutional, and Branding fields
+      description: |
+        Accepts JSON for no-logo creation and multipart/form-data when logo_file is submitted. Legacy cnpj fields are rejected; document is the canonical CNPJ payload field. INEP code, document, and email uniqueness checks include inactive and soft-deleted schools, with email compared case-insensitively.
       operationId: createSchool
       x-system-administrator-master-access: true
       requestBody:
         required: true
         content:
           application/json:
+            schema:
+              $ref: '#/components/schemas/SchoolCreateRequest'
+          multipart/form-data:
             schema:
               $ref: '#/components/schemas/SchoolCreateRequest'
       responses:
@@ -534,7 +541,9 @@ paths:
     patch:
       tags:
         - Schools
-      summary: Update school profile or operational status
+      summary: Update school profile tabs without changing document
+      description: |
+        Accepts JSON for normal updates and multipart/form-data when replacing logo_file. Address and Institutional fields remain required on every edit. document is read-only after create; changed document or legacy cnpj payloads are rejected. This operation preserves existing simultaneous edit behavior and does not add an optimistic-locking precondition.
       operationId: updateSchool
       x-system-administrator-master-access: true
       parameters:
@@ -543,6 +552,9 @@ paths:
         required: true
         content:
           application/json:
+            schema:
+              $ref: '#/components/schemas/SchoolUpdateRequest'
+          multipart/form-data:
             schema:
               $ref: '#/components/schemas/SchoolUpdateRequest'
       responses:
@@ -561,6 +573,8 @@ paths:
           $ref: '#/components/responses/Forbidden'
         '404':
           $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
         '422':
           $ref: '#/components/responses/ValidationError'
     delete:
@@ -710,18 +724,172 @@ paths:
           $ref: '#/components/responses/Conflict'
         '422':
           $ref: '#/components/responses/ValidationError'
+  /api/v1/school-lookups/administrative-types:
+    get:
+      tags:
+        - School Lookups
+      summary: List school administrative type options
+      operationId: listSchoolAdministrativeTypes
+      x-system-administrator-master-access: true
+      responses:
+        '200':
+          description: Full administrative type option list
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SchoolLookupOptionList'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+  /api/v1/school-lookups/legal-natures:
+    get:
+      tags:
+        - School Lookups
+      summary: List school legal nature options
+      operationId: listSchoolLegalNatures
+      x-system-administrator-master-access: true
+      responses:
+        '200':
+          description: Full legal nature option list
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SchoolLookupOptionList'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+  /api/v1/school-lookups/management-types:
+    get:
+      tags:
+        - School Lookups
+      summary: List school management type options
+      operationId: listSchoolManagementTypes
+      x-system-administrator-master-access: true
+      responses:
+        '200':
+          description: Full management type option list
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SchoolLookupOptionList'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+  /api/v1/school-lookups/pedagogical-approaches:
+    get:
+      tags:
+        - School Lookups
+      summary: List school pedagogical approach options
+      operationId: listSchoolPedagogicalApproaches
+      x-system-administrator-master-access: true
+      responses:
+        '200':
+          description: Full pedagogical approach option list
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SchoolLookupOptionList'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+  /api/v1/school-lookups/education-levels:
+    get:
+      tags:
+        - School Lookups
+      summary: List school education level options
+      operationId: listSchoolEducationLevels
+      x-system-administrator-master-access: true
+      responses:
+        '200':
+          description: Full education level option list
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SchoolLookupOptionList'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+  /api/v1/school-lookups/modalities:
+    get:
+      tags:
+        - School Lookups
+      summary: List school modality options
+      operationId: listSchoolModalities
+      x-system-administrator-master-access: true
+      responses:
+        '200':
+          description: Full modality option list
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SchoolLookupOptionList'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+  /api/v1/address-lookups/{zipCode}:
+    get:
+      tags:
+        - Address Lookups
+      summary: Lookup Brazilian address by CEP
+      description: Returns normalized address fields from ViaCEP for form prefill. This operation does not persist address data.
+      operationId: getAddressLookupByZipCode
+      x-system-administrator-master-access: true
+      parameters:
+        - name: zipCode
+          in: path
+          required: true
+          schema:
+            type: string
+            pattern: ^[0-9]{5}-?[0-9]{3}$
+          description: Brazilian CEP with or without mask.
+      responses:
+        '200':
+          description: Address found
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessEnvelope'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/PostalAddressLookup'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+        '503':
+          description: ViaCEP lookup is temporarily unavailable
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorEnvelope'
   /api/v1/users:
     get:
       tags:
         - Users
       summary: List users in permitted scope
+      description: Selects exactly one lookup mode before querying. With an exact X-School-Id, school mode requires active school-scoped users.view and returns only users owned by that school. Without X-School-Id, platform mode requires active platform-scoped schools.view or exact System Administrator master access and returns only platform-owned users. Modes never fall back to each other.
       operationId: listUsers
       x-system-administrator-master-access: true
       parameters:
         - $ref: '#/components/parameters/TenantContext'
         - $ref: '#/components/parameters/Page'
         - $ref: '#/components/parameters/PerPage'
-        - $ref: '#/components/parameters/StatusFilter'
+        - name: status
+          in: query
+          required: false
+          description: Filter users by user-specific lifecycle status.
+          schema:
+            $ref: '#/components/schemas/UserStatus'
         - $ref: '#/components/parameters/Sort'
       responses:
         '200':
@@ -743,6 +911,7 @@ paths:
       tags:
         - Users
       summary: Create a user inside the permitted scope
+      description: Creates one school-owned user. Omitted or active account_setup_mode preserves active creation. Invitation mode persists an invited user without creating an invitation, lifecycle token, or delivery request; invitation creation is a separate explicit operation.
       operationId: createUser
       x-system-administrator-master-access: true
       parameters:
@@ -774,6 +943,7 @@ paths:
       tags:
         - Users
       summary: Retrieve a user in permitted scope
+      description: Uses exactly one preselected lookup mode. School mode requires the exact active X-School-Id plus school-scoped users.view and queries only that school. Platform mode sends no school header, requires platform-scoped schools.view or exact System Administrator master access, and queries only platform-owned users. Unknown and opposite-mode identifiers share the same non-disclosing result, and no cross-mode fallback occurs.
       operationId: getUser
       x-system-administrator-master-access: true
       parameters:
@@ -3169,6 +3339,7 @@ paths:
       tags:
         - Assessment Responses
       summary: Submit one assigned questionnaire response attempt as the authenticated student
+      description: Records one same-school attempt for an assigned active learning-set questionnaire. Long-text answers are plain text. File-response uploads are private and unavailable until scan status is clean.
       operationId: submitStudentQuestionnaireResponse
       x-system-administrator-master-access: true
       parameters:
@@ -3211,7 +3382,12 @@ paths:
       x-system-administrator-master-access: true
       parameters:
         - $ref: '#/components/parameters/TenantContext'
-        - $ref: '#/components/parameters/ResponseAttemptId'
+        - name: responseAttemptId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
       responses:
         '200':
           description: Student-safe response status, score, feedback summary, and file availability metadata
@@ -3284,7 +3460,12 @@ paths:
       x-system-administrator-master-access: true
       parameters:
         - $ref: '#/components/parameters/TenantContext'
-        - $ref: '#/components/parameters/ResponseAttemptId'
+        - name: responseAttemptId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
       responses:
         '200':
           description: Teacher or school-administrator response review
@@ -3312,7 +3493,12 @@ paths:
       x-system-administrator-master-access: true
       parameters:
         - $ref: '#/components/parameters/TenantContext'
-        - $ref: '#/components/parameters/ResponseAttemptId'
+        - name: responseAttemptId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
       requestBody:
         required: true
         content:
@@ -3350,8 +3536,18 @@ paths:
       x-system-administrator-master-access: true
       parameters:
         - $ref: '#/components/parameters/TenantContext'
-        - $ref: '#/components/parameters/ResponseAttemptId'
-        - $ref: '#/components/parameters/AssessmentFileId'
+        - name: responseAttemptId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: fileId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
       responses:
         '200':
           description: Clean private answer file
@@ -4265,29 +4461,863 @@ paths:
         '422':
           $ref: '#/components/responses/ValidationError'
   /api/v1/reports:
-    $ref: ../../../api/paths/reports/index.yaml
+    get:
+      tags:
+        - Reports
+      summary: List report requests for the resolved school
+      operationId: listReports
+      x-system-administrator-master-access: true
+      parameters:
+        - $ref: '#/components/parameters/TenantContext'
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/PerPage'
+        - name: report_type
+          in: query
+          schema:
+            $ref: '#/components/schemas/ReportType'
+        - name: generation_status
+          in: query
+          schema:
+            $ref: '#/components/schemas/ReportGenerationStatus'
+        - name: report_source
+          in: query
+          schema:
+            type: string
+            enum:
+              - built_in
+              - custom
+        - name: include_deleted
+          in: query
+          description: Include soft-deleted report runs. Defaults to false.
+          schema:
+            type: boolean
+            default: false
+      responses:
+        '200':
+          description: Report request collection
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/PaginatedEnvelope'
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/ReportRun'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/TenantMismatch'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+    post:
+      tags:
+        - Reports
+      summary: Request a tenant-scoped built-in or custom report
+      operationId: requestReport
+      x-system-administrator-master-access: true
+      parameters:
+        - $ref: '#/components/parameters/TenantContext'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ReportRequest'
+      responses:
+        '202':
+          description: Report request accepted
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessEnvelope'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/ReportRun'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/TenantMismatch'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '422':
+          $ref: '#/components/responses/ValidationError'
   /api/v1/reports/{reportRunId}:
-    $ref: ../../../api/paths/reports/report-run.yaml
+    delete:
+      tags:
+        - Reports
+      summary: Soft-delete a report run from default report lists
+      operationId: deleteReport
+      x-system-administrator-master-access: true
+      parameters:
+        - $ref: '#/components/parameters/TenantContext'
+        - $ref: '#/components/parameters/ReportRunId'
+      responses:
+        '200':
+          description: Report run soft-deleted
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessEnvelope'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/ReportRun'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/TenantMismatch'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
   /api/v1/reports/{reportRunId}/retry:
-    $ref: ../../../api/paths/reports/retry.yaml
+    post:
+      tags:
+        - Reports
+      summary: Retry a failed or expired generated report run
+      operationId: retryReport
+      x-system-administrator-master-access: true
+      parameters:
+        - $ref: '#/components/parameters/TenantContext'
+        - $ref: '#/components/parameters/ReportRunId'
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: false
+              properties:
+                reason_code:
+                  type: string
+                  enum:
+                    - retry_failed_generation
+                    - retry_expired_output
+      responses:
+        '202':
+          description: Retry report request accepted
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessEnvelope'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/ReportRun'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/TenantMismatch'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '422':
+          $ref: '#/components/responses/ValidationError'
   /api/v1/reports/{reportRunId}/cancel:
-    $ref: ../../../api/paths/reports/cancel.yaml
+    post:
+      tags:
+        - Reports
+      summary: Cancel a requested or generating report run
+      operationId: cancelReport
+      x-system-administrator-master-access: true
+      parameters:
+        - $ref: '#/components/parameters/TenantContext'
+        - $ref: '#/components/parameters/ReportRunId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - reason_code
+              additionalProperties: false
+              properties:
+                reason_code:
+                  type: string
+                  enum:
+                    - requested_in_error
+                    - duplicate_request
+                    - no_longer_needed
+                    - invalid_filters
+      responses:
+        '200':
+          description: Report run canceled
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessEnvelope'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/ReportRun'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/TenantMismatch'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '422':
+          $ref: '#/components/responses/ValidationError'
   /api/v1/reports/{reportRunId}/download:
-    $ref: ../../../api/paths/reports/download.yaml
+    get:
+      tags:
+        - Reports
+      summary: Download a generated report output
+      description: Downloads one authorized generated output format. Expired outputs return the documented expired-output response and are never regenerated by this operation.
+      operationId: downloadReport
+      x-system-administrator-master-access: true
+      parameters:
+        - $ref: '#/components/parameters/TenantContext'
+        - $ref: '#/components/parameters/ReportRunId'
+        - name: format
+          in: query
+          required: true
+          schema:
+            $ref: '#/components/schemas/ReportFormat'
+      responses:
+        '200':
+          description: Generated report file download
+          content:
+            application/octet-stream:
+              schema:
+                type: string
+                format: binary
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/TenantMismatch'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '410':
+          $ref: '#/components/responses/OutputExpired'
+        '422':
+          $ref: '#/components/responses/ValidationError'
   /api/v1/reports/{reportRunId}/restore:
-    $ref: ../../../api/paths/reports/restore.yaml
+    post:
+      tags:
+        - Reports
+      summary: Restore a soft-deleted report run
+      operationId: restoreReport
+      x-system-administrator-master-access: true
+      parameters:
+        - $ref: '#/components/parameters/TenantContext'
+        - $ref: '#/components/parameters/ReportRunId'
+      responses:
+        '200':
+          description: Report run restored
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessEnvelope'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/ReportRun'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/TenantMismatch'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
   /api/v1/report-catalog:
-    $ref: ../../../api/paths/report-catalog/index.yaml
+    get:
+      tags:
+        - Reports
+      summary: Retrieve the approved report catalog for the resolved school
+      operationId: getReportCatalog
+      x-system-administrator-master-access: true
+      parameters:
+        - $ref: '#/components/parameters/TenantContext'
+      responses:
+        '200':
+          description: Approved report catalog
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessEnvelope'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/ReportCatalog'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/TenantMismatch'
+        '422':
+          $ref: '#/components/responses/ValidationError'
   /api/v1/report-definitions:
-    $ref: ../../../api/paths/report-definitions/index.yaml
+    get:
+      tags:
+        - Reports
+      summary: List custom report definitions for the resolved school
+      operationId: listReportDefinitions
+      x-system-administrator-master-access: true
+      parameters:
+        - $ref: '#/components/parameters/TenantContext'
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/PerPage'
+        - name: lifecycle_state
+          in: query
+          schema:
+            type: string
+            enum:
+              - draft
+              - active
+              - inactive
+              - deleted
+        - name: include_deleted
+          in: query
+          schema:
+            type: boolean
+            default: false
+      responses:
+        '200':
+          description: Custom report definition collection
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/PaginatedEnvelope'
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/ReportDefinition'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/TenantMismatch'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+    post:
+      tags:
+        - Reports
+      summary: Create a draft custom report definition
+      operationId: createReportDefinition
+      x-system-administrator-master-access: true
+      parameters:
+        - $ref: '#/components/parameters/TenantContext'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ReportDefinition'
+      responses:
+        '201':
+          description: Custom report definition created
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessEnvelope'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/ReportDefinition'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/TenantMismatch'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '422':
+          $ref: '#/components/responses/ValidationError'
   /api/v1/report-definitions/{reportDefinitionId}:
-    $ref: ../../../api/paths/report-definitions/report-definition.yaml
+    get:
+      tags:
+        - Reports
+      summary: Retrieve a custom report definition
+      operationId: getReportDefinition
+      x-system-administrator-master-access: true
+      parameters:
+        - $ref: '#/components/parameters/TenantContext'
+        - name: reportDefinitionId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Custom report definition
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessEnvelope'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/ReportDefinition'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/TenantMismatch'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    patch:
+      tags:
+        - Reports
+      summary: Update a custom report definition
+      operationId: updateReportDefinition
+      x-system-administrator-master-access: true
+      parameters:
+        - $ref: '#/components/parameters/TenantContext'
+        - name: reportDefinitionId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ReportDefinition'
+      responses:
+        '200':
+          description: Custom report definition updated
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessEnvelope'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/ReportDefinition'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/TenantMismatch'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+    delete:
+      tags:
+        - Reports
+      summary: Soft-delete a custom report definition
+      operationId: deleteReportDefinition
+      x-system-administrator-master-access: true
+      parameters:
+        - $ref: '#/components/parameters/TenantContext'
+        - name: reportDefinitionId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Custom report definition deleted
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessEnvelope'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/ReportDefinition'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/TenantMismatch'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
   /api/v1/report-definitions/{reportDefinitionId}/activate:
-    $ref: ../../../api/paths/report-definitions/activate.yaml
+    post:
+      tags:
+        - Reports
+      summary: Activate a valid draft or inactive custom report definition
+      operationId: activateReportDefinition
+      x-system-administrator-master-access: true
+      parameters:
+        - $ref: '#/components/parameters/TenantContext'
+        - name: reportDefinitionId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Custom report definition activated
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessEnvelope'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/ReportDefinition'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/TenantMismatch'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '422':
+          $ref: '#/components/responses/ValidationError'
   /api/v1/report-definitions/{reportDefinitionId}/deactivate:
-    $ref: ../../../api/paths/report-definitions/deactivate.yaml
+    post:
+      tags:
+        - Reports
+      summary: Deactivate an active custom report definition
+      operationId: deactivateReportDefinition
+      x-system-administrator-master-access: true
+      parameters:
+        - $ref: '#/components/parameters/TenantContext'
+        - name: reportDefinitionId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Custom report definition deactivated
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessEnvelope'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/ReportDefinition'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/TenantMismatch'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
   /api/v1/report-definitions/{reportDefinitionId}/restore:
-    $ref: ../../../api/paths/report-definitions/restore.yaml
+    post:
+      tags:
+        - Reports
+      summary: Restore a deleted custom report definition to inactive
+      operationId: restoreReportDefinition
+      x-system-administrator-master-access: true
+      parameters:
+        - $ref: '#/components/parameters/TenantContext'
+        - name: reportDefinitionId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Custom report definition restored to inactive
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/SuccessEnvelope'
+                  - type: object
+                    properties:
+                      data:
+                        $ref: '#/components/schemas/ReportDefinition'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/TenantMismatch'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+  /api/v1/platform/schools:
+    get:
+      tags:
+        - Platform Support
+      summary: List minimized platform school summaries
+      description: Returns platform-wide school operational summaries with documented filters, pagination, sorting, small-count suppression, and no school-owned detail records.
+      operationId: listPlatformSchoolSummaries
+      x-system-administrator-master-access: true
+      parameters:
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/PerPage'
+        - $ref: '#/components/parameters/Sort'
+        - name: status
+          in: query
+          schema:
+            type: string
+            enum:
+              - active
+              - inactive
+        - name: search
+          in: query
+          schema:
+            type: string
+            minLength: 1
+            maxLength: 120
+      responses:
+        '200':
+          description: Minimized platform school summaries
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PlatformSchoolSummaryPaginatedEnvelope'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/PlatformSupportForbidden'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+  /api/v1/platform/reporting/overview:
+    get:
+      tags:
+        - Platform Support
+      summary: Get cross-school reporting overview
+      description: Returns approved aggregate reporting health and lifecycle indicators without raw report outputs, generated files, or school-owned detail records.
+      operationId: getPlatformReportingOverview
+      x-system-administrator-master-access: true
+      parameters:
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/PerPage'
+        - $ref: '#/components/parameters/Sort'
+      responses:
+        '200':
+          description: Platform reporting overview
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PlatformReportingOverviewEnvelope'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/PlatformSupportForbidden'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+  /api/v1/platform/support-access:
+    post:
+      tags:
+        - Platform Support
+      summary: Request target-school support access
+      description: Creates or evaluates a minimized support access decision for exactly one target school using documented reason, purpose, correlation metadata, and target-school opt-in state.
+      operationId: requestSupportAccess
+      x-system-administrator-master-access: true
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SupportAccessRequest'
+      responses:
+        '201':
+          description: Support access decision created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SupportAccessDecisionEnvelope'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/PlatformSupportForbidden'
+        '409':
+          $ref: '#/components/responses/PlatformSupportConflict'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+  /api/v1/platform/support-access/{supportAccessId}:
+    get:
+      tags:
+        - Platform Support
+      summary: Get support access decision detail
+      operationId: getSupportAccessDecision
+      x-system-administrator-master-access: true
+      parameters:
+        - $ref: '#/components/parameters/SupportAccessId'
+      responses:
+        '200':
+          description: Support access decision
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SupportAccessDecisionEnvelope'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/PlatformSupportForbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /api/v1/platform/support-access/{supportAccessId}/approve:
+    post:
+      tags:
+        - Platform Support
+      summary: Approve support access
+      description: Records internal platform approval only when the matching target-school opt-in and support decision gates are valid.
+      operationId: approveSupportAccess
+      x-system-administrator-master-access: true
+      parameters:
+        - $ref: '#/components/parameters/SupportAccessId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SupportAccessTransitionRequest'
+      responses:
+        '200':
+          description: Support access approved
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SupportAccessDecisionEnvelope'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/PlatformSupportForbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/PlatformSupportConflict'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+  /api/v1/platform/support-access/{supportAccessId}/revoke:
+    post:
+      tags:
+        - Platform Support
+      summary: Revoke support access
+      operationId: revokeSupportAccess
+      x-system-administrator-master-access: true
+      parameters:
+        - $ref: '#/components/parameters/SupportAccessId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SupportAccessTransitionRequest'
+      responses:
+        '200':
+          description: Support access revoked
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SupportAccessDecisionEnvelope'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/PlatformSupportForbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/PlatformSupportConflict'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+  /api/v1/platform/support/schools/{schoolId}/diagnostics:
+    get:
+      tags:
+        - Platform Support
+      summary: Get redacted support diagnostics for one school
+      description: Returns redacted read-only diagnostics for one target school only when target-school opt-in and internal platform approval gates are valid and no older than 24 hours.
+      operationId: getSupportSchoolDiagnostics
+      x-system-administrator-master-access: true
+      parameters:
+        - $ref: '#/components/parameters/SchoolId'
+        - name: support_access_id
+          in: query
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Redacted support diagnostics
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SupportSchoolDiagnosticsEnvelope'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/PlatformSupportForbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/PlatformSupportConflict'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+  /api/v1/platform/support-audit-events:
+    get:
+      tags:
+        - Platform Support
+      summary: List minimized support audit events
+      operationId: listSupportAuditEvents
+      x-system-administrator-master-access: true
+      parameters:
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/PerPage'
+        - name: action
+          in: query
+          schema:
+            type: string
+            maxLength: 80
+        - name: outcome
+          in: query
+          schema:
+            type: string
+            enum:
+              - allowed
+              - denied
+              - validation_failed
+              - conflicted
+              - expired
+              - revoked
+        - name: correlation_id
+          in: query
+          schema:
+            type: string
+            maxLength: 120
+      responses:
+        '200':
+          description: Minimized support audit events
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SupportAuditEventPaginatedEnvelope'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/PlatformSupportForbidden'
+        '422':
+          $ref: '#/components/responses/ValidationError'
   /api/v1/class-sections:
     get:
       tags:
@@ -4646,262 +5676,6 @@ paths:
           $ref: '#/components/responses/Conflict'
         '422':
           $ref: '#/components/responses/ValidationError'
-  /api/v1/platform/schools:
-    get:
-      tags:
-        - Platform Support
-      summary: List minimized platform school summaries
-      description: Returns platform-wide school operational summaries with documented filters, pagination, sorting, small-count suppression, and no school-owned detail records.
-      operationId: listPlatformSchoolSummaries
-      x-system-administrator-master-access: true
-      parameters:
-        - $ref: '#/components/parameters/Page'
-        - $ref: '#/components/parameters/PerPage'
-        - $ref: '#/components/parameters/Sort'
-        - name: status
-          in: query
-          schema:
-            type: string
-            enum:
-              - active
-              - inactive
-        - name: search
-          in: query
-          schema:
-            type: string
-            minLength: 1
-            maxLength: 120
-      responses:
-        '200':
-          description: Minimized platform school summaries
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/PlatformSchoolSummaryPaginatedEnvelope'
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-        '403':
-          $ref: '#/components/responses/PlatformSupportForbidden'
-        '422':
-          $ref: '#/components/responses/ValidationError'
-  /api/v1/platform/reporting/overview:
-    get:
-      tags:
-        - Platform Support
-      summary: Get cross-school reporting overview
-      description: Returns approved aggregate reporting health and lifecycle indicators without raw report outputs, generated files, or school-owned detail records.
-      operationId: getPlatformReportingOverview
-      x-system-administrator-master-access: true
-      parameters:
-        - $ref: '#/components/parameters/Page'
-        - $ref: '#/components/parameters/PerPage'
-        - $ref: '#/components/parameters/Sort'
-      responses:
-        '200':
-          description: Platform reporting overview
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/PlatformReportingOverviewEnvelope'
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-        '403':
-          $ref: '#/components/responses/PlatformSupportForbidden'
-        '422':
-          $ref: '#/components/responses/ValidationError'
-  /api/v1/platform/support-access:
-    post:
-      tags:
-        - Platform Support
-      summary: Request target-school support access
-      description: Creates or evaluates a minimized support access decision for exactly one target school using documented reason, purpose, correlation metadata, and target-school opt-in state.
-      operationId: requestSupportAccess
-      x-system-administrator-master-access: true
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/SupportAccessRequest'
-      responses:
-        '201':
-          description: Support access decision created
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/SupportAccessDecisionEnvelope'
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-        '403':
-          $ref: '#/components/responses/PlatformSupportForbidden'
-        '409':
-          $ref: '#/components/responses/PlatformSupportConflict'
-        '422':
-          $ref: '#/components/responses/ValidationError'
-  /api/v1/platform/support-access/{supportAccessId}:
-    get:
-      tags:
-        - Platform Support
-      summary: Get support access decision detail
-      operationId: getSupportAccessDecision
-      x-system-administrator-master-access: true
-      parameters:
-        - $ref: '#/components/parameters/SupportAccessId'
-      responses:
-        '200':
-          description: Support access decision
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/SupportAccessDecisionEnvelope'
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-        '403':
-          $ref: '#/components/responses/PlatformSupportForbidden'
-        '404':
-          $ref: '#/components/responses/NotFound'
-  /api/v1/platform/support-access/{supportAccessId}/approve:
-    post:
-      tags:
-        - Platform Support
-      summary: Approve support access
-      description: Records internal platform approval only when the matching target-school opt-in and support decision gates are valid.
-      operationId: approveSupportAccess
-      x-system-administrator-master-access: true
-      parameters:
-        - $ref: '#/components/parameters/SupportAccessId'
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/SupportAccessTransitionRequest'
-      responses:
-        '200':
-          description: Support access approved
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/SupportAccessDecisionEnvelope'
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-        '403':
-          $ref: '#/components/responses/PlatformSupportForbidden'
-        '404':
-          $ref: '#/components/responses/NotFound'
-        '409':
-          $ref: '#/components/responses/PlatformSupportConflict'
-        '422':
-          $ref: '#/components/responses/ValidationError'
-  /api/v1/platform/support-access/{supportAccessId}/revoke:
-    post:
-      tags:
-        - Platform Support
-      summary: Revoke support access
-      operationId: revokeSupportAccess
-      x-system-administrator-master-access: true
-      parameters:
-        - $ref: '#/components/parameters/SupportAccessId'
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/SupportAccessTransitionRequest'
-      responses:
-        '200':
-          description: Support access revoked
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/SupportAccessDecisionEnvelope'
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-        '403':
-          $ref: '#/components/responses/PlatformSupportForbidden'
-        '404':
-          $ref: '#/components/responses/NotFound'
-        '409':
-          $ref: '#/components/responses/PlatformSupportConflict'
-        '422':
-          $ref: '#/components/responses/ValidationError'
-  /api/v1/platform/support/schools/{schoolId}/diagnostics:
-    get:
-      tags:
-        - Platform Support
-      summary: Get redacted support diagnostics for one school
-      description: Returns redacted read-only diagnostics for one target school only when target-school opt-in and internal platform approval gates are valid and no older than 24 hours.
-      operationId: getSupportSchoolDiagnostics
-      x-system-administrator-master-access: true
-      parameters:
-        - $ref: '#/components/parameters/SchoolId'
-        - name: support_access_id
-          in: query
-          required: true
-          schema:
-            type: string
-            format: uuid
-      responses:
-        '200':
-          description: Redacted support diagnostics
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/SupportSchoolDiagnosticsEnvelope'
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-        '403':
-          $ref: '#/components/responses/PlatformSupportForbidden'
-        '404':
-          $ref: '#/components/responses/NotFound'
-        '409':
-          $ref: '#/components/responses/PlatformSupportConflict'
-        '422':
-          $ref: '#/components/responses/ValidationError'
-  /api/v1/platform/support-audit-events:
-    get:
-      tags:
-        - Platform Support
-      summary: List minimized support audit events
-      operationId: listSupportAuditEvents
-      x-system-administrator-master-access: true
-      parameters:
-        - $ref: '#/components/parameters/Page'
-        - $ref: '#/components/parameters/PerPage'
-        - name: action
-          in: query
-          schema:
-            type: string
-            maxLength: 80
-        - name: outcome
-          in: query
-          schema:
-            type: string
-            enum:
-              - allowed
-              - denied
-              - validation_failed
-              - conflicted
-              - expired
-              - revoked
-        - name: correlation_id
-          in: query
-          schema:
-            type: string
-            maxLength: 120
-      responses:
-        '200':
-          description: Minimized support audit events
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/SupportAuditEventPaginatedEnvelope'
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-        '403':
-          $ref: '#/components/responses/PlatformSupportForbidden'
-        '422':
-          $ref: '#/components/responses/ValidationError'
 components:
   securitySchemes:
     bearerAuth:
@@ -4909,6 +5683,281 @@ components:
       scheme: bearer
       bearerFormat: token
   schemas:
+    PlatformSchoolSummary:
+      type: object
+      description: Minimized platform-visible school summary. Protected counts below 5 are suppressed and not derivable from related fields.
+      required:
+        - id
+        - name
+        - status
+        - indicators
+        - suppressed
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        status:
+          type: string
+          enum:
+            - active
+            - inactive
+        indicators:
+          type: object
+          additionalProperties:
+            type: string
+        suppressed:
+          type: array
+          items:
+            type: string
+    PlatformSchoolSummaryPaginatedEnvelope:
+      type: object
+      required:
+        - data
+        - meta
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/PlatformSchoolSummary'
+        meta:
+          type: object
+          required:
+            - page
+            - per_page
+            - total
+          properties:
+            page:
+              type: integer
+            per_page:
+              type: integer
+            total:
+              type: integer
+    PlatformReportingOverview:
+      type: object
+      required:
+        - health
+        - lifecycle
+        - suppressed
+      properties:
+        health:
+          type: object
+          additionalProperties:
+            type: string
+        lifecycle:
+          type: object
+          additionalProperties:
+            type: integer
+            minimum: 0
+        suppressed:
+          type: array
+          items:
+            type: string
+    PlatformReportingOverviewEnvelope:
+      type: object
+      required:
+        - data
+        - meta
+      properties:
+        data:
+          $ref: '#/components/schemas/PlatformReportingOverview'
+        meta:
+          type: object
+          additionalProperties: true
+    SupportAccessDecisionState:
+      type: string
+      enum:
+        - requested
+        - pending
+        - approved
+        - denied
+        - expired
+        - revoked
+    SupportAccessRequest:
+      type: object
+      additionalProperties: false
+      required:
+        - target_school_id
+        - reason_code
+        - purpose
+        - correlation_id
+      properties:
+        target_school_id:
+          type: string
+          format: uuid
+        reason_code:
+          type: string
+          minLength: 1
+          maxLength: 80
+        purpose:
+          type: string
+          minLength: 1
+          maxLength: 500
+        correlation_id:
+          type: string
+          minLength: 1
+          maxLength: 120
+    SupportAccessTransitionRequest:
+      type: object
+      additionalProperties: false
+      required:
+        - reason_code
+      properties:
+        reason_code:
+          type: string
+          minLength: 1
+          maxLength: 80
+    SupportAccessDecision:
+      type: object
+      required:
+        - id
+        - target_school_id
+        - state
+        - reason_code
+        - expires_at
+        - opt_in_state
+        - platform_approval_state
+      properties:
+        id:
+          type: string
+          format: uuid
+        target_school_id:
+          type: string
+          format: uuid
+        state:
+          $ref: '#/components/schemas/SupportAccessDecisionState'
+        reason_code:
+          type: string
+        purpose:
+          type: string
+        correlation_id:
+          type: string
+        expires_at:
+          type: string
+          format: date-time
+        opt_in_state:
+          type: string
+        platform_approval_state:
+          type: string
+    SupportAccessDecisionEnvelope:
+      type: object
+      required:
+        - data
+        - meta
+      properties:
+        data:
+          $ref: '#/components/schemas/SupportAccessDecision'
+        meta:
+          type: object
+          additionalProperties: true
+    SupportSchoolDiagnostics:
+      type: object
+      required:
+        - target_school_id
+        - support_access_id
+        - groups
+        - redacted_fields
+        - suppressed
+      properties:
+        target_school_id:
+          type: string
+          format: uuid
+        support_access_id:
+          type: string
+          format: uuid
+        groups:
+          type: array
+          items:
+            type: object
+            required:
+              - key
+              - state
+            properties:
+              key:
+                type: string
+              state:
+                type: string
+        redacted_fields:
+          type: array
+          items:
+            type: string
+        suppressed:
+          type: array
+          items:
+            type: string
+    SupportSchoolDiagnosticsEnvelope:
+      type: object
+      required:
+        - data
+        - meta
+      properties:
+        data:
+          $ref: '#/components/schemas/SupportSchoolDiagnostics'
+        meta:
+          type: object
+          additionalProperties: true
+    SupportAuditEvent:
+      type: object
+      required:
+        - id
+        - actor_user_id
+        - action
+        - outcome
+        - occurred_at
+      properties:
+        id:
+          type: string
+          format: uuid
+        actor_user_id:
+          type: string
+          format: uuid
+        target_school_id:
+          type:
+            - string
+            - 'null'
+          format: uuid
+        action:
+          type: string
+        outcome:
+          type: string
+        correlation_id:
+          type:
+            - string
+            - 'null'
+        reason_code:
+          type:
+            - string
+            - 'null'
+        metadata_summary:
+          type: object
+          additionalProperties: true
+        occurred_at:
+          type: string
+          format: date-time
+    SupportAuditEventPaginatedEnvelope:
+      type: object
+      required:
+        - data
+        - meta
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/SupportAuditEvent'
+        meta:
+          type: object
+          required:
+            - page
+            - per_page
+            - total
+          properties:
+            page:
+              type: integer
+            per_page:
+              type: integer
+            total:
+              type: integer
     LoginRequest:
       type: object
       required:
@@ -4936,16 +5985,23 @@ components:
         meta:
           type: object
           additionalProperties: true
-    Status:
+    UserStatus:
       type: string
+      description: User account lifecycle status.
       enum:
         - active
         - inactive
+        - invited
     Scope:
       type: string
       enum:
         - platform
         - school
+    Status:
+      type: string
+      enum:
+        - active
+        - inactive
     Permission:
       type: object
       required:
@@ -5016,7 +6072,7 @@ components:
           type: string
           format: email
         status:
-          $ref: '#/components/schemas/Status'
+          $ref: '#/components/schemas/UserStatus'
         roles:
           type: array
           items:
@@ -5040,90 +6096,149 @@ components:
           type: string
         number:
           type: string
-          pattern: '^[0-9]+$'
+          pattern: ^[0-9]+$
+          maxLength: 10
+          description: Digit-only address number. API returns a string, while storage uses unsigned integer.
         complement:
           type:
             - string
             - 'null'
+          maxLength: 255
         neighborhood:
           type: string
         city:
           type: string
         state:
           type: string
+          maxLength: 4
         zip_code:
           type: string
-          pattern: '^[0-9]+$'
-        country:
-          type:
-            - string
-            - 'null'
-    AddressInput:
-      type: object
-      additionalProperties: false
-      required:
-        - street
-        - number
-        - neighborhood
-        - city
-        - state
-        - zip_code
-      properties:
-        street:
-          type: string
-        number:
-          type: string
-          pattern: '^[0-9]+$'
-        complement:
-          type:
-            - string
-            - 'null'
-        neighborhood:
-          type: string
-        city:
-          type: string
-        state:
-          type: string
-        zip_code:
-          type: string
-          pattern: '^[0-9]+$'
+          pattern: ^[0-9]+$
+          maxLength: 12
         country:
           type:
             - string
             - 'null'
     School:
       type: object
+      additionalProperties: false
       required:
         - id
-        - name
-        - cnpj
+        - inep_code
         - status
+        - name
+        - document
+        - email
         - address
+        - administrative_type_id
+        - legal_nature_id
+        - management_type_id
+        - pedagogical_approach_id
+        - education_level_ids
+        - modality_ids
+        - timezone
+        - language
+        - logo_path
+        - logo_url
+        - primary_color
+        - secondary_color
       properties:
         id:
           type: string
           format: uuid
+        inep_code:
+          type: string
+          pattern: ^[0-9]{8}$
+          description: Required unique INEP school code. Uniqueness includes inactive and soft-deleted schools.
+        status:
+          type: integer
+          enum:
+            - 1
+            - 0
+          description: Numeric school status. 1 is active, 0 is inactive.
         name:
           type: string
-        cnpj:
+          maxLength: 255
+        trade_name:
+          type:
+            - string
+            - 'null'
+          maxLength: 255
+        legal_name:
+          type:
+            - string
+            - 'null'
+          maxLength: 255
+        document:
           type: string
-          pattern: '^[0-9]{14}$'
-          description: Unmasked Brazilian CNPJ digits. UI may display as ##.###.###/####-##.
-        status:
-          $ref: '#/components/schemas/Status'
-        contact_email:
-          type:
-            - string
-            - 'null'
+          pattern: ^[0-9]{14}$
+          description: Required unique Brazilian CNPJ digits with valid check digits. Replaces cnpj and is read-only after create. Uniqueness includes inactive and soft-deleted schools.
+        email:
+          type: string
           format: email
-        contact_phone:
+          maxLength: 100
+          description: Required unique school email. Uniqueness is case-insensitive and includes inactive and soft-deleted schools.
+        phone:
           type:
             - string
             - 'null'
+          pattern: ^[0-9]*$
+        website:
+          type:
+            - string
+            - 'null'
+          format: uri
+          maxLength: 100
+        description:
+          type:
+            - string
+            - 'null'
+          maxLength: 500
         address:
-          oneOf:
-            - $ref: '#/components/schemas/Address'
-            - type: 'null'
+          $ref: '#/components/schemas/Address'
+        administrative_type_id:
+          type: integer
+        legal_nature_id:
+          type: integer
+        management_type_id:
+          type: integer
+        pedagogical_approach_id:
+          type: integer
+        education_level_ids:
+          type: array
+          minItems: 1
+          items:
+            type: integer
+        modality_ids:
+          type: array
+          minItems: 1
+          items:
+            type: integer
+        timezone:
+          type: string
+          default: America/Sao_Paulo
+        language:
+          type: string
+          default: pt-BR
+        logo_path:
+          type:
+            - string
+            - 'null'
+          description: Backend-managed logo path or reference. Private storage internals are not exposed.
+        logo_url:
+          type:
+            - string
+            - 'null'
+          format: uri
+          description: Browser-ready URL for rendering the stored school logo. Null when no logo is stored.
+        primary_color:
+          type: string
+          pattern: ^#[0-9A-Fa-f]{6}$
+          default: '#1D4ED8'
+        secondary_color:
+          type: string
+          pattern: ^#[0-9A-Fa-f]{6}$
+          default: '#F59E0B'
     AuthSession:
       type: object
       required:
@@ -5443,28 +6558,146 @@ components:
                   type: integer
                 total:
                   type: integer
+    AddressInput:
+      type: object
+      additionalProperties: false
+      required:
+        - street
+        - number
+        - neighborhood
+        - city
+        - state
+        - zip_code
+      properties:
+        street:
+          type: string
+        number:
+          type: string
+          pattern: ^[0-9]+$
+          maxLength: 10
+          description: Digit-only address number. Must fit unsigned integer storage.
+        complement:
+          type:
+            - string
+            - 'null'
+          maxLength: 255
+        neighborhood:
+          type: string
+        city:
+          type: string
+        state:
+          type: string
+          maxLength: 4
+        zip_code:
+          type: string
+          pattern: ^[0-9]+$
+          maxLength: 12
+        country:
+          type:
+            - string
+            - 'null'
     SchoolCreateRequest:
       type: object
       additionalProperties: false
       required:
+        - inep_code
+        - status
         - name
-        - cnpj
+        - document
+        - email
+        - address
+        - administrative_type_id
+        - legal_nature_id
+        - management_type_id
+        - pedagogical_approach_id
+        - education_level_ids
+        - modality_ids
       properties:
+        inep_code:
+          type: string
+          pattern: ^[0-9]{8}$
+          description: Required unique INEP school code. Uniqueness includes inactive and soft-deleted schools.
+        status:
+          type: integer
+          enum:
+            - 1
+            - 0
         name:
           type: string
-        cnpj:
+          maxLength: 255
+        trade_name:
+          type:
+            - string
+            - 'null'
+          maxLength: 255
+        legal_name:
+          type:
+            - string
+            - 'null'
+          maxLength: 255
+        document:
           type: string
-          pattern: '^[0-9]{14}$'
-          description: Required unique Brazilian CNPJ without mask; must pass check-digit validation.
-        contact_email:
+          pattern: ^[0-9]{14}$
+          description: Required unique Brazilian CNPJ digits with valid check digits. Legacy cnpj payloads are rejected.
+        email:
           type: string
           format: email
-        contact_phone:
-          type: string
+          maxLength: 100
+          description: Required unique school email. Uniqueness is case-insensitive and includes inactive and soft-deleted schools.
+        phone:
+          type:
+            - string
+            - 'null'
+          pattern: ^[0-9]*$
+        website:
+          type:
+            - string
+            - 'null'
+          format: uri
+          maxLength: 100
+        description:
+          type:
+            - string
+            - 'null'
+          maxLength: 500
         address:
-          oneOf:
-            - $ref: '#/components/schemas/AddressInput'
-            - type: 'null'
+          $ref: '#/components/schemas/AddressInput'
+        administrative_type_id:
+          type: integer
+        legal_nature_id:
+          type: integer
+        management_type_id:
+          type: integer
+        pedagogical_approach_id:
+          type: integer
+        education_level_ids:
+          type: array
+          minItems: 1
+          items:
+            type: integer
+        modality_ids:
+          type: array
+          minItems: 1
+          items:
+            type: integer
+        timezone:
+          type: string
+          default: America/Sao_Paulo
+        language:
+          type: string
+          default: pt-BR
+        primary_color:
+          type: string
+          pattern: ^#[0-9A-Fa-f]{6}$
+          default: '#1D4ED8'
+        secondary_color:
+          type: string
+          pattern: ^#[0-9A-Fa-f]{6}$
+          default: '#F59E0B'
+        logo_file:
+          type: string
+          format: binary
+          description: Optional PNG, JPEG, or WebP logo file up to 2 MB. Only valid in multipart/form-data requests.
     LifecycleActionRequest:
       type: object
       required:
@@ -5565,27 +6798,223 @@ components:
     SchoolUpdateRequest:
       type: object
       additionalProperties: false
+      required:
+        - address
+        - administrative_type_id
+        - legal_nature_id
+        - management_type_id
+        - pedagogical_approach_id
+        - education_level_ids
+        - modality_ids
       properties:
+        inep_code:
+          type: string
+          pattern: ^[0-9]{8}$
+          description: Unique INEP school code. Uniqueness excludes the current school but includes inactive and soft-deleted schools.
+        status:
+          type: integer
+          enum:
+            - 1
+            - 0
         name:
           type: string
-        status:
-          $ref: '#/components/schemas/Status'
-        contact_email:
+          maxLength: 255
+        trade_name:
+          type:
+            - string
+            - 'null'
+          maxLength: 255
+        legal_name:
+          type:
+            - string
+            - 'null'
+          maxLength: 255
+        document:
+          type: string
+          readOnly: true
+          description: Document is immutable after create. Update requests that include a changed document or legacy cnpj payload are rejected.
+        email:
           type: string
           format: email
-        contact_phone:
-          type: string
+          maxLength: 100
+          description: Unique school email. Uniqueness is case-insensitive, excludes the current school, and includes inactive and soft-deleted schools.
+        phone:
+          type:
+            - string
+            - 'null'
+          pattern: ^[0-9]*$
+        website:
+          type:
+            - string
+            - 'null'
+          format: uri
+          maxLength: 100
+        description:
+          type:
+            - string
+            - 'null'
+          maxLength: 500
         address:
-          oneOf:
-            - $ref: '#/components/schemas/AddressInput'
-            - type: 'null'
+          $ref: '#/components/schemas/AddressInput'
+        administrative_type_id:
+          type: integer
+        legal_nature_id:
+          type: integer
+        management_type_id:
+          type: integer
+        pedagogical_approach_id:
+          type: integer
+        education_level_ids:
+          type: array
+          minItems: 1
+          items:
+            type: integer
+        modality_ids:
+          type: array
+          minItems: 1
+          items:
+            type: integer
+        timezone:
+          type: string
+          default: America/Sao_Paulo
+        language:
+          type: string
+          default: pt-BR
+        primary_color:
+          type: string
+          pattern: ^#[0-9A-Fa-f]{6}$
+          default: '#1D4ED8'
+        secondary_color:
+          type: string
+          pattern: ^#[0-9A-Fa-f]{6}$
+          default: '#F59E0B'
+        logo_file:
+          type: string
+          format: binary
+          description: Optional replacement PNG, JPEG, or WebP logo file up to 2 MB. Only valid in multipart/form-data requests. Omission preserves the current logo.
+    SchoolLookupOption:
+      type: object
+      additionalProperties: false
+      required:
+        - id
+        - label
+      properties:
+        id:
+          type: integer
+          description: Stable numeric lookup identifier seeded from the approved school field source.
+        label:
+          type: string
+        status:
+          type: integer
+          enum:
+            - 1
+            - 0
+          default: 1
+        sort_order:
+          type: integer
+    SchoolLookupOptionList:
+      type: object
+      additionalProperties: false
+      required:
+        - data
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/SchoolLookupOption'
+    PostalAddressLookup:
+      type: object
+      additionalProperties: false
+      required:
+        - zip_code
+        - formatted_zip_code
+        - street
+        - complement
+        - neighborhood
+        - city
+        - state
+        - state_name
+        - region
+        - ibge_code
+        - gia_code
+        - area_code
+        - siafi_code
+        - country
+        - source
+      properties:
+        zip_code:
+          type: string
+          pattern: ^[0-9]{8}$
+        formatted_zip_code:
+          type: string
+          pattern: ^[0-9]{5}-[0-9]{3}$
+        street:
+          type:
+            - string
+            - 'null'
+        complement:
+          type:
+            - string
+            - 'null'
+        neighborhood:
+          type:
+            - string
+            - 'null'
+        city:
+          type:
+            - string
+            - 'null'
+        state:
+          type:
+            - string
+            - 'null'
+        state_name:
+          type:
+            - string
+            - 'null'
+        region:
+          type:
+            - string
+            - 'null'
+        ibge_code:
+          type:
+            - string
+            - 'null'
+        gia_code:
+          type:
+            - string
+            - 'null'
+        area_code:
+          type:
+            - string
+            - 'null'
+        siafi_code:
+          type:
+            - string
+            - 'null'
+        country:
+          type: string
+          enum:
+            - BR
+        source:
+          type: string
+          enum:
+            - viacep
     UserCreateRequest:
       type: object
+      additionalProperties: false
       required:
         - full_name
         - email
         - role_ids
       properties:
+        account_setup_mode:
+          type: string
+          description: Controls initial account state. Omitted or active preserves active-user creation. Invitation persists an invited user without creating an invitation, lifecycle token, or delivery request.
+          enum:
+            - active
+            - invitation
+          default: active
         school_id:
           type: string
           format: uuid
@@ -6925,49 +8354,45 @@ components:
           minItems: 1
           items:
             $ref: '#/components/schemas/QuestionnaireQuestionInput'
-    AssessmentSubmissionState:
-      type: string
-      enum:
-        - submitted
-        - scan_blocked
-        - scan_failed
-        - needs_review
-        - partially_graded
-        - graded
-        - returned
-        - exempted
-    AssessmentGradingStatus:
-      type: string
-      enum:
-        - unsubmitted
-        - submitted
-        - scan_blocked
-        - scan_failed
-        - needs_review
-        - partially_graded
-        - graded
-        - returned
-        - exempted
-    AssessmentScoreSummary:
+    StudentAssessmentAnswerInput:
       type: object
       additionalProperties: false
       required:
-        - earned_points
-        - possible_points
-        - percentage
+        - question_id
+        - question_type
       properties:
-        earned_points:
-          type: number
-          minimum: 0
-        possible_points:
-          type: number
-          minimum: 0
-        percentage:
-          type:
-            - number
-            - 'null'
-          minimum: 0
-          maximum: 100
+        question_id:
+          type: string
+          format: uuid
+        question_type:
+          $ref: '#/components/schemas/QuestionType'
+        answer_text:
+          type: string
+          minLength: 1
+          maxLength: 10000
+        file:
+          type: string
+          format: binary
+          description: One uploaded file for file_response questions only.
+    StudentQuestionnaireResponseSubmissionRequest:
+      type: object
+      additionalProperties: false
+      required:
+        - questionnaire_id
+        - learning_set_id
+        - answers
+      properties:
+        questionnaire_id:
+          type: string
+          format: uuid
+        learning_set_id:
+          type: string
+          format: uuid
+        answers:
+          type: array
+          minItems: 1
+          items:
+            $ref: '#/components/schemas/StudentAssessmentAnswerInput'
     AssessmentFileAttachment:
       type: object
       required:
@@ -7014,23 +8439,49 @@ components:
             - clean_download_allowed
             - scan_pending
             - scan_failed
-    AssessmentFileSummary:
+    AssessmentGradingStatus:
+      type: string
+      enum:
+        - unsubmitted
+        - submitted
+        - scan_blocked
+        - scan_failed
+        - needs_review
+        - partially_graded
+        - graded
+        - returned
+        - exempted
+    AssessmentSubmissionState:
+      type: string
+      enum:
+        - submitted
+        - scan_blocked
+        - scan_failed
+        - needs_review
+        - partially_graded
+        - graded
+        - returned
+        - exempted
+    AssessmentScoreSummary:
       type: object
       additionalProperties: false
       required:
-        - pending_count
-        - clean_count
-        - failed_count
+        - earned_points
+        - possible_points
+        - percentage
       properties:
-        pending_count:
-          type: integer
+        earned_points:
+          type: number
           minimum: 0
-        clean_count:
-          type: integer
+        possible_points:
+          type: number
           minimum: 0
-        failed_count:
-          type: integer
+        percentage:
+          type:
+            - number
+            - 'null'
           minimum: 0
+          maximum: 100
     AssessmentAnswer:
       type: object
       required:
@@ -7068,6 +8519,23 @@ components:
             - teacher_review
             - report_summary_only
             - unavailable
+    AssessmentFileSummary:
+      type: object
+      additionalProperties: false
+      required:
+        - pending_count
+        - clean_count
+        - failed_count
+      properties:
+        pending_count:
+          type: integer
+          minimum: 0
+        clean_count:
+          type: integer
+          minimum: 0
+        failed_count:
+          type: integer
+          minimum: 0
     AssessmentResponseAttempt:
       type: object
       required:
@@ -7124,45 +8592,230 @@ components:
             $ref: '#/components/schemas/AssessmentAnswer'
         file_summary:
           $ref: '#/components/schemas/AssessmentFileSummary'
-    StudentAssessmentAnswerInput:
-      type: object
-      additionalProperties: false
-      required:
-        - question_id
-        - question_type
-      properties:
-        question_id:
+      $defs:
+        AssessmentSubmissionState:
           type: string
-          format: uuid
-        question_type:
-          $ref: '#/components/schemas/QuestionType'
-        answer_text:
+          enum:
+            - submitted
+            - scan_blocked
+            - scan_failed
+            - needs_review
+            - partially_graded
+            - graded
+            - returned
+            - exempted
+        AssessmentGradingStatus:
           type: string
-          minLength: 1
-          maxLength: 10000
-        file:
-          type: string
-          format: binary
-          description: One uploaded file for file_response questions only.
-    StudentQuestionnaireResponseSubmissionRequest:
-      type: object
-      additionalProperties: false
-      required:
-        - questionnaire_id
-        - learning_set_id
-        - answers
-      properties:
-        questionnaire_id:
-          type: string
-          format: uuid
-        learning_set_id:
-          type: string
-          format: uuid
-        answers:
-          type: array
-          minItems: 1
-          items:
-            $ref: '#/components/schemas/StudentAssessmentAnswerInput'
+          enum:
+            - unsubmitted
+            - submitted
+            - scan_blocked
+            - scan_failed
+            - needs_review
+            - partially_graded
+            - graded
+            - returned
+            - exempted
+        AssessmentScoreSummary:
+          type: object
+          additionalProperties: false
+          required:
+            - earned_points
+            - possible_points
+            - percentage
+          properties:
+            earned_points:
+              type: number
+              minimum: 0
+            possible_points:
+              type: number
+              minimum: 0
+            percentage:
+              type:
+                - number
+                - 'null'
+              minimum: 0
+              maximum: 100
+        AssessmentAnswer:
+          type: object
+          required:
+            - id
+            - question_id
+            - question_type
+            - grading_status
+            - visibility_state
+          properties:
+            id:
+              type: string
+              format: uuid
+            question_id:
+              type: string
+              format: uuid
+            question_type:
+              $ref: '#/components/schemas/QuestionType'
+            answer_text:
+              type:
+                - string
+                - 'null'
+              minLength: 1
+              maxLength: 10000
+              description: Plain text answer content; never report-visible.
+            file:
+              oneOf:
+                - $ref: '#/components/schemas/AssessmentFileAttachment'
+                - type: 'null'
+            grading_status:
+              $ref: '#/components/schemas/AssessmentGradingStatus'
+            visibility_state:
+              type: string
+              enum:
+                - student_safe
+                - teacher_review
+                - report_summary_only
+                - unavailable
+        AssessmentFileAttachment:
+          type: object
+          required:
+            - id
+            - filename
+            - file_category
+            - file_size_bytes
+            - scan_status
+            - availability
+          properties:
+            id:
+              type: string
+              format: uuid
+            filename:
+              type: string
+              maxLength: 255
+            declared_content_type:
+              type: string
+            detected_content_type:
+              type:
+                - string
+                - 'null'
+            file_category:
+              type: string
+              enum:
+                - pdf
+                - image
+                - text
+                - office
+            file_size_bytes:
+              type: integer
+              minimum: 1
+              maximum: 26214400
+            scan_status:
+              type: string
+              enum:
+                - pending
+                - clean
+                - failed
+            availability:
+              type: string
+              enum:
+                - unavailable
+                - clean_download_allowed
+                - scan_pending
+                - scan_failed
+        AssessmentFileSummary:
+          type: object
+          additionalProperties: false
+          required:
+            - pending_count
+            - clean_count
+            - failed_count
+          properties:
+            pending_count:
+              type: integer
+              minimum: 0
+            clean_count:
+              type: integer
+              minimum: 0
+            failed_count:
+              type: integer
+              minimum: 0
+        StudentQuestionnaireResponseSubmissionRequest:
+          type: object
+          additionalProperties: false
+          required:
+            - questionnaire_id
+            - learning_set_id
+            - answers
+          properties:
+            questionnaire_id:
+              type: string
+              format: uuid
+            learning_set_id:
+              type: string
+              format: uuid
+            answers:
+              type: array
+              minItems: 1
+              items:
+                $ref: '#/components/schemas/StudentAssessmentAnswerInput'
+        StudentAssessmentAnswerInput:
+          type: object
+          additionalProperties: false
+          required:
+            - question_id
+            - question_type
+          properties:
+            question_id:
+              type: string
+              format: uuid
+            question_type:
+              $ref: '#/components/schemas/QuestionType'
+            answer_text:
+              type: string
+              minLength: 1
+              maxLength: 10000
+            file:
+              type: string
+              format: binary
+              description: One uploaded file for file_response questions only.
+        GradeAssessmentResponseRequest:
+          type: object
+          additionalProperties: false
+          required:
+            - grading_outcomes
+          properties:
+            grading_outcomes:
+              type: array
+              minItems: 1
+              items:
+                type: object
+                additionalProperties: false
+                required:
+                  - answer_id
+                  - status
+                properties:
+                  answer_id:
+                    type: string
+                    format: uuid
+                  status:
+                    type: string
+                    enum:
+                      - graded
+                      - returned
+                      - exempted
+                  score:
+                    type:
+                      - number
+                      - 'null'
+                    minimum: 0
+                    maximum: 100
+                  feedback_summary:
+                    type:
+                      - string
+                      - 'null'
+                    maxLength: 1000
+                  private_grading_note:
+                    type:
+                      - string
+                      - 'null'
+                    maxLength: 2000
     GradeAssessmentResponseRequest:
       type: object
       additionalProperties: false
@@ -7869,6 +9522,14 @@ components:
         - academic_structure
         - school_activity
         - advanced_assessments
+    ReportGenerationStatus:
+      type: string
+      enum:
+        - requested
+        - generating
+        - generated
+        - failed
+        - canceled
     ReportFilters:
       type: object
       required:
@@ -7897,6 +9558,52 @@ components:
       enum:
         - pdf
         - csv
+        - xlsx
+    ReportOutputAvailability:
+      type: string
+      enum:
+        - pending
+        - available
+        - failed
+        - expired
+        - unsupported
+    ReportOutput:
+      type: object
+      required:
+        - id
+        - report_run_id
+        - format
+        - availability
+      properties:
+        id:
+          type: string
+          format: uuid
+        report_run_id:
+          type: string
+          format: uuid
+        format:
+          $ref: '#/components/schemas/ReportFormat'
+        availability:
+          $ref: '#/components/schemas/ReportOutputAvailability'
+        generated_at:
+          type:
+            - string
+            - 'null'
+          format: date-time
+        expires_at:
+          type:
+            - string
+            - 'null'
+          format: date-time
+        failure_reason_code:
+          type:
+            - string
+            - 'null'
+        excluded_private_assessment_fields:
+          type: array
+          description: Raw answer text, files, links, metadata, feedback summaries, and private notes are excluded from generated report output.
+          items:
+            type: string
     ReportRun:
       type: object
       required:
@@ -7906,7 +9613,8 @@ components:
         - report_type
         - filter_summary
         - output_formats
-        - status
+        - generation_status
+        - outputs
         - outputs_available
       properties:
         id:
@@ -7924,16 +9632,48 @@ components:
           $ref: '#/components/schemas/ReportFilters'
         output_formats:
           type: array
-          minItems: 2
+          minItems: 1
           items:
             $ref: '#/components/schemas/ReportFormat'
+        generation_status:
+          $ref: '#/components/schemas/ReportGenerationStatus'
         status:
-          type: string
-          enum:
-            - requested
-            - generated
-            - failed
-            - inactive
+          $ref: '#/components/schemas/ReportGenerationStatus'
+          deprecated: true
+          description: Deprecated compatibility alias for generation_status.
+        source_report_run_id:
+          type:
+            - string
+            - 'null'
+          format: uuid
+        superseded_by_report_run_id:
+          type:
+            - string
+            - 'null'
+          format: uuid
+        report_definition_id:
+          type:
+            - string
+            - 'null'
+          format: uuid
+        report_definition_snapshot_id:
+          type:
+            - string
+            - 'null'
+          format: uuid
+        deleted_at:
+          type:
+            - string
+            - 'null'
+          format: date-time
+        cancellation_reason_code:
+          type:
+            - string
+            - 'null'
+        failure_reason_code:
+          type:
+            - string
+            - 'null'
         generated_at:
           type:
             - string
@@ -7946,16 +9686,219 @@ components:
           format: date-time
         outputs_available:
           type: boolean
+        outputs:
+          type: array
+          items:
+            $ref: '#/components/schemas/ReportOutput'
     ReportRequest:
       type: object
       required:
-        - report_type
         - filters
+        - output_formats
       properties:
         report_type:
-          $ref: '#/components/schemas/ReportType'
+          oneOf:
+            - $ref: '#/components/schemas/ReportType'
+            - type: 'null'
+        report_definition_id:
+          type:
+            - string
+            - 'null'
+          format: uuid
         filters:
           $ref: '#/components/schemas/ReportFilters'
+        output_formats:
+          type: array
+          minItems: 1
+          uniqueItems: true
+          items:
+            $ref: '#/components/schemas/ReportFormat'
+    ReportCatalog:
+      type: object
+      required:
+        - domains
+        - complexity_limits
+      properties:
+        domains:
+          type: array
+          items:
+            type: object
+            required:
+              - id
+              - label
+              - fields
+              - filters
+              - grouping
+              - sorting
+              - output_formats
+            properties:
+              id:
+                type: string
+                enum:
+                  - attendance
+                  - grades
+                  - academic_structure
+                  - school_activity
+                  - advanced_assessments
+              label:
+                type: string
+              fields:
+                type: array
+                items:
+                  type: object
+                  required:
+                    - id
+                    - label
+                  properties:
+                    id:
+                      type: string
+                    label:
+                      type: string
+                    visibility:
+                      type: string
+                      enum:
+                        - aggregate_only
+                        - operational
+              filters:
+                type: array
+                items:
+                  type: object
+                  required:
+                    - id
+                    - operators
+                  properties:
+                    id:
+                      type: string
+                    operators:
+                      type: array
+                      items:
+                        type: string
+                    reference_type:
+                      type:
+                        - string
+                        - 'null'
+              grouping:
+                type: array
+                items:
+                  type: string
+              sorting:
+                type: array
+                items:
+                  type: string
+              output_formats:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ReportFormat'
+        complexity_limits:
+          type: object
+          required:
+            - max_fields
+            - max_filters
+            - max_grouping_levels
+            - max_sort_fields
+          properties:
+            max_fields:
+              type: integer
+              const: 25
+            max_filters:
+              type: integer
+              const: 10
+            max_grouping_levels:
+              type: integer
+              const: 2
+            max_sort_fields:
+              type: integer
+              const: 3
+    ReportDefinition:
+      type: object
+      required:
+        - id
+        - school_id
+        - name
+        - domain
+        - fields
+        - filters
+        - grouping
+        - sorting
+        - output_formats
+        - lifecycle_state
+        - version
+      properties:
+        id:
+          type: string
+          format: uuid
+        school_id:
+          type: string
+          format: uuid
+        name:
+          type: string
+          minLength: 1
+          maxLength: 120
+        description:
+          type:
+            - string
+            - 'null'
+          maxLength: 500
+        domain:
+          type: string
+          enum:
+            - attendance
+            - grades
+            - academic_structure
+            - school_activity
+        fields:
+          type: array
+          maxItems: 25
+          items:
+            type: string
+        filters:
+          type: array
+          maxItems: 10
+          items:
+            type: object
+            additionalProperties: true
+        grouping:
+          type: array
+          maxItems: 2
+          items:
+            type: string
+        sorting:
+          type: array
+          maxItems: 3
+          items:
+            type: object
+            additionalProperties: true
+        output_formats:
+          type: array
+          minItems: 1
+          uniqueItems: true
+          items:
+            $ref: '#/components/schemas/ReportFormat'
+        lifecycle_state:
+          type: string
+          enum:
+            - draft
+            - active
+            - inactive
+            - deleted
+        version:
+          type: integer
+          minimum: 1
+        created_by_user_id:
+          type:
+            - string
+            - 'null'
+          format: uuid
+        updated_by_user_id:
+          type:
+            - string
+            - 'null'
+          format: uuid
+        deleted_at:
+          type:
+            - string
+            - 'null'
+          format: date-time
     ClassSectionStatus:
       type: string
       enum:
@@ -8458,252 +10401,19 @@ components:
           type: string
           minLength: 1
           maxLength: 500
-    PlatformSchoolSummary:
-      type: object
-      description: Minimized platform-visible school summary. Protected counts below 5 are suppressed and not derivable from related fields.
-      required:
-        - id
-        - name
-        - status
-        - indicators
-        - suppressed
-      properties:
-        id:
-          type: string
-          format: uuid
-        name:
-          type: string
-        status:
-          type: string
-          enum:
-            - active
-            - inactive
-        indicators:
-          type: object
-          additionalProperties:
-            type: string
-        suppressed:
-          type: array
-          items:
-            type: string
-    PlatformSchoolSummaryPaginatedEnvelope:
-      allOf:
-        - $ref: '#/components/schemas/PaginatedEnvelope'
-        - type: object
-          required:
-            - data
-          properties:
-            data:
-              type: array
-              items:
-                $ref: '#/components/schemas/PlatformSchoolSummary'
-    PlatformReportingOverview:
-      type: object
-      required:
-        - health
-        - lifecycle
-        - suppressed
-      properties:
-        health:
-          type: object
-          additionalProperties:
-            type: string
-        lifecycle:
-          type: object
-          additionalProperties:
-            type: integer
-            minimum: 0
-        suppressed:
-          type: array
-          items:
-            type: string
-    PlatformReportingOverviewEnvelope:
-      allOf:
-        - $ref: '#/components/schemas/SuccessEnvelope'
-        - type: object
-          required:
-            - data
-          properties:
-            data:
-              $ref: '#/components/schemas/PlatformReportingOverview'
-    SupportAccessDecisionState:
-      type: string
-      enum:
-        - requested
-        - pending
-        - approved
-        - denied
-        - expired
-        - revoked
-    SupportAccessRequest:
-      type: object
-      additionalProperties: false
-      required:
-        - target_school_id
-        - reason_code
-        - purpose
-        - correlation_id
-      properties:
-        target_school_id:
-          type: string
-          format: uuid
-        reason_code:
-          type: string
-          minLength: 1
-          maxLength: 80
-        purpose:
-          type: string
-          minLength: 1
-          maxLength: 500
-        correlation_id:
-          type: string
-          minLength: 1
-          maxLength: 120
-    SupportAccessTransitionRequest:
-      type: object
-      additionalProperties: false
-      required:
-        - reason_code
-      properties:
-        reason_code:
-          type: string
-          minLength: 1
-          maxLength: 80
-    SupportAccessDecision:
-      type: object
-      required:
-        - id
-        - target_school_id
-        - state
-        - reason_code
-        - expires_at
-        - opt_in_state
-        - platform_approval_state
-      properties:
-        id:
-          type: string
-          format: uuid
-        target_school_id:
-          type: string
-          format: uuid
-        state:
-          $ref: '#/components/schemas/SupportAccessDecisionState'
-        reason_code:
-          type: string
-        purpose:
-          type: string
-        correlation_id:
-          type: string
-        expires_at:
-          type: string
-          format: date-time
-        opt_in_state:
-          type: string
-        platform_approval_state:
-          type: string
-    SupportAccessDecisionEnvelope:
-      allOf:
-        - $ref: '#/components/schemas/SuccessEnvelope'
-        - type: object
-          required:
-            - data
-          properties:
-            data:
-              $ref: '#/components/schemas/SupportAccessDecision'
-    SupportSchoolDiagnostics:
-      type: object
-      required:
-        - target_school_id
-        - support_access_id
-        - groups
-        - redacted_fields
-        - suppressed
-      properties:
-        target_school_id:
-          type: string
-          format: uuid
-        support_access_id:
-          type: string
-          format: uuid
-        groups:
-          type: array
-          items:
-            type: object
-            required:
-              - key
-              - state
-            properties:
-              key:
-                type: string
-              state:
-                type: string
-        redacted_fields:
-          type: array
-          items:
-            type: string
-        suppressed:
-          type: array
-          items:
-            type: string
-    SupportSchoolDiagnosticsEnvelope:
-      allOf:
-        - $ref: '#/components/schemas/SuccessEnvelope'
-        - type: object
-          required:
-            - data
-          properties:
-            data:
-              $ref: '#/components/schemas/SupportSchoolDiagnostics'
-    SupportAuditEvent:
-      type: object
-      required:
-        - id
-        - actor_user_id
-        - action
-        - outcome
-        - occurred_at
-      properties:
-        id:
-          type: string
-          format: uuid
-        actor_user_id:
-          type: string
-          format: uuid
-        target_school_id:
-          type:
-            - string
-            - 'null'
-          format: uuid
-        action:
-          type: string
-        outcome:
-          type: string
-        correlation_id:
-          type:
-            - string
-            - 'null'
-        reason_code:
-          type:
-            - string
-            - 'null'
-        metadata_summary:
-          type: object
-          additionalProperties: true
-        occurred_at:
-          type: string
-          format: date-time
-    SupportAuditEventPaginatedEnvelope:
-      allOf:
-        - $ref: '#/components/schemas/PaginatedEnvelope'
-        - type: object
-          required:
-            - data
-          properties:
-            data:
-              type: array
-              items:
-                $ref: '#/components/schemas/SupportAuditEvent'
   responses:
+    PlatformSupportForbidden:
+      description: Platform support access is forbidden because the authenticated actor lacks the required platform/support permission or approval gate.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorEnvelope'
+    PlatformSupportConflict:
+      description: Support access is stale, expired, revoked, mismatched, missing an approval gate, or concurrently changed.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorEnvelope'
     Unauthorized:
       description: Authentication is missing or invalid
       content:
@@ -8784,7 +10494,7 @@ components:
           schema:
             $ref: '#/components/schemas/ErrorEnvelope'
     AdministrationForbidden:
-      description: Administration lifecycle access is forbidden because the tenant context is missing, inactive, or outside permitted scope, or because the authenticated user lacks the required platform or school administration permission.
+      description: Administration lifecycle access is forbidden because the tenant context is missing, inactive, or outside permitted scope, or because the authenticated user lacks the required platform or school administration permission. An active platform System Administrator satisfies the permission requirement, but tenant-context and other non-permission failures remain forbidden.
       content:
         application/json:
           schema:
@@ -8797,11 +10507,17 @@ components:
                   code: tenant_mismatch
                   message: Tenant context is missing, inactive, or outside permitted scope.
             insufficientPermission:
-              summary: Scope is valid but the actor lacks administration lifecycle permission
+              summary: Non-System Administrator scope is valid but permission is missing
               value:
                 error:
                   code: forbidden
                   message: The authenticated user lacks permission for this action.
+            systemAdministratorTenantDenied:
+              summary: Master permission is satisfied but tenant context is invalid
+              value:
+                error:
+                  code: tenant_mismatch
+                  message: Tenant context is missing, inactive, or outside permitted scope.
     StudentProfileForbidden:
       description: Student profile access is forbidden because the tenant context is missing, inactive, or outside permitted scope, or because the authenticated user lacks student profile administration permission in an otherwise valid school context.
       content:
@@ -8827,14 +10543,20 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/ErrorEnvelope'
+    AssessmentForbidden:
+      description: Actor lacks same-school assessment authority
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorEnvelope'
     AssessmentValidation:
       description: Advanced assessment validation failed
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/ErrorEnvelope'
-    AssessmentForbidden:
-      description: Actor lacks same-school assessment authority
+    UnavailableFile:
+      description: Answer file is unavailable for this actor or state
       content:
         application/json:
           schema:
@@ -8851,12 +10573,6 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/ErrorEnvelope'
-    UnavailableFile:
-      description: Answer file is unavailable for this actor or state
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorEnvelope'
     OutputExpired:
       description: Generated report output file has expired; request a new ReportRun with the same filters
       content:
@@ -8864,7 +10580,7 @@ components:
           schema:
             $ref: '#/components/schemas/ErrorEnvelope'
     ClassroomRosterForbidden:
-      description: Classroom roster access is forbidden because tenant context is missing, inactive, or outside permitted scope, or because the authenticated actor lacks school-administrator permission or teacher own-active-assignment read permission in an otherwise valid school context.
+      description: Classroom roster access is forbidden because tenant context is missing, inactive, or outside permitted scope, or because the authenticated actor lacks school-administrator permission or teacher own-active-assignment read permission in an otherwise valid school context. An active platform System Administrator satisfies feature-specific roster permission checks only after valid active school context resolves.
       content:
         application/json:
           schema:
@@ -8877,7 +10593,7 @@ components:
                   code: tenant_mismatch
                   message: Tenant context is missing, inactive, or outside permitted scope.
             insufficientPermission:
-              summary: Scope is valid but the actor lacks roster permission
+              summary: Non-System Administrator scope is valid but roster permission is missing
               value:
                 error:
                   code: forbidden
@@ -8888,19 +10604,20 @@ components:
                 error:
                   code: forbidden
                   message: Teachers may read only their own active assignments.
-    PlatformSupportForbidden:
-      description: Platform support access is forbidden because the authenticated actor lacks the required platform/support permission or approval gate.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorEnvelope'
-    PlatformSupportConflict:
-      description: Support access is stale, expired, revoked, mismatched, missing an approval gate, or concurrently changed.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorEnvelope'
+            systemAdministratorTenantDenied:
+              summary: Master permission is satisfied but tenant context is invalid
+              value:
+                error:
+                  code: tenant_mismatch
+                  message: Tenant context is missing, inactive, or outside permitted scope.
   parameters:
+    SupportAccessId:
+      name: supportAccessId
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
     TenantContext:
       name: X-School-Id
       in: header
@@ -8941,17 +10658,99 @@ components:
         minimum: 1
         maximum: 100
         default: 25
-    StatusFilter:
-      name: status
-      in: query
-      schema:
-        type: string
     Sort:
       name: sort
       in: query
       description: Comma-separated field names; prefix with '-' for descending.
       schema:
         type: string
+    SchoolStatusFilter:
+      name: status
+      in: query
+      description: Filter schools by one numeric lifecycle status value. `1` means active and `0` means inactive.
+      schema:
+        type: integer
+        enum:
+          - 1
+          - 0
+    SchoolInepCodeFilter:
+      name: inep_code
+      in: query
+      description: Filter schools by exact INEP code after trimming and removing punctuation from the submitted value.
+      schema:
+        type: string
+        minLength: 1
+        maxLength: 32
+        example: '35000012'
+    SchoolDocumentFilter:
+      name: document
+      in: query
+      description: Filter schools by exact canonical CNPJ/document digits after trimming and removing punctuation. No `cnpj` query alias is supported.
+      schema:
+        type: string
+        minLength: 1
+        maxLength: 32
+        example: 12.345.678/0001-95
+    SchoolNameFilter:
+      name: name
+      in: query
+      description: Filter schools whose name contains this text, ignoring casing and accent marks.
+      schema:
+        type: string
+        minLength: 1
+        maxLength: 255
+    SchoolEmailFilter:
+      name: email
+      in: query
+      description: Filter schools whose email contains this text, ignoring casing and accent marks.
+      schema:
+        type: string
+        minLength: 1
+        maxLength: 255
+    SchoolCityFilter:
+      name: city
+      in: query
+      description: Filter schools whose address city contains this text, ignoring casing and accent marks.
+      schema:
+        type: string
+        minLength: 1
+        maxLength: 255
+    SchoolStateFilter:
+      name: state
+      in: query
+      description: Filter schools whose address state contains this text, ignoring casing and accent marks.
+      schema:
+        type: string
+        minLength: 1
+        maxLength: 255
+    SchoolAdministrativeTypeFilter:
+      name: administrative_type_id
+      in: query
+      description: Filter schools by one approved administrative type option identifier.
+      schema:
+        type: integer
+        minimum: 1
+    SchoolLegalNatureFilter:
+      name: legal_nature_id
+      in: query
+      description: Filter schools by one approved legal nature option identifier.
+      schema:
+        type: integer
+        minimum: 1
+    SchoolManagementTypeFilter:
+      name: management_type_id
+      in: query
+      description: Filter schools by one approved management type option identifier.
+      schema:
+        type: integer
+        minimum: 1
+    SchoolPedagogicalApproachFilter:
+      name: pedagogical_approach_id
+      in: query
+      description: Filter schools by one approved pedagogical approach option identifier.
+      schema:
+        type: integer
+        minimum: 1
     SchoolId:
       name: schoolId
       in: path
@@ -8959,6 +10758,11 @@ components:
       schema:
         type: string
         format: uuid
+    StatusFilter:
+      name: status
+      in: query
+      schema:
+        type: string
     RoleId:
       name: roleId
       in: path
@@ -9061,20 +10865,6 @@ components:
       schema:
         type: string
         format: uuid
-    ResponseAttemptId:
-      name: responseAttemptId
-      in: path
-      required: true
-      schema:
-        type: string
-        format: uuid
-    AssessmentFileId:
-      name: fileId
-      in: path
-      required: true
-      schema:
-        type: string
-        format: uuid
     AcademicPeriodFilter:
       name: academic_period_id
       in: query
@@ -9127,13 +10917,13 @@ components:
       schema:
         type: string
         format: uuid
-    SupportAccessId:
-      name: supportAccessId
-      in: path
-      required: true
-      schema:
-        type: string
-        format: uuid
+x-system-administrator-master-access:
+  role:
+    name: System Administrator
+    scope: platform
+    status: active
+  semantics: Operations marked x-system-administrator-master-access true treat the authenticated actor as satisfying feature-specific permission checks. Authentication, active account and session, resolved school context, tenant isolation, actor ownership, guardian links, lifecycle state, approval, confirmation, support opt-in, file safety, closed-period, and other business gates remain enforceable.
+  audit: Writes and lifecycle actions record tenant-safe master_access_used true through their existing audit pipeline. Reads do not gain a new audit event solely because the master role was evaluated.
 x-notes:
   source_of_truth: schoolmaster-specs
   backend_repository: schoolmaster-backend
@@ -9206,6 +10996,12 @@ x-promoted-scope:
     - /api/v1/questionnaires/{questionnaireId}
     - /api/v1/questionnaires/{questionnaireId}/status
     - /api/v1/questionnaires/{questionnaireId}/restore
+    - /api/v1/student/questionnaire-responses
+    - /api/v1/student/questionnaire-responses/{responseAttemptId}
+    - /api/v1/questionnaire-responses
+    - /api/v1/questionnaire-responses/{responseAttemptId}
+    - /api/v1/questionnaire-responses/{responseAttemptId}/grading
+    - /api/v1/questionnaire-responses/{responseAttemptId}/files/{fileId}/download
     - /api/v1/learning-sets
     - /api/v1/learning-sets/{learningSetId}
     - /api/v1/learning-sets/{learningSetId}/status

@@ -21,6 +21,23 @@
 - Q: How should failed invitation-token completion attempts be limited? → A: Revoke the invitation after 5 failed completion attempts per invitation, account, or IP within 15 minutes.
 - Q: How should password reset request sends be throttled? → A: Limit password reset requests to 3 per account or IP per 1 hour; over-limit requests return the same accepted envelope but create no token or email delivery request.
 
+### Session 2026-08-11 — Feature 034 alignment
+
+- Q: How is an invitation-eligible user created? → A: `createUser` accepts an
+  optional `account_setup_mode`; omission or `active` preserves active creation,
+  while `invitation` persists one invited user without creating an invitation,
+  token, or delivery request.
+- Q: What may activate an invited user? → A: Only successful invitation setup;
+  generic update, activation, recovery, and reactivation must reject invited
+  users.
+- Q: What authorizes administrative lifecycle actions? → A: An active
+  `account_lifecycle.manage` permission matching the target scope, or exact
+  active platform System Administrator master access for the permission check
+  only. Tenant, self-target, state, and other business gates still apply.
+- Q: How are school targets protected from enumeration? → A: Authorize the
+  active school context and actor scope before querying the target, and return
+  the same non-disclosing result for unknown and out-of-school UUIDs.
+
 ## User Scenarios & Testing *(mandatory)*
 
 ### User Story 1 - Invite Users and Complete Initial Password Setup (Priority: P1)
@@ -147,6 +164,24 @@ An authorized administrator reviews locked or inactive account state and perform
 - **FR-019**: Backend authorization MUST keep platform account administration, school user administration, school administration lifecycle, teacher workflows, student self-view, guardian access, reporting, and support access permissions separate.
 - **FR-020**: Backend implementation MUST NOT expose classroom, course, section, group, roster, teacher correction, guardian self-service, report lifecycle, report output, frontend, billing, messaging, notification-center, permanent purge, or undocumented API behavior in this slice.
 - **FR-021**: Backend tests MUST cover successful flows, validation failures, authorization failures, tenant isolation failures, inactive school/user handling, password length and common-password rejection, password-manager-compatible input, invitation send/resend limits, failed invitation-token completion revocation, password reset request throttling without account enumeration, token expiry, token reuse, token supersession by newer or resent tokens, bearer-token revocation after credential or account access-state changes, non-enumerating reset responses, lock and recovery conflicts, audit event coverage, credential-secret non-exposure, and response shape for every operation in this slice.
+- **FR-022**: `createUser` MUST preserve active creation when
+  `account_setup_mode` is omitted or `active`; `invitation` mode MUST persist one
+  invited user without creating an invitation, lifecycle token, or delivery
+  request.
+- **FR-023**: Only successful `completeAccountInvitation` processing MAY move an
+  invited user to active; generic update, activation, recovery, and reactivation
+  MUST NOT bypass first password setup.
+- **FR-024**: Ordinary administrative lifecycle actors MUST hold active
+  `account_lifecycle.manage` in the target's platform or school scope. Exact
+  active platform System Administrator master access MAY satisfy that permission
+  check but MUST NOT bypass tenant, self-target, target-state, or other business
+  prerequisites.
+- **FR-025**: Account lock review, lock, unlock, recovery, and reactivation MUST
+  reject actor-equals-target attempts through `AccountLifecyclePolicy` before
+  protected lock state is returned or a mutation is applied.
+- **FR-026**: School tenant context and actor authority MUST be resolved before
+  scoped target lookup; unknown and out-of-school identifiers MUST produce the
+  same non-disclosing outcome.
 
 ### Key Entities *(include if feature involves data)*
 

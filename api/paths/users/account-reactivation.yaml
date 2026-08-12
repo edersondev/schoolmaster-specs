@@ -5,7 +5,11 @@ post:
   description: >-
     Reactivation validates user lifecycle state, school lifecycle state, active
     role assignments, password setup state, lock state, and tenant or platform
-    scope before authentication may resume.
+    scope before authentication may resume. Matching active
+    account_lifecycle.manage or exact System Administrator master access is
+    required, but master access does not bypass tenant, self-target, or state
+    gates. Tenant authorization precedes scoped target lookup. Invited users
+    cannot be activated by this operation.
   operationId: reactivateAccount
   x-system-administrator-master-access: true
   parameters:

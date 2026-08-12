@@ -22,7 +22,8 @@
 - **Core fields used in this slice**:
   - `id` (UUID)
   - identity and contact fields documented by OpenAPI
-  - `status` (`invited`, `active`, `inactive`, `locked` where approved by contract)
+  - `status` (`invited`, `active`, `inactive`); lock state remains a separate
+    `AccountLock` concern
   - password credential state (`unset`, `set`)
   - role assignment references
   - school relationship data where school-scoped
@@ -232,6 +233,31 @@
   - record invitation creation, resend or replacement, over-limit invitation send/resend attempts, invitation completion, failed invitation-token completion, invitation revocation, password reset request acceptance, over-limit password reset request suppression, password reset completion, failed reset-token completion, reset-token suppression, administrative lock, account unlock, recovery, reactivation, blocked inactive-account attempts, and bearer-token revocation outcomes
   - do not store plaintext passwords, reusable invitation tokens, reset tokens, credential hashes, delivery-provider secrets, private content, or unauthorized cross-tenant details
 
+### AccountSetupMode
+
+- **Purpose**: Backward-compatible user creation choice used before invitation
+  creation.
+- **Values**: `active` (default) or `invitation`.
+- **Rules**:
+  - omitted or `active` preserves existing active-user creation
+  - `invitation` persists exactly one invited user without invitation, token, or
+    delivery side effects
+  - only successful invitation setup changes invited to active
+  - generic update, activation, recovery, and reactivation reject invited users
+
+### ScopedLifecyclePermission
+
+- **Purpose**: Exact ordinary-actor authority for administrative account
+  lifecycle operations.
+- **Identity**: `(code, scope)` is unique, where code is
+  `account_lifecycle.manage` and scope is `platform` or `school`.
+- **Rules**:
+  - permission and role assignment must both be active and scope-compatible
+  - exact active platform System Administrator may satisfy the permission check
+    without a permission row
+  - master access does not bypass tenant, self-target, state, or other business
+    gates
+
 ## Cross-Entity Rules
 
 - School-scoped account lifecycle operations must resolve active permitted school context before target user lookup, token lookup, authorization, recovery checks, persistence, or response shaping.
@@ -243,3 +269,8 @@
 - Token completion and token supersession must be atomic with token state changes and audit events.
 - Non-enumerating password reset request responses must not reveal whether a target identifier exists or why it is ineligible.
 - Over-limit password reset requests must preserve the same accepted envelope while suppressing reset token creation and email delivery request creation.
+- School context and actor authority must be resolved before scoped target
+  lookup; unknown and out-of-school identifiers share the same non-disclosing
+  result.
+- Actor-equals-target lock review, lock, unlock, recovery, and reactivation are
+  denied before protected lock state is returned or mutation begins.

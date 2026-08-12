@@ -17,6 +17,17 @@
 - Q: When should exact account lifecycle permission codes or capability flags be confirmed? → A: Planning documents the gate; implementation confirms approved permission codes or capability flags before enabling actions.
 - Q: Should invitation creation submit delivery metadata? → A: Do not submit `delivery_metadata` in invitation creation for this feature.
 
+### Session 2026-08-11 — Feature 034 completion
+
+- Q: What supersedes the temporary hardcoded lifecycle gate? → A: Active raw
+  `account_lifecycle.manage` permission matching target scope, or exact active
+  platform System Administrator master access for the permission check only.
+- Q: What should actors without matching lifecycle authority see? → A: Do not
+  mount invitation, lock-state, or lifecycle-action sections and issue no
+  lifecycle requests.
+- Q: Does Feature 034 enable administrator resend? → A: No. Resend remains
+  excluded until a non-secret operation is separately approved.
+
 ## User Scenarios & Testing *(mandatory)*
 
 ### User Story 1 - Invite users and complete first password setup (Priority: P1)
@@ -287,10 +298,11 @@ and recovery actions.
   completion are token-proven guest lifecycle flows. Platform account
   administrators may manage platform accounts only. School user administrators
   may manage same-school accounts only under active permitted school context.
-  Planning documents the action-visibility gate; frontend action visibility
-  remains blocked until implementation confirms the approved permission codes
-  or session capability flags for platform and school account lifecycle
-  administration.
+  Feature 034 supersedes the temporary hardcoded gate with active raw
+  `account_lifecycle.manage` permission matching the target scope, or exact
+  active platform System Administrator master access for the permission check
+  only. Tenant, target-state, self-action, and other prerequisites remain
+  mandatory.
 - **Compatibility impact**: Additive frontend behavior over approved contracts.
   Automatic session creation after setup or reset, provider-specific messaging,
   SMS delivery, notification-center behavior, guardian account linking,
@@ -368,11 +380,11 @@ and recovery actions.
 - **FR-013**: Account lifecycle action UI MUST show lock, unlock, recovery, and
   reactivation actions only when actor permissions, target account state, tenant
   context, and approved contract semantics allow the action.
-- **FR-013a**: Administrative account lifecycle action visibility MUST remain
-  blocked while planning documents the gate, and MUST remain blocked in
-  implementation until approved permission codes or session capability flags are
-  confirmed for platform account administration and school account
-  administration.
+- **FR-013a**: Administrative account lifecycle visibility MUST derive from
+  active raw `account_lifecycle.manage` permission matching target scope, or
+  exact active platform System Administrator master access for the permission
+  check only. Actors without matching authority MUST receive no invitation,
+  lock-state, or lifecycle-action section and MUST issue no lifecycle request.
 - **FR-014**: Account lock, unlock, recovery, and reactivation actions MUST
   require explicit confirmation before submission and MUST preserve backend
   authorization as authoritative when client-side visibility is stale.

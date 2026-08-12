@@ -151,3 +151,34 @@ Record in implementation PR:
 - Responsive/static review: forms, token states, panels, and dialogs use constrained card widths, grid/flex layouts, full-width mobile buttons, and Element Plus dialog width `min(92vw, 520px)`/`min(92vw, 560px)` suitable for 390px, 768px, and 1440px review.
 - Keyboard/accessibility review: forms use labels, native submit handling, password-manager-compatible inputs, status regions with `aria-live`, and Element Plus dialog focus behavior.
 - Representative administrator usability review (SC-009) remains pending because no human administrator review was available in this execution.
+
+## Feature 034 Completion Evidence - 2026-08-12
+
+- Feature 034 supersedes the hardcoded blocked gate. Lifecycle authority now
+  requires an active raw `account_lifecycle.manage` permission in the exact
+  platform or school scope, or the exact active platform role name
+  `System Administrator`. Flattened permission codes do not grant authority.
+- Backend Policy enforcement occurs before tenant-scoped target lookup;
+  self-targets are denied and unknown, opposite-mode, cross-school, and
+  soft-deleted targets remain non-enumerating.
+- User list/detail select exactly one lookup mode: platform-only with
+  `schools.view` or exact-school with school `users.view`; there is no fallback.
+- Invitation-mode user creation persists one `invited` user without automatic
+  invitation/delivery. Explicit invitation uses that persisted user; generic
+  updates/recovery cannot activate `invited` users.
+- Administrator resend remains absent because the published resend operation is
+  still token-path-dependent. Invitation UI renders only `status`,
+  `expires_at`, `delivery_channel`, and `delivery_requested_at`.
+- Live MySQL full backend suite: `php artisan test --compact` passed, 502 tests
+  and 2454 assertions. Focused tenant/invitation matrix passed, 24 tests and 75
+  assertions.
+- Full frontend suite: `npm run test:unit -- --run` passed, 341 files and 685
+  tests. `npm run build` passed with existing third-party pure-annotation and
+  large-chunk warnings.
+- Mocked-SPA Playwright evidence: focused account lifecycle matrix passed on
+  Chromium, Firefox, and WebKit (9 tests), including 390/768/1440 responsive
+  checks, hidden/zero-request denial, UUID-only create recovery, and no resend
+  or secret persistence. This is SPA orchestration evidence, not live backend
+  authorization evidence.
+- Five-administrator moderated UAT and representative human accessibility
+  review remain genuinely pending.

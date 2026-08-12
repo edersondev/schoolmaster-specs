@@ -2,6 +2,13 @@ get:
   tags:
     - Users
   summary: Retrieve a user in permitted scope
+  description: >-
+    Uses exactly one preselected lookup mode. School mode requires the exact
+    active X-School-Id plus school-scoped users.view and queries only that school.
+    Platform mode sends no school header, requires platform-scoped schools.view
+    or exact System Administrator master access, and queries only platform-owned
+    users. Unknown and opposite-mode identifiers share the same non-disclosing
+    result, and no cross-mode fallback occurs.
   operationId: getUser
   x-system-administrator-master-access: true
   parameters:
