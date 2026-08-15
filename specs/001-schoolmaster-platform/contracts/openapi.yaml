@@ -7007,7 +7007,6 @@ components:
             - viacep
     UserCreateRequest:
       type: object
-      additionalProperties: false
       required:
         - full_name
         - email
@@ -10768,6 +10767,13 @@ components:
       in: query
       schema:
         type: string
+    RoleId:
+      name: roleId
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
     AcademicYearNameFilter:
       name: name
       in: query
@@ -10781,8 +10787,8 @@ components:
       in: query
       description: |
         Inclusive start of the requested overlap range. Must be supplied together
-        with `date_to`. An academic year matches when its date span overlaps any
-        part of the requested range.
+        with `date_to`. An academic year matches when its date span overlaps any part
+        of the requested range.
       schema:
         type: string
         format: date
@@ -10790,8 +10796,8 @@ components:
       name: date_to
       in: query
       description: |
-        Inclusive end of the requested overlap range. Must be supplied together
-        with `date_from` and must be the same as or later than `date_from`.
+        Inclusive end of the requested overlap range. Must be supplied together with
+        `date_from` and must be the same as or later than `date_from`.
       schema:
         type: string
         format: date
@@ -10806,13 +10812,6 @@ components:
           - active
           - closed
           - inactive
-    RoleId:
-      name: roleId
-      in: path
-      required: true
-      schema:
-        type: string
-        format: uuid
     AcademicYearId:
       name: academicYearId
       in: path
