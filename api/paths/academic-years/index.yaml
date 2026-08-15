@@ -8,7 +8,10 @@ get:
     - $ref: ../../components/parameters/schools/TenantContext.yaml
     - $ref: ../../components/parameters/common/Page.yaml
     - $ref: ../../components/parameters/common/PerPage.yaml
-    - $ref: ../../components/parameters/common/StatusFilter.yaml
+    - $ref: ../../components/parameters/academic-years/AcademicYearNameFilter.yaml
+    - $ref: ../../components/parameters/academic-years/AcademicYearDateFromFilter.yaml
+    - $ref: ../../components/parameters/academic-years/AcademicYearDateToFilter.yaml
+    - $ref: ../../components/parameters/academic-years/AcademicYearStatusFilter.yaml
   responses:
     '200':
       description: Academic year collection
@@ -27,6 +30,8 @@ get:
       $ref: ../../components/responses/auth/Unauthorized.yaml
     '403':
       $ref: ../../components/responses/schools/TenantMismatch.yaml
+    '422':
+      $ref: ../../components/responses/common/ValidationError.yaml
 post:
   tags:
     - Academic Years

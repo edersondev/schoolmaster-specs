@@ -1,0 +1,8 @@
+name: date_to
+in: query
+description: |
+  Inclusive end of the requested overlap range. Must be supplied together with
+  `date_from` and must be the same as or later than `date_from`.
+schema:
+  type: string
+  format: date

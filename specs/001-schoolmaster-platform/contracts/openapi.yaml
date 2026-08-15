@@ -1539,7 +1539,10 @@ paths:
         - $ref: '#/components/parameters/TenantContext'
         - $ref: '#/components/parameters/Page'
         - $ref: '#/components/parameters/PerPage'
-        - $ref: '#/components/parameters/StatusFilter'
+        - $ref: '#/components/parameters/AcademicYearNameFilter'
+        - $ref: '#/components/parameters/AcademicYearDateFromFilter'
+        - $ref: '#/components/parameters/AcademicYearDateToFilter'
+        - $ref: '#/components/parameters/AcademicYearStatusFilter'
       responses:
         '200':
           description: Academic year collection
@@ -1558,6 +1561,8 @@ paths:
           $ref: '#/components/responses/Unauthorized'
         '403':
           $ref: '#/components/responses/TenantMismatch'
+        '422':
+          $ref: '#/components/responses/ValidationError'
     post:
       tags:
         - Academic Years
@@ -7002,7 +7007,6 @@ components:
             - viacep
     UserCreateRequest:
       type: object
-      additionalProperties: false
       required:
         - full_name
         - email
@@ -10770,6 +10774,44 @@ components:
       schema:
         type: string
         format: uuid
+    AcademicYearNameFilter:
+      name: name
+      in: query
+      description: Filter academic years whose name contains this text without case sensitivity.
+      schema:
+        type: string
+        minLength: 1
+        maxLength: 255
+    AcademicYearDateFromFilter:
+      name: date_from
+      in: query
+      description: |
+        Inclusive start of the requested overlap range. Must be supplied together
+        with `date_to`. An academic year matches when its date span overlaps any part
+        of the requested range.
+      schema:
+        type: string
+        format: date
+    AcademicYearDateToFilter:
+      name: date_to
+      in: query
+      description: |
+        Inclusive end of the requested overlap range. Must be supplied together with
+        `date_from` and must be the same as or later than `date_from`.
+      schema:
+        type: string
+        format: date
+    AcademicYearStatusFilter:
+      name: status
+      in: query
+      description: Filter academic years by one lifecycle status.
+      schema:
+        type: string
+        enum:
+          - planned
+          - active
+          - closed
+          - inactive
     AcademicYearId:
       name: academicYearId
       in: path
