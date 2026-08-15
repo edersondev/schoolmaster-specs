@@ -2,13 +2,24 @@ get:
   tags:
     - Users
   summary: List users in permitted scope
+  description: >-
+    Selects exactly one lookup mode before querying. With an exact X-School-Id,
+    school mode requires active school-scoped users.view and returns only users
+    owned by that school. Without X-School-Id, platform mode requires active
+    platform-scoped schools.view or exact System Administrator master access and
+    returns only platform-owned users. Modes never fall back to each other.
   operationId: listUsers
   x-system-administrator-master-access: true
   parameters:
     - $ref: ../../components/parameters/schools/TenantContext.yaml
     - $ref: ../../components/parameters/common/Page.yaml
     - $ref: ../../components/parameters/common/PerPage.yaml
-    - $ref: ../../components/parameters/common/StatusFilter.yaml
+    - name: status
+      in: query
+      required: false
+      description: Filter users by user-specific lifecycle status.
+      schema:
+        $ref: ../../components/schemas/users/UserStatus.yaml
     - $ref: ../../components/parameters/common/Sort.yaml
   responses:
     '200':
@@ -30,6 +41,11 @@ post:
   tags:
     - Users
   summary: Create a user inside the permitted scope
+  description: >-
+    Creates one school-owned user. Omitted or active account_setup_mode preserves
+    active creation. Invitation mode persists an invited user without creating
+    an invitation, lifecycle token, or delivery request; invitation creation is
+    a separate explicit operation.
   operationId: createUser
   x-system-administrator-master-access: true
   parameters:

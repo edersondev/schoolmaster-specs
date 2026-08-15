@@ -45,13 +45,14 @@ client-side tenant inference.
   depend on stale authenticated tenant context.
 - Free-form school code: rejected because no approved contract exists.
 
-## Decision: Action visibility waits for approved permissions or capabilities
+## Decision: Feature 034 supersedes the temporary action gate
 
-**Rationale**: Backend docs define platform account administrators and school
-user administrators but do not publish exact frontend permission codes in this
-spec. Frontend action visibility must not invent authorization semantics.
-Planning and tasks must verify approved permission codes or session capability
-flags before enabling admin actions.
+**Rationale**: Active raw `account_lifecycle.manage` permission matching target
+scope is the approved ordinary-actor source. Exact active platform System
+Administrator master access satisfies the permission check only. Tenant,
+target-state, self-action, and other prerequisites still apply. Unauthorized or
+unresolved views do not mount invitation, lock-state, or lifecycle-action
+sections and therefore issue no lifecycle requests.
 
 **Alternatives considered**:
 
@@ -59,6 +60,9 @@ flags before enabling admin actions.
   security-sensitive and may require separate authority.
 - Create local permission names: rejected because permissions must come from
   published session data and approved contracts.
+- Use flattened permission codes: rejected because they discard scope.
+- Treat master access as a tenant bypass: rejected because it weakens school
+  isolation.
 
 ## Decision: Confirmation reason rules follow current OpenAPI request bodies
 

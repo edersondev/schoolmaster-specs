@@ -130,3 +130,42 @@
 - Leave every token and retry setting to implementation configuration: rejected because client behavior and tests require contract-visible semantics.
 - Report an explicit rate-limit response for over-limit reset requests: rejected because it would expose account or identifier state.
 - Defer reset request limits to OpenAPI drafting: rejected because backend abuse controls and tests would remain under-specified.
+
+## Decision: Create invitation-ready users before invitations
+
+**Rationale**: Feature 034 adds optional `account_setup_mode` to `createUser`.
+Omitted or `active` preserves existing behavior; `invitation` persists one
+invited user without creating an invitation, token, or delivery request. The
+administrator then explicitly invokes `createAccountInvitation` for that
+persisted target, so creation and delivery remain separate retryable outcomes.
+Only successful invitation setup may activate the invited user.
+
+Platform onboarding is the documented exception to separate persistence:
+because `createUser` is school-only, an authorized platform invitation may
+atomically provision the missing platform-owned invited user and invitation
+after validating active platform roles. Existing platform invited users remain
+retryable targets. School invitation requests never provision from draft data.
+
+**Alternatives considered**:
+
+- Automatically invite during user creation: rejected because persistence and
+  delivery failures would become indistinguishable.
+- Activate invited users through generic lifecycle actions: rejected because it
+  bypasses first password setup.
+
+## Decision: Use exact scoped lifecycle authority and tenant-first lookup
+
+**Rationale**: Active `account_lifecycle.manage` is stored and evaluated
+separately for platform and school scopes. Exact active platform System
+Administrator master access satisfies only the permission check. Tenant,
+self-target, state, and other business gates remain mandatory. School context
+and actor authority are resolved before scoped target lookup so unknown and
+out-of-school identifiers remain indistinguishable.
+
+**Alternatives considered**:
+
+- Code-only permission matching: rejected because it loses target scope.
+- Post-lookup tenant authorization: rejected because it reveals target
+  existence.
+- Master access bypassing non-permission gates: rejected because it weakens
+  tenancy and lifecycle controls.

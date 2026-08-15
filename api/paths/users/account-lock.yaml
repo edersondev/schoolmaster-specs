@@ -2,6 +2,11 @@ get:
   tags:
     - Account Lifecycle
   summary: Review account lock state
+  description: >-
+    Requires active account_lifecycle.manage matching target scope, or exact
+    System Administrator master access for the permission check. Tenant context
+    and actor authority are resolved before scoped target lookup. Self-target,
+    unknown, and out-of-scope review never exposes protected lock state.
   operationId: getAccountLock
   x-system-administrator-master-access: true
   parameters:
@@ -32,7 +37,10 @@ post:
   description: >-
     Administrative locks remain active until an authorized unlock or recovery
     action clears them and revoke all active bearer tokens for the affected
-    user.
+    user. Authorization requires matching active account_lifecycle.manage or
+    exact System Administrator master access, while tenant, self-target, state,
+    and other business gates remain mandatory. Tenant authorization precedes
+    scoped target lookup.
   operationId: lockAccount
   x-system-administrator-master-access: true
   parameters:
@@ -70,6 +78,11 @@ delete:
   tags:
     - Account Lifecycle
   summary: Unlock or clear administrative account lock
+  description: >-
+    Requires matching active account_lifecycle.manage or exact System
+    Administrator master access. Tenant authorization precedes target lookup;
+    self-target and out-of-scope operations are denied without disclosing target
+    existence. Unlock sends no request body.
   operationId: unlockAccount
   x-system-administrator-master-access: true
   parameters:

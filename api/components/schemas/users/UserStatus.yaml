@@ -1,0 +1,6 @@
+type: string
+description: User account lifecycle status.
+enum:
+  - active
+  - inactive
+  - invited

@@ -21,6 +21,31 @@
 - Q: How should failed invitation-token completion attempts be limited? → A: Revoke the invitation after 5 failed completion attempts per invitation, account, or IP within 15 minutes.
 - Q: How should password reset request sends be throttled? → A: Limit password reset requests to 3 per account or IP per 1 hour; over-limit requests return the same accepted envelope but create no token or email delivery request.
 
+### Session 2026-08-11 — Feature 034 alignment
+
+- Q: How is an invitation-eligible user created? → A: `createUser` accepts an
+  optional `account_setup_mode`; omission or `active` preserves active creation,
+  while `invitation` persists one invited user without creating an invitation,
+  token, or delivery request.
+- Q: What may activate an invited user? → A: Only successful invitation setup;
+  generic update, activation, recovery, and reactivation must reject invited
+  users.
+- Q: What authorizes administrative lifecycle actions? → A: An active
+  `account_lifecycle.manage` permission matching the target scope, or exact
+  active platform System Administrator master access for the permission check
+  only. Tenant, self-target, state, and other business gates still apply.
+- Q: How are school targets protected from enumeration? → A: Authorize the
+  active school context and actor scope before querying the target, and return
+  the same non-disclosing result for unknown and out-of-school UUIDs.
+
+### Session 2026-08-12 — Feature 034 review reconciliation
+
+- Q: How is a new platform invitee provisioned when `createUser` remains
+  school-only? → A: An authorized platform invitation request may atomically
+  create the missing platform-owned user in `invited` state, assign only active
+  platform roles, and create the invitation. School invitations continue to
+  require the separately persisted invited user created by `createUser`.
+
 ## User Scenarios & Testing *(mandatory)*
 
 ### User Story 1 - Invite Users and Complete Initial Password Setup (Priority: P1)
@@ -34,7 +59,7 @@ A platform or school administrator invites an eligible user to activate access f
 **Acceptance Scenarios**:
 
 1. **Given** a school user administrator has an active resolved school context and permission to manage same-school users, **When** they invite a same-school user with valid role and contact information, **Then** an invitation is created for that school scope and the response follows the approved envelope without exposing token secrets.
-2. **Given** a platform account administrator has platform account-management permission, **When** they invite a platform-scoped user, **Then** the invitation is created without granting school-owned resource access.
+2. **Given** a platform account administrator has platform account-management permission, **When** they invite a new platform-scoped user, **Then** the platform-owned invited user and invitation are created atomically with active platform roles and without granting school-owned resource access.
 3. **Given** an invited user receives a valid unexpired invitation, **When** they complete password setup with credentials that are 12 to 128 characters, not common passwords, and compatible with paste/password managers, **Then** the account becomes eligible for authentication in the documented scope and the invitation cannot be reused.
 4. **Given** an invitation request references an inactive school, inactive role, cross-tenant role, existing active account, unsupported actor, or undocumented field, **When** the request is submitted, **Then** the request is rejected before creating invitation state.
 5. **Given** an administrator has already sent or resent 3 invitations for the same user and scope within 24 hours, **When** they attempt another invitation send or resend, **Then** the request is rejected with the documented rate-limit response and no new token is created.
@@ -126,6 +151,12 @@ An authorized administrator reviews locked or inactive account state and perform
 - **FR-003**: Requests with missing, mismatched, inactive, or unauthorized school context MUST fail before any school-owned account, invitation, role, student, teacher, guardian, report, or recovery data is accessed.
 - **FR-004**: Invitation creation MUST require a documented authorized actor, allowed account scope, eligible target user state, valid active role dependencies where applicable, and tenant-compatible contact identity before invitation state is created.
 - **FR-004a**: Platform account administrators MUST be limited to platform-scoped user account lifecycle administration, and school user administrators MUST be limited to same-school user account lifecycle administration under an active permitted school context.
+- **FR-004b**: When no platform-owned user exists for an authorized platform
+  invitation, invitation creation MUST atomically provision one `invited` user
+  with no `school_id`, an unusable generated password, and only the validated
+  active platform roles. School invitation creation MUST NOT provision a user
+  from draft data and MUST continue to require an eligible persisted invited
+  same-school user.
 - **FR-005**: Invitation creation MUST reject inactive schools, inactive or deleted users, duplicate active invitations where prohibited, unsupported user states, cross-tenant role assignments, platform/school scope mismatches, undocumented fields, and unsupported delivery assumptions.
 - **FR-006**: Invitation completion and first password setup MUST require a valid unexpired single-use invitation token and a password that is 12 to 128 characters, not found in the common-password blocklist, and compatible with paste/password-manager input before an invited account becomes eligible for authentication.
 - **FR-007**: Invitation and password setup responses MUST NOT expose plaintext passwords, reusable invitation tokens, reset tokens, credential hashes, or delivery-provider secrets.
@@ -147,6 +178,28 @@ An authorized administrator reviews locked or inactive account state and perform
 - **FR-019**: Backend authorization MUST keep platform account administration, school user administration, school administration lifecycle, teacher workflows, student self-view, guardian access, reporting, and support access permissions separate.
 - **FR-020**: Backend implementation MUST NOT expose classroom, course, section, group, roster, teacher correction, guardian self-service, report lifecycle, report output, frontend, billing, messaging, notification-center, permanent purge, or undocumented API behavior in this slice.
 - **FR-021**: Backend tests MUST cover successful flows, validation failures, authorization failures, tenant isolation failures, inactive school/user handling, password length and common-password rejection, password-manager-compatible input, invitation send/resend limits, failed invitation-token completion revocation, password reset request throttling without account enumeration, token expiry, token reuse, token supersession by newer or resent tokens, bearer-token revocation after credential or account access-state changes, non-enumerating reset responses, lock and recovery conflicts, audit event coverage, credential-secret non-exposure, and response shape for every operation in this slice.
+- **FR-022**: `createUser` MUST preserve active creation when
+  `account_setup_mode` is omitted or `active`; `invitation` mode MUST persist one
+  invited user without creating an invitation, lifecycle token, or delivery
+  request.
+- **FR-023**: Only successful `completeAccountInvitation` processing MAY move an
+  invited user to active; generic update, activation, recovery, and reactivation
+  MUST NOT bypass first password setup.
+- **FR-024**: Ordinary administrative lifecycle actors MUST hold active
+  `account_lifecycle.manage` in the target's platform or school scope. Exact
+  active platform System Administrator master access MAY satisfy that permission
+  check but MUST NOT bypass tenant, self-target, target-state, or other business
+  prerequisites.
+- **FR-025**: Account lock review, lock, unlock, recovery, and reactivation MUST
+  reject actor-equals-target attempts through `AccountLifecyclePolicy` before
+  protected lock state is returned or a mutation is applied.
+- **FR-026**: School tenant context and actor authority MUST be resolved before
+  scoped target lookup; unknown and out-of-school identifiers MUST produce the
+  same non-disclosing outcome.
+- **FR-027**: Generic update, activation, recovery, and reactivation operations
+  MUST reject invited users in their shared transition rules, and platform user
+  role updates MUST resolve only active platform-scoped roles with no school
+  ownership.
 
 ### Key Entities *(include if feature involves data)*
 

@@ -1,5 +1,11 @@
 # Tasks: Account Lifecycle Workflows UI
 
+> **Feature 034 supersession (2026-08-12):** The historical blocked lifecycle
+> permission-source tasks are completed by Feature 034 using scoped raw
+> `account_lifecycle.manage` records and exact active `System Administrator`
+> role identity. Administrator resend remains unavailable. Current validation
+> commands are `npm run test:unit -- --run` and `npm run build`.
+
 **Input**: Design documents from `specs/021-account-lifecycle-ui/`
 **Prerequisites**: plan.md, spec.md, research.md, data-model.md, contracts/account-lifecycle-ui-contract.md, quickstart.md
 
@@ -72,7 +78,7 @@
 ### Tests for User Story 1
 
 - [X] T024 [P] [US1] Add Vitest coverage for invitation creation request mapping without `delivery_metadata` in `tests/unit/account-lifecycle/services/createAccountInvitation.test.js`
-- [X] T025 [P] [US1] Add Vitest coverage for blocked admin resend rendering in `tests/unit/account-lifecycle/components/UserInvitationPanel.test.js`
+- [X] T025 [P] [US1] Add Vitest coverage proving administrator resend is absent while explicit invitation creation and its four safe result fields remain usable in `tests/unit/account-lifecycle/components/UserInvitationPanel.test.js` (superseded by Feature 034)
 - [X] T026 [P] [US1] Add Vitest coverage for invitation setup composable success, validation, conflict, invalid-token, stale response, and no-secret state in `tests/unit/account-lifecycle/composables/useInvitationSetup.test.js`
 - [X] T027 [P] [US1] Add Vitest coverage for password setup form validation, paste/password-manager compatibility, and submit events in `tests/unit/account-lifecycle/components/PasswordSetupForm.test.js`
 - [X] T028 [P] [US1] Add Vitest coverage for invitation setup page route token handling and sign-in recovery in `tests/unit/account-lifecycle/pages/InvitationSetupPage.test.js`
@@ -134,7 +140,7 @@
 
 ### Tests for User Story 3
 
-- [X] T055 [P] [US3] Add Vitest coverage for account lifecycle permission/capability gate and blocked visibility in `tests/unit/account-lifecycle/composables/useAccountLifecycleActions.permissions.test.js`
+- [X] T055 [P] [US3] Add Vitest coverage for active exact-scope lifecycle permission, exact master role, tenant, target, and self gates with zero-call denial in `tests/unit/account-lifecycle/composables/useAccountLifecycleActions.permissions.test.js` (completed by Feature 034)
 - [X] T056 [P] [US3] Add Vitest coverage for account lock review service and mapper behavior in `tests/unit/account-lifecycle/services/getAccountLock.service.test.js`
 - [X] T057 [P] [US3] Add Vitest coverage for lock required reason, unlock no-reason, and optional recovery/reactivation reason request mapping in `tests/unit/account-lifecycle/services/accountLifecycleActions.service.test.js`
 - [X] T058 [P] [US3] Add Vitest coverage for account lifecycle conflict, forbidden, tenant-mismatch, not-found, validation, and temporary-unavailable feedback in `tests/unit/account-lifecycle/composables/useAccountLifecycleActions.outcomes.test.js`
@@ -143,8 +149,8 @@
 
 ### Implementation for User Story 3
 
-- [X] T061 [US3] Verify and document the approved permission codes or session capability flags for platform and school account lifecycle administration in `specs/021-account-lifecycle-ui/quickstart.md`
-- [X] T062 [US3] Implement account lifecycle eligibility derivation using confirmed permission codes or capability flags in `src/composables/admin-system/useAccountLifecycleActions.js`
+- [X] T061 [US3] Verify and document active raw `account_lifecycle.manage` in platform and school scope plus exact active `System Administrator` master authority in `specs/021-account-lifecycle-ui/quickstart.md` (completed by Feature 034)
+- [X] T062 [US3] Implement exact-scope lifecycle eligibility using raw permission records and exact role identity in `src/composables/admin-system/useAccountLifecycleActions.js` (completed by Feature 034)
 - [X] T063 [US3] Implement lock state loading, action pending state, stale-response protection, and outcome normalization in `src/composables/admin-system/useAccountLifecycleActions.js`
 - [X] T064 [P] [US3] Implement `AccountLockPanel.vue` with safe lock state display and denied/not-found hiding in `src/components/admin-system/users/AccountLockPanel.vue`
 - [X] T065 [P] [US3] Implement `AccountLifecycleActions.vue` for lock, unlock, recovery, and reactivation visibility and action emits in `src/components/admin-system/users/AccountLifecycleActions.vue`

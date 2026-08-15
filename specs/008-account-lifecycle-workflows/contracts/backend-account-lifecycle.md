@@ -45,6 +45,28 @@ The backend implementation exposes only the account lifecycle routes below, each
 | `DELETE` | `/api/v1/users/{userId}/account-lock` | `unlockAccount` |
 | `POST` | `/api/v1/users/{userId}/account-reactivation` | `reactivateAccount` |
 
+## Feature 034 Contract Alignment
+
+- `createUser` accepts optional `account_setup_mode` with `active` as the
+  default. `invitation` persists an invited user only; it creates no invitation,
+  token, or delivery request.
+- `User.status` uses user-specific `active`, `inactive`, or `invited` values.
+  Only successful `completeAccountInvitation` processing may activate an
+  invited user.
+- `createAccountInvitation` requires a persisted invited user for school scope.
+  For platform scope only, it may atomically provision a missing platform-owned
+  invited user with validated active platform roles and create the invitation;
+  the endpoint remains the sole platform onboarding creation path in this slice.
+- Administrative lifecycle operations require active
+  `account_lifecycle.manage` matching target scope, or exact active platform
+  System Administrator master access for the permission check only.
+- `AccountLifecyclePolicy` denies self-target lock review, lock, unlock,
+  recovery, and reactivation before protected state or mutation.
+- School context and actor authority are resolved before target lookup. Unknown
+  and out-of-school UUIDs return the same non-disclosing outcome.
+- Administrator resend remains excluded while `resendAccountInvitation`
+  requires reusable invitation-token material.
+
 ## Required Contract Expansion
 
 OpenAPI must define, at minimum:

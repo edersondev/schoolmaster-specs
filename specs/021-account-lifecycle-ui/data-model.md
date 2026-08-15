@@ -166,8 +166,12 @@ and reactivation actions.
 - Lock requires `reason` from 1 to 500 characters.
 - Recovery and reactivation may include optional `reason` up to 500 characters.
 - Unlock uses no reason unless OpenAPI is expanded later.
-- Visibility remains blocked until approved permission codes or session
-  capability flags are confirmed.
+- Visibility derives from active raw `account_lifecycle.manage` permission
+  matching target scope, or exact active platform System Administrator master
+  access for the permission check only.
+- Unauthorized, missing-context, mismatched-context, and self-target views do
+  not mount invitation, lock-state, or lifecycle-action sections and issue no
+  lifecycle requests.
 - Backend authorization and current account state remain authoritative.
 
 **States**:

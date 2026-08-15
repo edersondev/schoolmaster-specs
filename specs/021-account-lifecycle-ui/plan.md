@@ -1,5 +1,11 @@
 # Implementation Plan: Account Lifecycle Workflows UI
 
+> **Superseded completion note (2026-08-12):** Feature 034 completed the
+> previously blocked administrator surfaces across the specifications,
+> Laravel backend, and Vue frontend. The original frontend-only assumptions
+> below remain as historical planning context; current authority and delivery
+> evidence is defined by `../034-complete-account-lifecycle-ui/`.
+
 **Branch**: `021-account-lifecycle-ui` | **Date**: 2026-06-28 | **Spec**: [spec.md](spec.md)
 **Input**: Feature specification from `specs/021-account-lifecycle-ui/spec.md`
 
@@ -24,7 +30,12 @@ invitation or user identifier is required before exposing admin resend.
 
 **Language/Version**: JavaScript with Vue 3 SFCs using Composition API and `<script setup>`; TypeScript remains out of scope.  
 **Primary Dependencies**: Vue 3, Vue Router, Pinia session/shell stores, Axios service boundary, Element Plus, `@element-plus/icons-vue`, Vue I18n, Tailwind CSS, and approved OpenAPI-backed account lifecycle operations.  
-**Storage**: No backend or database change. Token-flow form state, lock dialogs, and lifecycle confirmations remain route-local/in-memory. Existing Pinia auth/session state owns current user, permissions, token/session recovery, and active school context. Lifecycle token values and plaintext passwords must not be persisted in reusable frontend state.  
+**Storage**: Feature 034 adds composite `(code, scope)` permission identity and
+invitation-ready user creation in the backend. Frontend token-flow form state,
+lock dialogs, and lifecycle confirmations remain route-local/in-memory. Existing
+Pinia auth/session state owns raw scoped permissions, exact role identity,
+token/session recovery, and active school context. Lifecycle token values and
+plaintext passwords must not be persisted in reusable frontend state.  
 **Testing**: Vitest and Vue Test Utils for services, contract mappers, composables, forms, route pages, route metadata, invitation setup, password reset request/completion, lock state, lock/unlock/recovery/reactivation actions, stale response handling, denial mapping, invalid-token mapping, permission/capability gates, and no-secret diagnostics. Redocly/OpenAPI validation is required only if contract files change.  
 **Target Platform**: `schoolmaster-frontend` responsive SPA consuming published `/api/v1` contracts from `schoolmaster-specs`.  
 **Project Type**: Frontend SPA feature with specification and cross-repository delivery artifacts.  
@@ -39,12 +50,10 @@ invitation or user identifier is required before exposing admin resend.
 - PASS: OpenAPI impact is identified. This frontend feature consumes existing
   account lifecycle operation IDs and blocks admin resend until a non-secret
   resend contract is added. No OpenAPI change is planned by this slice.
-- PASS: Repository impacts are separated. `schoolmaster-specs` defines this
-  plan; `schoolmaster-frontend` implements it; `schoolmaster-backend` remains
-  unchanged unless contract verification finds an account lifecycle gap.
-- PASS: Backend architecture requirements are N/A because no Laravel route,
-  Request, Policy, Resource, Service, DTO, Repository, schema, or public
-  identifier change is approved.
+- PASS: Feature 034 separates synchronized specification, Laravel, and Vue
+  repository changes and keeps OpenAPI authoritative.
+- PASS: Feature 034 uses Laravel Requests, DTOs, Services, Policy enforcement,
+  scoped repositories, API Resources, and a guarded MySQL migration.
 - PASS: Frontend design uses Vue 3 Composition API, Pinia only for existing
   shared session/shell state, Vue Router, Tailwind CSS, Element Plus, Axios
   service modules, feature folders, and service-isolated API access.
@@ -195,20 +204,21 @@ session state and route-local composables are sufficient.
 
 | Surface | Required confirmation before enabling |
 |---------|---------------------------------------|
-| Invitation creation | Existing user create/detail route access plus approved platform or school account lifecycle permission/capability confirmed before enabling |
+| Invitation creation | Active raw `account_lifecycle.manage` permission in the target scope, or exact active platform `System Administrator`; target must be a persisted eligible `invited` user and not self |
 | Admin invitation resend | Blocked until OpenAPI provides non-secret resend by invitation or user identifier |
-| Account lock review | Approved platform or school account lifecycle permission/capability |
-| Lock account | Approved platform or school account lifecycle permission/capability and eligible target account state |
-| Unlock account | Approved platform or school account lifecycle permission/capability and eligible lock state |
-| Recover account | Approved platform or school account lifecycle permission/capability and eligible recovery state |
-| Reactivate account | Approved platform or school account lifecycle permission/capability and eligible inactive account state |
+| Account lock review | Active raw `account_lifecycle.manage` permission in the selected platform/exact-school scope, or exact active platform `System Administrator` |
+| Lock account | Same exact authority, non-self target, resolved target scope, and active unlocked target |
+| Unlock account | Same exact authority, non-self target, resolved target scope, and active administrative lock |
+| Recover account | Same exact authority, non-self target, resolved target scope, and eligible locked target |
+| Reactivate account | Same exact authority, non-self target, resolved target scope, and eligible inactive target; never `invited` |
 | Invitation setup | Token-proven guest flow; no authenticated permission check |
 | Password reset request | Guest flow; email only; no school selector |
 | Password reset completion | Token-proven guest flow; no authenticated permission check |
 
-Backend authorization remains authoritative. Client-side visibility improves
-usability only after implementation confirms approved permission codes or
-session capability flags.
+Backend authorization remains authoritative. Client-side visibility derives
+only from active raw permission records with exact scope or the exact active
+`System Administrator` role; flattened permission codes never grant lifecycle
+authority.
 
 ## Phase 0: Research
 
