@@ -1,0 +1,9 @@
+name: date_from
+in: query
+description: |
+  Inclusive start of the requested overlap range. Must be supplied together
+  with `date_to`. An academic year matches when its date span overlaps any part
+  of the requested range.
+schema:
+  type: string
+  format: date

@@ -1,0 +1,7 @@
+name: name
+in: query
+description: Filter academic years whose name contains this text without case sensitivity.
+schema:
+  type: string
+  minLength: 1
+  maxLength: 255
