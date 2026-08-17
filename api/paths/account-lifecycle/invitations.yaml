@@ -3,7 +3,10 @@ post:
     - Account Lifecycle
   summary: Create or replace an account invitation
   description: >-
-    Creates a 7-day single-use invitation for an eligible invited user. School
+    Creates a 7-day single-use invitation for an eligible invited user and
+    synchronously submits one setup email to the target user's current address.
+    A successful response means the configured mail transport accepted the
+    submission; it does not confirm inbox delivery. School
     scope requires a separately persisted same-school invited user. Platform
     scope atomically provisions a missing platform-owned invited user with the
     validated active platform roles because no platform create-user operation
@@ -11,7 +14,8 @@ post:
     exact System Administrator master access for the permission check; tenant
     authorization precedes scoped target lookup. The response never exposes
     reusable invitation token secrets. Creating a new invitation supersedes
-    prior unused invitations for the same user and scope.
+    prior unused invitations for the same user and scope. The plaintext token
+    and setup URL appear only in the submitted email and are never returned.
   operationId: createAccountInvitation
   x-system-administrator-master-access: true
   parameters:
@@ -42,3 +46,5 @@ post:
       $ref: ../../components/responses/common/Conflict.yaml
     '422':
       $ref: ../../components/responses/common/ValidationError.yaml
+    '503':
+      $ref: ../../components/responses/common/TemporaryUnavailable.yaml

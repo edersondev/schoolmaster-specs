@@ -113,7 +113,12 @@
 
 ## Decision: Represent email delivery request metadata, not messaging implementation
 
-**Rationale**: This slice may request and audit invitation or reset email delivery metadata, but it must not implement messaging templates, SMS delivery, notification preferences, inboxes, campaigns, parent portal communication, provider-specific delivery behavior, or delivery-provider secrets. Account lifecycle can define the email delivery request boundary without owning a messaging product.
+**Rationale**: This slice may request and audit invitation or reset email
+delivery metadata. Feature 036 extends invitation creation with one generic
+transactional setup email while keeping password-reset delivery, SMS,
+notification preferences, inboxes, campaigns, parent portal communication,
+provider event tracking, and delivery-provider secrets outside scope. Account
+lifecycle does not become a general messaging product.
 
 **Alternatives considered**:
 

@@ -57,14 +57,15 @@ soft-delete behavior, and response envelopes for each affected resource.
 
 ### 3. Account Lifecycle Workflows
 
-**Status**: Spec started in `specs/008-account-lifecycle-workflows/spec.md`.
+**Status**: Implemented. Feature 036 completes production invitation email
+delivery and documents retryable transport failure.
 
 **Purpose**: Define invitations, password setup, password reset, account
 reactivation, and account lock or recovery behavior.
 
-**Why next**: User creation exists, but operational onboarding and recovery
-flows remain blocked. These rules affect security, audit events, and frontend
-auth behavior.
+**Delivery note**: Invitation creation now submits one secure setup email after
+persisting only the token hash. Password-reset email and provider event tracking
+remain separate work.
 
 **Contract gate**: Define token lifetime, delivery assumptions, audit events,
 inactive-user behavior, and allowed actor roles before implementation.

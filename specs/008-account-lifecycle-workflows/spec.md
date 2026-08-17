@@ -17,7 +17,10 @@
 - Q: What password policy applies to password setup and reset completion? → A: Passwords must be 12 to 128 characters, block common passwords, and allow paste/password managers.
 - Q: How should invitation sends and resends be limited? → A: Allow 3 invitation sends or resends per user and scope per 24 hours.
 - Q: How long do administrative account locks remain active? → A: Administrative locks remain until an authorized unlock or recovery action clears them.
-- Q: What delivery metadata is in scope for account lifecycle tokens? → A: Email delivery request metadata only; no provider-specific messaging behavior.
+- Q: What delivery behavior is in scope for account lifecycle tokens? → A:
+  Feature 008 records email delivery request metadata. Feature 036 additionally
+  submits invitation setup email through the configured generic mail transport;
+  password-reset email and provider event tracking remain outside scope.
 - Q: How should failed invitation-token completion attempts be limited? → A: Revoke the invitation after 5 failed completion attempts per invitation, account, or IP within 15 minutes.
 - Q: How should password reset request sends be throttled? → A: Limit password reset requests to 3 per account or IP per 1 hour; over-limit requests return the same accepted envelope but create no token or email delivery request.
 
@@ -171,7 +174,10 @@ An authorized administrator reviews locked or inactive account state and perform
 - **FR-014b**: Password reset requests MUST allow at most 3 requests per account or IP within 1 hour; further requests within that window MUST return the same non-enumerating accepted envelope while creating no new reset token and no email delivery request.
 - **FR-014c**: Invitation sends and resends MUST allow at most 3 attempts per user and scope within 24 hours; further attempts within that window MUST be rejected without creating a new token.
 - **FR-014d**: Invitation completion MUST allow at most 5 failed invitation-token completion attempts per invitation, account, or IP within 15 minutes, then revoke the invitation so it can no longer be completed.
-- **FR-015**: Delivery behavior MUST be limited to auditable email delivery request metadata only; this slice MUST NOT implement provider-specific messaging behavior, SMS delivery, notification preferences, inboxes, campaigns, or parent portal communication features.
+- **FR-015**: Delivery behavior MUST retain auditable email delivery request
+  metadata. Feature 036 MAY submit invitation setup email through configured
+  generic mail transport, but MUST NOT add provider-specific tracking, SMS,
+  notification preferences, inboxes, campaigns, or parent portal communication.
 - **FR-016**: Backend audit events MUST record invitation creation, invitation resend or replacement where documented, invitation completion, password reset request acceptance, over-limit password reset request suppression, password reset completion, failed token completion, account lock, account unlock, recovery, reactivation, and blocked inactive-account attempts without storing plaintext credentials or reusable token values.
 - **FR-017**: Backend validation MUST reject undocumented request fields, unsupported filters, unsupported sort values, invalid payload shapes, invalid credentials, invalid lifecycle transitions, invalid effective dates, duplicate active tokens where prohibited, inactive references, and cross-tenant references.
 - **FR-018**: Backend responses MUST match the published OpenAPI success and error semantics declared for each approved operation. The backend MUST NOT emit undocumented status semantics unless OpenAPI first documents them on the relevant operation.
@@ -234,6 +240,10 @@ An authorized administrator reviews locked or inactive account state and perform
 - `007-administration-lifecycle` has implemented or approved user, role, school, active, inactive, soft-delete, restore, and dependency rules that account lifecycle workflows must respect.
 - Existing backend authentication keeps bearer token expiry at 8 hours, rejects inactive users and inactive schools, rate-limits failed login attempts by email and IP, and audits login success, login failure, logout, and token rejection.
 - Current OpenAPI contracts do not yet publish invitation, password setup, password reset, account lock recovery, or account reactivation operations; this feature must expand contracts before backend implementation.
-- Invitation and reset email delivery may be requested and audited by this slice, but provider-specific messaging, SMS delivery, notification templates, inboxes, campaigns, and communication preferences remain outside scope.
+- Invitation and reset email delivery may be requested and audited by this
+  slice. Feature 036 owns actual invitation setup email submission only;
+  password-reset email, provider-specific messaging/tracking, SMS, general
+  notification templates, inboxes, campaigns, and preferences remain outside
+  scope.
 - Platform-scoped and school-scoped accounts share account lifecycle concepts, but platform account administrator permissions, school user administrator permissions, tenant context, and visible account state remain separated.
 - Classroom, course, section, roster, teacher correction, guardian self-service, report lifecycle expansion, frontend implementation, billing, messaging, notifications, and parent portal behavior remain outside this slice.

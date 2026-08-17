@@ -861,6 +861,8 @@ components:
             total:
               type: integer
   responses:
+    TemporaryUnavailable:
+      $ref: components/responses/common/TemporaryUnavailable.yaml
     PlatformSupportForbidden:
       description: Platform support access is forbidden because the authenticated actor lacks the required platform/support permission or approval gate.
       content:

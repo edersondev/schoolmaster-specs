@@ -16,6 +16,9 @@ supports a persisted post-create invitation phase, activates lock/unlock/recover
 reactivate controls, and rejects stale identity/permission/tenant responses.
 Token-path admin resend remains excluded.
 
+Feature 036 subsequently changes fresh administrator form state to select
+`invitation` while preserving this plan's `active` default for omitted API input.
+
 ## Technical Context
 
 **Language/Version**: PHP 8.3 with Laravel 13; JavaScript with Vue 3.5 Composition API and `<script setup>`  

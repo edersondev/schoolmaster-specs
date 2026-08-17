@@ -63,5 +63,5 @@ When implementing or modifying features:
 - only then implementation repositories should change
 
 <!-- SPECKIT START -->
-Active implementation plan: `specs/035-academic-year-filters/plan.md`
+Active implementation plan: `specs/036-invitation-email-delivery/plan.md`
 <!-- SPECKIT END -->
