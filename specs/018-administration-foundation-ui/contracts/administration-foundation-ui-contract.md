@@ -129,8 +129,10 @@ deferred to a separate implementation feature.
 - Role rows omit an inline Permissions column. Their overflow menu always
   exposes List permissions to sessions with `roles.view`.
 - List permissions opens a read-only dialog backed only by the selected role's
-  embedded `permissions` array. Its table maps permission `code` to Permission
-  name and permission `name` to Description; it sends no lookup request.
+  embedded `permissions` array. Its responsive grid presents permission `code`
+  as Permission name and permission `name` as Description, with one column by
+  default, two at the small breakpoint, and four on large screens; it sends no
+  lookup request.
 - Element Plus components use PascalCase tags.
 - Shared UI text uses Vue I18n.
 - Tailwind handles spacing, layout, responsiveness, and restrained visual

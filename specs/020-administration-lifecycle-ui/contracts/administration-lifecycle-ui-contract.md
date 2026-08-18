@@ -133,6 +133,10 @@ Administrator update or lifecycle action must record
 - Create Role and Edit Role load every page from `listPermissions` before
   presenting one complete permission selector. The selector exposes no page
   controls and does not present a partial result if any page fails.
+- Role detail presents assigned permissions through the same read-only
+  responsive grid used by the Roles list permission dialog, mapping `code` to
+  Permission name and `name` to Description. The grid uses one column by
+  default, two at the small breakpoint, and four on large screens.
 - Academic-period update does not expose academic-year reassignment.
 - Field errors map to matching controls; unmatched errors appear in an
   accessible form summary.

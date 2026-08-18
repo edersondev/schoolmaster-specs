@@ -152,8 +152,10 @@ are submitted; direct permission assignment is absent.
 
 **List presentation**: The main table omits inline permissions. A List
 permissions overflow action opens a read-only dialog over the selected role's
-embedded permission collection. Dialog columns map `code` to Permission name
-and `name` to Description; no additional API state or request is introduced.
+embedded permission collection. A responsive grid presents `code` as Permission
+name and `name` as Description, using one column by default, two at the small
+breakpoint, and four on large screens; no additional API state or request is
+introduced.
 
 ## RoleCreateForm
 

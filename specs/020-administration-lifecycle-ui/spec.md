@@ -22,6 +22,10 @@
 - Q: Where should role permissions appear on the Roles list? → A: Remove the
   inline Permissions column and expose a non-lifecycle List permissions
   overflow action that opens the Feature 018 read-only permission dialog.
+- Q: How should the Role detail page present assigned permissions? → A: Use the
+  same read-only responsive grid as the Roles list dialog, with one column by
+  default, two at the small breakpoint, and four on large screens. Use
+  permission `code` as Permission name and human-readable `name` as Description.
 
 ## User Scenarios & Testing *(mandatory)*
 
@@ -288,6 +292,11 @@ validation, conflict, and denial states.
 - **FR-006**: Detail pages MUST show the current status with a reusable status
   tag and MUST expose actions only when the current record state, permissions,
   tenant context, and approved operation allow them.
+- **FR-006a**: The Role detail page MUST present assigned permissions as the
+  same read-only responsive grid used by the Roles list permission dialog,
+  using permission `code` as Permission name and `name` as Description. The grid
+  MUST use one column by default, two at the small breakpoint, and four on large
+  screens.
 - **FR-007**: Update forms MUST submit only editable non-status fields
   published by the resource update contract: school name, contact information,
   and address; user full name, email, and role assignments; role name and

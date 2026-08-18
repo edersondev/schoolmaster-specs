@@ -96,8 +96,8 @@ Role create UI must not expose scope. Its service payload must submit
 - Create Role loads every permission API page and presents one selector without
   pagination controls.
 - Roles list omits its inline Permissions column. List permissions opens a
-  read-only table using permission code as name and human-readable name as
-  description without another request.
+  read-only responsive grid with up to four columns, using permission code as
+  name and human-readable name as description without another request.
 
 ## 6. Verify Security and Errors
 

@@ -29,9 +29,10 @@
   academic-year selectors keep their existing paginated behavior.
 - Q: How should the Roles list present each role's permissions? → A: Remove the
   Permissions column and add a List permissions overflow action that opens a
-  read-only dialog table. Use permission `code` as Permission name and the
-  human-readable permission `name` as Description because those are the fields
-  published by the existing API.
+  read-only responsive grid with one column by default, two at the small
+  breakpoint, and four on large screens. Use permission `code` as Permission
+  name and the human-readable permission `name` as Description because those
+  are the fields published by the existing API.
 
 ## User Scenarios & Testing *(mandatory)*
 
@@ -115,8 +116,8 @@ user assigned to an available role while verifying denied and invalid states.
    controls.
 9. **Given** a role is visible in the Roles list, **When** the administrator
    chooses List permissions from its overflow menu, **Then** a read-only dialog
-   shows that role's embedded permissions with Permission name and Description
-   columns and no extra API request.
+   shows that role's embedded permissions as a responsive grid with Permission
+   name and Description content and no extra API request.
 
 ---
 
@@ -343,9 +344,10 @@ states.
   lists MUST support approved status and pagination controls.
 - **FR-009a**: The Roles list MUST NOT render a Permissions column. Every
   visible role MUST expose a List permissions overflow action under
-  `roles.view`; the action MUST open a read-only dialog table using each
-  embedded permission's `code` as Permission name and `name` as Description,
-  and MUST NOT issue another API request.
+  `roles.view`; the action MUST open a read-only responsive grid using each
+  embedded permission's `code` as Permission name and `name` as Description.
+  The grid MUST use one column by default, two at the small breakpoint, and four
+  on large screens, and MUST NOT issue another API request.
 - **FR-010**: Permission lists MUST support approved pagination controls and
   MUST NOT expose create, edit, assignment-to-user, or lifecycle actions.
 - **FR-011**: Academic period lists MUST support approved pagination, status,
