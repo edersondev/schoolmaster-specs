@@ -5,9 +5,9 @@
 | Operation | Contract change |
 |---|---|
 | `createUser` | Canonical email rules, exact generic 422 example, and new authorized recoverable 409 |
-| `createAccountInvitation` | Same rules only when platform invitation creation would provision a missing platform user; preserve existing invitation conflict variants |
+| `createAccountInvitation` | Canonical ownership and generic unavailable-email rules when platform invitation creation would provision a missing platform user; preserve existing invitation conflict variants |
 | `updateUser` | Canonicalize future email updates and preserve global retained ownership; existing response statuses remain |
-| `restoreUser` | No shape/status change; remains explicit recommended recovery operation |
+| `restoreUser` | No shape/status change; document established school context and `users.view` plus `users.manage` authorization for the recommended recovery operation |
 
 No endpoint or API version is added.
 
@@ -15,8 +15,9 @@ No endpoint or API version is added.
 
 For affected create/update inputs, server trims surrounding whitespace and
 lowercases the complete email before validation, ownership comparison, and
-storage. Retained lookup includes soft-deleted users and compares legacy stored
-values by their trimmed, lowercase form. Existing rows are not bulk-updated.
+storage. Retained lookup includes soft-deleted users and uses indexed
+`identity_email_key`, a stored generated `LOWER(TRIM(email))` value. Existing
+email values are not bulk-updated.
 
 ## Direct create recoverable conflict
 
@@ -45,9 +46,8 @@ Canonical body:
 The response is permitted only when all conditions hold:
 
 - matching user is soft-deleted
-- matching user belongs to exact preselected request scope
-- school mode uses exact active school context and actor has `users.lifecycle`
-- platform mode actor has `schools.manage`
+- matching user belongs to the exact preselected active school
+- actor has `users.view` and `users.manage` for that school
 - requester already passed operation authentication, tenant, and creation
   authorization
 
@@ -85,21 +85,25 @@ Status is `422`. Body shape and text are identical when matching identity is:
 - active, inactive, or invited
 - soft-deleted but outside exact request scope
 - soft-deleted but requester lacks effective restore permission
-- platform-owned during school mode or school-owned during platform mode
+- platform-owned during school mode or any collision during platform invitation
+  provisioning
+- canonical lookup is ambiguous because legacy rows resolve to multiple owners
 - detected only by final `users_email_unique` persistence failure
 
 No matching identifier or lifecycle fact appears in the generic response.
 
 ## Account invitation conflicts
 
-`POST /api/v1/account-invitations` already publishes status 409 for account
-lifecycle conflicts. Its endpoint-specific 409 component must retain the
-existing generic conflict example and add the recovery example above for the
-platform-provisioning branch only.
+`POST /api/v1/account-invitations` keeps its existing status 409 response for
+unrelated account-lifecycle conflicts. Platform-provisioning email collisions
+do not add a recoverable 409 because platform-user restoration is not contracted
+by this feature; they use the generic 422 response above.
 
 ```yaml
 '409':
-  $ref: ../../components/responses/account-lifecycle/AccountInvitationCreationConflict.yaml
+  $ref: ../../components/responses/common/Conflict.yaml
+'422':
+  $ref: ../../components/responses/users/UserCreationValidationError.yaml
 ```
 
 School invitation creation requires an already persisted eligible invited user
@@ -127,9 +131,15 @@ Create request never performs any of these actions automatically. Existing
 restore state, effective-date, reason, dependency, parent-state, authorization,
 tenant, and history rules remain authoritative.
 
+This recovery flow is school-scoped. The actor must have exact active school
+context plus `users.view` and `users.manage`. Feature 037 does not contract
+platform-user restoration.
+
 ## Atomicity and concurrency
 
 - Friendly retained-owner lookup does not replace database uniqueness.
+- Retained-owner lookup uses indexed equality on generated
+  `identity_email_key`; it does not apply `LOWER(TRIM(...))` in the query.
 - `users_email_unique` remains final authority.
 - Any matching index failure rolls back full user/role/invitation transaction.
 - Race loser receives generic 422, never recoverable 409.
@@ -146,9 +156,8 @@ recoverable conflict. Plaintext email and hidden target information are absent.
 
 - `createUser` adds 409 for a scenario already rejected today; successful 201
   and generic 422 shapes remain.
-- `createAccountInvitation` keeps 409 status but adds
-  `recoverable_user_conflict` beside existing `conflict` codes. Clients that
-  branch on error code must accept both.
+- `createAccountInvitation` keeps its existing 409 `conflict` behavior and adds
+  only the generic unavailable-email 422 example for provisioning collisions.
 - `updateUser` and `restoreUser` operation IDs/status sets remain unchanged.
-- No frontend release, data migration, bulk rewrite, or API version bump is
-  required.
+- One generated-key schema migration is required; no email-value backfill,
+  frontend release, or API version bump is required.

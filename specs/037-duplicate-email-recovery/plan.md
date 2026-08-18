@@ -9,24 +9,26 @@ Preserve one globally unique user identity per email across active and
 soft-deleted records while replacing database-level duplicate failures with
 documented, privacy-safe outcomes. OpenAPI leads with a scoped
 `409 recoverable_user_conflict` and a generic `422 validation_failed` variant.
-Laravel then centralizes trim/lowercase normalization, legacy-aware ownership
-lookup, restore-authority classification, post-rollback unique-index handling,
-and allowlisted audit recording across direct user creation and platform user
-provisioning through account invitations. Existing restore and update workflows
-remain explicit; no migration, bulk email rewrite, new package, endpoint, or
-frontend delivery is required.
+Laravel then adds an indexed generated canonical-email lookup key and
+centralizes trim/lowercase normalization, legacy-aware ownership lookup,
+restore-authority classification, post-rollback unique-index handling, and
+allowlisted audit recording across direct user creation and platform user
+provisioning through account invitations. School recovery uses the established
+user lifecycle permissions; platform invitation collisions remain generic.
+Existing restore and update workflows remain explicit; no bulk email rewrite,
+new package, endpoint, or frontend delivery is required.
 
 ## Technical Context
 
 **Language/Version**: PHP 8.3.31 with Laravel 13.15.0  
 **Primary Dependencies**: Existing Eloquent `SoftDeletes`, Form Requests, DTOs, administration policy and tenant services, database transactions, `UniqueConstraintViolationException`, API response helpers, and audit services; no new package  
-**Storage**: Existing MySQL `users` table with case-insensitive global `users_email_unique` index plus existing `audit_events`; no migration and no bulk normalization  
+**Storage**: Existing MySQL `users` table with case-insensitive global `users_email_unique` index plus a new stored generated `identity_email_key` and non-unique lookup index; existing `audit_events`; no email-value backfill or bulk normalization  
 **Testing**: Redocly OpenAPI bundle/lint; PHPUnit 12.5 feature, unit, response-shape, transaction, and MySQL concurrency tests; Laravel Pint  
 **Target Platform**: Linux-hosted Laravel JSON API exposing versioned `/api/v1` operations  
 **Project Type**: Multi-repository web service: shared specification/OpenAPI repository and Laravel API repository; Vue SPA unchanged  
-**Performance Goals**: Preserve indexed uniqueness arbitration; add at most one ownership lookup to each creation decision and one audit write only for rejected duplicate attempts  
-**Constraints**: Contract before backend; authorization and tenant mode before disclosure; target UUID only for an authorized same-scope soft-deleted user eligible for recovery disclosure; generic responses byte/shape-equivalent across hidden states; no plaintext email in duplicate audits; persistence races become generic 422 after rollback; existing email rows remain unchanged until updated  
-**Scale/Scope**: Two user-provisioning paths, one user-email update path, one shared identity-email service, one focused audit service, one typed conflict exception, three reusable response components, and focused regression/concurrency coverage
+**Performance Goals**: Preserve indexed uniqueness arbitration and require retained-owner lookup to use `users_identity_email_key_index`; add at most one ownership lookup to each creation decision and one audit write only for rejected duplicate attempts  
+**Constraints**: Contract before backend; authorization and tenant mode before disclosure; target UUID only for an authorized same-school soft-deleted user during direct creation; platform invitation collisions stay generic; generic responses byte/shape-equivalent across hidden states; no plaintext email in duplicate audits; persistence races become generic 422 after rollback; existing email rows remain unchanged until updated  
+**Scale/Scope**: Two user-provisioning paths, one user-email update path, one generated-key migration, one shared identity-email service, one focused audit service, one typed conflict exception, two reusable response components, and focused regression/concurrency coverage
 
 ## Constitution Check
 
@@ -52,8 +54,8 @@ frontend delivery is required.
   rows, school/platform mode is preselected before disclosure, and opposite
   scope or cross-tenant collisions remain generic.
 - PASS: Compatibility is additive: direct user creation gains a documented 409;
-  account invitation preserves existing conflict cases while adding one code;
-  generic duplicates remain 422 and successful envelopes remain unchanged.
+  account invitation preserves existing conflict cases and uses the new generic
+  422 example for provisioning collisions; successful envelopes remain unchanged.
 - PASS: Redocly, PHPUnit response/tenant/privacy/atomicity/concurrency coverage,
   full backend regression, and Pint cover all changed critical flows. Vitest is
   not required because the frontend repository is unchanged.
@@ -82,7 +84,6 @@ schoolmaster-specs/
 ├── api/
 │   ├── components/
 │   │   ├── responses/
-│   │   │   ├── account-lifecycle/AccountInvitationCreationConflict.yaml
 │   │   │   └── users/
 │   │   │       ├── RecoverableUserConflict.yaml
 │   │   │       └── UserCreationValidationError.yaml
@@ -93,11 +94,14 @@ schoolmaster-specs/
 │   │           └── UserUpdateRequest.yaml
 │   └── paths/
 │       ├── account-lifecycle/invitations.yaml
-│       └── users/index.yaml
+│       └── users/
+│           ├── index.yaml
+│           └── restore.yaml
 ├── specs/001-schoolmaster-platform/contracts/openapi.yaml
 └── specs/037-duplicate-email-recovery/
 
 schoolmaster-backend/
+├── database/migrations/2026_08_18_000001_add_identity_email_key_to_users_table.php
 ├── app/
 │   ├── DTOs/
 │   │   ├── AccountLifecycle/CreateAccountInvitationData.php
@@ -123,6 +127,7 @@ schoolmaster-backend/
 └── tests/
     ├── Feature/
     │   ├── AccountLifecycle/AccountInvitationDuplicateEmailTest.php
+    │   ├── IdentityEmailKeyTest.php
     │   └── Api/V1/
     │       ├── AdministrationLifecycle/UserDetailUpdateTest.php
     │       ├── UserDuplicateEmailConcurrencyTest.php
@@ -148,23 +153,24 @@ implementation is part of feature 037.
 | Component | Responsibility | Inputs / outputs |
 |---|---|---|
 | `IdentityEmailService` | Normalize identity emails, perform global legacy-aware retained-owner lookup, classify creation collisions, and identify the email unique index | Raw email, actor, resolved context, workflow in; normalized email or domain failure out |
-| `AdministrationLifecyclePolicy` | Decide whether actor may receive same-scope deleted-user recovery disclosure using exact restore permissions | Actor and retained user in; boolean out |
+| `AdministrationLifecyclePolicy` | Decide whether actor may receive same-school deleted-user recovery disclosure using established `users.view` plus `users.manage` permissions | Actor and retained user in; boolean out |
 | `DuplicateEmailAuditService` | Create exactly one allowlisted duplicate-attempt audit outside rolled-back transactions | Actor, scope, workflow, outcome, normalized email, optional authorized target, source IP in; audit event out |
 | `RecoverableUserConflictException` | Carry public target UUID and constant recommended action to global renderer | Authorized target UUID in; documented 409 out |
 | `UserService` | Orchestrate school user creation, roles, transaction, collision handling, and final unique-index translation | Validated DTO/context/actor/IP in; user or documented failure out |
-| `AccountInvitationService` | Preserve invitation lifecycle while applying the same rules only when platform invitation provisioning would create a user | Validated DTO/context/actor/IP in; invitation or documented failure out |
+| `AccountInvitationService` | Preserve invitation lifecycle while applying canonical ownership, generic duplicate handling, and atomicity when platform invitation provisioning would create a user | Validated DTO/context/actor/IP in; invitation or documented failure out |
 | `AdministrationUpdateService` | Normalize future email changes and preserve global retained ownership without bulk-rewriting legacy rows | Validated update and target user in; updated user or generic validation failure out |
 
 ## Implementation Approach
 
 ### Phase 0: Contract and source-of-truth alignment
 
-- Add specialized reusable responses for direct recoverable conflict, user
-  creation validation with exact unavailable-email example, and invitation
-  creation conflicts that preserve existing lifecycle cases.
+- Add specialized reusable responses for direct recoverable conflict and user
+  creation validation with the exact unavailable-email example. Preserve the
+  invitation operation's existing generic lifecycle-conflict response.
 - Update direct user creation and account invitation descriptions, responses,
-  and email request-schema normalization rules. Document update normalization
-  without changing restore/update operation shapes.
+  and email request-schema normalization rules. Document the existing
+  school-scoped restore permission boundary and update normalization without
+  changing restore/update operation shapes.
 - Regenerate the platform OpenAPI mirror from the modular aggregate, then lint
   both named APIs before backend changes.
 
@@ -174,14 +180,17 @@ implementation is part of feature 037.
   defensively at the shared service boundary. Enforce the existing 255-character
   storage limit in every affected request. New and updated values are stored
   canonical; existing rows are not rewritten.
-- Query retained ownership globally with a legacy-aware normalized comparison.
+- Add stored generated `identity_email_key=LOWER(TRIM(email))` and its non-unique
+  B-tree index, then query retained ownership with sargable equality against that
+  key. Read at most two matches so ambiguous legacy ownership remains generic.
   Tenant mode and creation authorization resolve first. A deleted target is
-  eligible for recovery disclosure only in the exact preselected active scope
-  when the actor has the effective restore permission (`users.lifecycle` for
-  school users or `schools.manage` for platform users); all other states remain
-  generic. The 409 does not pre-approve restoration: the explicit restore action
-  re-evaluates dependency, uniqueness, lifecycle, reason, and effective-date
-  constraints against current state.
+  eligible for recovery disclosure only during school-scoped direct creation in
+  the exact preselected active school when the actor has `users.view` and
+  `users.manage`; platform invitation collisions and all other states remain
+  generic. Align the school restore authorization implementation with those
+  published permissions. The 409 does not pre-approve restoration: the explicit
+  restore action re-evaluates dependency, uniqueness, lifecycle, reason, and
+  effective-date constraints against current state.
 - Add typed recovery exception rendering through `ApiResponse` with only
   `user_id` and `recommended_action=restore` in details. Generic failures use
   Laravel validation errors with `fields.email` array.
@@ -202,17 +211,19 @@ implementation is part of feature 037.
 ### Phase 2: Verification and rollout
 
 - Cover lifecycle states, case/whitespace variants, the 255-character request
-  limit, legacy mixed-case rows, and the one-ownership-query performance bound,
-  same-scope restore authority, missing restore authority, cross-tenant and
-  opposite-mode privacy, platform invitation provisioning, update
+  limit, legacy mixed-case rows, generated-key/index behavior, and the
+  one-ownership-query performance bound, same-school restore authority, missing
+  restore authority, cross-tenant and opposite-mode privacy, generic platform
+  invitation provisioning, update
   normalization, every required audit field, conditional audit target UUID, and
   plaintext exclusion.
 - Add deterministic unique-index translation tests and a barrier-controlled
   two-connection MySQL integration test proving at most one concurrent creation
   succeeds and race losers receive the canonical 422 after rollback.
 - Run focused and full PHPUnit, Pint, modular/aggregate OpenAPI bundle and lint,
-  and response-shape review. Deploy contract first, backend second; no data
-  migration or coordinated frontend release is needed.
+  and response-shape review. Deploy contract first, then run the schema migration
+  before backend code; no email-value backfill or coordinated frontend release
+  is needed.
 
 ## Complexity Tracking
 

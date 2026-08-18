@@ -1,8 +1,8 @@
 # Data Model: Duplicate Email Recovery
 
-No database migration is required. Feature 037 preserves existing `users` and
-`audit_events` storage while defining canonical write, retained ownership,
-collision classification, and audit rules.
+Feature 037 adds one generated lookup key and index to `users`. It preserves
+existing email values and `audit_events` storage while defining canonical write,
+retained ownership, collision classification, and audit rules.
 
 ## User Identity
 
@@ -18,6 +18,9 @@ globally owned through all lifecycle states.
 - `full_name` and `name`: profile/display fields unchanged by collision handling.
 - `email`: `varchar(255)`, non-null, globally unique under the existing
   case-insensitive MySQL collation.
+- `identity_email_key`: stored generated value `LOWER(TRIM(email))`, indexed by
+  non-unique `users_identity_email_key_index` for sargable retained-owner lookup;
+  never accepted from API input or returned by resources.
 - `status`: `active`, `inactive`, or `invited`.
 - `deleted_at`: nullable soft-delete marker; a non-null value does not release
   email ownership.
@@ -35,12 +38,15 @@ globally owned through all lifecycle states.
 - New and updated email input is trimmed and lowercased before validation,
   comparison, and storage.
 - Comparison is global and includes soft-deleted users.
-- Legacy stored email is compared through its trimmed, lowercase form but is not
-  rewritten until an authorized email update.
+- Legacy stored email is compared through indexed `identity_email_key` but is
+  not rewritten until an authorized email update.
 - Direct creation and platform invitation provisioning may not create a second
   identity for an owned email.
 - Database index `users_email_unique` remains final atomic authority for
   concurrent canonical writes.
+- Lookup reads at most two canonical matches. More than one legacy match is an
+  ambiguous ownership state and always produces generic unavailable-email
+  validation with no recovery target.
 
 **Lifecycle behavior**:
 
@@ -64,8 +70,8 @@ Creation conflict never changes this state automatically.
 
 ## Identity Email
 
-**Purpose**: Transient canonical value used by every affected ownership
-decision.
+**Purpose**: Canonical value used by every affected ownership decision and
+materialized by MySQL for indexed retained-owner lookup.
 
 **Values**:
 
@@ -80,7 +86,8 @@ decision.
 - Canonical value is the only value used for new/update persistence.
 - Hash is pseudonymous audit metadata, not a public identifier and not an API
   field.
-- No bulk derivation or update of existing rows occurs.
+- MySQL derives `identity_email_key` for existing rows during the schema change;
+  no stored `email` value is backfilled or rewritten.
 
 ## Duplicate Email Decision
 
@@ -92,15 +99,16 @@ and authorization are resolved.
 | Decision | Conditions | External result |
 |---|---|---|
 | `available` | No retained owner matches canonical email | Creation may continue |
-| `recoverable_user_conflict` | Matching owner is soft-deleted, in exact preselected active scope, and actor has effective restore permission | `409`, public target UUID, `recommended_action=restore`; later restore is not pre-approved |
-| `email_unavailable` | Matching owner is active, inactive, invited, cross-tenant, opposite-mode, or otherwise not eligible for recovery disclosure | Generic `422`, no target |
+| `recoverable_user_conflict` | During school-scoped direct creation, exactly one matching owner is soft-deleted in the exact active school and actor has `users.view` plus `users.manage` | `409`, public target UUID, `recommended_action=restore`; later restore is not pre-approved |
+| `email_unavailable` | Matching owner is active, inactive, invited, cross-tenant, platform-owned, ambiguous, or otherwise not eligible for recovery disclosure | Generic `422`, no target |
 | `persistence_conflict` | `users_email_unique` wins after precheck during concurrent persistence | Same generic `422`, no target |
 
 **Authorization rules**:
 
-- School recovery disclosure requires exact active school context and
-  `users.lifecycle` for that school.
-- Platform recovery disclosure requires platform mode and `schools.manage`.
+- School recovery disclosure requires exact active school context plus
+  `users.view` and `users.manage` for that school.
+- Platform invitation provisioning never discloses a recovery target; its email
+  collisions are generic until platform-user restoration is contracted.
 - Creation permission alone does not authorize recovery disclosure.
 - Lookup/classification never changes the matching user's state.
 
@@ -133,7 +141,8 @@ for recovery disclosure.
   `The email is unavailable.`
 
 Payload is identical for active, inactive, invited, hidden soft-deleted,
-cross-tenant, opposite-mode, unauthorized, and persistence-race cases.
+cross-tenant, platform-provisioning, ambiguous-legacy, unauthorized, and
+persistence-race cases.
 
 ## Duplicate Attempt Audit
 
@@ -189,7 +198,7 @@ transaction(user + role assignments)
 
 ```text
 authorize platform invitation -> canonicalize -> classify retained owner
-  -> recoverable/generic audit + reject
+  -> generic audit + reject for every collision
   OR
 transaction(platform user + roles + invitation state)
   -> existing email-delivery lifecycle continues

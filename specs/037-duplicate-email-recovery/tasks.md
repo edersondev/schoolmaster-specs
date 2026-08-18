@@ -18,14 +18,15 @@ backend behavior changes.
 
 - [ ] T001 [P] Add the exact `409 recoverable_user_conflict` envelope with only `user_id` and `recommended_action=restore` in `api/components/responses/users/RecoverableUserConflict.yaml`
 - [ ] T002 [P] Add the reusable `422 validation_failed` unavailable-email example with `error.details.fields.email` array in `api/components/responses/users/UserCreationValidationError.yaml`
-- [ ] T003 [P] Preserve existing invitation `conflict` variants and add the recoverable variant in `api/components/responses/account-lifecycle/AccountInvitationCreationConflict.yaml`
+- [ ] T003 [P] Document the existing school-scoped restore context and established `users.view` plus `users.manage` permission boundary without changing response shapes in `api/paths/users/restore.yaml`
 - [ ] T004 [P] Document trim/lowercase normalization, global retained ownership, storage behavior, and the 255-character limit in `api/components/schemas/users/UserCreateRequest.yaml`, `api/components/schemas/users/UserUpdateRequest.yaml`, and `api/components/schemas/account-lifecycle/AccountInvitationCreateRequest.yaml`
-- [ ] T005 Wire the new response components and provisioning-specific descriptions into `api/paths/users/index.yaml` and `api/paths/account-lifecycle/invitations.yaml`
+- [ ] T005 Wire direct-create 409/422 and invitation generic 422 responses plus provisioning-specific descriptions into `api/paths/users/index.yaml` and `api/paths/account-lifecycle/invitations.yaml`, preserving invitation's existing generic 409
 - [ ] T006 Bundle `api/openapi.yaml`, review the generated operations, and regenerate `specs/001-schoolmaster-platform/contracts/openapi.yaml`
 - [ ] T007 Run Redocly lint for the aggregate and platform APIs and verify the documented status sets and exact safe bodies against `specs/037-duplicate-email-recovery/contracts/duplicate-email-recovery.md`
 
 **Checkpoint**: Contract publishes direct-create 409/422 behavior, preserves all
-invitation conflicts, and documents create/update normalization.
+invitation conflicts, keeps platform provisioning collisions generic, and
+documents create/update normalization and school restore authority.
 
 ---
 
@@ -36,13 +37,13 @@ error primitives used by every story.
 
 **⚠️ CRITICAL**: Complete before user-story integration.
 
-- [ ] T008 [P] Write failing unit coverage for canonicalization, global `withTrashed` legacy-aware lookup through `LOWER(TRIM(email))`, current-user exclusion, collision decisions, and at most one ownership query per decision in `schoolmaster-backend/tests/Unit/Services/Users/IdentityEmailServiceTest.php`
-- [ ] T009 Implement canonicalization, retained-owner lookup, collision classification, and exact `users_email_unique` identification in `schoolmaster-backend/app/Services/Users/IdentityEmailService.php`
+- [ ] T008 [P] Write failing unit coverage for canonicalization, indexed global `withTrashed` lookup, current-user exclusion, ambiguous legacy-owner handling, collision decisions, and at most one ownership query per decision in `schoolmaster-backend/tests/Unit/Services/Users/IdentityEmailServiceTest.php`; add MySQL integration coverage for generated `identity_email_key` and `EXPLAIN` selection of `users_identity_email_key_index` in `schoolmaster-backend/tests/Feature/IdentityEmailKeyTest.php`
+- [ ] T009 Add stored generated `identity_email_key=LOWER(TRIM(email))` with non-unique `users_identity_email_key_index`, then implement indexed canonical retained-owner lookup, at-most-two ambiguity classification, and exact `users_email_unique` identification in `schoolmaster-backend/database/migrations/2026_08_18_000001_add_identity_email_key_to_users_table.php` and `schoolmaster-backend/app/Services/Users/IdentityEmailService.php`
 - [ ] T010 [P] Write failing unit coverage for exactly one audit row, actor, resolved school or platform scope, outcome, source IP, workflow, reason code, SHA-256 canonical-email hash, conditional target UUID, strict metadata allowlist, and plaintext exclusion in `schoolmaster-backend/tests/Unit/Services/Users/DuplicateEmailAuditServiceTest.php`
 - [ ] T011 Implement exactly-one `user_creation_duplicate_email` audit recording with scope, workflow, outcome, reason, source IP, and conditional affected user in `schoolmaster-backend/app/Services/Users/DuplicateEmailAuditService.php`
-- [ ] T012 [P] Write failing tests for exact recovery-disclosure authorization and the minimal recovery error resource in `schoolmaster-backend/tests/Unit/Policies/AdministrationLifecyclePolicyTest.php` and `schoolmaster-backend/tests/Unit/ApiResponseTest.php`
+- [ ] T012 [P] Write failing tests for exact-school `users.view` plus `users.manage` recovery-disclosure and restore authorization, platform denial, and the minimal recovery error resource in `schoolmaster-backend/tests/Unit/Policies/AdministrationLifecyclePolicyTest.php`, `schoolmaster-backend/tests/Feature/Api/V1/AdministrationLifecycle/UserLifecycleTransitionTest.php`, and `schoolmaster-backend/tests/Unit/ApiResponseTest.php`
 - [ ] T013 Add the typed public-UUID recovery failure and render its exact safe 409 envelope while preserving generic validation formatting in `schoolmaster-backend/app/Exceptions/RecoverableUserConflictException.php`, `schoolmaster-backend/app/Http/Resources/ApiResponse.php`, and `schoolmaster-backend/bootstrap/app.php`
-- [ ] T014 Add deny-by-default recovery-disclosure authorization matching effective school `users.lifecycle` and platform `schools.manage` restore authority in `schoolmaster-backend/app/Policies/AdministrationLifecyclePolicy.php`
+- [ ] T014 Add deny-by-default recovery disclosure for exact-school `users.view` plus `users.manage`, deny platform recovery, and align the school restore action with that published permission set in `schoolmaster-backend/app/Policies/AdministrationLifecyclePolicy.php` and `schoolmaster-backend/app/Services/AdministrationLifecycle/AdministrationLifecycleService.php`
 
 **Checkpoint**: Shared primitives can distinguish disclosure-eligible recovery
 from a generic unavailable email without disclosing hidden identity state.
@@ -51,9 +52,10 @@ from a generic unavailable email without disclosing hidden identity state.
 
 ## Phase 3: User Story 1 - Restore Retained Identity (Priority: P1) 🎯 MVP
 
-**Goal**: Direct and platform-provisioning creation reject an authorized,
-same-scope soft-deleted owner with safe recovery guidance; the original user is
-then restored and updated only through existing workflows.
+**Goal**: School-scoped direct creation rejects an authorized same-school
+soft-deleted owner with safe recovery guidance; the original user is then
+restored and updated only through existing workflows. Platform provisioning
+remains outside recovery disclosure.
 
 **Independent Test**: Soft-delete an in-scope user, create with the same email,
 assert exact 409/no partial state/one safe audit, then restore the returned UUID
@@ -65,13 +67,13 @@ history.
 > Write these tests first and confirm they fail before implementation.
 
 - [ ] T015 [P] [US1] Add direct-create recovery, exact minimal 409 body, no duplicate or role state, exact target-bearing audit fields, explicit restore, permitted follow-up update, and post-409 dependency, uniqueness, or lifecycle restore rejection coverage in `schoolmaster-backend/tests/Feature/Api/V1/UserDuplicateEmailRecoveryTest.php`
-- [ ] T016 [P] [US1] Add platform-invitation recoverable conflict, exact platform audit fields, and no user, role, invitation, credential, delivery request, or email submission coverage in `schoolmaster-backend/tests/Feature/AccountLifecycle/AccountInvitationDuplicateEmailTest.php`
+- [ ] T016 [P] [US1] Add the platform-invitation boundary case proving a soft-deleted platform-owned collision returns generic 422, records a target-free audit, and creates no user, role, invitation, credential, delivery request, or email submission in `schoolmaster-backend/tests/Feature/AccountLifecycle/AccountInvitationDuplicateEmailTest.php`
 
 ### Implementation for User Story 1
 
 - [ ] T017 [US1] Resolve school scope and create authorization before lookup, pass source IP, emit/audit authorized recovery, and keep user-plus-role persistence atomic in `schoolmaster-backend/app/Services/Users/UserService.php` and `schoolmaster-backend/app/Http/Controllers/Api/V1/UserController.php`
-- [ ] T018 [US1] Replace the invitation-specific owner lookup with the shared identity decision and emit/audit recovery only in the platform provisioning branch in `schoolmaster-backend/app/Services/AccountLifecycle/AccountInvitationService.php` and `schoolmaster-backend/app/Repositories/AccountLifecycleRepository.php`
-- [ ] T019 [US1] Run the direct and invitation recovery tests, including the existing restore/update follow-up, and record the P1 checkpoint in `specs/037-duplicate-email-recovery/quickstart.md`
+- [ ] T018 [US1] Replace the invitation-specific owner lookup with the shared indexed identity decision and emit/audit only generic target-free duplicate validation in the platform provisioning branch in `schoolmaster-backend/app/Services/AccountLifecycle/AccountInvitationService.php` and `schoolmaster-backend/app/Repositories/AccountLifecycleRepository.php`
+- [ ] T019 [US1] Run direct recovery, established-permission restore/update follow-up, and platform generic-boundary tests, then record the P1 checkpoint in `specs/037-duplicate-email-recovery/quickstart.md`
 
 **Checkpoint**: The retained user remains the sole identity; recovery is
 explicit, authorized, and independently testable.
@@ -95,7 +97,7 @@ no partial writes, and one target-free audit per attempt.
 > Write these tests first and confirm they fail before implementation.
 
 - [ ] T020 [P] [US2] Add the complete direct-create lifecycle, cross-tenant, opposite-scope, inactive-parent-scope, and missing-restore-authority privacy matrix with exact 422 and exact target-free audit field assertions in `schoolmaster-backend/tests/Feature/Api/V1/UserDuplicateEmailRecoveryTest.php`
-- [ ] T021 [P] [US2] Add invitation-provisioning generic collision, preserved existing 409 cases, response equivalence, exact target-free audit fields, audit secrecy, and full rollback assertions in `schoolmaster-backend/tests/Feature/AccountLifecycle/AccountInvitationDuplicateEmailTest.php`
+- [ ] T021 [P] [US2] Add invitation-provisioning generic collisions for active and soft-deleted platform owners, preserved existing 409 cases, response equivalence, exact target-free audit fields, audit secrecy, and full rollback assertions in `schoolmaster-backend/tests/Feature/AccountLifecycle/AccountInvitationDuplicateEmailTest.php`
 
 ### Implementation for User Story 2
 
@@ -122,7 +124,7 @@ loser responses, no partial state, and correct post-rollback audits.
 
 > Write these tests first and confirm they fail before implementation.
 
-- [ ] T025 [P] [US3] Extend normalization tests for exact, case, whitespace, complete-value lowercase behavior, unchanged omitted legacy values, and normalized legacy ownership lookup in `schoolmaster-backend/tests/Unit/Services/Users/IdentityEmailServiceTest.php`
+- [ ] T025 [P] [US3] Extend normalization tests for exact, case, whitespace, complete-value lowercase behavior, unchanged omitted legacy values, indexed generated-key legacy ownership lookup, and ambiguous canonical legacy owners in `schoolmaster-backend/tests/Unit/Services/Users/IdentityEmailServiceTest.php`
 - [ ] T026 [P] [US3] Add canonical storage, equivalent-owner, and 255-character validation coverage across direct create, platform invitation provisioning, and future email update in `schoolmaster-backend/tests/Feature/Api/V1/UserDuplicateEmailRecoveryTest.php`, `schoolmaster-backend/tests/Feature/AccountLifecycle/AccountInvitationDuplicateEmailTest.php`, and `schoolmaster-backend/tests/Feature/Api/V1/AdministrationLifecycle/UserDetailUpdateTest.php`
 - [ ] T027 [US3] Add deterministic exact-index translation, unrelated-index rethrow, retained-owner concurrent rejection, and barrier-controlled two-connection MySQL race coverage in `schoolmaster-backend/tests/Feature/Api/V1/UserDuplicateEmailConcurrencyTest.php`
 
@@ -148,7 +150,7 @@ release readiness across specification and backend repositories.
 - [ ] T034 Run the full PHPUnit suite and Laravel Pint check in `schoolmaster-backend/`
 - [ ] T035 Rebundle `api/openapi.yaml`, regenerate `specs/001-schoolmaster-platform/contracts/openapi.yaml`, and run Redocly lint for both named APIs
 - [ ] T036 Audit responses, logs, exceptions, and serialized audit metadata for plaintext email or unauthorized target leakage and document findings in `specs/037-duplicate-email-recovery/quickstart.md`
-- [ ] T037 Confirm no migration, backfill, frontend change, automatic restore, or undocumented API was introduced by reviewing `specs/037-duplicate-email-recovery/spec.md`, `specs/037-duplicate-email-recovery/plan.md`, and implementation diffs
+- [ ] T037 Confirm the only schema change is the generated canonical lookup key/index and that no email-value backfill, frontend change, automatic restore, platform-user restore, or undocumented API was introduced by reviewing `specs/037-duplicate-email-recovery/spec.md`, `specs/037-duplicate-email-recovery/plan.md`, and implementation diffs
 - [ ] T038 Record focused/full test, Pint, Redocly, concurrency repetition, compatibility, and deployment evidence in `specs/037-duplicate-email-recovery/quickstart.md`
 
 ---
@@ -181,8 +183,9 @@ release readiness across specification and backend repositories.
 - Author tests and confirm meaningful failures before matching implementation.
 - Resolve authentication, tenant mode, and scope before global owner disclosure.
 - Keep audits outside transactions that reject or roll back.
-- Preserve the unique index as final race authority; never catch unrelated
-  database failures as email validation.
+- Use the generated-key index for retained-owner lookup, preserve the raw email
+  unique index as final race authority, and never catch unrelated database
+  failures as email validation.
 - Complete the story checkpoint before moving to the next priority.
 
 ### Parallel Opportunities
@@ -201,7 +204,7 @@ release readiness across specification and backend repositories.
 
 ```text
 Task: T015 direct recovery and restore-follow-up tests
-Task: T016 platform invitation recovery and atomicity tests
+Task: T016 platform invitation generic-boundary and atomicity tests
 ```
 
 ## Parallel Example: User Story 2
@@ -245,7 +248,9 @@ Task: T026 workflow canonical-storage feature tests
 
 - `[P]` means different files or no dependency on unfinished work.
 - `[US1]`, `[US2]`, and `[US3]` map tasks to specification stories.
-- No frontend, database migration, bulk email rewrite, new endpoint, package,
-  permanent deletion, or automatic restoration belongs in feature 037.
+- No frontend, email-value backfill, new endpoint, package, platform-user
+  restoration, permanent deletion, or automatic restoration belongs in feature
+  037; the generated canonical lookup key/index migration is the only schema
+  change.
 - Mark a task `[X]` only after its implementation and verification evidence
   exist.

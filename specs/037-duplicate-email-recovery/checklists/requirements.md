@@ -33,3 +33,7 @@
 
 - Validation passed on first review. No clarification markers remain.
 - Architecture and contract impact names affected versioned operations only where required by the project specification template.
+- Revalidated after pull-request review: recovery now uses the established
+  school lifecycle permission set, platform invitation collisions remain
+  generic until platform-user restore is contracted, and retained-owner lookup
+  has an explicit indexed canonical-key requirement.

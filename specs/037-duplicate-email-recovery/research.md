@@ -3,8 +3,10 @@
 ## Decision 1: Preserve the existing global database uniqueness rule
 
 **Decision**: Keep the existing case-insensitive unique index on `users.email`
-as the final authority across active and soft-deleted users. Do not add a
-migration, partial uniqueness rule, generated column, or deleted-email rewrite.
+as the final authority across active and soft-deleted users. Add a stored
+generated `identity_email_key` computed as `LOWER(TRIM(email))` with a non-unique
+index for retained-owner lookup. Do not add a partial uniqueness rule or rewrite
+stored email values.
 
 **Rationale**: Product identity remains global and soft deletion intentionally
 retains ownership. The current MySQL index already prevents two canonical new
@@ -13,8 +15,9 @@ writes from winning a race and includes soft-deleted rows.
 **Alternatives considered**: Releasing email on soft delete was rejected because
 it breaks identity/history continuity and makes restore ambiguous. A generated
 active-only key and mutating deleted email were rejected because they implement
-email reuse, contrary to the specification. A new normalized column was
-rejected because no bulk rewrite is approved.
+email reuse, contrary to the specification. A unique canonical key was rejected
+because legacy whitespace-equivalent rows could make deployment fail; the
+existing raw unique index remains the atomic arbiter for canonical future writes.
 
 ## Decision 2: Normalize at request and service boundaries without backfill
 
@@ -36,41 +39,48 @@ clarified scope.
 ## Decision 3: Use one legacy-aware ownership resolver
 
 **Decision**: Add `IdentityEmailService` for global retained-owner lookup using
-the canonical input against `LOWER(TRIM(email))`, including soft-deleted rows.
+raw equality against indexed `identity_email_key`, including soft-deleted rows.
 Use it from direct user creation, platform invitation provisioning, and user
 email update validation. Retire the account-lifecycle-only email lookup so
-ownership rules have one implementation.
+ownership rules have one implementation. Read at most two matches; if legacy
+data produces more than one canonical owner, classify the result as generic
+unavailable rather than disclose an arbitrary recovery target.
 
-**Rationale**: Existing records are not backfilled, so raw equality alone cannot
-honor surrounding-whitespace normalization for legacy rows. One focused query is
-simple enough that a new repository abstraction is not justified.
+**Rationale**: The stored generated key derives canonical values for existing
+rows without rewriting `users.email`, while its B-tree index avoids a full table
+expression scan. One focused query is simple enough that a new repository
+abstraction is not justified.
 
 **Alternatives considered**: Separate queries in each service were rejected as
-drift-prone. Raw equality was rejected because it misses legacy whitespace.
-Adding a repository for one lookup was rejected as unnecessary indirection.
+drift-prone. `WHERE LOWER(TRIM(email)) = ?` was rejected because it cannot use
+the existing raw-email B-tree index. Adding a repository for one lookup was
+rejected as unnecessary indirection.
 
 ## Decision 4: Authorize recovery disclosure with effective restore rules
 
-**Decision**: Resolve tenant/platform mode and creation authorization before
-global owner classification. Extend the administration policy with a focused
-recovery-disclosure decision that matches actual restore permissions:
-`users.lifecycle` in the exact active school or `schools.manage` for a platform
-user. Only a soft-deleted exact-scope target passing that decision may expose its
-UUID.
+**Decision**: Resolve tenant mode and creation authorization before global owner
+classification. Extend the administration policy with a focused
+recovery-disclosure decision using the established school lifecycle permission
+set: exact active school context plus `users.view` and `users.manage`. Align the
+school restore service with that published permission contract. Only a
+soft-deleted exact-school target passing that decision may expose its UUID.
+Platform invitation provisioning always returns generic unavailable because
+platform-user restoration is not contracted by this feature.
 
 This decision authorizes disclosure only. It does not pre-approve the explicit
 restore action, which re-evaluates all lifecycle constraints against current
 state and may still fail.
 
-**Rationale**: The existing administration policy allows a lifecycle fallback
-that differs from the individual restore service. Reusing that broad fallback
-could tell a create-only administrator about a deleted identity they cannot
-restore. A dedicated policy decision makes disclosure deny-by-default without
-changing existing restore behavior.
+**Rationale**: The published administration contract already defines
+`users.view` plus `users.manage` for user lifecycle operations. Requiring an
+undocumented `users.lifecycle` permission would make the recommended follow-up
+unusable for otherwise authorized administrators. Platform recovery stays
+generic until a platform-user restore contract is designed independently.
 
-**Alternatives considered**: Treating `users.manage` or
-`account_lifecycle.manage` as restore authority was rejected because those
-permissions do not authorize the follow-up operation. Performing global lookup
+**Alternatives considered**: Introducing `users.lifecycle` was rejected because
+it is absent from the source-of-truth permission contract. Treating platform
+`schools.manage` as user restore authority was rejected because the published
+lifecycle contract scopes restore to school users. Performing global lookup
 before tenant authorization was rejected as a cross-tenant disclosure risk.
 
 ## Decision 5: Publish specialized errors without new endpoints
@@ -79,20 +89,19 @@ before tenant authorization was rejected as a cross-tenant disclosure risk.
 `recoverable_user_conflict`, message `A retained user can be restored.`, and
 details containing only `user_id` plus `recommended_action=restore`. Generic
 duplicates use the existing validation envelope with
-`details.fields.email=["The email is unavailable."]`. Invitation creation uses
-an endpoint-specific 409 response that preserves existing `conflict` cases and
-adds the recoverable variant.
+`details.fields.email=["The email is unavailable."]`. Invitation creation keeps
+its existing generic 409 lifecycle response, while provisioning-time email
+collisions use the generic 422 because no platform-user restore flow is added.
 
 **Rationale**: A distinct recoverable code gives authorized clients a safe next
 action, while the identical 422 body prevents lifecycle or tenant enumeration.
-Invitation creation already has unrelated 409 cases, so replacing its response
-with a recovery-only component would misdocument current behavior.
+Invitation creation already has unrelated 409 cases, which remain unchanged.
 
-**Alternatives considered**: Generic 422 for recoverable users was rejected
-because clients would still need a deleted-user browser that is out of scope.
-Changing the common conflict response was rejected because it is shared by many
-unrelated operations. A new recovery endpoint was rejected because existing
-restore/update operations are sufficient.
+**Alternatives considered**: Generic 422 for school recoverable users was
+rejected because clients would still need a deleted-user browser that is out of
+scope. Adding a platform recovery variant was rejected because its recommended
+restore operation is not contracted. Changing the common conflict response was
+rejected because it is shared by many unrelated operations.
 
 ## Decision 6: Let MySQL arbitrate races and translate one exact index failure
 
@@ -122,8 +131,9 @@ source IP, and SHA-256 of the canonical email. Set affected resource type/user
 UUID only for an authorized recoverable conflict.
 
 **Rationale**: The existing audit table already supports every required value,
-so no migration is needed. An explicit allowlist prevents plaintext email or
-hidden target data from entering metadata. SHA-256 matches an existing
+so the canonical-key migration does not alter audit storage. An explicit
+allowlist prevents plaintext email or hidden target data from entering metadata.
+SHA-256 matches an existing
 account-lifecycle metadata convention; audit access controls and retention
 treat the value as pseudonymous operational data.
 
@@ -154,8 +164,8 @@ rejected as flaky.
 ## Decision 9: Keep frontend and existing restore behavior unchanged
 
 **Decision**: Deliver specification/OpenAPI first and backend second. Do not add
-frontend handling, automatic restoration, a deleted-user browser, or changes to
-restore/update payloads.
+frontend handling, automatic restoration, a deleted-user browser, platform-user
+restoration, or changes to restore/update payloads.
 
 **Rationale**: Existing clients may already handle 409/422 envelopes, and the
 feature explicitly excludes frontend delivery. The returned UUID is sufficient
@@ -163,5 +173,5 @@ for an authorized client to invoke the existing explicit restore workflow.
 
 **Alternatives considered**: Auto-restore was rejected because it bypasses
 reason, effective-date, dependency, and audit rules. Coordinated frontend work
-was rejected as unnecessary scope. A new restore contract was rejected because
-the current versioned operation already supports the required transition.
+was rejected as unnecessary scope. Expanding restore to platform users was
+rejected because it requires separate product and authorization design.
