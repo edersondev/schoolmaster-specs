@@ -162,7 +162,12 @@ approved all-or-nothing bulk lifecycle. Account lifecycle remains excluded.
 **Update fields**: `name`, `permissionIds`.
 
 **Rules**: Role update requires `roles.view`, `roles.manage`, and
-`permissions.view`. Scope is display-only.
+`permissions.view`. Scope is display-only. Create Role and Edit Role traverse
+all paginated `listPermissions` responses internally and present one
+non-paginated permission selector; a failed page makes the complete lookup
+unavailable. Roles list omits the inline permissions column; its List
+permissions overflow action opens a read-only dialog over the selected role's
+embedded permissions and requires only `roles.view`.
 
 **Lifecycle**: Single-record activate, deactivate, soft delete, restore, and
 approved all-or-nothing bulk lifecycle.

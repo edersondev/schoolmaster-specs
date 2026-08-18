@@ -21,6 +21,18 @@
   page? → A: Use paginated remote selectors that retain selected options while
   traversing every available page with operation-approved parameters.
 
+### Session 2026-08-18
+
+- Q: How should Create Role present permission choices when `listPermissions`
+  is paginated? → A: Load every permission page internally and present one
+  complete, non-paginated multi-select without page controls; user-role and
+  academic-year selectors keep their existing paginated behavior.
+- Q: How should the Roles list present each role's permissions? → A: Remove the
+  Permissions column and add a List permissions overflow action that opens a
+  read-only dialog table. Use permission `code` as Permission name and the
+  human-readable permission `name` as Description because those are the fields
+  published by the existing API.
+
 ## User Scenarios & Testing *(mandatory)*
 
 ### User Story 1 - Manage Schools from the Platform Workspace (Priority: P1)
@@ -94,9 +106,17 @@ user assigned to an available role while verifying denied and invalid states.
    **When** an administration request is attempted, **Then** tenant-owned
    content remains hidden and the established tenant recovery or denial state is
    shown.
-7. **Given** available roles or permissions span multiple pages, **When** the
-   administrator traverses lookup pages, **Then** every permitted option is
-   reachable and already selected values remain selected.
+7. **Given** available roles span multiple pages, **When** the administrator
+   traverses lookup pages, **Then** every permitted option is reachable and
+   already selected values remain selected.
+8. **Given** active school-scope permissions span multiple API pages, **When**
+   the administrator opens Create Role, **Then** every page is loaded
+   internally and one complete permission selector is shown without page
+   controls.
+9. **Given** a role is visible in the Roles list, **When** the administrator
+   chooses List permissions from its overflow menu, **Then** a read-only dialog
+   shows that role's embedded permissions with Permission name and Description
+   columns and no extra API request.
 
 ---
 
@@ -205,8 +225,10 @@ states.
 - A multi-school session has no restorable active school and no approved
   user-authorized school source; tenant-owned administration remains blocked
   and no administration list or lookup request is sent.
-- A paginated role, permission, or academic-year lookup changes page after a
-  value is selected; the selected option must remain visible and submittable.
+- A paginated role or academic-year lookup changes page after a value is
+  selected; the selected option must remain visible and submittable.
+- A permission page fails while Create Role is loading its complete permission
+  set; the partial result must not be presented as a complete selector.
 
 ## Architecture & Contract Impact *(mandatory)*
 
@@ -319,6 +341,11 @@ states.
   published sort parameter. User lists MUST support approved status,
   pagination, page-size, and sort controls. Role, academic year, and guardian
   lists MUST support approved status and pagination controls.
+- **FR-009a**: The Roles list MUST NOT render a Permissions column. Every
+  visible role MUST expose a List permissions overflow action under
+  `roles.view`; the action MUST open a read-only dialog table using each
+  embedded permission's `code` as Permission name and `name` as Description,
+  and MUST NOT issue another API request.
 - **FR-010**: Permission lists MUST support approved pagination controls and
   MUST NOT expose create, edit, assignment-to-user, or lifecycle actions.
 - **FR-011**: Academic period lists MUST support approved pagination, status,
@@ -328,10 +355,12 @@ states.
   authorized, approved recovery actions.
 - **FR-013**: Create forms MUST use only fields and selectable references
   published by the corresponding request contract.
-- **FR-013a**: Role, permission, and academic-year selectors MUST provide
-  server-driven page traversal using only parameters approved for their list
-  operations, MUST make every permitted page reachable, and MUST retain
-  selected options across page changes and tenant-safe reloads.
+- **FR-013a**: Role and academic-year selectors MUST provide server-driven page
+  traversal using only parameters approved for their list operations, MUST
+  make every permitted page reachable, and MUST retain selected options across
+  page changes and tenant-safe reloads. The Create Role permission selector
+  MUST automatically traverse every `listPermissions` page and present one
+  complete, non-paginated selector without page controls.
 - **FR-014**: User creation MUST allow only approved role selection and MUST NOT
   offer direct permission assignment.
 - **FR-015**: Role creation in this feature MUST always submit `scope=school`,

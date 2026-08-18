@@ -30,14 +30,14 @@
 
 ## Frontend verification
 
-1. Open fresh create-user form; Invitation required is selected.
-2. Select Active; verify explicit choice remains supported.
-3. Submit untouched default; verify request contains
+1. Open fresh create-user form; verify no Account setup field or Active
+   immediately option is rendered.
+2. Submit identity and role details; verify request contains
    `account_setup_mode=invitation`.
-4. Complete existing create-then-invite UI and validate safe success/failure
+3. Complete existing create-then-invite UI and validate safe success/failure
    feedback.
-5. Open emailed link, set password, then use normal login.
-6. Run focused/full Vitest, Playwright account lifecycle test, and build.
+4. Open emailed link, set password, then use normal login.
+5. Run focused/full Vitest, Playwright account lifecycle test, and build.
 
 ## Release checks
 

@@ -90,6 +90,7 @@ post-action refresh, and selectors: `listSchools`, `listUsers`, `listRoles`,
 | User update | `users.view`, `users.manage`, `roles.view` |
 | User lifecycle/bulk | `users.view`, `users.manage` |
 | Role detail | `roles.view` |
+| Role List permissions dialog | `roles.view` |
 | Role update | `roles.view`, `roles.manage`, `permissions.view` |
 | Role lifecycle/bulk | `roles.view`, `roles.manage` |
 | Permission reference choices | `permissions.view` |
@@ -129,6 +130,9 @@ Administrator update or lifecycle action must record
 - Role update requires `roles.view`, `roles.manage`, and `permissions.view`,
   does not expose scope editing, and allows only permitted school-scope
   permission assignments.
+- Create Role and Edit Role load every page from `listPermissions` before
+  presenting one complete permission selector. The selector exposes no page
+  controls and does not present a partial result if any page fails.
 - Academic-period update does not expose academic-year reassignment.
 - Field errors map to matching controls; unmatched errors appear in an
   accessible form summary.
@@ -152,6 +156,9 @@ Administrator update or lifecycle action must record
   record to the requester.
 - Successful lifecycle outcomes reconcile status tags, row actions, detail
   summary, lifecycle history, list membership, and selection state.
+- The role List permissions item is a read-only navigation action, not a
+  lifecycle action. It remains in the overflow menu when lifecycle actions are
+  unavailable and opens the selected role's embedded permission collection.
 
 ## Bulk Lifecycle Contract
 

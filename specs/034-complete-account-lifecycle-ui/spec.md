@@ -11,7 +11,7 @@
 
 - Q: How should invitation creation start after user creation succeeds? → A: Show an explicit invitation action on the create flow after the user persists.
 - Q: What should actors without account lifecycle authority see? → A: Hide invitation, lock-state, and lifecycle-action sections and send no lifecycle requests.
-- Q: How should the feature resolve backend blockers that make create-then-invite and scoped lifecycle authorization impossible? → A: Expand Feature 034 across contracts, backend, and frontend; add invitation-ready user creation while preserving the active API default, provision scoped permissions, deny self-actions, and enforce tenant-safe lookup before activating the UI. Feature 036 later makes invitation the fresh administrator-form default.
+- Q: How should the feature resolve backend blockers that make create-then-invite and scoped lifecycle authorization impossible? → A: Expand Feature 034 across contracts, backend, and frontend; add invitation-ready user creation while preserving the active API default, provision scoped permissions, deny self-actions, and enforce tenant-safe lookup before activating the UI. Feature 036 later makes administrator frontend creation invitation-only.
 
 ### Session 2026-08-12 — PR review reconciliation
 
@@ -197,7 +197,7 @@ while invitation creation remains usable for authorized actors.
   create-user-to-invitation handoff; activate existing lock, unlock, recovery,
   reactivation, lock review, and invitation services and components; preserve
   blocked resend; and add focused and end-to-end regression coverage. Feature
-  036 later selects invitation by default in fresh create-user forms.
+  036 later makes fresh administrator create-user forms invitation-only.
 - **Specification or contract repository impact**: Add this completion feature;
   update Feature 008 and Feature 021 rules and evidence; extend the user-create
   request with account setup mode; define user-specific invited status; document

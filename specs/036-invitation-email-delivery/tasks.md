@@ -62,9 +62,9 @@ complete setup, reject reuse, then log in.
 
 **Goal**: Fresh administrator user forms explicitly choose invitation while API omission stays active.
 
-**Independent Test**: Open fresh form, submit untouched setup choice, and verify
-explicit invitation payload and separate invitation action; select active and
-verify legacy option remains.
+**Independent Test**: Open fresh form, verify no setup choice is rendered,
+submit identity and role details, and verify explicit invitation payload and
+separate invitation action.
 
 ### Tests for User Story 2
 
@@ -73,9 +73,9 @@ verify legacy option remains.
 
 ### Implementation for User Story 2
 
-- [X] T017 [US2] Change only fresh form default to invitation while preserving explicit active mapping in `schoolmaster-frontend/src/contracts/admin-system/users.js`
+- [X] T017 [US2] Remove the account-setup selector and form state, then enforce invitation mapping in `schoolmaster-frontend/src/components/admin-system/users/UserForm.vue`, `schoolmaster-frontend/src/pages/admin-system/users/CreateUserPage.vue`, and `schoolmaster-frontend/src/contracts/admin-system/users.js`
 
-**Checkpoint**: UI operational default changes; API compatibility remains.
+**Checkpoint**: UI creation is invitation-only; API compatibility remains.
 
 ---
 

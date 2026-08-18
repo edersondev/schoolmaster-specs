@@ -11,8 +11,8 @@ newly issued plaintext token only in the setup URL, retain only its hash, and
 record delivery-request metadata after mail transport acceptance. A transport
 failure leaves a secret-safe, replaceable invitation and returns documented
 `503 temporary_unavailable`. Vue keeps existing explicit create-then-invite
-flow but initializes fresh user forms with `invitation`; API omission remains
-`active` for compatibility.
+flow, removes the account-setup selector, and always maps create-user requests
+to `invitation`; API omission remains `active` for compatibility.
 
 ## Technical Context
 
@@ -24,7 +24,7 @@ flow but initializes fresh user forms with `invitation`; API omission remains
 **Project Type**: Multi-repository web application: shared specs/OpenAPI, Laravel API, Vue SPA
 **Performance Goals**: One mail submission per accepted invitation request; invitation creation stays within configured mail-transport timeout; no background payload carries the plaintext token
 **Constraints**: Contract before backend before frontend; no new package or endpoint; no token in API/log/audit/database/queue metadata; trusted frontend origin only; delivery acceptance is not inbox-delivery proof; existing limits, tenancy, authorization, and setup rules remain
-**Scale/Scope**: One existing invitation endpoint, one new mailable/view, one trusted URL setting, one standard 503 response, one frontend form default, focused tests, and synchronized Feature 008/034 docs
+**Scale/Scope**: One existing invitation endpoint, one new mailable/view, one trusted URL setting, one standard 503 response, one frontend invitation-only invariant, focused tests, and synchronized Feature 008/034 docs
 
 ## Constitution Check
 
@@ -83,6 +83,8 @@ schoolmaster-backend/
     └── Unit/Mail/AccountInvitationMailTest.php
 
 schoolmaster-frontend/
+├── src/components/admin-system/users/UserForm.vue
+├── src/pages/admin-system/users/CreateUserPage.vue
 ├── src/contracts/admin-system/users.js
 ├── tests/unit/admin-system/administration/
 │   ├── contracts/access.contract.spec.js
@@ -93,16 +95,17 @@ schoolmaster-frontend/
 **Structure Decision**: Extend existing account lifecycle boundaries. Backend
 mail formatting is isolated in one mailable/view and delivery orchestration in
 one service; `AccountInvitationService` retains lifecycle ownership. Frontend
-change is pure initial form state, so no component or composable split is
-needed. Existing `CreateUserPage.vue` remains composition surface.
+change removes one field from the existing form and enforces the invariant in
+the pure request mapper, so no component or composable split is needed.
+Existing `CreateUserPage.vue` remains the composition surface.
 
 ## Component Map
 
 | Surface | Responsibility | Inputs / outputs |
 |---|---|---|
-| `CreateUserPage.vue` | Compose existing user and invitation phases | Existing session/route/form in; unchanged create and navigation actions out |
-| `UserForm.vue` | Render explicit active/invitation selector | Form model and errors in; `v-model` update out |
-| `createUserForm()` | Own fresh form defaults | No inputs; explicit invitation-mode draft out |
+| `CreateUserPage.vue` | Compose identity/role form and invitation phase without setup-mode controls | Existing session/route/form in; create and navigation actions out |
+| `UserForm.vue` | Render editable user identity and role fields only | Form model and errors in; `v-model` update out |
+| `mapUserCreateRequest()` | Enforce frontend invitation-only creation | User identity/roles in; explicit invitation payload out |
 
 ## Implementation Approach
 
@@ -132,12 +135,13 @@ needed. Existing `CreateUserPage.vue` remains composition surface.
 - Keep synchronous sending because queue serialization would durably store the
   reusable plaintext token. No new queue/job/package is introduced.
 
-### Phase 2: Frontend operational default
+### Phase 2: Frontend invitation-only creation
 
-- Change only `createUserForm()` fresh state to `accountSetupMode:
-  'invitation'`; keep validation and request mapping explicit.
-- Preserve active option, persisted create-then-invite phase, page reload
-  recovery, permission gates, no auto-send, and no auto-sign-in.
+- Remove account-setup mode from form state and `UserForm.vue`.
+- Make `mapUserCreateRequest()` always submit
+  `account_setup_mode=invitation`, regardless of stale extra form fields.
+- Preserve persisted create-then-invite phase, page reload recovery, permission
+  gates, no auto-send, and no auto-sign-in.
 - Update Vitest and Playwright expectations to prove default invitation mode
   and full create/invite/setup/login journey.
 

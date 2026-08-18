@@ -50,19 +50,22 @@ injection. Backend `APP_URL` was rejected because it targets the API. A token in
 query parameters was rejected because the existing frontend path contract is
 already implemented and tested.
 
-## Decision 4: Preserve API default; change frontend default
+## Decision 4: Preserve API default; enforce frontend invitation setup
 
-**Decision**: Fresh administrator forms explicitly select `invitation`. The
-public user-create schema and backend DTO continue defaulting omitted
-`account_setup_mode` to `active`.
+**Decision**: Administrator forms expose no account-setup choice, and the
+frontend request mapper always submits `invitation`. The public user-create
+schema and backend DTO continue defaulting omitted `account_setup_mode` to
+`active`.
 
-**Rationale**: This changes operational behavior for the intended UI while
-preserving backward compatibility for existing API clients. Explicit payloads
-keep client intent visible.
+**Rationale**: Active creation produces no usable human onboarding path in the
+administrator UI because it issues no known credential or setup message.
+Invitation-only frontend creation provides one complete path while preserving
+backward compatibility for existing API clients.
 
 **Alternatives considered**: Changing the OpenAPI/backend default was rejected
-as a breaking semantic change. Removing active setup was rejected because the
-user asked for a default, not removal.
+as a breaking semantic change. Keeping Active immediately in the frontend was
+rejected because it creates an active account without giving the user a usable
+credential.
 
 ## Decision 5: Reuse existing two-step administration flow
 

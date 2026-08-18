@@ -17,7 +17,8 @@ reactivate controls, and rejects stale identity/permission/tenant responses.
 Token-path admin resend remains excluded.
 
 Feature 036 subsequently changes fresh administrator form state to select
-`invitation` while preserving this plan's `active` default for omitted API input.
+`invitation` for every frontend request while preserving this plan's `active`
+default for omitted API input.
 
 ## Technical Context
 

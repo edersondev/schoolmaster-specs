@@ -59,6 +59,8 @@ creation and supersession rules.
 
 - No endpoint, request property, success field, or setup behavior is removed.
 - Existing API clients omitting `account_setup_mode` retain active creation.
-- Frontend fresh form sends `account_setup_mode=invitation` explicitly.
+- Frontend exposes no account-setup selector and always sends
+  `account_setup_mode=invitation`, even if stale form input contains another
+  value.
 - Password reset email, admin token-path resend redesign, provider event
   tracking, SMS, and bulk delivery remain out of scope.

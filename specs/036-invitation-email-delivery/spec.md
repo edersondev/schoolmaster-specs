@@ -5,6 +5,15 @@
 **Status**: Draft
 **Input**: User description: "Complete the production account setup flow so an administrator creates an invitation, the invited user receives a secure setup link by email, chooses a password, and can then log in. Make invitation the default account setup choice for new users."
 
+## Clarifications
+
+### Session 2026-08-18
+
+- Q: Should administrators retain the Active immediately option in the Create
+  User page? → A: No. Remove the frontend account-setup choice and always submit
+  invitation setup. The API retains its active default for backward-compatible
+  non-frontend clients.
+
 ## User Scenarios & Testing *(mandatory)*
 
 ### User Story 1 - Receive and complete account invitation (Priority: P1)
@@ -30,26 +39,37 @@ password, and verify normal sign-in succeeds while the link cannot be reused.
 
 ---
 
-### User Story 2 - Default new users to invitation setup (Priority: P1)
+### User Story 2 - Always use invitation setup for new users (Priority: P1)
 
-An administrator opening the new-user form sees invitation setup selected by
-default, while retaining an explicit active-account option for the exceptional
-legacy workflow.
+An administrator opening the new-user form enters identity and role details
+without choosing an account-setup mode. Frontend user creation always starts
+the invitation workflow.
 
 **Why this priority**: Email delivery provides little operational value if new
 users continue to default to immediately active accounts with system-generated
 credentials.
 
-**Independent Test**: Open a fresh new-user form, verify invitation setup is
-selected, create the user, and verify the account remains invited until the
-administrator explicitly creates the invitation and the user completes setup.
+**Independent Test**: Open a fresh new-user form, verify no account-setup choice
+is shown, create the user, verify the request explicitly uses invitation setup,
+and verify the account remains invited until the administrator creates the
+invitation and the user completes setup.
 
 **Acceptance Scenarios**:
 
-1. **Given** an administrator opens a fresh new-user form, **When** no prior form state exists, **Then** invitation setup is selected by default.
-2. **Given** invitation setup remains selected, **When** valid user creation succeeds, **Then** one invited user is persisted without an active password, invitation, token, or delivery request, and the explicit create-invitation step is shown.
-3. **Given** the administrator explicitly selects active setup, **When** valid user creation succeeds, **Then** existing active-user creation behavior remains available and no invitation is created.
-4. **Given** an API client omits the account setup choice, **When** it creates a user, **Then** the existing active-account default remains unchanged for backward compatibility.
+1. **Given** an administrator opens a fresh new-user form, **When** the form
+   renders, **Then** no account-setup selector or Active immediately option is
+   shown.
+2. **Given** the administrator submits valid identity and role details,
+   **When** frontend user creation succeeds, **Then** the request explicitly
+   uses invitation setup, one invited user is persisted without an active
+   password, invitation, token, or delivery request, and the explicit
+   create-invitation step is shown.
+3. **Given** stale or manipulated frontend form state contains an active setup
+   value, **When** the request mapper builds the payload, **Then** it still
+   submits `account_setup_mode=invitation`.
+4. **Given** a non-frontend API client omits the account setup choice, **When**
+   it creates a user, **Then** the existing active-account default remains
+   unchanged for backward compatibility.
 
 ---
 
@@ -92,7 +112,9 @@ the earlier invitation cannot be completed.
 ### Repository Impact
 
 - **Backend repository impact**: Deliver invitation setup emails through the configured mail capability, build the public setup URL from trusted configuration, keep token handling transient and secret-safe, distinguish accepted delivery requests from delivery failures, and add focused mail, failure, security, and account-setup tests.
-- **Frontend repository impact**: Change fresh create-user form state so invitation is the selected setup mode, preserve explicit active setup, and update unit and end-to-end coverage for the default and full emailed-link journey.
+- **Frontend repository impact**: Remove the account-setup selector, make the
+  request mapper always submit invitation setup, and update unit and end-to-end
+  coverage for the invariant and full emailed-link journey.
 - **Specification or contract repository impact**: Update Feature 008 and Feature 034 rules that currently limit invitation behavior to delivery metadata or describe active setup as the operational default; document email handoff and retryable failure behavior in OpenAPI without exposing a token or setup URL.
 - **Delivery ownership and sequencing**: `schoolmaster-specs` defines behavior first; `schoolmaster-backend` implements secure email submission next; `schoolmaster-frontend` changes the administrator default and validates the existing setup route after backend behavior is verified.
 
@@ -102,7 +124,10 @@ the earlier invitation cannot be completed.
 - **Versioned endpoints affected**: `POST /api/v1/account-invitations`, `POST /api/v1/account-invitations/{invitationToken}/setup`, and `POST /api/v1/users` documentation; no new endpoint is added.
 - **JSON response impact**: Successful invitation responses keep the existing envelope and safe invitation fields. No token or setup URL is added. Email-submission failure uses the approved standard temporary-failure envelope and does not claim accepted delivery metadata.
 - **Authentication/authorization impact**: No new permission or public access path. Invitation creation retains existing same-scope account-lifecycle authority and tenant-first lookup. Password setup remains token-proven and unauthenticated.
-- **Compatibility impact**: Email submission adds a real side effect to invitation creation. Fresh frontend forms change default choice to invitation. API clients omitting `account_setup_mode` retain active creation, avoiding an implicit breaking change.
+- **Compatibility impact**: Email submission adds a real side effect to
+  invitation creation. Frontend user creation always submits invitation setup.
+  API clients omitting `account_setup_mode` retain active creation, avoiding an
+  implicit breaking API change.
 
 ### Data & Tenancy Impact
 
@@ -124,15 +149,23 @@ the earlier invitation cannot be completed.
 - **FR-008**: System MUST return documented retryable feedback when email submission fails and MUST NOT report the invitation as delivered or expose its setup link.
 - **FR-009**: System MUST allow an authorized administrator to create a replacement invitation after delivery failure, subject to existing send limits, and MUST invalidate prior pending invitations.
 - **FR-010**: Successful password setup MUST remain the only operation that activates an invited user and MUST leave the user signed out until normal login.
-- **FR-011**: Fresh administrator create-user forms MUST select invitation setup by default.
-- **FR-012**: Administrators MUST retain an explicit active setup choice for supported exceptional use.
+- **FR-011**: Administrator create-user forms MUST NOT expose an account-setup
+  selector or Active immediately option.
+- **FR-012**: Frontend user creation MUST always submit
+  `account_setup_mode=invitation`, including when stale or manipulated form
+  state contains another value.
 - **FR-013**: User creation in invitation mode MUST remain separate from invitation creation so persistence success and delivery failure remain distinguishable and retryable.
-- **FR-014**: API user creation MUST retain `active` as the default when `account_setup_mode` is omitted; frontend requests MUST explicitly submit the selected invitation default.
+- **FR-014**: API user creation MUST retain `active` as the default when
+  `account_setup_mode` is omitted; frontend requests MUST always explicitly
+  submit `account_setup_mode=invitation`.
 - **FR-015**: System MUST define changed invitation delivery and temporary-failure behavior in OpenAPI before backend implementation begins.
 - **FR-016**: System MUST preserve existing success envelopes and use the standard documented failure envelope without adding secret-bearing response fields.
 - **FR-017**: System MUST preserve tenant isolation and MUST NOT encode school or platform authorization context into the setup URL.
 - **FR-018**: Delivery implementation MUST use existing configurable email infrastructure without adding a provider-specific product dependency.
-- **FR-019**: Tests MUST prove successful message submission, recipient and link correctness, failure handling, token non-persistence, frontend invitation default, setup completion, token reuse rejection, and successful subsequent login.
+- **FR-019**: Tests MUST prove successful message submission, recipient and link
+  correctness, failure handling, token non-persistence, absence of the frontend
+  setup selector, invariant invitation mapping, setup completion, token reuse
+  rejection, and successful subsequent login.
 
 ### Key Entities
 
@@ -147,7 +180,8 @@ the earlier invitation cannot be completed.
 
 - **SC-001**: In acceptance testing, 100% of successfully created invitations submit one email to the intended target and expose no token through API responses, stored metadata, logs, or audit records.
 - **SC-002**: An invited user can move from received email to completed password setup and successful login in under 5 minutes, excluding email-provider transit time.
-- **SC-003**: 100% of fresh administrator create-user forms select invitation setup until the administrator explicitly chooses active setup.
+- **SC-003**: 100% of administrator create-user requests submit invitation
+  setup and 0% of create-user forms expose Active immediately.
 - **SC-004**: In failure testing, 100% of rejected email submissions produce retryable administrator feedback and never claim accepted delivery.
 - **SC-005**: Expired, consumed, superseded, revoked, malformed, and reused invitation links produce zero unauthorized account activations.
 - **SC-006**: Existing active-setup API clients that omit `account_setup_mode` continue producing active accounts without request changes.

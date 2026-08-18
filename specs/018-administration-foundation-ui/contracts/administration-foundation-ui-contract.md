@@ -104,11 +104,14 @@ deferred to a separate implementation feature.
 
 ## Lookup Contract
 
-- User-role, role-permission, and period-year selectors use server-driven
-  pagination over `listRoles`, `listPermissions`, and `listAcademicYears`.
-- Those operations publish no general search parameter, so selectors expose
-  explicit page traversal or an equivalent load-more control rather than
-  silently limiting choices to the first page.
+- User-role and period-year selectors use server-driven pagination over
+  `listRoles` and `listAcademicYears`.
+- Create Role automatically traverses every `listPermissions` page before
+  presenting one complete, non-paginated permission selector. It exposes no
+  page controls and does not present a partial result if any page fails.
+- These operations publish no general search parameter, so selectors either
+  expose explicit page traversal or load their complete approved result set
+  rather than silently limiting choices to the first page.
 - Lookup calls send only operation-approved page, page-size, and supported
   status parameters.
 - Selected options remain visible and submittable while another page is
@@ -123,6 +126,11 @@ deferred to a separate implementation feature.
   loading, empty, feedback, and pagination.
 - Resource components define fields, columns, labels, and approved choices.
 - Props are read-only; user intent is emitted upward.
+- Role rows omit an inline Permissions column. Their overflow menu always
+  exposes List permissions to sessions with `roles.view`.
+- List permissions opens a read-only dialog backed only by the selected role's
+  embedded `permissions` array. Its table maps permission `code` to Permission
+  name and permission `name` to Description; it sends no lookup request.
 - Element Plus components use PascalCase tags.
 - Shared UI text uses Vue I18n.
 - Tailwind handles spacing, layout, responsiveness, and restrained visual
@@ -195,7 +203,8 @@ Vitest coverage must verify:
 - reusable list/table/filter/pagination/feedback behavior
 - each create form's fields, validation mapping, pending state, and success
   navigation
-- paginated role, permission, academic-year, and student lookup behavior,
+- paginated role and academic-year lookup behavior, complete permission
+  loading, and student lookup behavior,
   including selected-option retention and tenant reset
 - exact permission-matrix behavior, including multi-permission create routes
 - absence of platform scope selection in role creation
