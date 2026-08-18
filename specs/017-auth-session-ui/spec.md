@@ -14,6 +14,12 @@
 - Q: How should direct access to a protected route behave for signed-out users? → A: Preserve the originally requested protected route and return there after sign-in only if still authorized.
 - Q: Where should school selection choices come from when the user must choose an active school? → A: Choices must come from an approved OpenAPI operation that returns only schools authorized for the current user; if no such contract is confirmed, implementation is blocked until OpenAPI is updated.
 
+### Session 2026-08-18
+
+- Q: Which session identity should the authenticated shell header display? → A:
+  Use the mapped current user's `fullName`, fall back to `email` and then a
+  generic Account label, and never substitute a role name.
+
 ## User Scenarios & Testing *(mandatory)*
 
 ### User Story 1 - Sign in to the correct workspace (Priority: P1)
@@ -83,6 +89,9 @@ content is shown.
 8. **Given** school selection is required but no approved school-selection
    contract is confirmed, **When** implementation is reviewed, **Then** the
    school-selection UI is blocked until OpenAPI defines the source contract.
+9. **Given** a valid session includes current-user identity data, **When** the
+   authenticated header renders, **Then** the account control shows the mapped
+   full name, or email fallback, rather than a role name.
 
 ---
 
@@ -237,6 +246,10 @@ with different email addresses and verifying the same safe confirmation outcome.
   OpenAPI is updated.
 - **FR-005**: The system MUST select the appropriate authenticated or
   unauthenticated layout based on session state and route access requirements.
+- **FR-005a**: The authenticated layout MUST present the current user's mapped
+  `fullName` in the header account control, fall back to `email` and then a
+  generic Account label, and MUST NOT use a role name as the displayed user
+  identity.
 - **FR-006**: The system MUST send signed-out users who attempt to open
   protected surfaces to the sign-in flow while preserving the originally
   requested route.

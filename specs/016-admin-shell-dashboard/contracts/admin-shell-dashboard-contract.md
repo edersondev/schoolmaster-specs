@@ -75,8 +75,12 @@ The top header may include:
 - current page title or breadcrumb context
 - sidebar or drawer toggle
 - placeholder or absent-state notification indicator
-- future user/session affordance placeholder
+- authenticated account control showing the mapped current user's full name,
+  falling back to email and then a generic Account label
 - global feedback placement
+
+The account control must not present a role name, including System
+Administrator, as the user's identity.
 
 The header must not define authentication screens, logout behavior, account
 recovery behavior, or live notification data in this slice.

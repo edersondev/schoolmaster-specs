@@ -37,7 +37,7 @@ The backend implementation exposes only the account lifecycle routes below, each
 |--------|-------|----------------------|
 | `POST` | `/api/v1/account-invitations` | `createAccountInvitation` |
 | `POST` | `/api/v1/account-invitations/{invitationToken}/resend` | `resendAccountInvitation` |
-| `POST` | `/api/v1/account-invitations/{invitationToken}/setup` | `completeAccountInvitation` |
+| `POST` | `/api/v1/account-invitations/setup` | `completeAccountInvitation` |
 | `POST` | `/api/v1/auth/password-reset-requests` | `requestPasswordReset` |
 | `POST` | `/api/v1/auth/password-resets` | `completePasswordReset` |
 | `GET` | `/api/v1/users/{userId}/account-lock` | `getAccountLock` |
@@ -72,7 +72,9 @@ The backend implementation exposes only the account lifecycle routes below, each
 OpenAPI must define, at minimum:
 
 - operation IDs and versioned `/api/v1` paths for every approved account lifecycle action
-- request schemas for invitation creation, invitation completion, password setup, reset request, reset completion, lock, unlock, recovery, and reactivation where approved
+- request schemas for invitation creation, invitation completion with the secret
+  in the JSON body rather than the request path, password setup, reset request,
+  reset completion, lock, unlock, recovery, and reactivation where approved
 - response schemas for accepted reset request, token completion, recovery outcomes, invalid token outcomes, conflict outcomes, and audit-safe metadata where exposed
 - token semantics: invitation token expiry of 7 days, password reset token expiry of 30 minutes, single-use completion, supersession of prior unused tokens of the same type for the same user and scope, and invalid-token response behavior
 - password policy: 12 to 128 characters, common-password blocklist rejection, and compatibility with paste/password-manager input
@@ -87,7 +89,9 @@ OpenAPI must define, at minimum:
 - school tenant-context errors for school-owned account lifecycle operations
 - validation errors for invalid credentials, invalid lifecycle transitions, invalid token state, inactive references, incompatible role dependencies, duplicate active token state, unsupported fields, and cross-tenant references
 - audit event requirements and fields safe for response or support review
-- email delivery request metadata behavior without introducing provider-specific messaging, SMS delivery, notification, inbox, or provider-specific implementation
+- email delivery request metadata behavior; Feature 036 adds generic invitation
+  email submission and a secret-safe temporary failure response without adding
+  provider-specific tracking, SMS, notification inboxes, or provider coupling
 - not-found behavior that does not reveal cross-tenant or ineligible account existence
 
 ## Required Response Shapes
@@ -155,7 +159,10 @@ These behaviors are outside this implementation boundary until OpenAPI documents
 - report retry, cancellation, deletion, restore, designer, custom reports, additional formats, or report output lifecycle changes
 - platform support-user access to school-owned records
 - frontend implementation
-- provider-specific email delivery, SMS delivery, messaging, notification preferences, inboxes, campaigns, delivery templates, or parent portal communication
+- provider-specific email delivery events, password-reset email submission, SMS,
+  general messaging, notification preferences, inboxes, campaigns, reusable
+  marketing templates, or parent portal communication; Feature 036 separately
+  permits one transactional invitation setup template
 - permanent purge, anonymization, legal hold, or retention management
 - billing or undocumented APIs
 - additional filters, sorting options, response fields, status values, lifecycle actions, token modes, or authorization exceptions

@@ -278,7 +278,7 @@ and recovery actions.
 - **Versioned endpoints affected**:
   - `createAccountInvitation` - `POST /api/v1/account-invitations`
   - `resendAccountInvitation` - `POST /api/v1/account-invitations/{invitationToken}/resend` (not approved for admin UI while it requires an invitation token)
-  - `completeAccountInvitation` - `POST /api/v1/account-invitations/{invitationToken}/setup`
+  - `completeAccountInvitation` - `POST /api/v1/account-invitations/setup` with the token in the JSON body
   - `requestPasswordReset` - `POST /api/v1/auth/password-reset-requests`
   - `completePasswordReset` - `POST /api/v1/auth/password-resets`
   - `getAccountLock` - `GET /api/v1/users/{userId}/account-lock`

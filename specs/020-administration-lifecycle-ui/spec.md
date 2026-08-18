@@ -14,6 +14,19 @@
 - Q: Should lifecycle effective dates allow future scheduling? → A: Effective date must be today or in the past; lifecycle actions are immediate.
 - Q: What permissions are required for role update when permission assignments are editable? → A: Role update requires `roles.view`, `roles.manage`, and `permissions.view`.
 
+### Session 2026-08-18
+
+- Q: How should Create Role and Edit Role present permission choices when
+  `listPermissions` is paginated? → A: Load every permission page internally
+  and present one complete, non-paginated multi-select without page controls.
+- Q: Where should role permissions appear on the Roles list? → A: Remove the
+  inline Permissions column and expose a non-lifecycle List permissions
+  overflow action that opens the Feature 018 read-only permission dialog.
+- Q: How should the Role detail page present assigned permissions? → A: Use the
+  same read-only responsive grid as the Roles list dialog, with one column by
+  default, two at the small breakpoint, and four on large screens. Use
+  permission `code` as Permission name and human-readable `name` as Description.
+
 ## User Scenarios & Testing *(mandatory)*
 
 ### User Story 1 - Review and Edit Administrative Records (Priority: P1)
@@ -52,6 +65,12 @@ same list query.
 5. **Given** the administrator leaves an edited detail form before saving,
    **When** browser or in-app navigation is attempted, **Then** a confirmation
    is required before discarding changes.
+6. **Given** permission definitions span multiple API pages, **When** an
+   authorized administrator opens Edit Role, **Then** every permitted
+   permission is loaded into one selector without visible pagination controls.
+7. **Given** an administrator can view roles, **When** they choose List
+   permissions from a role's overflow menu, **Then** the read-only permission
+   dialog opens independently of manage or lifecycle authority.
 
 ---
 
@@ -273,6 +292,11 @@ validation, conflict, and denial states.
 - **FR-006**: Detail pages MUST show the current status with a reusable status
   tag and MUST expose actions only when the current record state, permissions,
   tenant context, and approved operation allow them.
+- **FR-006a**: The Role detail page MUST present assigned permissions as the
+  same read-only responsive grid used by the Roles list permission dialog,
+  using permission `code` as Permission name and `name` as Description. The grid
+  MUST use one column by default, two at the small breakpoint, and four on large
+  screens.
 - **FR-007**: Update forms MUST submit only editable non-status fields
   published by the resource update contract: school name, contact information,
   and address; user full name, email, and role assignments; role name and
@@ -281,8 +305,13 @@ validation, conflict, and denial states.
   information.
 - **FR-008**: Role update MUST require `roles.view`, `roles.manage`, and
   `permissions.view`, MUST allow only approved permission assignments from the
-  permitted school-scope permission set, and MUST NOT expose platform role
-  scope editing.
+  permitted school-scope permission set, MUST automatically traverse every
+  `listPermissions` page and present one non-paginated permission selector, and
+  MUST NOT expose platform role scope editing.
+- **FR-008a**: The role List permissions overflow action MUST require only
+  `roles.view`, MUST remain available independently of role manage and
+  lifecycle actions, and MUST open the read-only Feature 018 dialog without a
+  new request.
 - **FR-009**: User update MUST require `users.view`, `users.manage`, and
   `roles.view`, MUST allow role assignment only, and MUST NOT expose direct
   per-user permission assignment.

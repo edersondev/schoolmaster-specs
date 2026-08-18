@@ -98,8 +98,9 @@ Backend authorization remains authoritative for every action.
   restore; no bulk lifecycle.
 - Users: detail, non-status update, activate, deactivate, soft delete,
   restore, all-or-nothing bulk lifecycle; no account lifecycle.
-- Roles: detail, non-status update, activate, deactivate, soft delete,
-  restore, all-or-nothing bulk lifecycle; no scope editing.
+- Roles: detail with a responsive permission grid of up to four columns,
+  non-status update, activate, deactivate, soft delete, restore, all-or-nothing
+  bulk lifecycle; no scope editing.
 - Permissions: stay read-only with no lifecycle UI.
 - Academic years: detail, non-status update, activate, deactivate, soft
   delete, restore, all-or-nothing bulk lifecycle.

@@ -73,7 +73,8 @@ Role create UI must not expose scope. Its service payload must submit
 - Schools: list, status, pagination, create; no sort control until backend
   honors the published sort parameter.
 - Users: list, status, sort, pagination, create with paginated role choices.
-- Roles: list, status, pagination, create with paginated permission choices.
+- Roles: list, status, pagination, List permissions overflow dialog, and create
+  with all permission pages loaded into one selector without page controls.
 - Permissions: read-only paginated list.
 - Academic years: list, status, pagination, create.
 - Academic periods: list, status, year filter, pagination, create with
@@ -90,8 +91,13 @@ Role create UI must not expose scope. Its service payload must submit
 - Successful create returns to previous validated list query.
 - Dirty create routes confirm every exit.
 - School switch confirms dirty tenant form, then clears old tenant state.
-- Role, permission, and academic-year selectors can reach every API page and
-  retain selected options while paging.
+- Role and academic-year selectors can reach every API page and retain selected
+  options while paging.
+- Create Role loads every permission API page and presents one selector without
+  pagination controls.
+- Roles list omits its inline Permissions column. List permissions opens a
+  read-only responsive grid with up to four columns, using permission code as
+  name and human-readable name as description without another request.
 
 ## 6. Verify Security and Errors
 

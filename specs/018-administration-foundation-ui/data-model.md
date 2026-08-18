@@ -106,14 +106,16 @@ forms, service mappings, and relationships to approved OpenAPI records.
 
 **Rules**:
 
-- Role, permission, and academic-year selectors expose server-driven page
-  traversal because their approved operations are paginated and do not publish
-  general search.
+- Role and academic-year selectors expose server-driven page traversal because
+  their approved operations are paginated and do not publish general search.
+- The permission selector traverses every approved API page internally and
+  exposes no page controls.
 - Lookup requests send only operation-approved page, page-size, and supported
   status parameters.
 - Every returned page is reachable; implementations must not assume the first
   page contains all selectable references.
-- Selected options remain visible and submittable while another page is shown.
+- Selected role and academic-year options remain visible and submittable while
+  another page is shown.
 - Only the latest request for the current tenant may update options.
 - School change clears current and selected tenant-owned options.
 
@@ -148,16 +150,25 @@ are submitted; direct permission assignment is absent.
 
 **Fields**: `id`, `schoolId`, `scope`, `name`, `status`, `permissions`.
 
+**List presentation**: The main table omits inline permissions. A List
+permissions overflow action opens a read-only dialog over the selected role's
+embedded permission collection. A responsive grid presents `code` as Permission
+name and `name` as Description, using one column by default, two at the small
+breakpoint, and four on large screens; no additional API state or request is
+introduced.
+
 ## RoleCreateForm
 
 **Fields**: `name`, `permissionIds`.
 
-**Relationships**: Permission choices come from paginated `listPermissions`
-results coordinated through `AdministrationLookupState`.
+**Relationships**: Permission choices come from every paginated
+`listPermissions` response coordinated through `AdministrationLookupState` and
+are presented as one non-paginated selector.
 
 **Rules**: Only active school-scope permissions are selectable. The UI has no
-scope control. The service mapper adds contract-required `scope=school` and
-uses active school tenant context. Platform-role creation is outside scope.
+scope or permission-page controls. A failed permission page makes the complete
+lookup unavailable. The service mapper adds contract-required `scope=school`
+and uses active school tenant context. Platform-role creation is outside scope.
 
 ## Permission
 

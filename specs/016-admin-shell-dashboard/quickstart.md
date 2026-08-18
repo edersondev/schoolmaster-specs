@@ -20,7 +20,8 @@ The implementation should provide:
 
 - System Administrator layout frame.
 - Sidebar navigation.
-- Top header.
+- Top header with the current session user's full name in its account control,
+  falling back to email and never to a role name.
 - Route content region.
 - Page title or breadcrumb context.
 - Global feedback placement.

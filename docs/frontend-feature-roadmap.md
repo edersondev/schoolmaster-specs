@@ -139,7 +139,9 @@ actions, and role visibility before the frontend exposes maintenance actions.
 
 **Status**: Complete. Feature specification, quality checklist,
 implementation plan, research, data model, frontend contract, quickstart, and
-tasks are complete in `specs/021-account-lifecycle-ui/`.
+tasks are complete in `specs/021-account-lifecycle-ui/`. Feature 036 makes
+Invitation required the fresh create-user default and verifies a fragment-based,
+access-log-safe emailed setup link through password setup and normal sign-in.
 
 **Purpose**: Define invitation, password setup, password reset, reactivation,
 account lock, and recovery screens and flows for the SPA.

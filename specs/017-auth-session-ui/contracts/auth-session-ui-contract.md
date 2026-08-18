@@ -191,6 +191,10 @@ Frontend state may own:
 - originally requested protected route during sign-in or re-authentication
 - auth and session feedback state
 
+The authenticated header account control uses mapped current-user `fullName`,
+falls back to mapped `email` and then localized Account text, and never uses a
+role name as the identity label.
+
 Frontend state must not:
 
 - authorize tenant access without backend confirmation

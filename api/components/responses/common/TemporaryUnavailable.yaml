@@ -1,0 +1,10 @@
+description: Requested operation is temporarily unavailable and may be retried
+content:
+  application/json:
+    schema:
+      $ref: ../../schemas/common/ErrorEnvelope.yaml
+    example:
+      error:
+        code: temporary_unavailable
+        message: Invitation email could not be submitted. Try again.
+        details: {}

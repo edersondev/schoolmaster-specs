@@ -104,18 +104,22 @@ submits UUIDs only.
 unusable. Loading every student was rejected for scale. Adding student CRUD was
 rejected as outside this feature.
 
-## Decision: Page through non-searchable form lookups
+## Decision: Make every non-searchable form lookup option reachable
 
 **Rationale**: `listRoles`, `listPermissions`, and `listAcademicYears` are
-paginated but publish no general search parameter. User-role, role-permission,
-and period-year selectors therefore use server-driven page or load-more
-controls, retain selected options independently from the visible page, and
-clear tenant-owned options on school change.
+paginated but publish no general search parameter. User-role and period-year
+selectors therefore use server-driven page or load-more controls and retain
+selected options independently from the visible page. Create Role traverses
+every permission page sequentially and presents one complete selector without
+page controls. All selectors clear tenant-owned options on school change.
 
 **Alternatives considered**: Loading only the first page was rejected because
 valid references beyond the default page size become unreachable. Fetching
-every page eagerly was rejected because it creates unbounded request bursts.
-Client-side search over loaded pages was rejected because it implies complete
+every role or academic-year page eagerly was rejected because it creates
+unbounded request bursts. Dividing the permission assignment matrix across UI
+pages was rejected because Create Role must expose the complete approved set;
+those API pages are loaded sequentially and any failure rejects the lookup.
+Client-side search over partial pages was rejected because it implies complete
 data when only part of the collection is loaded.
 
 ## Decision: Use server-driven sorting and pagination only where approved

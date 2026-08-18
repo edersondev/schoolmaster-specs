@@ -59,7 +59,8 @@ bootstrap lifecycle.
 **Relationships**:
 
 - Belongs to `AuthSessionState`.
-- Contributes to header or session affordance display.
+- Contributes `fullName`, with `email` fallback, to the authenticated header
+  account control. Role names do not substitute for user identity.
 
 **Validation rules**:
 

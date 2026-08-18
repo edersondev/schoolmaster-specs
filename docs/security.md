@@ -89,6 +89,10 @@ before backend and frontend implementation diverge.
   activation, and school deactivation.
 - Authentication and school lifecycle audit events must not store plaintext
   credentials or bearer token values.
+- Reusable lifecycle secrets must not appear in frontend or API request paths,
+  query strings, access logs, application logs, or retained browser history.
+  Email setup links carry invitation proof in a URL fragment and clients submit
+  it only in the documented JSON request body.
 - Audit event schemas and retention rules remain module-level decisions and
   must be specified before implementation where they affect product behavior.
 

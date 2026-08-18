@@ -44,7 +44,7 @@ Frontend services may consume only these approved operations for this slice:
 | Operation ID | Method and Path | UI use |
 |--------------|-----------------|--------|
 | `createAccountInvitation` | `POST /api/v1/account-invitations` | Create or replace invitation for an existing user create/detail flow. |
-| `completeAccountInvitation` | `POST /api/v1/account-invitations/{invitationToken}/setup` | Complete first password setup from invitation token. |
+| `completeAccountInvitation` | `POST /api/v1/account-invitations/setup` | Complete first password setup with the invitation token in the JSON body. |
 | `requestPasswordReset` | `POST /api/v1/auth/password-reset-requests` | Request password reset with email-only, non-enumerating confirmation. |
 | `completePasswordReset` | `POST /api/v1/auth/password-resets` | Complete password reset from reset token. |
 | `getAccountLock` | `GET /api/v1/users/{userId}/account-lock` | Review lock state for permitted target user. |
