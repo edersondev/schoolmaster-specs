@@ -98,7 +98,7 @@ paths:
     $ref: paths/account-lifecycle/invitations.yaml
   /api/v1/account-invitations/{invitationToken}/resend:
     $ref: paths/account-lifecycle/invitations-resend.yaml
-  /api/v1/account-invitations/{invitationToken}/setup:
+  /api/v1/account-invitations/setup:
     $ref: paths/account-lifecycle/invitations-setup.yaml
   /api/v1/auth/password-reset-requests:
     $ref: paths/auth/password-reset-requests.yaml
@@ -903,7 +903,7 @@ x-promoted-scope:
     - /api/v1/auth/logout
     - /api/v1/account-invitations
     - /api/v1/account-invitations/{invitationToken}/resend
-    - /api/v1/account-invitations/{invitationToken}/setup
+    - /api/v1/account-invitations/setup
     - /api/v1/auth/password-reset-requests
     - /api/v1/auth/password-resets
     - /api/v1/schools

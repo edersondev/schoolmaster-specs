@@ -17,14 +17,16 @@
 
 1. Fake mail and create invitation.
 2. Assert exactly one `AccountInvitationMail` to target current email.
-3. Assert rendered mail contains trusted frontend origin, encoded issued token,
-   setup path, product identity, and expiry.
+3. Assert rendered mail contains trusted frontend origin, secret-free setup
+   path, encoded issued token only in the fragment, product identity, and expiry.
 4. Assert stored invitation contains hash only and response/log/audit/metadata
    contain neither token nor setup URL.
 5. Assert `delivery_requested_at` is populated only after successful send.
-6. Force transport failure; assert safe `503 temporary_unavailable`, unset
-   delivery fields, and secret-free failure audit.
-7. Retry; assert old invitation superseded, replacement email sent, replacement
+6. Force transport failure; assert safe `503 temporary_unavailable`, candidate
+   removal, any prior delivered invitation remains valid, the transport
+   exception is chained, failed submissions do not consume quota, and the
+   failure audit is secret-free.
+7. Retry; assert old invitation superseded only after acceptance, replacement email sent, replacement
    setup completes, old link fails, and login succeeds only after setup.
 8. Run focused then full PHPUnit and Pint.
 
@@ -36,7 +38,9 @@
    `account_setup_mode=invitation`.
 3. Complete existing create-then-invite UI and validate safe success/failure
    feedback.
-4. Open emailed link, set password, then use normal login.
+4. Open emailed link; verify the token is read from the fragment, immediately
+   removed from browser history, and sent only in the JSON setup body. Set the
+   password, then use normal login.
 5. Run focused/full Vitest, Playwright account lifecycle test, and build.
 
 ## Release checks
@@ -63,3 +67,20 @@
   token is used only in request memory and email setup URL. Database stores hash
   only; response, delivery metadata, audit event, and failure envelope remain
   secret-free.
+
+## Review Hardening Evidence — 2026-08-18
+
+- Modular and aggregate OpenAPI validate; aggregate retains 9 unrelated
+  pre-existing unused assessment-schema warnings.
+- `createAccountInvitation` 201 specializes `delivery_requested_at` as required
+  and non-null in both publications.
+- Invitation setup uses a URL fragment, removes it from browser history, and
+  submits `invitation_token` only in the JSON body at a secret-free API path.
+- Backend focused invitation coverage passed: 21 tests, 122 assertions. Full
+  backend PHPUnit passed: 523 tests, 2,558 assertions. Pint passed.
+- Frontend focused coverage passed: 11 tests across 6 files. Full Vitest passed:
+  718 tests across 347 files. Production build and 12 account-lifecycle
+  Playwright cases passed.
+- Failure regressions prove prior delivered invitations survive transport
+  failure, failed submissions do not consume quota, and wrapped delivery
+  failures preserve the transport exception.

@@ -13,7 +13,7 @@ Frontend must not enable lifecycle actions against older backend behavior.
 | `createUser` | `POST /api/v1/users` | Persist school user in invitation mode |
 | `getUser` | `GET /api/v1/users/{userId}` | Load target in platform-only or exact-school mode |
 | `createAccountInvitation` | `POST /api/v1/account-invitations` | Explicitly create invitation from persisted user |
-| `completeAccountInvitation` | `POST /api/v1/account-invitations/{invitationToken}/setup` | Sole invited-to-active setup transition; guest regression scope |
+| `completeAccountInvitation` | `POST /api/v1/account-invitations/setup` | Sole invited-to-active setup transition; token is supplied in the JSON body |
 | `getAccountLock` | `GET /api/v1/users/{userId}/account-lock` | Load authorized lock state |
 | `lockAccount` | `POST /api/v1/users/{userId}/account-lock` | Lock with required reason |
 | `unlockAccount` | `DELETE /api/v1/users/{userId}/account-lock` | Unlock with no body |
@@ -68,6 +68,9 @@ invited user.
   sections mount. Unknown and opposite-mode identifiers share the non-disclosing
   result.
 - General user permissions do not authorize account lifecycle.
+- Because Feature 036 makes frontend user creation invitation-only, the
+  create-user route requires matching `account_lifecycle.manage` as well as its
+  existing user and role permissions.
 - Unauthorized/missing/mismatched frontend views mount no lifecycle sections and
   send no lifecycle request.
 - Backend authorizes tenant before scoped lookup; unknown/out-of-scope targets

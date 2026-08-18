@@ -37,7 +37,15 @@ post:
               - type: object
                 properties:
                   data:
-                    $ref: ../../components/schemas/account-lifecycle/AccountInvitation.yaml
+                    allOf:
+                      - $ref: ../../components/schemas/account-lifecycle/AccountInvitation.yaml
+                      - type: object
+                        required:
+                          - delivery_requested_at
+                        properties:
+                          delivery_requested_at:
+                            type: string
+                            format: date-time
     '401':
       $ref: ../../components/responses/auth/Unauthorized.yaml
     '403':

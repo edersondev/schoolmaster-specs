@@ -109,6 +109,8 @@ metadata, retry successfully, and verify old pending invitation is superseded.
 - [X] T024 Run focused/full PHPUnit and Pint in `schoolmaster-backend/`
 - [X] T025 Run focused/full Vitest, Playwright `e2e/account-lifecycle.spec.js`, and production build in `schoolmaster-frontend/`
 - [X] T026 Validate token absence from repository-visible response, log, audit, metadata, and queue assertions; record results in `specs/036-invitation-email-delivery/quickstart.md`
+- [X] T027 Address review hardening: move invitation setup secrets from frontend/API paths to fragment/body transport, require non-null 201 delivery metadata, and synchronize aggregate OpenAPI
+- [X] T028 Address implementation review hardening: preserve prior delivered invitations on failure, exclude failed submissions from quota, chain transport exceptions, align create-user route authority, and filter edit-role permissions with regression coverage
 
 ---
 

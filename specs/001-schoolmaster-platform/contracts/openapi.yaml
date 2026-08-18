@@ -166,7 +166,15 @@ paths:
                   - type: object
                     properties:
                       data:
-                        $ref: '#/components/schemas/AccountInvitation'
+                        allOf:
+                          - $ref: '#/components/schemas/AccountInvitation'
+                          - type: object
+                            required:
+                              - delivery_requested_at
+                            properties:
+                              delivery_requested_at:
+                                type: string
+                                format: date-time
         '401':
           $ref: '#/components/responses/Unauthorized'
         '403':
@@ -210,16 +218,14 @@ paths:
           $ref: '#/components/responses/Conflict'
         '422':
           $ref: '#/components/responses/ValidationError'
-  /api/v1/account-invitations/{invitationToken}/setup:
+  /api/v1/account-invitations/setup:
     post:
       tags:
         - Account Lifecycle
       summary: Complete invitation and initial password setup
-      description: Completes first password setup with a valid unexpired single-use invitation token. Failed completion attempts revoke the invitation after 5 failures per invitation, account, or IP within 15 minutes. Successful completion is the sole operation that transitions an invited user to active.
+      description: Completes first password setup with a valid unexpired single-use invitation token supplied in the JSON body so request paths and access logs remain secret-free. Failed completion attempts revoke the invitation after 5 failures per invitation, account, or IP within 15 minutes. Successful completion is the sole operation that transitions an invited user to active.
       operationId: completeAccountInvitation
       security: []
-      parameters:
-        - $ref: '#/components/parameters/InvitationToken'
       requestBody:
         required: true
         content:
@@ -6402,8 +6408,14 @@ components:
       type: object
       additionalProperties: false
       required:
+        - invitation_token
         - password
       properties:
+        invitation_token:
+          type: string
+          minLength: 1
+          maxLength: 255
+          description: Single-use invitation secret copied from the email URL fragment. Clients must submit it only in this JSON body, never in a request path or query.
         password:
           type: string
           minLength: 12
@@ -10995,7 +11007,7 @@ x-promoted-scope:
     - /api/v1/auth/logout
     - /api/v1/account-invitations
     - /api/v1/account-invitations/{invitationToken}/resend
-    - /api/v1/account-invitations/{invitationToken}/setup
+    - /api/v1/account-invitations/setup
     - /api/v1/auth/password-reset-requests
     - /api/v1/auth/password-resets
     - /api/v1/schools

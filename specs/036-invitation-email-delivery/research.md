@@ -18,10 +18,12 @@ new endpoint and data-model scope.
 
 ## Decision 2: Commit invitation, then submit mail, then mark accepted
 
-**Decision**: Persist only the token hash with delivery fields unset, commit,
-submit mail, and set safe delivery-request metadata only after transport
-acceptance. On failure, keep the pending undelivered invitation and return a
-documented retryable error.
+**Decision**: Persist only the token hash with delivery fields unset, commit the
+candidate without superseding an existing delivered invitation, submit mail,
+and only after transport acceptance atomically supersede prior pending state and
+set safe delivery-request metadata. On failure, delete the undelivered candidate,
+preserve the prior invitation, and return a documented retryable error. Only
+accepted submissions count toward the 24-hour send quota.
 
 **Rationale**: Sending inside a database transaction can produce a working email
 for rolled-back state. Sending after commit avoids that inconsistency. Keeping
@@ -34,21 +36,25 @@ mail may have been accepted before a timeout. Marking delivery requested before
 send was rejected as false confirmation. Returning 201 on failure was rejected
 because administrators need accurate retry feedback.
 
-## Decision 3: Use trusted frontend-origin configuration
+## Decision 3: Keep invitation secrets out of request paths
 
 **Decision**: Read `APP_FRONTEND_URL` through cached application configuration,
-require an absolute HTTP(S) origin, strip trailing slash, and append the existing
-public invitation setup route with an encoded token.
+require an absolute HTTP(S) origin, strip trailing slash, and append the public
+secret-free setup route with the encoded token in the URL fragment. The SPA
+copies the token into memory, removes the fragment from browser history, and
+submits the token in the JSON body to a secret-free API setup path.
 
-**Rationale**: API `APP_URL` points to backend and request host/header data is
-attacker-influenced. Environment-backed configuration supports each deployment
-without hardcoding production URLs. Laravel guidance keeps `env()` access in
-configuration files so configuration caching remains safe.
+**Rationale**: URL fragments are not transmitted in HTTP requests, so frontend
+CDN access logs never receive the token. A JSON request body keeps the token out
+of backend proxy access-log paths. API `APP_URL` points to backend and request
+host/header data is attacker-influenced. Environment-backed configuration
+supports each deployment without hardcoding production URLs.
 
 **Alternatives considered**: Request-origin links were rejected for host-header
-injection. Backend `APP_URL` was rejected because it targets the API. A token in
-query parameters was rejected because the existing frontend path contract is
-already implemented and tested.
+injection. Backend `APP_URL` was rejected because it targets the API. Path and
+query tokens were rejected because common frontend/CDN and backend proxy access
+logs retain them. Deployment-specific log redaction alone was rejected because
+the application can avoid transmitting the secret in request targets entirely.
 
 ## Decision 4: Preserve API default; enforce frontend invitation setup
 

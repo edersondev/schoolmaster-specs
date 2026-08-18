@@ -7,7 +7,7 @@
 
 Complete account onboarding through contract-first invitation email delivery.
 Laravel will synchronously submit a transactional mailable containing the
-newly issued plaintext token only in the setup URL, retain only its hash, and
+newly issued plaintext token only in the setup URL fragment, retain only its hash, and
 record delivery-request metadata after mail transport acceptance. A transport
 failure leaves a secret-safe, replaceable invitation and returns documented
 `503 temporary_unavailable`. Vue keeps existing explicit create-then-invite
@@ -23,14 +23,16 @@ to `invitation`; API omission remains `active` for compatibility.
 **Target Platform**: Laravel JSON API on Linux, configured SMTP-compatible production mail transport, and modern browsers consuming `/api/v1`
 **Project Type**: Multi-repository web application: shared specs/OpenAPI, Laravel API, Vue SPA
 **Performance Goals**: One mail submission per accepted invitation request; invitation creation stays within configured mail-transport timeout; no background payload carries the plaintext token
-**Constraints**: Contract before backend before frontend; no new package or endpoint; no token in API/log/audit/database/queue metadata; trusted frontend origin only; delivery acceptance is not inbox-delivery proof; existing limits, tenancy, authorization, and setup rules remain
+**Constraints**: Contract before backend before frontend; no new package; no token in frontend or API request paths, access/application logs, API/audit/database/queue metadata, or retained browser history; trusted frontend origin only; delivery acceptance is not inbox-delivery proof; existing limits, tenancy, authorization, and setup rules remain
 **Scale/Scope**: One existing invitation endpoint, one new mailable/view, one trusted URL setting, one standard 503 response, one frontend invitation-only invariant, focused tests, and synchronized Feature 008/034 docs
 
 ## Constitution Check
 
 *GATE: PASS before Phase 0; re-checked and PASS after Phase 1 design.*
 
-- PASS: OpenAPI documents invitation email side effects and `503` before backend changes; no endpoint or API version is added.
+- PASS: OpenAPI documents invitation email side effects and `503` before backend
+  changes. The `completeAccountInvitation` operation ID and API version remain,
+  while its pre-merge path/input contract moves the token out of request paths.
 - PASS: Specification, backend, and frontend impacts are separate and sequenced under Feature 036; Features 008 and 034 are synchronized.
 - PASS: Existing thin controller, Form Request, DTO, Policy, Resource, and repository boundaries remain. `AccountInvitationService` owns orchestration and a focused delivery service owns mail submission. UUID boundaries remain.
 - PASS: Vue remains JavaScript by repository convention, Composition API/`<script setup>`, existing Pinia session state, router, Tailwind/Element Plus, and Axios services. Default change stays in pure form-contract state; no component HTTP or new store is added.
@@ -121,17 +123,20 @@ Existing `CreateUserPage.vue` remains the composition surface.
 ### Phase 1: Backend mail delivery
 
 - Add trusted `APP_FRONTEND_URL` configuration and validate a non-empty
-  HTTP(S) origin before constructing
-  `/auth/account-invitations/{token}/setup`.
+  HTTP(S) origin before constructing the secret-free
+  `/auth/account-invitations/setup#token={token}` link.
 - Add `AccountInvitationMail` and escaped Markdown mail view with product name,
   recipient greeting, expiry, setup action, and ignore-if-unexpected guidance.
 - Extend invitation creation to retain plaintext token only in memory, commit
-  hashed invitation state first, synchronously submit mail, then update
+  hashed candidate invitation state without superseding an already delivered
+  invitation, synchronously submit mail, then supersede prior pending state and update
   `delivery_requested_at`, `delivery_channel`, safe metadata, and success audit.
-- On configuration or transport failure, record secret-free failure audit and
-  throw `InvitationDeliveryException`; global exception rendering returns
-  standard `temporary_unavailable` 503. Pending undelivered invitation remains
-  replaceable; retry supersedes it and any late/ambiguous earlier message.
+- On configuration or transport failure, remove the undelivered candidate,
+  preserve any prior delivered pending invitation, record secret-free failure
+  audit, and throw `InvitationDeliveryException` with the transport failure as
+  its previous exception; global exception rendering returns standard
+  `temporary_unavailable` 503. Failed submissions do not consume the accepted
+  delivery quota.
 - Keep synchronous sending because queue serialization would durably store the
   reusable plaintext token. No new queue/job/package is introduced.
 
@@ -141,7 +146,11 @@ Existing `CreateUserPage.vue` remains the composition surface.
 - Make `mapUserCreateRequest()` always submit
   `account_setup_mode=invitation`, regardless of stale extra form fields.
 - Preserve persisted create-then-invite phase, page reload recovery, permission
-  gates, no auto-send, and no auto-sign-in.
+  gates, no auto-send, and no auto-sign-in. Require matching
+  `account_lifecycle.manage` before the invitation-only create-user route mounts.
+- Read the invitation secret from the URL fragment into memory, immediately
+  remove the fragment from browser history, and submit it in the JSON body to
+  `POST /api/v1/account-invitations/setup`.
 - Update Vitest and Playwright expectations to prove default invitation mode
   and full create/invite/setup/login journey.
 

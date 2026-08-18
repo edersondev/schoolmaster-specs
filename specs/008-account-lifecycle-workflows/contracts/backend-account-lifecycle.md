@@ -37,7 +37,7 @@ The backend implementation exposes only the account lifecycle routes below, each
 |--------|-------|----------------------|
 | `POST` | `/api/v1/account-invitations` | `createAccountInvitation` |
 | `POST` | `/api/v1/account-invitations/{invitationToken}/resend` | `resendAccountInvitation` |
-| `POST` | `/api/v1/account-invitations/{invitationToken}/setup` | `completeAccountInvitation` |
+| `POST` | `/api/v1/account-invitations/setup` | `completeAccountInvitation` |
 | `POST` | `/api/v1/auth/password-reset-requests` | `requestPasswordReset` |
 | `POST` | `/api/v1/auth/password-resets` | `completePasswordReset` |
 | `GET` | `/api/v1/users/{userId}/account-lock` | `getAccountLock` |
@@ -72,7 +72,9 @@ The backend implementation exposes only the account lifecycle routes below, each
 OpenAPI must define, at minimum:
 
 - operation IDs and versioned `/api/v1` paths for every approved account lifecycle action
-- request schemas for invitation creation, invitation completion, password setup, reset request, reset completion, lock, unlock, recovery, and reactivation where approved
+- request schemas for invitation creation, invitation completion with the secret
+  in the JSON body rather than the request path, password setup, reset request,
+  reset completion, lock, unlock, recovery, and reactivation where approved
 - response schemas for accepted reset request, token completion, recovery outcomes, invalid token outcomes, conflict outcomes, and audit-safe metadata where exposed
 - token semantics: invitation token expiry of 7 days, password reset token expiry of 30 minutes, single-use completion, supersession of prior unused tokens of the same type for the same user and scope, and invalid-token response behavior
 - password policy: 12 to 128 characters, common-password blocklist rejection, and compatibility with paste/password-manager input

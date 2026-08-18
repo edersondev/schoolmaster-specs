@@ -64,8 +64,9 @@ delivery and documents retryable transport failure.
 reactivation, and account lock or recovery behavior.
 
 **Delivery note**: Invitation creation now submits one secure setup email after
-persisting only the token hash. Password-reset email and provider event tracking
-remain separate work.
+persisting only the token hash. The setup secret travels in the email URL
+fragment and JSON completion body, never a request path. Password-reset email
+and provider event tracking remain separate work.
 
 **Contract gate**: Define token lifetime, delivery assumptions, audit events,
 inactive-user behavior, and allowed actor roles before implementation.

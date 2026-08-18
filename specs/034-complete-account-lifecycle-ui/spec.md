@@ -220,7 +220,7 @@ while invitation creation remains usable for authorized actors.
   - `createUser` - `POST /api/v1/users`
   - `getUser` - `GET /api/v1/users/{userId}`
   - `createAccountInvitation` - `POST /api/v1/account-invitations`
-  - `completeAccountInvitation` - `POST /api/v1/account-invitations/{invitationToken}/setup`
+  - `completeAccountInvitation` - `POST /api/v1/account-invitations/setup` with `invitation_token` in the JSON body
   - `getAccountLock` - `GET /api/v1/users/{userId}/account-lock`
   - `lockAccount` - `POST /api/v1/users/{userId}/account-lock`
   - `unlockAccount` - `DELETE /api/v1/users/{userId}/account-lock`

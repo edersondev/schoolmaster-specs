@@ -32,8 +32,8 @@ of existing invitation delivery fields.
 ```text
 create hash -> pending / delivery unset
 pending -> pending / delivery accepted
-pending delivery failure -> pending / delivery unset
-retry -> old pending becomes superseded; new pending invitation created
+candidate delivery failure -> candidate removed; prior pending invitation unchanged
+accepted replacement -> old pending becomes superseded; new pending invitation marked delivered
 valid setup -> completed; target user invited -> active
 expiry/failure threshold -> expired or revoked
 ```
@@ -46,12 +46,14 @@ transport.
 **Transient values**:
 
 - target email and display name
-- absolute setup URL containing plaintext token
+- absolute secret-free setup path with plaintext token in its URL fragment
 - expiry timestamp
 - product name
 
 InvitationEmail is not a database entity. Its plaintext URL must not enter queue
-storage, database columns, logs, audits, or API payloads.
+storage, database columns, request paths, access/application logs, audits, or
+API responses. Invitation completion places the token only in its JSON request
+body.
 
 ## InvitedUser
 

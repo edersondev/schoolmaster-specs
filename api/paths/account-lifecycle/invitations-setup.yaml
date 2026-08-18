@@ -4,13 +4,12 @@ post:
   summary: Complete invitation and initial password setup
   description: >-
     Completes first password setup with a valid unexpired single-use invitation
-    token. Failed completion attempts revoke the invitation after 5 failures per
+    token supplied in the JSON body so request paths and access logs remain
+    secret-free. Failed completion attempts revoke the invitation after 5 failures per
     invitation, account, or IP within 15 minutes. Successful completion is the
     sole operation that transitions an invited user to active.
   operationId: completeAccountInvitation
   security: []
-  parameters:
-    - $ref: ../../components/parameters/account-lifecycle/InvitationToken.yaml
   requestBody:
     required: true
     content:

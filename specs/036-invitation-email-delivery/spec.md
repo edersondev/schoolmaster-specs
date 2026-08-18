@@ -33,7 +33,7 @@ password, and verify normal sign-in succeeds while the link cannot be reused.
 **Acceptance Scenarios**:
 
 1. **Given** an eligible invited user and authorized same-scope administrator, **When** the administrator creates an invitation, **Then** one invitation email is submitted to the configured email service for the invited user's validated email address.
-2. **Given** a newly created invitation, **When** the user opens the email, **Then** it identifies SchoolMaster, explains that account setup is required, states the invitation expiry, and provides one secure setup link for that invitation.
+2. **Given** a newly created invitation, **When** the user opens the email, **Then** it identifies SchoolMaster, explains that account setup is required, states the invitation expiry, and provides one secure setup link whose secret is carried only in the URL fragment.
 3. **Given** a valid unexpired setup link, **When** the user submits a policy-compliant password, **Then** setup activates the invited account, consumes the invitation, and directs the user to sign in without automatically creating an authenticated session.
 4. **Given** an expired, used, superseded, revoked, malformed, or scope-incompatible link, **When** the user attempts setup, **Then** no credential or account state changes and existing safe invalid-link feedback is shown.
 
@@ -70,6 +70,10 @@ invitation and the user completes setup.
 4. **Given** a non-frontend API client omits the account setup choice, **When**
    it creates a user, **Then** the existing active-account default remains
    unchanged for backward compatibility.
+5. **Given** an administrator lacks same-scope `account_lifecycle.manage`,
+   **When** frontend route authorization is evaluated, **Then** the
+   invitation-only create-user route is unavailable so the actor cannot persist
+   an invited account whose invitation controls they cannot use.
 
 ---
 
@@ -121,13 +125,16 @@ the earlier invitation cannot be completed.
 ### API Contract Impact
 
 - **OpenAPI update required**: Yes. Existing invitation creation and response documentation must state real email submission semantics, secret-safe response behavior, and the documented temporary delivery-failure outcome. User creation retains its current API default.
-- **Versioned endpoints affected**: `POST /api/v1/account-invitations`, `POST /api/v1/account-invitations/{invitationToken}/setup`, and `POST /api/v1/users` documentation; no new endpoint is added.
+- **Versioned endpoints affected**: `POST /api/v1/account-invitations`, `POST /api/v1/account-invitations/setup`, and `POST /api/v1/users` documentation. The setup token moves from the request path into the JSON body so access logs do not receive it.
 - **JSON response impact**: Successful invitation responses keep the existing envelope and safe invitation fields. No token or setup URL is added. Email-submission failure uses the approved standard temporary-failure envelope and does not claim accepted delivery metadata.
 - **Authentication/authorization impact**: No new permission or public access path. Invitation creation retains existing same-scope account-lifecycle authority and tenant-first lookup. Password setup remains token-proven and unauthenticated.
 - **Compatibility impact**: Email submission adds a real side effect to
   invitation creation. Frontend user creation always submits invitation setup.
   API clients omitting `account_setup_mode` retain active creation, avoiding an
-  implicit breaking API change.
+  implicit user-creation breaking change. Before feature merge, invitation
+  completion moves from the secret-bearing path to the secret-free setup path
+  and adds required `invitation_token` JSON input; backend and frontend must
+  deploy that contract together.
 
 ### Data & Tenancy Impact
 
@@ -141,9 +148,9 @@ the earlier invitation cannot be completed.
 
 - **FR-001**: System MUST submit exactly one account setup email for each successfully created invitation.
 - **FR-002**: System MUST address the setup email only to the invitation target's validated current email address.
-- **FR-003**: System MUST include a single absolute setup link built from a trusted public application origin and the newly issued invitation secret.
+- **FR-003**: System MUST include a single absolute setup link built from a trusted public application origin, a secret-free setup path, and the newly issued invitation secret in the URL fragment so the browser does not transmit it to frontend infrastructure.
 - **FR-004**: Setup email MUST identify the product, explain the required action, and communicate the invitation's expiration without including passwords or unrelated tenant-private data.
-- **FR-005**: System MUST keep the plaintext invitation secret transient and MUST NOT persist it in application data, delivery metadata, queued payloads, logs, audit events, or API responses.
+- **FR-005**: System MUST keep the plaintext invitation secret transient and MUST NOT persist it in application data, delivery metadata, queued payloads, browser history after setup initialization, request paths, access logs, application logs, audit events, or API responses. Invitation completion MUST carry the secret in the JSON request body to a secret-free API path.
 - **FR-006**: System MUST preserve existing invitation expiry, single-use, supersession, send-limit, failed-completion, tenant, authorization, and target-eligibility rules.
 - **FR-007**: System MUST record delivery-request time only when the configured email service accepts the message submission.
 - **FR-008**: System MUST return documented retryable feedback when email submission fails and MUST NOT report the invitation as delivered or expose its setup link.
@@ -163,9 +170,14 @@ the earlier invitation cannot be completed.
 - **FR-017**: System MUST preserve tenant isolation and MUST NOT encode school or platform authorization context into the setup URL.
 - **FR-018**: Delivery implementation MUST use existing configurable email infrastructure without adding a provider-specific product dependency.
 - **FR-019**: Tests MUST prove successful message submission, recipient and link
-  correctness, failure handling, token non-persistence, absence of the frontend
+  correctness, secret-free frontend/API request paths, fragment removal from
+  browser history after initialization, failure handling, token non-persistence, absence of the frontend
   setup selector, invariant invitation mapping, setup completion, token reuse
   rejection, and successful subsequent login.
+- **FR-020**: Frontend route authorization for invitation-only user creation
+  MUST require same-scope `account_lifecycle.manage` in addition to the existing
+  user and role permissions; exact System Administrator master-access behavior
+  remains unchanged.
 
 ### Key Entities
 
