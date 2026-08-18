@@ -15,6 +15,13 @@
 - Q: What responsive navigation pattern should the admin shell use? → A: Desktop and tablet use a collapsible sidebar; mobile uses an overlay drawer.
 - Q: How should the shell handle unauthorized, forbidden, or expired-session access in this slice? → A: Show shell-level unauthorized, forbidden, and session-expired states; auth screens remain a future slice.
 
+### Session 2026-08-18
+
+- Q: What identity should the authenticated header account control display? →
+  A: Display the current user's login-session full name, fall back to email when
+  the full name is unavailable, and never use the user's role name as the
+  account label.
+
 ## User Scenarios & Testing *(mandatory)*
 
 ### User Story 1 - Navigate the Admin Shell (Priority: P1)
@@ -49,6 +56,9 @@ without depending on any concrete CRUD resource page.
    **When** the shell attempts to render protected content, **Then** it shows a
    shell-level denial or expired-session state without defining login or
    recovery screens.
+5. **Given** the authenticated session includes the current user's full name,
+   **When** the top header renders, **Then** its account control shows that name
+   instead of a role label such as System Administrator.
 
 ---
 
@@ -211,6 +221,9 @@ workflow approval is missing.
 - **FR-004a**: The shell MUST show shell-level unauthorized, forbidden, and
   session-expired states for protected-route failures without defining login,
   logout, or account recovery screens.
+- **FR-004b**: The authenticated header account control MUST display the
+  current session user's `fullName`, fall back to `email` and then a generic
+  Account label when needed, and MUST NOT display a role name as user identity.
 - **FR-005**: The dashboard MUST define a landing surface with page context,
   summary card region, recent activity region, quick actions region, and
   notification or alert region.

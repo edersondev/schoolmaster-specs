@@ -89,11 +89,11 @@ region, and feedback states work without any dashboard live data or CRUD pages.
 - [X] T021 [US1] Implement shell state actions for sidebar collapsed state, mobile drawer open state, active route key, and feedback state in `src/stores/admin-system/shell.store.js`
 - [X] T022 [US1] Implement permission visibility helpers that hide unauthorized or unapproved navigation entries in `src/composables/admin-system/useAdminShellPermissions.js`
 - [X] T023 [US1] Implement responsive shell state behavior that uses desktop/tablet collapsed sidebar and mobile overlay drawer in `src/composables/admin-system/useAdminShellState.js`
-- [X] T024 [US1] Implement `AdminSystemLayout.vue` with sidebar, top header, route content region, page context, global feedback placement, and no direct Axios calls in `src/layouts/admin-system/AdminSystemLayout.vue`
+- [X] T024 [US1] Implement `AdminSystemLayout.vue` with sidebar, top header, current-user display-name mapping, route content region, page context, global feedback placement, and no direct Axios calls in `src/layouts/admin-system/AdminSystemLayout.vue`
 - [X] T025 [US1] Implement reusable shell navigation component with hidden unauthorized items and active route state in `src/components/admin-system/shell/AdminShellSidebar.vue`
-- [X] T026 [US1] Implement reusable top header component with page context, sidebar/drawer controls, and placeholder notification affordance in `src/components/admin-system/shell/AdminShellHeader.vue`
+- [X] T026 [US1] Implement reusable top header component with page context, sidebar/drawer controls, current-user account name, and placeholder notification affordance in `src/components/admin-system/shell/AdminShellHeader.vue`
 - [X] T027 [US1] Implement shell feedback component for loading, empty, error, forbidden, unauthorized, session-expired, tenant-mismatch, and unavailable states in `src/components/admin-system/shell/AdminShellFeedback.vue`
-- [X] T028 [US1] Add localized shell labels, feedback messages, and accessible control text in `src/locales/admin-system.js`
+- [X] T028 [US1] Add localized shell labels, account-menu fallback and accessible text, feedback messages, and control text in `src/locales/admin-system.js`
 
 **Checkpoint**: User Story 1 is independently functional and testable as the
 MVP shell.

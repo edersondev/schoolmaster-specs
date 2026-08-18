@@ -46,6 +46,8 @@ The implementation should:
 - keep protected content hidden while bootstrap is pending
 - hydrate current user, roles, permissions, and resolved school from
   `AuthSession`
+- display mapped current-user full name in the authenticated header account
+  control, with email and generic Account fallbacks and no role-name fallback
 - choose authenticated or unauthenticated layout from session and route state
 - clear stale protected state after token rejection, inactive-user,
   inactive-school, or tenant-mismatch outcomes

@@ -92,13 +92,16 @@ Administrator shell and placeholder dashboard.
 - `drawerToggle`: Mobile navigation control.
 - `sidebarToggle`: Desktop/tablet collapse control.
 - `notificationIndicator`: Placeholder or absent-state indicator in this slice.
-- `userAffordance`: Non-authentication placeholder for future session UI.
+- `accountDisplayName`: Current session user's full name, with email and generic
+  Account fallbacks; role names are not valid identity labels.
 - `feedbackAnchor`: Placement for global feedback messages.
 
 **Relationships**:
 
 - Uses `ShellState` for drawer/sidebar controls.
 - Uses `ShellFeedbackState` for global feedback.
+- Uses the mapped current-user identity from the authenticated session for
+  `accountDisplayName`.
 
 **Validation rules**:
 
