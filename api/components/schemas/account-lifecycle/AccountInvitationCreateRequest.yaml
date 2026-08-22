@@ -24,6 +24,10 @@ properties:
     type: string
     format: email
     maxLength: 255
+    description: >-
+      Trimmed and lowercased by the server before validation and identity
+      lookup, and before storage when platform invitation creation provisions a
+      missing platform-owned user. Global ownership includes soft-deleted users.
   role_ids:
     type: array
     minItems: 1

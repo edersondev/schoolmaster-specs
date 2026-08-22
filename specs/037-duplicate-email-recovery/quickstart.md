@@ -106,3 +106,56 @@ docker exec schoolmaster-backend-app-1 php artisan test
 - Monitor `user_creation_duplicate_email` volume and persistence-conflict
   outcomes without logging plaintext email.
 - Frontend deployment is not required for feature completion.
+
+## Implementation evidence (2026-08-22)
+
+### Story checkpoints
+
+- **P1 retained identity recovery**: Direct create returns the exact minimal
+  `409 recoverable_user_conflict`, writes one target-bearing safe audit, and
+  leaves the deleted owner and role state unchanged. The returned UUID was
+  restored explicitly and updated through the existing administration update
+  endpoint while retaining the original user identity. A separate case proved
+  the guidance does not bypass a later inactive-school authentication blocker.
+- **P2 private generic rejection**: Active, inactive, invited, unauthorized
+  same-school deleted, cross-school deleted, inactive-parent, platform-owned,
+  and ambiguous legacy owners produced shape-equivalent generic `422`
+  responses. Their audits were target-free and used only the four allowlisted
+  metadata keys. Platform invitation collisions created no user, role pivot,
+  invitation, delivery request, or email submission; established school
+  invitation `409` behavior remained covered by regression tests.
+- **P3 canonical and concurrent ownership**: Direct create, platform
+  provisioning, and future email updates trim and lowercase submitted email;
+  omitted legacy values remain untouched; over-255-character values fail
+  validation. Generated-key lookup and `EXPLAIN` selected
+  `users_identity_email_key_index`. The barrier-controlled two-process MySQL
+  test proved one commit, loser rollback, generic validation, no loser role
+  pivot, and a post-rollback `persistence_conflict` audit. The race passed in
+  three executions across focused and full-suite runs. A non-email unique
+  violation was rethrown unchanged.
+
+### Release gate results
+
+| Gate | Result |
+|---|---|
+| Focused Feature 037 suite | Passed: 38 tests, 225 assertions; final direct recovery file passed 7 tests, 101 assertions after adding the restore-blocker case |
+| Exact-index and two-connection race suite | Passed: 3 tests, 13 assertions |
+| Full backend PHPUnit suite | Passed final run: 549 tests, 2,746 assertions |
+| Feature-touched Pint files | Passed: `vendor/bin/pint --dirty --format agent` and subsequent dirty check |
+| Full-repository Pint baseline | Executed; reports 39 existing style issues in unrelated guardian, report, teacher-workflow, assessment, address, and school files |
+| OpenAPI bundle | Regenerated `specs/001-schoolmaster-platform/contracts/openapi.yaml` from `api/openapi.yaml` |
+| Redocly named API lint | Valid for `aggregate@v1` and `schoolmaster-platform@v1`; 9 existing unused assessment-component warnings |
+| Diff and privacy review | Passed `git diff --check`; no feature logging calls, plaintext audit email, unauthorized target identifier, automatic restore, or frontend change |
+
+### Compatibility and deployment notes
+
+- The only schema addition is stored generated `identity_email_key` plus
+  non-unique `users_identity_email_key_index`; `users_email_unique` remains the
+  race authority. No existing `users.email` value is updated or backfilled.
+- Deploy the generated-key migration before the backend code. No frontend
+  deployment or new endpoint is required.
+- Platform-user restoration remains unsupported and is now explicitly denied;
+  school user restore requires the published `users.view` plus `users.manage`
+  permission pair.
+- Full Pint remains a known repository-wide baseline failure; no unrelated
+  formatting changes were made as part of Feature 037.

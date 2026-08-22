@@ -1,0 +1,12 @@
+description: A retained user can be restored by the authorized school administrator
+content:
+  application/json:
+    schema:
+      $ref: ../../schemas/common/ErrorEnvelope.yaml
+    example:
+      error:
+        code: recoverable_user_conflict
+        message: A retained user can be restored.
+        details:
+          user_id: 00000000-0000-4000-8000-000000000001
+          recommended_action: restore

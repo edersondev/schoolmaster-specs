@@ -10,7 +10,11 @@ post:
     scope requires a separately persisted same-school invited user. Platform
     scope atomically provisions a missing platform-owned invited user with the
     validated active platform roles because no platform create-user operation
-    exists. Requires matching active account_lifecycle.manage or
+    exists. Email is trimmed and lowercased before validation and global
+    retained identity lookup. Any provisioning collision, including a
+    soft-deleted platform owner, returns the generic unavailable-email 422 and
+    never exposes a recovery target. Requires matching active
+    account_lifecycle.manage or
     exact System Administrator master access for the permission check; tenant
     authorization precedes scoped target lookup. The response never exposes
     reusable invitation token secrets. Creating a new invitation supersedes
@@ -53,6 +57,6 @@ post:
     '409':
       $ref: ../../components/responses/common/Conflict.yaml
     '422':
-      $ref: ../../components/responses/common/ValidationError.yaml
+      $ref: ../../components/responses/users/UserCreationValidationError.yaml
     '503':
       $ref: ../../components/responses/common/TemporaryUnavailable.yaml
