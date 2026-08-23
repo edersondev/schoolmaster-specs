@@ -63,5 +63,5 @@ When implementing or modifying features:
 - only then implementation repositories should change
 
 <!-- SPECKIT START -->
-Active implementation plan: `specs/037-duplicate-email-recovery/plan.md`
+Active implementation plan: `specs/038-user-recovery-ui/plan.md`
 <!-- SPECKIT END -->
