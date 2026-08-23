@@ -144,7 +144,7 @@ paths:
       tags:
         - Account Lifecycle
       summary: Create or replace an account invitation
-      description: Creates a 7-day single-use invitation for an eligible invited user and synchronously submits one setup email to the target user's current address. A successful response means the configured mail transport accepted the submission; it does not confirm inbox delivery. School scope requires a separately persisted same-school invited user. Platform scope atomically provisions a missing platform-owned invited user with the validated active platform roles because no platform create-user operation exists. Requires matching active account_lifecycle.manage or exact System Administrator master access for the permission check; tenant authorization precedes scoped target lookup. The response never exposes reusable invitation token secrets. Creating a new invitation supersedes prior unused invitations for the same user and scope. The plaintext token and setup URL appear only in the submitted email and are never returned.
+      description: Creates a 7-day single-use invitation for an eligible invited user and synchronously submits one setup email to the target user's current address. A successful response means the configured mail transport accepted the submission; it does not confirm inbox delivery. School scope requires a separately persisted same-school invited user. Platform scope atomically provisions a missing platform-owned invited user with the validated active platform roles because no platform create-user operation exists. Email is trimmed and lowercased before validation and global retained identity lookup. Any provisioning collision, including a soft-deleted platform owner, returns the generic unavailable-email 422 and never exposes a recovery target. Requires matching active account_lifecycle.manage or exact System Administrator master access for the permission check; tenant authorization precedes scoped target lookup. The response never exposes reusable invitation token secrets. Creating a new invitation supersedes prior unused invitations for the same user and scope. The plaintext token and setup URL appear only in the submitted email and are never returned.
       operationId: createAccountInvitation
       x-system-administrator-master-access: true
       parameters:
@@ -182,7 +182,7 @@ paths:
         '409':
           $ref: '#/components/responses/Conflict'
         '422':
-          $ref: '#/components/responses/ValidationError'
+          $ref: '#/components/responses/UserCreationValidationError'
         '503':
           $ref: '#/components/responses/TemporaryUnavailable'
   /api/v1/account-invitations/{invitationToken}/resend:
@@ -919,7 +919,7 @@ paths:
       tags:
         - Users
       summary: Create a user inside the permitted scope
-      description: Creates one school-owned user. Omitted or active account_setup_mode preserves active creation. Invitation mode persists an invited user without creating an invitation, lifecycle token, or delivery request; invitation creation is a separate explicit operation.
+      description: Creates one school-owned user. Omitted or active account_setup_mode preserves active creation. Invitation mode persists an invited user without creating an invitation, lifecycle token, or delivery request; invitation creation is a separate explicit operation. Email is trimmed and lowercased before validation, global retained identity comparison, and storage. If one same-school soft-deleted owner exists and the actor has users.view plus users.manage, creation returns recoverable_user_conflict so the existing restore flow can be used. Every other collision returns the same generic unavailable-email validation result.
       operationId: createUser
       x-system-administrator-master-access: true
       parameters:
@@ -944,8 +944,10 @@ paths:
                         $ref: '#/components/schemas/User'
         '403':
           $ref: '#/components/responses/TenantMismatch'
+        '409':
+          $ref: '#/components/responses/RecoverableUserConflict'
         '422':
-          $ref: '#/components/responses/ValidationError'
+          $ref: '#/components/responses/UserCreationValidationError'
   /api/v1/users/{userId}:
     get:
       tags:
@@ -1130,6 +1132,7 @@ paths:
       tags:
         - Users
       summary: Restore a soft-deleted user
+      description: Restores a school-owned user in the exact active X-School-Id context. The actor must have users.view and users.manage in that school. This operation does not restore platform-owned users and re-evaluates current lifecycle, dependency, uniqueness, reason, and effective-date constraints.
       operationId: restoreUser
       x-system-administrator-master-access: true
       parameters:
@@ -1168,6 +1171,11 @@ paths:
       tags:
         - Users
       summary: Apply one lifecycle action to selected users
+      description: |
+        Requires an active school context. User restore actions require both
+        school-scoped users.view and users.manage; other lifecycle actions require
+        school-scoped users.lifecycle. Platform-owned users are outside this bulk
+        endpoint.
       operationId: bulkLifecycleUsers
       x-system-administrator-master-access: true
       parameters:
@@ -6344,6 +6352,7 @@ components:
           type: string
           format: email
           maxLength: 255
+          description: Trimmed and lowercased by the server before validation and identity lookup, and before storage when platform invitation creation provisions a missing platform-owned user. Global ownership includes soft-deleted users.
         role_ids:
           type: array
           minItems: 1
@@ -7041,6 +7050,8 @@ components:
         email:
           type: string
           format: email
+          maxLength: 255
+          description: Trimmed and lowercased by the server before validation, global retained identity ownership comparison, and storage. Ownership includes soft-deleted users.
         role_ids:
           type: array
           items:
@@ -7055,6 +7066,8 @@ components:
         email:
           type: string
           format: email
+          maxLength: 255
+          description: When present, trimmed and lowercased by the server before validation, global retained identity ownership comparison, and storage. Ownership includes soft-deleted users and excludes only this target user. When omitted, an existing legacy value remains unchanged.
         status:
           $ref: '#/components/schemas/Status'
         role_ids:
@@ -10504,6 +10517,23 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/ErrorEnvelope'
+    UserCreationValidationError:
+      description: User creation validation failed
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorEnvelope'
+          examples:
+            emailUnavailable:
+              summary: The normalized email is already owned by a retained identity
+              value:
+                error:
+                  code: validation_failed
+                  message: Validation failed.
+                  details:
+                    fields:
+                      email:
+                        - The email is unavailable.
     NotFound:
       description: Resource was not found in the permitted scope
       content:
@@ -10522,6 +10552,19 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/ErrorEnvelope'
+    RecoverableUserConflict:
+      description: A retained user can be restored by the authorized school administrator
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorEnvelope'
+          example:
+            error:
+              code: recoverable_user_conflict
+              message: A retained user can be restored.
+              details:
+                user_id: 00000000-0000-4000-8000-000000000001
+                recommended_action: restore
     AdministrationForbidden:
       description: Administration lifecycle access is forbidden because the tenant context is missing, inactive, or outside permitted scope, or because the authenticated user lacks the required platform or school administration permission. An active platform System Administrator satisfies the permission requirement, but tenant-context and other non-permission failures remain forbidden.
       content:

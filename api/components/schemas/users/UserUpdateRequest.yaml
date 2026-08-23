@@ -6,6 +6,12 @@ properties:
   email:
     type: string
     format: email
+    maxLength: 255
+    description: >-
+      When present, trimmed and lowercased by the server before validation,
+      global retained identity ownership comparison, and storage. Ownership
+      includes soft-deleted users and excludes only this target user. When
+      omitted, an existing legacy value remains unchanged.
   status:
     $ref: ../common/Status.yaml
   role_ids:

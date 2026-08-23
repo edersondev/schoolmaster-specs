@@ -1,0 +1,16 @@
+description: User creation validation failed
+content:
+  application/json:
+    schema:
+      $ref: ../../schemas/common/ErrorEnvelope.yaml
+    examples:
+      emailUnavailable:
+        summary: The normalized email is already owned by a retained identity
+        value:
+          error:
+            code: validation_failed
+            message: Validation failed.
+            details:
+              fields:
+                email:
+                  - The email is unavailable.

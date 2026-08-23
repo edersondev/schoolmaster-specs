@@ -2,6 +2,11 @@ post:
   tags:
     - Users
   summary: Apply one lifecycle action to selected users
+  description: |
+    Requires an active school context. User restore actions require both
+    school-scoped users.view and users.manage; other lifecycle actions require
+    school-scoped users.lifecycle. Platform-owned users are outside this bulk
+    endpoint.
   operationId: bulkLifecycleUsers
   x-system-administrator-master-access: true
   parameters:

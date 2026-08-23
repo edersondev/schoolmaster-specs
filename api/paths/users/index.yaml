@@ -45,7 +45,12 @@ post:
     Creates one school-owned user. Omitted or active account_setup_mode preserves
     active creation. Invitation mode persists an invited user without creating
     an invitation, lifecycle token, or delivery request; invitation creation is
-    a separate explicit operation.
+    a separate explicit operation. Email is trimmed and lowercased before
+    validation, global retained identity comparison, and storage. If one
+    same-school soft-deleted owner exists and the actor has users.view plus
+    users.manage, creation returns recoverable_user_conflict so the existing
+    restore flow can be used. Every other collision returns the same generic
+    unavailable-email validation result.
   operationId: createUser
   x-system-administrator-master-access: true
   parameters:
@@ -70,5 +75,7 @@ post:
                     $ref: ../../components/schemas/users/User.yaml
     '403':
       $ref: ../../components/responses/schools/TenantMismatch.yaml
+    '409':
+      $ref: ../../components/responses/users/RecoverableUserConflict.yaml
     '422':
-      $ref: ../../components/responses/common/ValidationError.yaml
+      $ref: ../../components/responses/users/UserCreationValidationError.yaml

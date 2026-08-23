@@ -2,6 +2,11 @@ post:
   tags:
     - Users
   summary: Restore a soft-deleted user
+  description: >-
+    Restores a school-owned user in the exact active X-School-Id context. The
+    actor must have users.view and users.manage in that school. This operation
+    does not restore platform-owned users and re-evaluates current lifecycle,
+    dependency, uniqueness, reason, and effective-date constraints.
   operationId: restoreUser
   x-system-administrator-master-access: true
   parameters:
