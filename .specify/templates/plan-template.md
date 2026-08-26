@@ -33,7 +33,13 @@
 
 - OpenAPI impact is identified, and any API change starts from the contract.
 - Backend, frontend, and specification repository impacts are called out
-  separately, including delivery sequencing when more than one repo changes.
+  separately for every feature. An unchanged backend or frontend repository has
+  an explicit `N/A` rationale and readiness dependency.
+- Backend contract, implementation, and verification tasks are sequenced before
+  frontend implementation. A backend-readiness gate remains required when no
+  backend source change is needed.
+- Each affected implementation repository uses the exact feature branch name
+  created by `/speckit-specify`; unaffected repositories receive no branch.
 - Backend design uses Laravel feature organization, Service Layer, Form
   Requests, Policies, API Resources, UUID-based public identifiers, and
   explicit DTO or Repository decisions where applicable.
@@ -64,6 +70,11 @@ specs/[###-feature]/
 ```
 
 ### Source Code (target repositories)
+
+**Branch coordination**: Create the same `[###-feature-name]` branch in each
+affected implementation repository only. Do not create a branch in a backend
+or frontend repository marked `N/A` for this feature.
+
 <!--
   ACTION REQUIRED: Replace the placeholder tree below with the concrete layout
   for this feature. Delete unused options and expand the chosen structure with

@@ -79,10 +79,10 @@
 
 ### Repository Impact
 
-- **Backend repository impact**: [Describe affected Laravel features, services, requests, policies, resources, and routes]
-- **Frontend repository impact**: [Describe affected Vue modules, routes, stores, services, and UI surfaces]
+- **Backend repository impact**: [Describe affected Laravel features, services, requests, policies, resources, and routes; if unchanged, state `N/A`, why, and the contract/readiness gate]
+- **Frontend repository impact**: [Describe affected Vue modules, routes, stores, services, and UI surfaces; if unchanged, state `N/A` and why]
 - **Specification or contract repository impact**: [Describe OpenAPI, shared docs, or state N/A]
-- **Delivery ownership and sequencing**: [State which repo leads, dependency order, and how linked work will be tracked]
+- **Delivery ownership and sequencing**: [State which repo leads, dependency order, and how linked work will be tracked. Backend contract, implementation, and verification complete before frontend implementation; frontend-only delivery still records backend readiness first. State that every affected implementation repository uses the exact feature branch name created by `/speckit-specify`, while unaffected repositories receive no branch.]
 
 ### API Contract Impact
 

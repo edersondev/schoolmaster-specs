@@ -60,7 +60,17 @@ When implementing or modifying features:
 - first update specifications
 - then update plans/tasks if needed
 - then update API contracts
-- only then implementation repositories should change
+- every new feature specification must explicitly assess backend and frontend
+  impact, including an explicit `N/A` rationale where a repository has no code
+  change
+- when `/speckit-implement` runs, complete backend contract, implementation,
+  and verification work first; frontend implementation may begin only after
+  that backend gate passes
+- invoking `/speckit-implement` authorizes necessary in-scope changes and
+  normal validation in `schoolmaster-backend`, then `schoolmaster-frontend`
+- when `/speckit-specify` creates a feature branch, create a branch with that
+  exact name only in each affected implementation repository; do not create a
+  backend or frontend branch for a repository with no feature work
 
 <!-- SPECKIT START -->
 Active implementation plan: `specs/038-user-recovery-ui/plan.md`

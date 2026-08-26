@@ -1,25 +1,20 @@
 <!--
 Sync Impact Report
-Version change: 1.0.0 -> 1.0.0
+Version change: 1.2.0 -> 1.3.0
 Modified principles:
-- I. Contract-First Split Architecture -> I. API-First Contract Governance
-- II. Laravel Backend Boundaries -> II. Laravel Backend Architecture and Coding Standards
-- III. Vue Frontend Module Boundaries -> III. Vue Frontend Architecture and Coding Standards
-- IV. MySQL and Tenant-Safe Data Design -> IV. Multi-Tenant Data and Access Boundaries
-- V. Verified Critical Flows -> V. Verification and Release Gates
+- Delivery Workflow -> Delivery Workflow (require both repository assessments
+  and backend-first implementation sequencing with scoped implementation
+  authority and matching affected-repository branches)
 Added sections:
-- API Standards
-- Repository Standards
-- Delivery Workflow
+ - None
 Removed sections:
-- Delivery Constraints
-- Engineering Workflow
+ - None
 Templates requiring updates:
 - ✅ updated: .specify/templates/plan-template.md
 - ✅ updated: .specify/templates/spec-template.md
 - ✅ updated: .specify/templates/tasks-template.md
 - ✅ reviewed: .specify/templates/commands/*.md (directory absent; no updates required)
-- ✅ reviewed: AGENTS.md (no conflicting runtime guidance found in the tracked file)
+- ✅ updated: AGENTS.md
 Follow-up TODOs:
 - None
 -->
@@ -104,16 +99,31 @@ backend, and frontend verification must move together to keep releases safe.
   across repositories.
 - Cross-repository work MUST share a common feature identifier, issue linkage,
   or equivalent traceability so reviewers can reconstruct the full delivery.
+- When `/speckit-specify` creates a feature branch in `schoolmaster-specs`,
+  every affected implementation repository MUST use that exact branch name.
+  No implementation branch MUST be created in a repository with no feature
+  work; for example, a backend-only feature creates only the matching backend
+  branch.
 
 ## Delivery Workflow
 
-- Specifications MUST identify backend repository impact, frontend repository
-  impact, specification or contract repository impact, OpenAPI impact, tenant
-  impact, and required critical-flow tests.
+- Every new specification MUST assess both backend repository impact and
+  frontend repository impact. A repository with no source change MUST still
+  have an explicit `N/A` rationale and any readiness or contract dependency.
+  Specifications MUST also identify specification or contract repository impact,
+  OpenAPI impact, tenant impact, and required critical-flow tests.
 - Implementation plans MUST fail Constitution Check when they omit Service
   Layer usage, Form Requests, Policies, API Resources, DTO or Repository
   decisions where applicable, UUID boundaries, service-isolated frontend API
   access, repository coordination, or tenant-safety considerations.
+- `/speckit-implement` MUST execute backend contract, implementation, and
+  verification tasks before frontend implementation tasks. If a feature needs
+  no backend source change, the backend readiness and contract verification
+  gate MUST be completed and recorded before frontend work begins.
+- Invoking `/speckit-implement` authorizes necessary in-scope source changes
+  and normal validation in `schoolmaster-backend`, followed by
+  `schoolmaster-frontend`. Work outside the approved feature specification,
+  plan, or task list still requires separate direction.
 - Task lists and reviews MUST show how PHPUnit, Vitest, and contract
   verification cover each changed critical business flow across the affected
   repositories.
@@ -132,4 +142,4 @@ Compliance review is mandatory for every specification, implementation plan,
 task list, and pull request; any non-compliant item MUST either be corrected or
 carry an explicit, approved exception with rationale.
 
-**Version**: 1.0.0 | **Ratified**: 2026-05-08 | **Last Amended**: 2026-05-08
+**Version**: 1.3.0 | **Ratified**: 2026-05-08 | **Last Amended**: 2026-08-26

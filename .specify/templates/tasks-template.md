@@ -15,6 +15,11 @@ specification explicitly requests broader coverage.
 
 **Organization**: Tasks are grouped by user story to enable independent implementation and testing of each story.
 
+**Implementation sequence**: `/speckit-implement` completes backend contract,
+implementation, and verification tasks before any frontend implementation task.
+For frontend-only work, include and complete an explicit backend readiness and
+contract-verification gate first.
+
 ## Format: `[ID] [P?] [Story] Description`
 
 - **[P]**: Can run in parallel (different files, no dependencies)
@@ -60,8 +65,8 @@ specification explicitly requests broader coverage.
 **Purpose**: Contract definition, repository targeting, and basic structure
 
 - [ ] T001 Update or create the OpenAPI contract for the affected `/api/v1` scope
-- [ ] T002 Identify backend, frontend, and specification repository targets per implementation plan
-- [ ] T003 [P] Configure project tooling and quality gates required by each repository
+- [ ] T002 Identify backend, frontend, and specification repository targets per implementation plan; create the exact `/speckit-specify` feature branch name only in affected implementation repositories
+- [ ] T003 Complete backend readiness and contract verification before frontend implementation, recording an `N/A` backend rationale when no backend source change is required
 
 ---
 
@@ -75,7 +80,7 @@ Examples of foundational tasks (adjust based on your project):
 
 - [ ] T004 Implement Laravel route, controller, request, resource, policy, and service scaffolding for the feature
 - [ ] T005 [P] Establish tenant-scoping, UUID, cross-tenant access rules, and soft-delete support for affected entities
-- [ ] T006 [P] Setup Vue module, router, store, and service scaffolding for the feature
+- [ ] T006 Setup Vue module, router, store, and service scaffolding only after the backend gate passes
 - [ ] T007 Create shared models, DTOs, or entities that all stories depend on
 - [ ] T008 Configure authentication, authorization, error handling, and consistent JSON response behavior
 - [ ] T009 Setup cross-repository traceability and contract validation workflows
@@ -103,8 +108,8 @@ Examples of foundational tasks (adjust based on your project):
 - [ ] T013 [P] [US1] Create or update Laravel models and UUID-ready persistence for affected entities
 - [ ] T014 [US1] Implement backend business logic in the appropriate Service Layer class and supporting DTO or Repository code when required
 - [ ] T015 [US1] Implement Form Request, Policy, API Resource, and `/api/v1` controller wiring
-- [ ] T016 [US1] Implement frontend service integration and module-level state updates
-- [ ] T017 [US1] Implement the user-facing Vue module or route changes without direct component HTTP calls
+- [ ] T016 [US1] Implement frontend service integration and module-level state updates after backend implementation and verification pass
+- [ ] T017 [US1] Implement the user-facing Vue module or route changes without direct component HTTP calls after T016
 - [ ] T018 [US1] Add validation, error handling, tenant-safety checks, and repository coordination notes
 
 **Checkpoint**: At this point, User Story 1 should be fully functional and testable independently
@@ -127,7 +132,7 @@ Examples of foundational tasks (adjust based on your project):
 
 - [ ] T022 [P] [US2] Create or update affected Laravel entities and supporting persistence
 - [ ] T023 [US2] Implement backend service and HTTP-layer changes for the story
-- [ ] T024 [US2] Implement frontend service and module updates for the story
+- [ ] T024 [US2] Implement frontend service and module updates only after backend implementation and verification pass
 - [ ] T025 [US2] Integrate with User Story 1 behavior while preserving independent testability
 
 **Checkpoint**: At this point, User Stories 1 AND 2 should both work independently
@@ -150,7 +155,7 @@ Examples of foundational tasks (adjust based on your project):
 
 - [ ] T029 [P] [US3] Create or update affected Laravel entities and supporting persistence
 - [ ] T030 [US3] Implement backend service and HTTP-layer changes for the story
-- [ ] T031 [US3] Implement frontend service and module updates for the story
+- [ ] T031 [US3] Implement frontend service and module updates only after backend implementation and verification pass
 
 **Checkpoint**: All user stories should now be independently functional
 
@@ -192,9 +197,10 @@ Examples of foundational tasks (adjust based on your project):
 
 ### Within Each User Story
 
-- Contract, backend, and frontend tests for critical flows MUST be written and fail before implementation
+- Contract and backend tests for critical flows MUST be written and fail before backend implementation
 - Models and persistence changes before services
-- Services before controllers, resources, and frontend integration
+- Services before controllers, resources, backend verification, and frontend integration
+- Backend contract, implementation, and verification MUST complete before frontend tests or implementation
 - Core implementation before cross-story integration
 - Story complete before moving to next priority
 
@@ -203,7 +209,8 @@ Examples of foundational tasks (adjust based on your project):
 - All Setup tasks marked [P] can run in parallel
 - All Foundational tasks marked [P] can run in parallel (within Phase 2)
 - Once Foundational phase completes, all user stories can start in parallel (if team capacity allows)
-- All tests for a user story marked [P] can run in parallel
+- All tests for a user story marked [P] can run in parallel only after their
+  applicable backend-first delivery gate passes
 - Models within a story marked [P] can run in parallel
 - Different user stories can be worked on in parallel by different team members
 
