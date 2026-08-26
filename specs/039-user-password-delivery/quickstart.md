@@ -9,7 +9,8 @@ rtk npx @redocly/cli lint aggregate@v1 schoolmaster-platform@v1
 ```
 
 Document `requestUserPasswordDelivery`, its safe 201 response, tenant context,
-and 401/403/404/409/422/429/503 results before backend work.
+and 401/403/404/409/422/429/503 results before backend work. Tenant-context
+failures remain `403 tenant_mismatch`; `422` is reserved for request validation.
 
 From `schoolmaster-backend`:
 
@@ -19,7 +20,8 @@ rtk docker exec schoolmaster-backend-app-1 php artisan test --compact \
 ```
 
 Verify scope, tenant-first lookup, eligibility, limit, mail failure, token
-supersession, safe responses, completion, and session revocation.
+suppression before issuance, supersession, safe responses, completion, and
+session revocation.
 
 ## Frontend gate
 

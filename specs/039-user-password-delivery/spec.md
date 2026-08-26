@@ -189,9 +189,10 @@ and verify the documented feedback and zero secret exposure.
   notification-center, or per-school delivery-channel selection.
 - **FR-005**: The system MUST allow no more than 3 password-link deliveries per
   user and scope within 24 hours, apply documented limits to completion
-  attempts, and MUST not claim inbox delivery when mail submission is rejected
-  or unavailable. A rejected or unavailable submission MUST issue no usable new
-  link and MUST allow a deliberate retry.
+  attempts, honor existing reset-token failure suppression before issuing a
+  delivery token, and MUST not claim inbox delivery when mail submission is
+  rejected or unavailable. A rejected or unavailable submission MUST issue no
+  usable new link and MUST allow a deliberate retry.
 - **FR-006**: The system MUST allow a valid recipient to set a compliant
   password once and MUST invalidate affected active sessions on success.
 - **FR-006a**: The system MUST reject password-link delivery for a locked user;
@@ -203,6 +204,10 @@ and verify the documented feedback and zero secret exposure.
 - **FR-009**: The system MUST reject delivery for unauthorized, cross-tenant,
   inactive, invited, soft-deleted, or otherwise ineligible users without
   issuing a link or exposing private target details.
+- **FR-009a**: School-scoped delivery MUST resolve tenant context before target
+  lookup and return the established `403` tenant-context error with
+  `error.code = tenant_mismatch` for missing, inactive, mismatched, or
+  unauthorized `X-School-Id`. Validation failures remain `422`.
 - **FR-010**: The system MUST invalidate pending frontend delivery state when
   its target, actor, authorization, tenant context, or route changes.
 - **FR-011**: The system MUST define changed REST behavior in OpenAPI before

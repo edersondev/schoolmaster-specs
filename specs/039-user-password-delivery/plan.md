@@ -19,7 +19,8 @@ Element Plus/Vitest/Playwright
 **Target Platform**: Laravel `/api/v1` and responsive SPA
 **Project Type**: Specs, backend, frontend
 **Constraints**: Email only; no auto-send; no secrets; 3/user/scope/24h;
-locked/invited/inactive/deleted/cross-tenant denial; backend before frontend
+reset-token suppression before issuance; locked/invited/inactive/deleted/
+cross-tenant denial; backend before frontend
 
 ## Constitution Check
 
@@ -60,8 +61,9 @@ header, and documented 401/403/404/409/422/429/503 outcomes. Reuse existing
 
 Implement tenant-first lookup, scoped lifecycle authority, active/unlocked
 eligibility, 3-per-user/scope/24h limiting, single-use reset-token issuance,
-supersession only after accepted mail handoff, safe audit data, and 503 with no
-usable new token on mail failure. Add full PHP feature/unit and contract tests.
+existing reset-token suppression before issuance, supersession only after
+accepted mail handoff, safe audit data, and 503 with no usable new token on
+mail failure. Add full PHP feature/unit and contract tests.
 
 ### Phase 2: Frontend after backend verification
 

@@ -18,6 +18,9 @@ No plaintext token, link, or password is stored in or exposed by this record.
 Server-side token hash tied to one user. It is single-use, expiring, and moves
 from active to consumed, superseded, revoked, or expired. A newer accepted
 delivery supersedes older active links; mail failure leaves no newly usable link.
+Existing reset-token failure suppression blocks new delivery token creation for
+15 minutes after five failed reset-token completions per account or IP within
+15 minutes.
 
 ## Eligibility and completion
 
