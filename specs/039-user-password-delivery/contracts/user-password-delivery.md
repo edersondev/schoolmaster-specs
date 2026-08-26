@@ -38,3 +38,11 @@ token: five failed reset-token completions per account or IP within 15 minutes
 block new reset-token creation for 15 minutes. `createUser` remains active by
 default with no automatic mail; invitation and public reset request behavior
 remain unchanged.
+
+## Contract verification
+
+On 2026-08-26, the aggregate contract added
+`requestUserPasswordDelivery`, the closed safe-result schema, and dedicated
+rate-limit and mail-unavailable responses. `rtk npx @redocly/cli lint
+aggregate@v1 schoolmaster-platform@v1` passed both APIs with zero errors and
+nine pre-existing unused-component warnings in the platform contract.
