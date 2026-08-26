@@ -44,8 +44,8 @@ goal and independent verification boundary.
 **Purpose**: Confirm the published dependency and create shared safe fixtures
 before changing frontend behavior.
 
-- [ ] T001 Confirm Feature 038 specification approval, record the linked specs and frontend branch or pull request identifiers, verify the unchanged `createUser`, `restoreUser`, and `getUser` contract with Redocly, and record the gate result in `specs/038-user-recovery-ui/quickstart.md`
-- [ ] T002 Create reusable exact, malformed, generic, and status-matrix response fixtures after T001 passes in `tests/unit/admin-system/user-recovery/fixtures/recoveryFeedback.js`
+- [X] T001 Confirm Feature 038 specification approval, record the linked specs and frontend branch or pull request identifiers, verify the unchanged `createUser`, `restoreUser`, and `getUser` contract with Redocly, and record the gate result in `specs/038-user-recovery-ui/quickstart.md`
+- [X] T002 Create reusable exact, malformed, generic, and status-matrix response fixtures after T001 passes in `tests/unit/admin-system/user-recovery/fixtures/recoveryFeedback.js`
 
 ---
 
@@ -56,12 +56,12 @@ recovery reference can control the page.
 
 **⚠️ CRITICAL**: No user story implementation begins until this phase passes.
 
-- [ ] T003 [P] Add failing reset/context-change and late-resolution tests to `tests/unit/admin-system/administration/composables/useAdminCreateForm.spec.js`
-- [ ] T004 Implement request-generation invalidation, pending cleanup, and stale-result suppression in `src/composables/admin-system/useAdminCreateForm.js`
-- [ ] T005 [P] Add failing close/reset/in-flight invalidation tests to `tests/unit/admin-system/administration-lifecycle/composables/useAdminLifecycleAction.spec.js`
-- [ ] T006 Implement an explicit invalidate/reset action that advances the request sequence and makes late lifecycle results inert in `src/composables/admin-system/useAdminLifecycleAction.js`
-- [ ] T007 [P] Extend restore service regression coverage for method, path, request body, and `X-School-Id` in `tests/unit/admin-system/administration/services/users.spec.js`
-- [ ] T008 [P] Add the internal `restore-user` recovery action constant without changing existing actions in `src/contracts/admin-system/administration.js`
+- [X] T003 [P] Add failing reset/context-change and late-resolution tests to `tests/unit/admin-system/administration/composables/useAdminCreateForm.spec.js`
+- [X] T004 Implement request-generation invalidation, pending cleanup, and stale-result suppression in `src/composables/admin-system/useAdminCreateForm.js`
+- [X] T005 [P] Add failing close/reset/in-flight invalidation tests to `tests/unit/admin-system/administration-lifecycle/composables/useAdminLifecycleAction.spec.js`
+- [X] T006 Implement an explicit invalidate/reset action that advances the request sequence and makes late lifecycle results inert in `src/composables/admin-system/useAdminLifecycleAction.js`
+- [X] T007 [P] Extend restore service regression coverage for method, path, request body, and `X-School-Id` in `tests/unit/admin-system/administration/services/users.spec.js`
+- [X] T008 [P] Add the internal `restore-user` recovery action constant without changing existing actions in `src/contracts/admin-system/administration.js`
 
 **Checkpoint**: Create and lifecycle promises are single-flight and stale-safe;
 the existing restore service contract is verified.
@@ -81,17 +81,17 @@ order, preserved creation draft, and immediate clearing after any email edit.
 
 ### Tests for User Story 1
 
-- [ ] T009 [P] [US1] Add failing exact-response projection, valid-UUID, fixed-copy key, and raw-message/details exclusion tests to `tests/unit/admin-system/administration/services/administration-error-mapper.spec.js`
-- [ ] T010 [P] [US1] Add failing safe-copy, props/emits, polite atomic status, no nested alert, unchanged-focus, normal-tab-order, and no-identifier tests in `tests/unit/admin-system/user-recovery/components/UserRecoveryAlert.spec.js`
-- [ ] T011 [P] [US1] Add failing mounted-page tests for exact warning rendering, generic-feedback suppression, no automatic restore, draft preservation, and email-edit clearing in `tests/unit/admin-system/user-recovery/pages/CreateUserRecovery.spec.js`
+- [X] T009 [P] [US1] Add failing exact-response projection, valid-UUID, fixed-copy key, and raw-message/details exclusion tests to `tests/unit/admin-system/administration/services/administration-error-mapper.spec.js`
+- [X] T010 [P] [US1] Add failing safe-copy, props/emits, polite atomic status, no nested alert, unchanged-focus, normal-tab-order, and no-identifier tests in `tests/unit/admin-system/user-recovery/components/UserRecoveryAlert.spec.js`
+- [X] T011 [P] [US1] Add failing mounted-page tests for exact warning rendering, generic-feedback suppression, no automatic restore, draft preservation, and email-edit clearing in `tests/unit/admin-system/user-recovery/pages/CreateUserRecovery.spec.js`
 
 ### Implementation for User Story 1
 
-- [ ] T012 [US1] Implement exact `409` + `recoverable_user_conflict` + valid UUID + `restore` classification and minimal safe projection in `src/services/admin-system/administration-error-mapper.js`
-- [ ] T013 [P] [US1] Add fixed localized warning, restore action, generic lifecycle resource label, and recovery feedback keys in `src/locales/administration.js`
-- [ ] T014 [US1] Implement the presentation-only polite atomic status region with semantic HTML, Tailwind, a normal `ElButton`, and one `restore` emit in `src/components/admin-system/users/UserRecoveryAlert.vue`
-- [ ] T015 [US1] Implement readonly transient recovery acceptance, context snapshot, visibility, and explicit clear actions without persistence or discovery in `src/composables/admin-system/useUserCreationRecovery.js`
-- [ ] T016 [US1] Compose exact recovery feedback and `UserRecoveryAlert` into the create form, suppress duplicate assertive feedback, preserve the draft, and clear recovery on email edit in `src/pages/admin-system/users/CreateUserPage.vue`
+- [X] T012 [US1] Implement exact `409` + `recoverable_user_conflict` + valid UUID + `restore` classification and minimal safe projection in `src/services/admin-system/administration-error-mapper.js`
+- [X] T013 [P] [US1] Add fixed localized warning, restore action, generic lifecycle resource label, and recovery feedback keys in `src/locales/administration.js`
+- [X] T014 [US1] Implement the presentation-only polite atomic status region with semantic HTML, Tailwind, a normal `ElButton`, and one `restore` emit in `src/components/admin-system/users/UserRecoveryAlert.vue`
+- [X] T015 [US1] Implement readonly transient recovery acceptance, context snapshot, visibility, and explicit clear actions without persistence or discovery in `src/composables/admin-system/useUserCreationRecovery.js`
+- [X] T016 [US1] Compose exact recovery feedback and `UserRecoveryAlert` into the create form, suppress duplicate assertive feedback, preserve the draft, and clear recovery on email edit in `src/pages/admin-system/users/CreateUserPage.vue`
 
 **Checkpoint**: User Story 1 independently distinguishes valid recoverable
 feedback from the previous generic conflict and exposes no retained identity.
@@ -113,16 +113,16 @@ retry GET only while restore call count stays one.
 
 ### Tests for User Story 2
 
-- [ ] T017 [P] [US2] Add failing restore orchestration, single-flight, same-context, local/0/408/422/429/5xx preserve, 401/403/404/409/other-HTTP clear, and safe-terminal-feedback tests in `tests/unit/admin-system/user-recovery/composables/useUserCreationRecovery.spec.js`
-- [ ] T018 [P] [US2] Add failing mounted-page tests for lifecycle dialog reuse, fixed generic label, reason/date submission, exact failure handling, draft discard, and explicit school-mode detail navigation in `tests/unit/admin-system/user-recovery/pages/CreateUserRecovery.spec.js`
-- [ ] T019 [P] [US2] Add failing post-restore detail-load tests proving the detail route remains active, normal retry/return feedback is used, and retry invokes only `getUser` in `tests/unit/admin-system/user-recovery/pages/UserRecoveryDetailFailure.spec.js`
-- [ ] T020 [P] [US2] Create a failing stateful conflict-to-confirmation-to-restore-to-detail browser journey that asserts no more than two deliberate actions from warning to completed confirmation, excluding reason/date entry, and enforces one restore call in `e2e/user-recovery.spec.js`
+- [X] T017 [P] [US2] Add failing restore orchestration, single-flight, same-context, local/0/408/422/429/5xx preserve, 401/403/404/409/other-HTTP clear, and safe-terminal-feedback tests in `tests/unit/admin-system/user-recovery/composables/useUserCreationRecovery.spec.js`
+- [X] T018 [P] [US2] Add failing mounted-page tests for lifecycle dialog reuse, fixed generic label, reason/date submission, exact failure handling, draft discard, and explicit school-mode detail navigation in `tests/unit/admin-system/user-recovery/pages/CreateUserRecovery.spec.js`
+- [X] T019 [P] [US2] Add failing post-restore detail-load tests proving the detail route remains active, normal retry/return feedback is used, and retry invokes only `getUser` in `tests/unit/admin-system/user-recovery/pages/UserRecoveryDetailFailure.spec.js`
+- [X] T020 [P] [US2] Create a failing stateful conflict-to-confirmation-to-restore-to-detail browser journey that asserts no more than two deliberate actions from warning to completed confirmation, excluding reason/date entry, and enforces one restore call in `e2e/user-recovery.spec.js`
 
 ### Implementation for User Story 2
 
-- [ ] T021 [US2] Extend the recovery composable with lifecycle-dialog orchestration, exact numeric-status disposition, safe terminal feedback retention, deliberate retry, and same-context restore submission in `src/composables/admin-system/useUserCreationRecovery.js`
-- [ ] T022 [US2] Wire the existing `restoreUser` service and `AdminLifecycleDialog` to the recovery coordinator with the original school context and no pre-restore detail lookup in `src/pages/admin-system/users/CreateUserPage.vue`
-- [ ] T023 [US2] Reset the failed create draft, invalidate recovery, and navigate once to named `userDetail` with `user_mode=school` after current restore success in `src/pages/admin-system/users/CreateUserPage.vue`
+- [X] T021 [US2] Extend the recovery composable with lifecycle-dialog orchestration, exact numeric-status disposition, safe terminal feedback retention, deliberate retry, and same-context restore submission in `src/composables/admin-system/useUserCreationRecovery.js`
+- [X] T022 [US2] Wire the existing `restoreUser` service and `AdminLifecycleDialog` to the recovery coordinator with the original school context and no pre-restore detail lookup in `src/pages/admin-system/users/CreateUserPage.vue`
+- [X] T023 [US2] Reset the failed create draft, invalidate recovery, and navigate once to named `userDetail` with `user_mode=school` after current restore success in `src/pages/admin-system/users/CreateUserPage.vue`
 
 **Checkpoint**: User Story 2 completes the recommended recovery flow. Restore
 is explicit and single-flight; later maintenance remains separate.
@@ -142,16 +142,16 @@ cross-tenant request, feedback replacement, or navigation survives invalidation.
 
 ### Tests for User Story 3
 
-- [ ] T024 [P] [US3] Add failing generic, flat-body, wrong-code, malformed-UUID, missing/wrong-action, extra-field, and recovery-field-stripping tests to `tests/unit/admin-system/administration/services/administration-error-mapper.spec.js`
-- [ ] T025 [P] [US3] Add failing email/school/actor/session/permission/route/cancel/newer-request invalidation and stale-create/restore tests to `tests/unit/admin-system/user-recovery/composables/useUserCreationRecovery.spec.js`
-- [ ] T026 [P] [US3] Add failing mounted-page privacy tests for generic duplicate feedback, no discovery request, context changes, stale feedback suppression, and no route/storage/DOM identifier exposure in `tests/unit/admin-system/user-recovery/pages/CreateUserRecovery.spec.js`
-- [ ] T027 [P] [US3] Extend browser coverage for generic and malformed privacy fallbacks, repeated submission, context switches, route departure, and stale in-flight responses in `e2e/user-recovery.spec.js`
+- [X] T024 [P] [US3] Add failing generic, flat-body, wrong-code, malformed-UUID, missing/wrong-action, extra-field, and recovery-field-stripping tests to `tests/unit/admin-system/administration/services/administration-error-mapper.spec.js`
+- [X] T025 [P] [US3] Add failing email/school/actor/session/permission/route/cancel/newer-request invalidation and stale-create/restore tests to `tests/unit/admin-system/user-recovery/composables/useUserCreationRecovery.spec.js`
+- [X] T026 [P] [US3] Add failing mounted-page privacy tests for generic duplicate feedback, no discovery request, context changes, stale feedback suppression, and no route/storage/DOM identifier exposure in `tests/unit/admin-system/user-recovery/pages/CreateUserRecovery.spec.js`
+- [X] T027 [P] [US3] Extend browser coverage for generic and malformed privacy fallbacks, repeated submission, context switches, route departure, and stale in-flight responses in `e2e/user-recovery.spec.js`
 
 ### Implementation for User Story 3
 
-- [ ] T028 [US3] Enforce safe generic fallback with no recovery fields for every malformed, unsupported, flat, or non-allowlisted create conflict in `src/services/admin-system/administration-error-mapper.js`
-- [ ] T029 [US3] Implement cancellation and email/school/actor/session/permission/route/newer-request invalidation with safe-default clearing for non-allowlisted HTTP outcomes in `src/composables/admin-system/useUserCreationRecovery.js`
-- [ ] T030 [US3] Connect administration context and route invalidation through `src/composables/admin-system/useAdministrationCreatePage.js` and `src/pages/admin-system/users/CreateUserPage.vue`, suppress stale page effects, and ensure no recovery state enters query, Pinia, storage, logs, or telemetry
+- [X] T028 [US3] Enforce safe generic fallback with no recovery fields for every malformed, unsupported, flat, or non-allowlisted create conflict in `src/services/admin-system/administration-error-mapper.js`
+- [X] T029 [US3] Implement cancellation and email/school/actor/session/permission/route/newer-request invalidation with safe-default clearing for non-allowlisted HTTP outcomes in `src/composables/admin-system/useUserCreationRecovery.js`
+- [X] T030 [US3] Connect administration context and route invalidation through `src/composables/admin-system/useAdministrationCreatePage.js` and `src/pages/admin-system/users/CreateUserPage.vue`, suppress stale page effects, and ensure no recovery state enters query, Pinia, storage, logs, or telemetry
 
 **Checkpoint**: All three user stories are independently verified, and recovery
 cannot weaken duplicate-email or tenant privacy.
@@ -163,10 +163,10 @@ cannot weaken duplicate-email or tenant privacy.
 **Purpose**: Protect adjacent invitation behavior, finish browser accessibility
 coverage, and collect release evidence.
 
-- [ ] T031 [P] Add regression coverage proving successful invited-user creation and the existing invitation continuation still work in `tests/unit/account-lifecycle/pages/CreateUserAccountInvitation.test.js`
-- [ ] T032 [P] Extend the recovery workflow for 390/768/1440 layouts, polite live announcement, unchanged focus, natural keyboard activation, dialog keyboard use, and no accessible UUID in `e2e/user-recovery.spec.js`
-- [ ] T033 Run Redocly, focused and full Vitest, the recovery Playwright workflow, and the production build, then record commands and results in `specs/038-user-recovery-ui/quickstart.md`
-- [ ] T034 Run the documented privacy/architecture source audits plus manual responsive, live-region, focus, and keyboard review, then record evidence in `specs/038-user-recovery-ui/quickstart.md`
+- [X] T031 [P] Add regression coverage proving successful invited-user creation and the existing invitation continuation still work in `tests/unit/account-lifecycle/pages/CreateUserAccountInvitation.test.js`
+- [X] T032 [P] Extend the recovery workflow for 390/768/1440 layouts, polite live announcement, unchanged focus, natural keyboard activation, dialog keyboard use, and no accessible UUID in `e2e/user-recovery.spec.js`
+- [X] T033 Run Redocly, focused and full Vitest, the recovery Playwright workflow, and the production build, then record commands and results in `specs/038-user-recovery-ui/quickstart.md`
+- [X] T034 Run the documented privacy/architecture source audits plus manual responsive, live-region, focus, and keyboard review, then record evidence in `specs/038-user-recovery-ui/quickstart.md`
 - [ ] T035 Conduct moderated acceptance with a preselected cohort of at least 10 authorized administrators, count a participant as passing only when they independently identify restore-versus-recreate behavior and select `Restore existing user` as the next action, calculate the pass percentage and require at least 90%, and record privacy-safe evidence in `specs/038-user-recovery-ui/quickstart.md`
 
 ---

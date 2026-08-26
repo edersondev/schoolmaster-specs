@@ -20,6 +20,17 @@ Expected: no new contract errors. Existing unrelated warnings must be recorded,
 not represented as Feature 038 regressions. Do not regenerate or modify OpenAPI
 because this feature changes no wire behavior.
 
+T001 evidence recorded on 2026-08-23:
+
+- specification approval: merged `schoolmaster-specs` PR
+  `https://github.com/edersondev/schoolmaster-specs/pull/37` at merge commit
+  `d2e05cedccd8036fbfd1038a56c0cf40728f86a6`;
+- frontend delivery branch: `schoolmaster-frontend/038-user-recovery-ui`;
+- Redocly command above exited successfully and verified the unchanged
+  `createUser`, `restoreUser`, and `getUser` operations;
+- both configured API descriptions were valid; nine pre-existing unused
+  assessment-component warnings were reported and are unrelated to Feature 038.
+
 Optional backend prerequisite evidence, when the backend container is running:
 
 ```bash
@@ -71,8 +82,12 @@ update this quickstart and the task list together.
 ## 4. Run the Workflow Test
 
 ```bash
-rtk env CI=1 npm run test:e2e -- e2e/user-recovery.spec.js --project=chromium
+rtk env CI=1 npm run test:e2e -- e2e/user-recovery.spec.js
 ```
+
+Run without a `--project` filter so the configured Chromium, Firefox, and
+WebKit projects all execute. The recorded 12-test release result covers those
+three projects.
 
 The browser workflow must prove:
 
@@ -136,14 +151,20 @@ Fill this table during implementation; do not pre-mark results:
 
 | Gate | Result | Evidence/notes |
 |---|---|---|
-| Redocly contract lint | Pending | |
-| Focused Vitest suite | Pending | |
-| Full Vitest suite | Pending | |
-| Playwright recovery workflow | Pending | |
-| Production build | Pending | |
-| Privacy/source audit | Pending | |
-| Responsive, live-region, focus, and keyboard review | Pending | |
+| Redocly contract lint | PASS | Both APIs valid; 9 pre-existing unused assessment-component warnings; T001 evidence above |
+| Focused Vitest suite | PASS | 9 files and 63 tests passed; final terminal-feedback regression added 2 files and 31 passing tests |
+| Full Vitest suite | PASS | 351 files and 765 tests passed in 200.81 seconds |
+| Playwright recovery workflow | PASS | 12 tests passed across Chromium, Firefox, and WebKit in 38.1 seconds against the final build |
+| Production build | PASS | Vite production build completed; existing third-party pure-annotation and large-chunk warnings remain non-blocking |
+| Privacy/source audit | PASS | No direct page/component HTTP, persistence, raw backend message, telemetry/logging, alert nesting, autofocus, or custom tab order; `created_user_id` matches the pre-existing post-create invitation continuation only |
+| Responsive, live-region, focus, and keyboard review | PASS | Browser assertions and visual review passed at 390, 768, and 1440 pixels; warning remained readable without horizontal overflow, polite/atomic semantics and unchanged focus passed, and restore/dialog keyboard operation passed |
 | Moderated administrator acceptance (SC-007) | Pending | Record predefined cohort size (minimum 10), binary passes, and pass percentage (minimum 90%) |
+
+T033–T034 release evidence recorded on 2026-08-23. The final source audit also
+confirmed that the recovery UUID is absent from the warning/page template and
+browser storage before restore. The only `user_id` source-audit matches in the
+create page are the existing `created_user_id` invitation query flow, which is
+set only after a successful invited-user creation and is not recovery state.
 
 ## 8. Run Moderated Acceptance
 
