@@ -82,8 +82,12 @@ update this quickstart and the task list together.
 ## 4. Run the Workflow Test
 
 ```bash
-rtk env CI=1 npm run test:e2e -- e2e/user-recovery.spec.js --project=chromium
+rtk env CI=1 npm run test:e2e -- e2e/user-recovery.spec.js
 ```
+
+Run without a `--project` filter so the configured Chromium, Firefox, and
+WebKit projects all execute. The recorded 12-test release result covers those
+three projects.
 
 The browser workflow must prove:
 
