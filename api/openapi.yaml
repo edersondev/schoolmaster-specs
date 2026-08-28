@@ -108,6 +108,8 @@ paths:
     $ref: paths/users/account-lock.yaml
   /api/v1/users/{userId}/account-reactivation:
     $ref: paths/users/account-reactivation.yaml
+  /api/v1/users/{userId}/password-delivery:
+    $ref: paths/users/password-delivery.yaml
   /api/v1/schools:
     $ref: paths/schools/index.yaml
   /api/v1/schools/{schoolId}:
