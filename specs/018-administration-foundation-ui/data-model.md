@@ -39,6 +39,9 @@ forms, service mappings, and relationships to approved OpenAPI records.
 - `status`: Approved status value where operation supports it.
 - `sort`: Approved sort value where operation supports it.
 - `academicYearId`: UUID used only for academic-period lists.
+- `fullName`: Optional partial full-name value used only for Guardian lists.
+- `contactEmail`: Optional partial contact-email value used only for Guardian
+  lists.
 
 **Relationships**:
 
@@ -53,6 +56,8 @@ forms, service mappings, and relationships to approved OpenAPI records.
 - Filter or page-size changes reset page to 1.
 - Query values contain no tenant authorization state.
 - School list queries omit `sort` until backend implementation honors it.
+- Guardian list queries allow only `fullName`, `contactEmail`, and `status`
+  filters; text values map to `full_name` and `contact_email` API parameters.
 
 ## AdministrationListState
 
@@ -217,7 +222,9 @@ date guidance uses selected year bounds; backend remains authoritative.
 `StudentProfileLookupOption` results in active school.
 
 **Rules**: Full name and relationship required; contact email validated when
-supplied; failed association means no partial success is shown.
+supplied; contact phone uses the shared `(00) 00000-0000` masked field and is
+stored in form state without punctuation; failed association means no partial
+success is shown.
 
 ## StudentProfileLookupOption
 

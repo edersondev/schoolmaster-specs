@@ -8,6 +8,8 @@ get:
     - $ref: ../../components/parameters/schools/TenantContext.yaml
     - $ref: ../../components/parameters/common/Page.yaml
     - $ref: ../../components/parameters/common/PerPage.yaml
+    - $ref: ../../components/parameters/guardians/GuardianFullNameFilter.yaml
+    - $ref: ../../components/parameters/guardians/GuardianContactEmailFilter.yaml
     - $ref: ../../components/parameters/common/StatusFilter.yaml
   responses:
     '200':
@@ -27,6 +29,8 @@ get:
       $ref: ../../components/responses/auth/Unauthorized.yaml
     '403':
       $ref: ../../components/responses/schools/TenantMismatch.yaml
+    '422':
+      $ref: ../../components/responses/common/ValidationError.yaml
 post:
   tags:
     - Guardians

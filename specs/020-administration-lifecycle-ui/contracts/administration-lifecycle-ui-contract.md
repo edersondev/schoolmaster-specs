@@ -122,6 +122,10 @@ Administrator update or lifecycle action must record
   `end_date`.
 - Guardian update fields: `full_name`, `relationship_type`, `contact_email`,
   `contact_phone`.
+- Guardian contact-phone update reuses the shared Maska-backed phone field. It
+  displays `(00) 00000-0000` while form state and the update payload contain
+  only up to 11 digits. Guardian detail output uses the same Maska-backed
+  display formatter.
 - Status is display-only in edit forms even where the OpenAPI update schema
   publishes a status property.
 - User update requires `users.view`, `users.manage`, and `roles.view` because

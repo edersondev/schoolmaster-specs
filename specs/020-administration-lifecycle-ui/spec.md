@@ -303,6 +303,10 @@ validation, conflict, and denial states.
   permission assignments; academic year name and dates; academic period name,
   sequence, and dates; guardian name, relationship type, and contact
   information.
+- **FR-007a**: Guardian update MUST reuse the shared masked phone field used by
+  school forms, display `(00) 00000-0000`, and retain only up to 11 unmasked
+  digits in form state and request mapping. Guardian detail MUST display the
+  phone value with the same mask.
 - **FR-008**: Role update MUST require `roles.view`, `roles.manage`, and
   `permissions.view`, MUST allow only approved permission assignments from the
   permitted school-scope permission set, MUST automatically traverse every

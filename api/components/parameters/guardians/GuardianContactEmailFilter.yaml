@@ -1,0 +1,7 @@
+name: contact_email
+in: query
+description: Filter guardians whose contact email contains this text, ignoring casing.
+schema:
+  type: string
+  minLength: 1
+  maxLength: 255

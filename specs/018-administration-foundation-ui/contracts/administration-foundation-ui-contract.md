@@ -82,6 +82,9 @@ deferred to a separate implementation feature.
 - School list UI omits `sort` because current backend behavior ignores the
   published parameter; enable it only after backend compliance is verified.
 - Academic periods additionally support `academic_year_id`.
+- Guardians additionally support optional `full_name` and `contact_email`
+  substring filters. Matching is case-insensitive, each value is limited to
+  255 characters, and no other Guardian search field is approved.
 - Student-profile lookup additionally supports approved `search`, status, and
   sort parameters.
 - Unsupported, malformed, or out-of-range values normalize to defaults and are
@@ -157,6 +160,10 @@ deferred to a separate implementation feature.
 - Guardian student choices are hidden when `student_profiles.view` is absent;
   when present, choices come from remote `listStudentProfiles` with
   `status=active`.
+- Guardian contact-phone entry reuses the shared Maska-backed phone field. The
+  input shows `(00) 00000-0000` while form state and API payloads contain only
+  up to 11 digits. Guardian list output uses the same Maska-backed display
+  formatter.
 
 ## State and Tenancy Contract
 
@@ -203,6 +210,8 @@ Vitest coverage must verify:
 - paginated envelope and error mappings
 - stale request cancellation/ignore behavior
 - reusable list/table/filter/pagination/feedback behavior
+- Guardian full-name, contact-email, and status filter rendering, query
+  persistence, reset behavior, and exact API parameter mapping
 - each create form's fields, validation mapping, pending state, and success
   navigation
 - paginated role and academic-year lookup behavior, complete permission
@@ -216,4 +225,5 @@ Vitest coverage must verify:
 - list feedback within 2 seconds when mocked service latency is at most 1.5
   seconds, measured from route navigation or committed query change
 
-No OpenAPI file changes are part of this contract.
+The additive Guardian list parameters and validation response are published in
+OpenAPI and must remain synchronized with backend validation and filtering.

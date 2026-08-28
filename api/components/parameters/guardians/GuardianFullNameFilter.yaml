@@ -1,0 +1,7 @@
+name: full_name
+in: query
+description: Filter guardians whose full name contains this text, ignoring casing.
+schema:
+  type: string
+  minLength: 1
+  maxLength: 255

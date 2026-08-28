@@ -19,18 +19,20 @@ The implementation extends the existing admin shell and auth/session
 foundation. Route pages remain composition surfaces. Reusable admin
 components handle page framing, filters, tables, pagination, feedback, and
 forms; feature composables coordinate query and draft state; services own Axios
-calls and OpenAPI mapping. No backend or OpenAPI change is planned.
+calls and OpenAPI mapping. The Guardian list receives an additive OpenAPI and
+Laravel change for optional `full_name` and `contact_email` filters; the
+existing `status` filter remains unchanged.
 
 ## Technical Context
 
 **Language/Version**: JavaScript with Vue 3 SFCs using Composition API and `<script setup>`; TypeScript remains out of scope.
 **Primary Dependencies**: Vue 3, Vue Router, Pinia session/shell stores, Axios service boundary, Element Plus, `@element-plus/icons-vue`, Vue I18n, Tailwind CSS, and existing OpenAPI-backed administration operations.
-**Storage**: No backend or database change. List state persists only in route query parameters. Unsaved form drafts remain in memory and are discarded only after confirmation.
-**Testing**: Vitest and Vue Test Utils for route modules, services, contract mappers, composables, shared CRUD components, list/create pages, tenant changes, permission denials, paginated lookups, complete permission loading, stale requests, unresolved school gating, and unsaved-route guards; moderated UAT with five representative administrators completing six create workflows each. Redocly/OpenAPI validation is not required unless contract files change.
+**Storage**: No database schema change. Guardian query filtering is implemented in the existing Laravel service. List state persists only in route query parameters. Unsaved form drafts remain in memory and are discarded only after confirmation.
+**Testing**: PHPUnit feature coverage for Guardian validation, filtering, and tenant isolation; Vitest and Vue Test Utils for route modules, services, contract mappers, composables, shared CRUD components, list/create pages, tenant changes, permission denials, paginated lookups, complete permission loading, stale requests, unresolved school gating, and unsaved-route guards; Redocly validation for the additive Guardian parameters; moderated UAT with five representative administrators completing six create workflows each.
 **Target Platform**: `schoolmaster-frontend` responsive SPA consuming published `/api/v1` contracts from `schoolmaster-specs`.
-**Project Type**: Frontend SPA feature with specification and cross-repository delivery artifacts.
+**Project Type**: Cross-repository OpenAPI, Laravel API, and Vue SPA change.
 **Performance Goals**: With the app bootstrapped and mocked list service latency capped at 1.5 seconds, each list renders data, empty state, or recoverable error within 2 seconds from route navigation or committed query change; stale requests are cancelled or ignored; one resource action must not block unrelated shell behavior.
-**Constraints**: No undocumented endpoint, field, filter, sort, or action; no direct Axios in pages/components/router; no lifecycle/detail/edit/delete flows; no direct per-user permission assignment; no client-side tenant inference; unresolved school selection remains blocked; dedicated create routes; URL-query list state; paginated form selectors for non-searchable role and academic-year lookups; complete sequential loading for the permission selector; school sort hidden until backend honors it; active-only guardian student lookup; WCAG 2.1 AA target at 390px, 768px, and 1440px; PascalCase Element Plus tags; centralized reusable text.
+**Constraints**: No undocumented endpoint, field, filter, sort, or action; Guardian list search is limited to `full_name`, `contact_email`, and `status`; no direct Axios in pages/components/router; no lifecycle/detail/edit/delete flows; no direct per-user permission assignment; no client-side tenant inference; unresolved school selection remains blocked; dedicated create routes; URL-query list state; paginated form selectors for non-searchable role and academic-year lookups; complete sequential loading for the permission selector; school sort hidden until backend honors it; active-only guardian student lookup; WCAG 2.1 AA target at 390px, 768px, and 1440px; PascalCase Element Plus tags; centralized reusable text.
 **Scale/Scope**: Seven list modules, six create workflows, two paginated
 reference selectors, one complete permission selector, one student-profile lookup, shared CRUD primitives, route
 metadata/navigation, URL query coordination, validation/error mapping,
@@ -40,17 +42,20 @@ responsive layouts, and focused frontend tests.
 
 *GATE: Must pass before Phase 0 research. Re-check after Phase 1 design.*
 
-- PASS: OpenAPI impact is identified. The feature consumes only existing
+- PASS: OpenAPI impact is identified. The feature consumes existing
   `listSchools`, `createSchool`, `listUsers`, `createUser`, `listRoles`,
   `createRole`, `listPermissions`, `listAcademicYears`,
   `createAcademicYear`, `listAcademicPeriods`, `createAcademicPeriod`,
-  `listGuardians`, `createGuardian`, and `listStudentProfiles` operations.
+  `listGuardians`, `createGuardian`, and `listStudentProfiles` operations and
+  additively publishes `full_name` and `contact_email` on `listGuardians`.
 - PASS: Repository impacts are separated. `schoolmaster-specs` defines this
-  plan; `schoolmaster-frontend` implements it; `schoolmaster-backend` remains
-  unchanged unless contract verification finds a gap.
-- PASS: Backend architecture requirements are N/A because no Laravel code,
-  schema, route, Policy, Request, Resource, Service, DTO, Repository, or public
-  identifier change is approved.
+  plan and OpenAPI contract; `schoolmaster-backend` validates and applies the
+  additive Guardian filters; `schoolmaster-frontend` implements their UI and
+  URL/service mapping.
+- PASS: Backend architecture requirements are satisfied through a dedicated
+  Form Request, a typed list-filter DTO, the existing Guardian service, and
+  feature tests. No schema, route, Policy, Resource, Repository, or public
+  identifier change is required.
 - PASS: Frontend design uses Vue 3 Composition API, Pinia only for existing
   shared session/shell state, Vue Router, Tailwind CSS, Element Plus, Axios
   service modules, feature folders, and service-isolated API access.
@@ -63,8 +68,8 @@ responsive layouts, and focused frontend tests.
 - PASS: API compatibility, authentication, authorization, pagination,
   filtering, sorting, success envelopes, error mapping, and exact frontend
   permission requirements are documented.
-- PASS: Vitest covers changed critical frontend flows. OpenAPI validation is
-  required only if contract review results in a separate contract change.
+- PASS: PHPUnit covers Guardian API validation/filtering and tenant isolation;
+  Vitest covers changed frontend flows; Redocly validates the contract.
 - PASS: No constitution deviation is required.
 
 ## Project Structure
@@ -240,8 +245,8 @@ Design outputs are captured in:
 
 - PASS: Design preserves contract-first consumption and names every approved
   operation, request parameter, envelope, and blocked lifecycle category.
-- PASS: Repository ownership remains explicit; no backend implementation or
-  contract mutation is hidden in frontend work.
+- PASS: Repository ownership remains explicit: specs own the contract,
+  backend owns query validation/filtering, and frontend owns URL and UI state.
 - PASS: Pages/components remain presentation and composition boundaries;
   services own transport; composables own route/form coordination; existing
   Pinia stores own only shared session and shell state.

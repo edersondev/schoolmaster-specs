@@ -34,6 +34,13 @@
   name and the human-readable permission `name` as Description because those
   are the fields published by the existing API.
 
+### Session 2026-08-28
+
+- Q: Which controls should the Guardian list search form expose? → A: Expose
+  only optional partial, case-insensitive `full_name` and `contact_email`
+  filters plus the existing `status` filter. Do not expose a general search,
+  relationship-type, phone, student, or other Guardian filter.
+
 ## User Scenarios & Testing *(mandatory)*
 
 ### User Story 1 - Manage Schools from the Platform Workspace (Priority: P1)
@@ -178,7 +185,7 @@ states.
 
 1. **Given** an authorized school administrator, **When** they open guardians,
    **Then** they see a paginated list limited to the active school with the
-   approved status filter.
+   approved full-name, contact-email, and status filters.
 2. **Given** no guardians match the current page or filter, **When** loading
    completes, **Then** a clear empty state and authorized create action are
    shown.
@@ -287,7 +294,9 @@ states.
     `student_profiles.view`.
   All listed permissions are required for the corresponding frontend route or
   action. Backend authorization remains authoritative.
-- **Compatibility impact**: Frontend-only and additive. Detail, update,
+- **Compatibility impact**: Additive across the OpenAPI contract, Laravel
+  Guardian list query validation/service, and frontend Guardian list UI. No
+  response or database schema changes are required. Detail, update,
   activation, deactivation, deletion, restoration, bulk lifecycle, invitation,
   password, and guardian user-link workflows remain outside this feature.
 
@@ -340,8 +349,11 @@ states.
 - **FR-009**: School lists MUST support status, pagination, and page-size
   controls but MUST NOT expose sorting until backend implementation honors the
   published sort parameter. User lists MUST support approved status,
-  pagination, page-size, and sort controls. Role, academic year, and guardian
-  lists MUST support approved status and pagination controls.
+  pagination, page-size, and sort controls. Role and academic year lists MUST
+  support approved status and pagination controls. Guardian lists MUST support
+  optional partial, case-insensitive full-name and contact-email filters,
+  approved status, and pagination controls, and MUST expose no other search
+  fields.
 - **FR-009a**: The Roles list MUST NOT render a Permissions column. Every
   visible role MUST expose a List permissions overflow action under
   `roles.view`; the action MUST open a read-only responsive grid using each
@@ -377,6 +389,10 @@ states.
   from the approved student-profile list with `status=active` for the active
   school, and the UI MUST not present a partially successful result when any
   association is rejected.
+- **FR-017a**: Guardian contact-phone entry MUST reuse the shared masked phone
+  field used by school forms, display `(00) 00000-0000`, and retain only up to
+  11 unmasked digits in form state and request mapping. Guardian list phone
+  values MUST use the same display mask.
 - **FR-018**: Validation responses MUST map field errors to matching controls,
   preserve correct user input, show form-level errors when no field match
   exists, and focus or summarize errors accessibly.
@@ -490,8 +506,9 @@ states.
 - Schools are managed through platform-scoped permissions; other resource
   pages use the active permitted school context unless the published contract
   explicitly returns a permitted platform scope.
-- Search controls are not included because the current foundation list
-  operations do not publish a general search parameter.
+- No general search control is included. The Guardian list is the only
+  foundation list with resource-specific text filters, limited to the
+  published `full_name` and `contact_email` parameters.
 - School sorting remains hidden because the current backend implementation
   ignores the published school sort parameter and always orders by name.
 - Create workflows use dedicated protected routes and must preserve accessible

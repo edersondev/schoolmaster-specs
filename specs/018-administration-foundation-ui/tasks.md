@@ -4,9 +4,9 @@
 **Prerequisites**: `plan.md`, `spec.md`, `research.md`, `data-model.md`,
 `contracts/administration-foundation-ui-contract.md`, `quickstart.md`
 
-**Tests**: Frontend behavior changes require Vitest coverage for services,
-contracts, composables, routes, shared components, tenant handling, forms, and
-critical user flows.
+**Tests**: Frontend behavior changes require Vitest coverage; Guardian API
+filter changes additionally require PHPUnit feature coverage and Redocly
+contract validation.
 
 **Organization**: Tasks are grouped by user story. Implementation paths are
 relative to `schoolmaster-frontend`; specification paths are relative to
@@ -18,8 +18,8 @@ relative to `schoolmaster-frontend`; specification paths are relative to
   depend on another incomplete task.
 - **[Story]**: Maps task to a user story from `spec.md`.
 - Run specification tasks from `schoolmaster-specs`.
-- Run frontend tasks from `schoolmaster-frontend`.
-- No backend or OpenAPI implementation changes are planned.
+- Run frontend tasks from `schoolmaster-frontend` and Guardian API tasks from
+  `schoolmaster-backend` after the specification/OpenAPI gate passes.
 
 ## Phase 1: Setup
 
@@ -233,6 +233,22 @@ scope, and documentation verification.
 
 ---
 
+## Phase 8: Guardian List Filter Amendment
+
+**Purpose**: Replace the School-filter reuse on Guardians with the approved
+Guardian-only search form and synchronize its additive API behavior.
+
+- [X] T099 [US4] Update the Guardian list specification, design contract, data model, plan, and tasks for `full_name`, `contact_email`, and `status` only in `specs/018-administration-foundation-ui/`
+- [X] T100 [US4] Publish optional Guardian full-name and contact-email parameters plus list validation errors in `api/paths/guardians/index.yaml` and `api/components/parameters/guardians/`
+- [X] T101 [US4] Add PHPUnit feature coverage for partial case-insensitive Guardian filtering, combined status filtering, tenant isolation, invalid values, and undocumented fields in `../schoolmaster-backend/tests/Feature/Api/V1/GuardianManagementTest.php`
+- [X] T102 [US4] Implement validated Guardian list filters through a dedicated Form Request, typed DTO, and the existing Guardian service in `../schoolmaster-backend/app/Http/Requests/Api/V1/ListGuardianRequest.php`, `../schoolmaster-backend/app/DTOs/Guardians/GuardianListFilters.php`, `../schoolmaster-backend/app/Http/Controllers/Api/V1/GuardianController.php`, and `../schoolmaster-backend/app/Services/Guardians/GuardianService.php`
+- [X] T103 [US4] Add Vitest coverage for Guardian query parsing/serialization, exact service parameters, filter emits/reset behavior, and page wiring in `../schoolmaster-frontend/tests/unit/admin-system/administration/`
+- [X] T104 [US4] Implement the Guardian-only search form, URL query mapping, service parameter mapping, and list-page wiring in `../schoolmaster-frontend/src/components/admin-system/guardians/GuardianFilters.vue`, `../schoolmaster-frontend/src/composables/admin-system/`, `../schoolmaster-frontend/src/services/admin-system/`, and `../schoolmaster-frontend/src/pages/admin-system/guardians/GuardiansListPage.vue`
+- [X] T105 Run focused backend and frontend tests plus Laravel Pint for the Guardian filter amendment
+- [X] T106 Run Redocly validation, frontend production build, and cross-repository diff review
+
+---
+
 ## Dependencies and Execution Order
 
 ### Phase Dependencies
@@ -356,5 +372,5 @@ T077 Guardian component tests
 - `[P]` means files do not conflict at task start.
 - Story labels appear only in story phases.
 - Tests must fail before corresponding implementation.
-- No package installation, backend implementation, or OpenAPI change is
-  approved.
+- No package installation is approved. Backend and OpenAPI changes are limited
+  to the Guardian list filter amendment in Phase 8.
