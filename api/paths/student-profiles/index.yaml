@@ -35,6 +35,16 @@ post:
   tags:
     - Student Profiles
   summary: Create a same-school student profile
+  description: >-
+    Creates one student profile and, optionally, zero to two guardian
+    associations in one atomic request. Guardian entries may link active
+    same-school existing guardians or create new same-school guardians inline.
+    Duplicate relationship labels are accepted, but duplicate existing guardian
+    references, more than two entries, invalid mode combinations, inactive,
+    deleted, missing, or cross-school guardian references, invalid guardian
+    contact fields, and missing guardian management authority for submitted
+    guardian entries are rejected. When any guardian entry fails, no student,
+    guardian, or association record is committed.
   operationId: createStudentProfile
   x-system-administrator-master-access: true
   parameters:
@@ -47,7 +57,9 @@ post:
           $ref: ../../components/schemas/student-profiles/StudentProfileCreateRequest.yaml
   responses:
     '201':
-      description: Student profile created
+      description: >-
+        Student profile created with zero to two association-level guardian
+        response records.
       content:
         application/json:
           schema:

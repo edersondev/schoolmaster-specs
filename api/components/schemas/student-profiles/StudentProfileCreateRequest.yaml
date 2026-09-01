@@ -45,10 +45,14 @@ properties:
   guardian_associations:
     type: array
     description: >-
-      Optional same-school guardian links to create with the student profile.
-      Each `guardian_id` may appear at most once in a request, even if
-      `relationship_type` differs. Duplicate guardian references are rejected
-      with a validation error.
+      Optional same-school guardian entries to create with the student profile.
+      Zero, one, or two entries are accepted. Each entry must use exactly one
+      mode: link an existing active same-school guardian by `guardian_id`, or
+      create a new same-school guardian from the supplied identity/contact data.
+      Each existing `guardian_id` may appear at most once in a request, even if
+      `relationship_type` differs. Duplicate relationship labels are accepted
+      when each guardian identity or reference is otherwise valid.
+    maxItems: 2
     items:
       $ref: StudentProfileGuardianInput.yaml
     uniqueItems: true

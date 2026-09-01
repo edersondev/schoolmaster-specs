@@ -141,3 +141,64 @@ Record in implementation PRs:
   permission, full payload, or cross-tenant data appears in visible errors,
   logs, or test output.
 - Responsive and keyboard review for 390px, 768px, and 1440px.
+
+## Implementation Evidence
+
+### T001 Branch Readiness
+
+- `schoolmaster-specs`: `040-student-guardian-tabs`
+- `schoolmaster-backend`: `040-student-guardian-tabs`
+- `schoolmaster-frontend`: `040-student-guardian-tabs`
+- Frontend had pre-existing unrelated dirty classroom roster changes before
+  branch creation; implementation will not modify or revert those files.
+
+### T010 OpenAPI Contract Gate
+
+- `rtk npx @redocly/cli lint api/openapi.yaml`: passed.
+- `rtk npx @redocly/cli bundle api/openapi.yaml --output /tmp/feature-040-openapi.yaml`: passed.
+
+### T022 Backend Gate
+
+- `rtk docker exec schoolmaster-backend-app-1 php artisan test tests/Feature/Api/V1/StudentProfileCreateWithGuardiansTest.php tests/Feature/Api/V1/StudentProfileCreateWithExistingGuardiansTest.php tests/Feature/Api/V1/StudentProfileGuardianValidationTest.php tests/Feature/Api/V1/StudentProfileCreateAtomicityTest.php tests/Feature/Api/V1/StudentProfileGuardianLimitRegressionTest.php tests/Unit/StudentProfiles/StudentProfileGuardianEntryDataTest.php`: passed, 13 tests and 41 assertions.
+- `rtk docker exec schoolmaster-backend-app-1 php artisan test`: passed, 583 tests and 2963 assertions.
+
+### T054 Contract Polish
+
+- `rtk npx @redocly/cli lint api/openapi.yaml`: passed.
+- `rtk npx @redocly/cli bundle api/openapi.yaml --output /tmp/feature-040-final-openapi.yaml`: passed.
+
+### T056-T057 Frontend Gate
+
+- `rtk npm run test:unit -- tests/unit/student-guardian-tabs`: passed, 12 files and 15 tests.
+- `rtk npm run test:unit -- tests/unit/student-guardian-tabs tests/unit/admin-system/administration/routes/administration.navigation.spec.js tests/unit/admin-system/administration/routes/administration.routes.spec.js tests/unit/admin-system/administration/services/student-profiles.spec.js tests/unit/admin-system/administration/services/guardians.spec.js tests/unit/student-enrollment-roster/services/studentProfileCreate.service.spec.js`: passed, 17 files and 25 tests.
+- `rtk npm run test:unit`: passed, 366 files and 813 tests.
+- `rtk npm run build`: passed. Existing warnings remain for VueUse pure annotations and large chunks; no feature compile errors remain.
+
+### T058 Source Audit
+
+- Direct Axios usage remains inside service modules: `authService.js`, `accountLifecycle.js`, and `admin-system/administration-service.js`.
+- Guardian endpoint strings remain only in `src/services/admin-system/guardians.js`.
+- `createGuardian` is not called by the Create Student page, components, composable, or student profile service.
+- `guardiansList` route remains only as a hidden redirect record; no Guardians sidebar item or `navigation.guardians` sidebar metadata remains.
+
+### T059 Responsive and Keyboard Review
+
+- Source review confirmed the Create Student workflow uses existing `AdminFormPage`, Element Plus tabs, form items, buttons, and native form submit/cancel handling.
+- The tab layout has no fixed-width text containers; Student fields retain the existing responsive two-column grid and Guardians entries use one-column mobile/two-column desktop grids.
+- Guardian add/remove/mode/select controls are keyboard-reachable Element Plus controls. Live browser review at 390px, 768px, and 1440px remains recommended before release because no authenticated administrator browser session was available in this run.
+
+### T060 Privacy Review
+
+- Backend validation errors use field paths and generic same-school guardian messages; cross-school, missing, inactive, and deleted guardian references are not distinguished by protected record detail.
+- Frontend validation messages do not include guardian contact values, full request payloads, tokens, role payloads, or cross-tenant existence details.
+- Route redirects preserve only the former route name in `redirected_from` and active school context is still owned by the existing auth/session flow.
+
+### T061-T063 Final Evidence
+
+- `createStudentProfile` now handles zero, one, or two guardian entries; `createGuardian` is not chained by the frontend workflow.
+- Guardian entries require `guardians.manage`; student-only creation still requires only student profile management.
+- Sidebar navigation excludes Guardians for all tested permission combinations.
+- Former guardian list/create/detail/edit routes redirect to Create Student without loading guardian pages.
+- Backend tests cover zero/two new guardians, mixed new/existing guardians, duplicate relationship-label acceptance, duplicate existing guardian rejection, third guardian rejection, and atomic rollback.
+- Frontend tests cover route hiding/redirects, payload mapping, active lookup filtering, tab rendering, entry limits, duplicate identity/reference validation, and no partial-success contract.
+- Administrator-proxy timed evidence: focused feature Vitest run completed in 3.38s; full frontend unit suite completed in 135.17s; production build completed in 1.46s. Existing-guardian lookup is covered as a single active-filtered service call; duplicate submit prevention remains inherited from `useAdminCreateForm` pending-request behavior.

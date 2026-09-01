@@ -1,0 +1,14 @@
+type: object
+required:
+  - full_name
+properties:
+  full_name:
+    type: string
+    minLength: 1
+    maxLength: 160
+  contact_email:
+    type: string
+    format: email
+  contact_phone:
+    type: string
+    maxLength: 40

@@ -26,8 +26,9 @@ allOf:
         format: uuid
       guardian_associations:
         type: array
+        maxItems: 2
         items:
-          $ref: ../guardians/Guardian.yaml
+          $ref: StudentProfileGuardianAssociation.yaml
       enrollment_history:
         type: array
         items:

@@ -1,13 +1,53 @@
 type: object
 required:
-  - guardian_id
   - relationship_type
 additionalProperties: false
+oneOf:
+  - title: Existing guardian reference
+    required:
+      - guardian_id
+    not:
+      anyOf:
+        - properties:
+            full_name: {}
+          required:
+            - full_name
+        - properties:
+            contact_email: {}
+          required:
+            - contact_email
+        - properties:
+            contact_phone: {}
+          required:
+            - contact_phone
+  - title: New guardian details
+    allOf:
+      - $ref: StudentProfileNewGuardianInput.yaml
+      - not:
+          properties:
+            guardian_id: {}
+          required:
+            - guardian_id
 properties:
   guardian_id:
     type: string
     format: uuid
+    description: Active same-school guardian UUID for existing-guardian mode.
   relationship_type:
     type: string
     minLength: 1
     maxLength: 80
+    description: Relationship label for this student-guardian association.
+  full_name:
+    type: string
+    minLength: 1
+    maxLength: 160
+    description: Required guardian name for new-guardian mode.
+  contact_email:
+    type: string
+    format: email
+    description: Optional guardian email for new-guardian mode.
+  contact_phone:
+    type: string
+    maxLength: 40
+    description: Optional guardian phone for new-guardian mode.
