@@ -183,6 +183,33 @@ privacy, and documentation across all stories.
 
 ---
 
+## Phase 7: User Story 4 - Student Detail With Student and Guardian Tabs (Priority: P2)
+
+**Goal**: The Student Profile detail page presents Student and Guardians tabs;
+the Guardians tab renders zero to two read-only guardian associations from the
+existing documented `getStudentProfile.guardian_associations` response, with no
+guardian edit, lifecycle, or association-management controls.
+
+**Independent Test**: Open an existing student detail page with guardian
+associations, switch between Student and Guardians tabs, confirm read-only
+guardian fields, and confirm the empty state for a student without guardians.
+
+### Tests for User Story 4
+
+- [X] T064 [P] [US4] Add Vitest page coverage proving the Student Profile detail page renders Student and Guardians tabs and shows existing guardian associations in the Guardians tab in `schoolmaster-frontend/tests/unit/student-guardian-tabs/pages/StudentProfileDetailPage.spec.js`
+- [X] T065 [P] [US4] Add Vitest component coverage for guardian association display fields, formatted phone, status rendering, and empty state in `schoolmaster-frontend/tests/unit/student-guardian-tabs/components/StudentGuardianAssociationsPanel.spec.js`
+
+### Implementation for User Story 4
+
+- [X] T066 [US4] Implement read-only guardian associations panel with relationship, full name, contact email, contact phone, status, and empty state in `schoolmaster-frontend/src/components/admin-system/students/StudentGuardianAssociationsPanel.vue`
+- [X] T067 [US4] Convert the Student Profile detail page into Student and Guardians tabs using the existing detail record `guardianAssociations` in `schoolmaster-frontend/src/pages/admin-system/students/StudentProfileDetailPage.vue`
+- [X] T068 [US4] Run focused Vitest files, eslint on changed frontend files, and production build, then record results in `schoolmaster-specs/specs/040-student-guardian-tabs/quickstart.md`
+
+**Checkpoint**: User Story 4 is independently functional after the Phase 2
+backend gate; no backend or OpenAPI change is required.
+
+---
+
 ## Dependencies and Execution Order
 
 ### Phase Dependencies
@@ -202,6 +229,9 @@ privacy, and documentation across all stories.
 - **User Story 3 (P3)**: Starts after Phase 2 and after US2 workflow scaffolding
   exists; its limit and duplicate handling remain independently testable in the
   composable and page tests.
+- **User Story 4 (P2)**: Starts after Phase 2; consumes the existing
+  `getStudentProfile.guardian_associations` contract and requires no additional
+  backend or OpenAPI gate.
 
 ### Within Each User Story
 
@@ -224,6 +254,7 @@ privacy, and documentation across all stories.
 - T040, T041, and T042 can run in parallel after T036 through T039.
 - T045 through T048 can run in parallel after US2 workflow scaffolding exists.
 - T054 through T063 run after implementation is complete; serialize each `quickstart.md` evidence update.
+- T064 and T065 can run in parallel after the Phase 2 backend gate.
 
 ---
 

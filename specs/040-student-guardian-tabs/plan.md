@@ -11,7 +11,9 @@ link existing same-school guardians, with zero to two guardian entries and no
 partial success. Frontend work follows after backend readiness: remove the
 standalone Guardians sidebar item, redirect direct guardian admin routes to
 Create Student, and convert Create Student into Student and Guardians tabs with
-permission-aware guardian capture.
+permission-aware guardian capture. The same feature converts the Student
+Profile detail page into Student and Guardians tabs that render the documented
+`guardian_associations` response read-only.
 
 ## Technical Context
 
@@ -23,7 +25,7 @@ permission-aware guardian capture.
 **Project Type**: Cross-repository OpenAPI, Laravel API, and Vue SPA change
 **Performance Goals**: Create Student route shows stable form, blocked state, or recoverable error within 2 seconds after app bootstrap; existing-guardian search returns a usable page within 2 seconds under normal admin list latency; valid student-with-guardians submission settles with success or actionable feedback without duplicate submits
 **Constraints**: OpenAPI before backend, backend gate before frontend, no standalone Guardians sidebar entry, direct standalone guardian admin routes redirect to Create Student, zero to two guardians allowed, third guardian blocked, guardian capture requires guardian management authority, no partial student/guardian success, no direct Axios outside services, no undocumented request fields or endpoints
-**Scale/Scope**: One student-create contract expansion, one backend validation/service transaction update, one guardian lookup use from existing list contract, one Create Student tabbed workflow, one navigation removal, one redirect route behavior, and focused backend/frontend verification
+**Scale/Scope**: One student-create contract expansion, one backend validation/service transaction update, one guardian lookup use from existing list contract, one Create Student tabbed workflow, one navigation removal, one redirect route behavior, one Student Profile detail tabbed view, and focused backend/frontend verification
 
 ## Constitution Check
 
@@ -149,6 +151,14 @@ form. The Student tab owns student fields; the Guardians tab supports zero to
 two entries, new guardian data, existing same-school guardian selection,
 guardian permission gating, tab-level validation badges or summaries, stale
 request handling, and safe feedback.
+
+### Phase 3: Student Profile Detail Tabs (Frontend Only)
+
+Convert the Student Profile detail page into Student and Guardians tabs. The
+Student tab keeps the existing student summary and enrollment status panels;
+the Guardians tab renders the zero to two `guardian_associations` records
+already returned and documented by `getStudentProfile` as a read-only panel.
+No backend or OpenAPI change is required for this phase.
 
 ## Post-Design Constitution Check
 

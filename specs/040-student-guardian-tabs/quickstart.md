@@ -202,3 +202,11 @@ Record in implementation PRs:
 - Backend tests cover zero/two new guardians, mixed new/existing guardians, duplicate relationship-label acceptance, duplicate existing guardian rejection, third guardian rejection, and atomic rollback.
 - Frontend tests cover route hiding/redirects, payload mapping, active lookup filtering, tab rendering, entry limits, duplicate identity/reference validation, and no partial-success contract.
 - Administrator-proxy timed evidence: focused feature Vitest run completed in 3.38s; full frontend unit suite completed in 135.17s; production build completed in 1.46s. Existing-guardian lookup is covered as a single active-filtered service call; duplicate submit prevention remains inherited from `useAdminCreateForm` pending-request behavior.
+
+### T064-T068 Detail View Tabs (User Story 4)
+
+- `StudentProfileDetailPage.vue` now presents Student and Guardians tabs; the Student tab keeps the summary and enrollment status panels, and the Guardians tab renders zero to two read-only `guardianAssociations` from the existing documented `getStudentProfile` response.
+- `StudentGuardianAssociationsPanel.vue` renders guardian full name, relationship, contact email, formatted phone, and status tag, with a no-guardians empty state and no edit/lifecycle controls.
+- Focused Vitest: `tests/unit/student-guardian-tabs/pages/StudentProfileDetailPage.spec.js` and `tests/unit/student-guardian-tabs/components/StudentGuardianAssociationsPanel.spec.js` passed, 2 files and 3 tests.
+- `eslint` on the changed frontend files passed; `npm run build` passed with existing VueUse/chunk-size warnings only.
+- No backend or OpenAPI change was required; the detail view consumes the already documented `guardian_associations` response.

@@ -65,11 +65,38 @@ A school administrator can add more than one guardian in the Guardians tab, such
 3. **Given** two guardian entries already exist, **When** the administrator attempts to add another guardian, **Then** the workflow prevents a third entry and explains that a student can have a maximum of two guardians.
 4. **Given** two guardian entries are submitted for one student, **When** both pass validation, **Then** both guardian records are associated to the created student.
 
+---
+
+### User Story 4 - View Student Detail With Student and Guardian Tabs (Priority: P2)
+
+A school administrator opens a saved student profile and sees student
+information and the student's zero to two guardian associations split into
+Student and Guardians tabs, so the full enrollment context is reviewable from
+one detail view without leaving the student page.
+
+**Why this priority**: Guardians are captured during student creation; the
+detail view must expose those associations so administrators can verify the
+completed enrollment context.
+
+**Independent Test**: Can be fully tested by opening an existing student
+profile detail page as an authorized administrator, confirming Student and
+Guardians tabs, switching to the Guardians tab, and confirming zero, one, or
+two guardian associations display read-only without edit or lifecycle controls.
+
+**Acceptance Scenarios**:
+
+1. **Given** an authorized school administrator opens a student profile detail page, **When** the page renders, **Then** it shows a Student tab with the existing student summary and enrollment status panels and a Guardians tab.
+2. **Given** the student has one or two guardian associations, **When** the administrator opens the Guardians tab, **Then** each association shows guardian full name, relationship label, contact email, contact phone, and association status without exposing other-tenant or protected detail.
+3. **Given** the student has no guardian associations, **When** the administrator opens the Guardians tab, **Then** the tab shows the no-guardians empty state without edit controls.
+4. **Given** the detail page renders guardian associations, **When** the administrator inspects the tab, **Then** no guardian create, edit, lifecycle, bulk, user-link, or association-management control is offered in this slice.
+
 ### Edge Cases
 
 - The active school context is missing, inactive, changed during the workflow, or no longer authorized while the administrator is creating a student with guardians.
 - Guardian data is partially entered and the administrator switches tabs, changes page size, changes active school, signs out, or navigates away.
 - The administrator submits zero guardians; student creation remains allowed and no guardian association is created.
+- The student detail record has zero guardian associations; the Guardians tab shows the empty state.
+- The student detail record has one or two guardian associations; the Guardians tab renders them read-only from the documented `getStudentProfile` response, and no guardian mutation occurs from the detail view.
 - The administrator submits duplicate guardian entries with the same name and contact data or the same existing guardian reference; duplicate relationship labels are allowed and do not make the request invalid.
 - One guardian entry is valid and another is invalid; the workflow must not present partial success as complete student creation.
 - Guardian contact email or phone fields are blank, malformed, or already used by another same-school guardian record where uniqueness rules apply.
@@ -83,13 +110,14 @@ A school administrator can add more than one guardian in the Guardians tab, such
 ### Repository Impact
 
 - **Backend repository impact**: Backend contract review is required because the new workflow creates or links guardian records from the student creation experience and enforces a maximum of two guardians per student. If existing operations can support this behavior without new backend behavior, planning must document the exact approved operation sequence and backend readiness gate; otherwise backend validation and contract behavior must be updated before frontend implementation.
-- **Frontend repository impact**: Update the protected administration navigation to remove the standalone Guardians sidebar item, update the Create Student experience to use Student and Guardians tabs, support one or two guardian entries in the Guardians tab, preserve tabbed form state, and redirect direct guardian administration access to Create Student.
+- **Frontend repository impact**: Update the protected administration navigation to remove the standalone Guardians sidebar item, update the Create Student experience to use Student and Guardians tabs, support one or two guardian entries in the Guardians tab, preserve tabbed form state, redirect direct guardian administration access to Create Student, and convert the Student Profile detail page into Student and Guardians tabs backed by the documented `guardian_associations` response from `getStudentProfile`.
 - **Specification or contract repository impact**: Add this behavior specification. OpenAPI must document the two-guardian maximum and approved new-guardian creation plus existing same-school guardian association behavior used by the tabbed student create workflow before implementation begins.
 - **Delivery ownership and sequencing**: `schoolmaster-specs` defines the updated behavior first. Backend contract, implementation, and verification must pass before frontend implementation when OpenAPI or backend validation changes are needed. `schoolmaster-frontend` implements navigation and tabbed workflow only after backend readiness is recorded. Every affected implementation repository uses the exact feature branch name created by `/speckit-specify`; unaffected repositories receive no branch.
 
 ### API Contract Impact
 
 - **OpenAPI update required**: Yes. The contract must document how guardian records are created or existing same-school guardian records are associated from student creation and must define the maximum of two guardians per student. If planning proves existing endpoints already provide this behavior, OpenAPI still needs the missing two-guardian maximum documented where the request or validation contract is defined.
+- **Detail view contract note**: No additional OpenAPI update is required for the Student Profile detail view. `getStudentProfile` already returns and documents `guardian_associations` with a maximum of two association records; the detail Guardians tab consumes that existing documented response. Backend repository impact for this slice: N/A.
 - **Versioned endpoints affected**: `/api/v1/student-profiles` and `/api/v1/guardians` are affected if the workflow uses existing student and guardian creation or association operations. Any combined student-with-guardians operation or changed guardian association behavior must be added under `/api/v1/...` before implementation begins.
 - **JSON response impact**: Success responses must allow the frontend to confirm the created student and associated guardian records. Failure responses must clearly distinguish student-field validation, guardian-field validation, maximum-guardian violations, duplicate guardian violations, authorization denials, tenant mismatch, inactive school, not-found references, and conflict states without exposing protected details.
 - **Authentication/authorization impact**: Student creation remains protected by approved student administration permissions and active permitted school context. Guardian creation or association inside the student form requires both approved student create permission and guardian manage permission.
@@ -125,6 +153,9 @@ A school administrator can add more than one guardian in the Guardians tab, such
 - **FR-018**: System MUST preserve tenant isolation and document any intentional cross-tenant access path; no cross-tenant access is expected for this feature.
 - **FR-019**: System MUST identify all affected repositories and the delivery sequence when implementation spans more than one repository.
 - **FR-020**: Verification MUST cover sidebar visibility, direct guardian route behavior, tab switching, zero/one/two guardian submissions, rejected third guardian attempts, validation errors by tab, authorization denials, tenant isolation denials, stale responses, and no-sensitive-data diagnostics behavior.
+- **FR-021**: The Student Profile detail page MUST present Student and Guardians tabs, where the Student tab shows the existing student summary and enrollment status panels.
+- **FR-022**: The detail Guardians tab MUST render zero to two read-only guardian associations from the documented `getStudentProfile.guardian_associations` response, including guardian full name, relationship label, contact email, contact phone, and status.
+- **FR-023**: The detail Guardians tab MUST NOT offer guardian create, edit, lifecycle, bulk, user-link, or association-management controls, and MUST keep guardian self-service behavior outside this feature.
 
 ### Key Entities *(include if feature involves data)*
 
@@ -147,6 +178,7 @@ A school administrator can add more than one guardian in the Guardians tab, such
 - **SC-006**: 100% of tested unauthorized, forbidden, tenant-mismatch, inactive-school, not-found, validation, conflict, and temporary-unavailable cases show safe feedback without exposing protected student, guardian, contact, permission, role, token, full request payload, or cross-tenant details.
 - **SC-007**: Contract review confirms every student-with-guardians submission path and the maximum-two guardian rule are documented before implementation begins.
 - **SC-008**: Review confirms guardian self-service, guardian user-link management, lifecycle actions, bulk lifecycle actions, student transfer, roster membership, teacher assignment, reports, messaging, billing, and undocumented guardian behavior are not exposed by this feature.
+- **SC-009**: In at least one documented usability check, an authorized administrator can open a student detail page, switch to the Guardians tab, and identify all guardian associations for the student in under 1 minute without assistance.
 
 ## Assumptions
 
