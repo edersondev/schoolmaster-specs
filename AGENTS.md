@@ -73,5 +73,5 @@ When implementing or modifying features:
   backend or frontend branch for a repository with no feature work
 
 <!-- SPECKIT START -->
-Active implementation plan: `specs/039-user-password-delivery/plan.md`
+Active implementation plan: `specs/040-student-guardian-tabs/plan.md`
 <!-- SPECKIT END -->
