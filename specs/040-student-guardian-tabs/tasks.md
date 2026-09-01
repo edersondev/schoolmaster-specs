@@ -25,7 +25,7 @@ implemented and tested independently after the backend gate.
 locations before contract or implementation work starts.
 
 - [ ] T001 Confirm `040-student-guardian-tabs` is checked out or created in `schoolmaster-backend/` and `schoolmaster-frontend/`, then record branch readiness in `schoolmaster-specs/specs/040-student-guardian-tabs/quickstart.md`
-- [ ] T002 [P] Review current student create and guardian contracts for `guardian_associations`, `createStudentProfile`, `listGuardians`, and `createGuardian` in `schoolmaster-specs/api/components/schemas/student-profiles/StudentProfileCreateRequest.yaml`, `schoolmaster-specs/api/components/schemas/student-profiles/StudentProfileGuardianInput.yaml`, and `schoolmaster-specs/api/paths/guardians/index.yaml`
+- [ ] T002 [P] Review current student create and guardian contracts for `guardian_associations`, `createStudentProfile`, `listGuardians`, and `createGuardian` in `schoolmaster-specs/api/components/schemas/student-profiles/StudentProfileCreateRequest.yaml`, `schoolmaster-specs/api/components/schemas/student-profiles/StudentProfileGuardianInput.yaml`, `schoolmaster-specs/api/components/schemas/student-profiles/StudentProfile.yaml`, and `schoolmaster-specs/api/paths/guardians/index.yaml`
 - [ ] T003 [P] Review existing backend student, guardian, and association request/service/resource/policy files to identify exact class names in `schoolmaster-backend/app/Http/Requests/`, `schoolmaster-backend/app/Services/`, `schoolmaster-backend/app/Policies/`, and `schoolmaster-backend/app/Http/Resources/`
 - [ ] T004 [P] Review existing frontend student and guardian route/service/component files to identify exact route names and component boundaries in `schoolmaster-frontend/src/router/modules/`, `schoolmaster-frontend/src/services/admin-system/`, `schoolmaster-frontend/src/pages/admin-system/`, and `schoolmaster-frontend/src/components/admin-system/`
 
@@ -45,13 +45,13 @@ complete.
 - [ ] T006 Update `StudentProfileCreateRequest` to cap `guardian_associations` at two entries and reference the expanded guardian entry schema in `schoolmaster-specs/api/components/schemas/student-profiles/StudentProfileCreateRequest.yaml`
 - [ ] T007 Add or update the guardian entry schema with exactly-one-mode validation fields for existing `guardian_id` or new guardian identity/contact data in `schoolmaster-specs/api/components/schemas/student-profiles/StudentProfileGuardianInput.yaml`
 - [ ] T008 [P] Add reusable new-guardian payload schema for full name, contact email, and contact phone in `schoolmaster-specs/api/components/schemas/student-profiles/StudentProfileNewGuardianInput.yaml`
-- [ ] T009 Update `createStudentProfile` response and validation documentation for maximum guardians, duplicate existing guardian, duplicate relationship-label acceptance, missing permission, cross-school reference, inactive guardian, and atomic rollback outcomes in `schoolmaster-specs/api/paths/student-profiles/index.yaml`
+- [ ] T009 Update `createStudentProfile` response and validation documentation for maximum guardians, duplicate existing guardian, duplicate relationship-label acceptance, missing permission, cross-school reference, inactive guardian, and atomic rollback outcomes, and update `StudentProfile.guardian_associations` to use an association-level response schema such as `StudentProfileGuardianAssociation` in `schoolmaster-specs/api/paths/student-profiles/index.yaml`, `schoolmaster-specs/api/components/schemas/student-profiles/StudentProfile.yaml`, and `schoolmaster-specs/api/components/schemas/student-profiles/StudentProfileGuardianAssociation.yaml`
 - [ ] T010 Run Redocly lint and bundle for the changed OpenAPI contract and record results in `schoolmaster-specs/specs/040-student-guardian-tabs/quickstart.md`
 
 ### Backend Tests
 
 - [ ] T011 [P] Add PHPUnit feature coverage for `createStudentProfile` with zero guardians, one new guardian, two new guardians, and created association response shape in `schoolmaster-backend/tests/Feature/StudentProfiles/StudentProfileCreateWithGuardiansTest.php`
-- [ ] T012 [P] Add PHPUnit feature coverage for existing same-school guardian linking, mixed new/existing entries, duplicate existing guardian rejection, and duplicate relationship-label acceptance in `schoolmaster-backend/tests/Feature/StudentProfiles/StudentProfileCreateWithExistingGuardiansTest.php`
+- [ ] T012 [P] Add PHPUnit feature coverage for existing same-school guardian linking, mixed new/existing entries, association-label response values that can differ from guardian-level metadata, duplicate existing guardian rejection, and duplicate relationship-label acceptance in `schoolmaster-backend/tests/Feature/StudentProfiles/StudentProfileCreateWithExistingGuardiansTest.php`
 - [ ] T013 [P] Add PHPUnit feature coverage for maximum two guardians, invalid mode combinations, missing relationship, invalid contact, inactive guardian, deleted guardian, cross-school guardian, tenant mismatch, and missing guardian management authority in `schoolmaster-backend/tests/Feature/StudentProfiles/StudentProfileGuardianValidationTest.php`
 - [ ] T014 [P] Add PHPUnit unit coverage for guardian entry DTO normalization, exactly-one-mode validation support, and duplicate detection in `schoolmaster-backend/tests/Unit/StudentProfiles/StudentProfileGuardianEntryDataTest.php`
 - [ ] T015 Add PHPUnit transaction coverage proving no student, guardian, or association persists when any submitted guardian entry fails in `schoolmaster-backend/tests/Feature/StudentProfiles/StudentProfileCreateAtomicityTest.php`
@@ -63,7 +63,7 @@ complete.
 - [ ] T018 Update student profile policy authorization so guardian entries require guardian management authority while zero-guardian student creation remains permitted in `schoolmaster-backend/app/Policies/StudentProfilePolicy.php`
 - [ ] T019 Update student profile creation service to resolve tenant context first, validate existing guardians as active same-school records, create new guardians, create associations, allow duplicate relationship labels, and wrap student plus guardian work in one transaction in `schoolmaster-backend/app/Services/StudentProfiles/StudentProfileService.php`
 - [ ] T020 Update or add guardian association service helpers for duplicate guardian reference handling and same-school active guardian checks in `schoolmaster-backend/app/Services/StudentProfiles/GuardianAssociationService.php`
-- [ ] T021 Update student profile API resource output to expose created student and zero to two associated guardian records through the documented response shape in `schoolmaster-backend/app/Http/Resources/StudentProfileResource.php`
+- [ ] T021 Update student profile API resource output to expose created student and zero to two association-level guardian response records with relationship/status values through the documented response shape in `schoolmaster-backend/app/Http/Resources/StudentProfileResource.php`
 - [ ] T022 Run the focused backend test files and full `php artisan test`, then record backend gate results in `schoolmaster-specs/specs/040-student-guardian-tabs/quickstart.md`
 
 **Checkpoint**: OpenAPI and backend gate passed. Frontend implementation may
@@ -93,7 +93,7 @@ Student.
 - [ ] T026 [US1] Remove visible Guardians sidebar metadata while retaining safe route records needed for redirect behavior in `schoolmaster-frontend/src/router/modules/guardians.routes.js`
 - [ ] T027 [US1] Add redirect handling from former standalone guardian administration routes to Create Student in `schoolmaster-frontend/src/router/modules/guardians.routes.js`
 - [ ] T028 [US1] Update administration route assembly so hidden guardian routes do not appear in sidebar navigation lists in `schoolmaster-frontend/src/router/modules/administration.routes.js`
-- [ ] T029 [US1] Add or update localized redirect and navigation fallback text for former guardian routes in `schoolmaster-frontend/src/locales/student-guardian-tabs.js`
+- [ ] T029 [US1] Add or update localized redirect and navigation fallback text for former guardian routes and register the locale module in `schoolmaster-frontend/src/locales/student-guardian-tabs.js` and `schoolmaster-frontend/src/locales/index.js`
 
 **Checkpoint**: User Story 1 is independently functional and testable as MVP.
 
@@ -113,8 +113,8 @@ validation without data loss.
 ### Tests for User Story 2
 
 - [ ] T030 [P] [US2] Add Vitest contract tests for StudentCreateWorkflow, StudentDraft, GuardianEntry, NewGuardianDraft, ExistingGuardianReference, GuardianStudentAssociation, SafeFeedback, and camelCase to OpenAPI payload mapping in `schoolmaster-frontend/tests/unit/student-guardian-tabs/contracts/studentGuardianTabs.contract.spec.js`
-- [ ] T031 [P] [US2] Add Vitest service tests for student create payloads with zero guardians, new guardian entries, existing guardian references, mixed entries, abort signal, tenant header, and safe error mapping in `schoolmaster-frontend/tests/unit/student-guardian-tabs/services/studentProfilesCreateWithGuardians.service.spec.js`
-- [ ] T032 [P] [US2] Add Vitest service tests for existing guardian lookup with approved list filters, active status, pagination, stale cancellation, and no unsupported fields in `schoolmaster-frontend/tests/unit/student-guardian-tabs/services/guardianLookup.service.spec.js`
+- [ ] T031 [P] [US2] Add Vitest service tests for student create payloads with zero guardians, new guardian entries, existing guardian references, mixed entries, association-level guardian response mapping, abort signal, tenant header, and safe error mapping in `schoolmaster-frontend/tests/unit/student-guardian-tabs/services/studentProfilesCreateWithGuardians.service.spec.js`
+- [ ] T032 [P] [US2] Add Vitest service tests for existing guardian lookup with approved list filters, active status, pagination, stale cancellation, no unsupported fields, and availability for actors with student create authority plus `guardians.manage` without standalone guardian list visibility in `schoolmaster-frontend/tests/unit/student-guardian-tabs/services/guardianLookup.service.spec.js`
 - [ ] T033 [P] [US2] Add Vitest composable tests for tab state, dirty state, guardian mode switching, value preservation, tab error mapping, submit pending state, and stale-response protection in `schoolmaster-frontend/tests/unit/student-guardian-tabs/composables/useStudentCreateWorkflow.spec.js`
 - [ ] T034 [P] [US2] Add component tests for Student tab fields, Guardians tab mode selector, new guardian fields, existing guardian selector, props-down/events-up behavior, and validation summary in `schoolmaster-frontend/tests/unit/student-guardian-tabs/components/StudentCreateTabs.spec.js`
 - [ ] T035 [P] [US2] Add page-flow tests for Create Student tabs, zero guardian submission, one new guardian submission, one existing guardian submission, validation failure preservation, dirty leave guard, and success state in `schoolmaster-frontend/tests/unit/student-guardian-tabs/pages/StudentCreatePage.spec.js`
@@ -123,13 +123,13 @@ validation without data loss.
 
 - [ ] T036 [US2] Define frontend contracts and mappers for StudentCreateWorkflow, GuardianEntry modes, SafeFeedback, and expanded `guardian_associations` payloads in `schoolmaster-frontend/src/contracts/admin-system/student-guardian-tabs.js`
 - [ ] T037 [US2] Update the student profile create service to submit zero to two new or existing guardian entries through `createStudentProfile` only in `schoolmaster-frontend/src/services/admin-system/studentProfiles.js`
-- [ ] T038 [US2] Add guardian lookup service support for active same-school existing guardian selection using only `listGuardians` filters and pagination in `schoolmaster-frontend/src/services/admin-system/guardians.js`
+- [ ] T038 [US2] Add guardian lookup service support for active same-school existing guardian selection using only the limited `listGuardians` filters and pagination allowed for student create authority plus `guardians.manage` in `schoolmaster-frontend/src/services/admin-system/guardians.js`
 - [ ] T039 [US2] Implement route-local tabbed workflow orchestration with minimal reactive state, computed tab errors, explicit actions, lookup cancellation, submit cancellation, and dirty guard state in `schoolmaster-frontend/src/composables/admin-system/useStudentCreateWorkflow.js`
 - [ ] T040 [P] [US2] Implement Student tab presentational component with approved student fields, field errors, pending state, and submit/cancel emits in `schoolmaster-frontend/src/components/admin-system/students/StudentCreateStudentTab.vue`
 - [ ] T041 [P] [US2] Implement Guardians tab presentational component with new/existing mode controls, guardian lookup UI, validation summary, selected guardian retention, and no transport logic in `schoolmaster-frontend/src/components/admin-system/students/StudentCreateGuardiansTab.vue`
 - [ ] T042 [P] [US2] Implement reusable guardian entry editor with stable entry keys, relationship field, new guardian fields, existing guardian selection, remove action, and props/emits contract in `schoolmaster-frontend/src/components/admin-system/students/GuardianEntryEditor.vue`
-- [ ] T043 [US2] Compose the Create Student page with Student and Guardians tabs, workflow composable, permission-aware guardian capture, field focus recovery, dirty leave guard, success feedback, and list return behavior in `schoolmaster-frontend/src/pages/admin-system/students/StudentProfileCreatePage.vue`
-- [ ] T044 [US2] Add localized Student tab, Guardians tab, new guardian, existing guardian, lookup, validation, pending, success, and dirty-leave text in `schoolmaster-frontend/src/locales/student-guardian-tabs.js`
+- [ ] T043 [US2] Compose the Create Student page with Student and Guardians tabs, workflow composable, permission-aware guardian capture, existing-guardian lookup availability for student create authority plus `guardians.manage`, field focus recovery, dirty leave guard, success feedback, and list return behavior in `schoolmaster-frontend/src/pages/admin-system/students/StudentProfileCreatePage.vue`
+- [ ] T044 [US2] Add localized Student tab, Guardians tab, new guardian, existing guardian, lookup, validation, pending, success, and dirty-leave text in the registered locale module in `schoolmaster-frontend/src/locales/student-guardian-tabs.js` and `schoolmaster-frontend/src/locales/index.js`
 
 **Checkpoint**: User Stories 1 and 2 work independently after the backend gate.
 
@@ -159,7 +159,7 @@ partial success.
 - [ ] T050 [US3] Update Guardians tab controls to block third guardian entry creation, keep two entries editable, and expose accessible maximum-two feedback in `schoolmaster-frontend/src/components/admin-system/students/StudentCreateGuardiansTab.vue`
 - [ ] T051 [US3] Update guardian entry editor validation display so duplicate relationship labels are accepted while duplicate existing guardian references and duplicate identity conflicts show field-level feedback in `schoolmaster-frontend/src/components/admin-system/students/GuardianEntryEditor.vue`
 - [ ] T052 [US3] Update Create Student page submission and feedback handling so rejected guardian entries preserve both tabs and never show partial success in `schoolmaster-frontend/src/pages/admin-system/students/StudentProfileCreatePage.vue`
-- [ ] T053 [US3] Add maximum-two, duplicate-existing-guardian, duplicate-identity, duplicate-relationship-allowed, and no-partial-success text in `schoolmaster-frontend/src/locales/student-guardian-tabs.js`
+- [ ] T053 [US3] Add maximum-two, duplicate-existing-guardian, duplicate-identity, duplicate-relationship-allowed, and no-partial-success text in the registered locale module in `schoolmaster-frontend/src/locales/student-guardian-tabs.js` and `schoolmaster-frontend/src/locales/index.js`
 
 **Checkpoint**: All user stories are independently functional.
 

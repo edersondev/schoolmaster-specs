@@ -40,7 +40,7 @@ OpenAPI must be updated before backend or frontend implementation.
 | Operation ID | Method and path | Feature use |
 |--------------|-----------------|-------------|
 | `createStudentProfile` | `POST /api/v1/student-profiles` | Create one same-school student with zero to two guardian entries in one atomic request. |
-| `listGuardians` | `GET /api/v1/guardians` | Lookup active same-school existing guardians for selection inside the Guardians tab. |
+| `listGuardians` | `GET /api/v1/guardians` | Limited lookup of active same-school existing guardians for selection inside the Guardians tab when the actor has student create authority and `guardians.manage`. |
 
 The frontend must not use `createGuardian` as a chained post-student-create
 step for this workflow. New guardian creation for this feature is part of the
@@ -91,8 +91,16 @@ The contract must document validation for:
 Success response for `createStudentProfile` must allow the frontend to confirm:
 
 - created student profile
-- zero to two associated guardian records
-- relationship labels for created associations
+- zero to two associated guardian association records
+- relationship labels and status for created associations, even when the
+  submitted association label differs from the linked guardian record's own
+  guardian-level relationship metadata
+
+OpenAPI must either update `StudentProfile.guardian_associations` to use an
+association-level response schema or introduce a dedicated
+`StudentProfileGuardianAssociation` response schema. The response must not
+represent student-guardian associations as plain `Guardian` records when the
+frontend needs association-specific relationship or status values.
 
 Failure responses must use documented envelopes for:
 
@@ -127,7 +135,7 @@ committed when any submitted guardian entry fails.
 |---------|--------------------|
 | Create Student without guardians | Existing student profile creation authority |
 | Guardians tab visibility or entry editing | Existing student profile creation authority and `guardians.manage` |
-| Existing guardian lookup inside Guardians tab | `guardians.manage` and `guardians.view` where existing permission model requires list visibility |
+| Existing guardian lookup inside Guardians tab | Existing student profile creation authority and `guardians.manage`; this is limited to active same-school selection inside Create Student and does not grant standalone guardian list visibility |
 | Student create request with one or two guardian entries | Existing student profile creation authority and `guardians.manage` |
 | Former standalone guardian sidebar item | Never visible |
 
@@ -156,8 +164,9 @@ invalid user actions.
 - Axios calls exist only in service/API-client boundaries.
 - Create Student page and tab components never call endpoints directly.
 - Student create service maps camelCase form state to OpenAPI request fields.
-- Guardian lookup service uses only `listGuardians` with documented tenant
-  context, page, per-page, status, full-name, and contact-email filters.
+- Guardian lookup service uses only the limited `listGuardians` selection path
+  with documented tenant context, page, per-page, status, full-name, and
+  contact-email filters.
 - Route-local composables own tab state, dirty state, lookup state, validation
   mapping, pending state, and stale-response protection.
 - Existing Pinia session and shell stores remain the source for user,
@@ -204,7 +213,8 @@ OpenAPI and backend verification must cover:
 - inactive, missing, deleted, and cross-school existing guardian rejection.
 - actor without guardian management authority submitting guardian entries.
 - transaction rollback when any guardian entry fails.
-- response shape includes created student and associated guardians.
+- response shape includes created student and association-level guardian
+  relationship/status values.
 - no-sensitive-data error and diagnostics behavior.
 
 Frontend verification must cover:
@@ -215,7 +225,9 @@ Frontend verification must cover:
 - zero, one, and two guardian submissions.
 - blocked third guardian entry.
 - new guardian and existing guardian modes.
-- permission-gated Guardians tab behavior.
+- permission-gated Guardians tab behavior, including existing-guardian lookup
+  availability for actors with student create authority and `guardians.manage`
+  without requiring standalone guardian list visibility.
 - tab-scoped validation summary and field errors.
 - stale lookup and submit response protection.
 - tenant change and unsaved-change handling.
